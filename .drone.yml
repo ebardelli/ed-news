@@ -1,0 +1,17 @@
+---
+kind: pipeline
+type: docker
+name: build
+
+steps:
+    - name: build ed-news image
+      image: plugins/docker
+      settings:
+        dockerfile: build.dockerfile
+        username: 
+          from_secret: dockerhub_username
+        password:
+          from_secret: dockerhub_password
+        repo: ebardelli/ed-news
+        tags: latest
+...
