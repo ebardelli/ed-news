@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-101618137-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-101618137-1');
+    </script>
+
+  <meta charset='utf-8'>
+  <meta name='generator' content='<%= Pluto.generator %>'>
+  <title><%= site.title %></title>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <%= stylesheet_link_tag 'css/umich' %>
+
+  <script src="https://code.jquery.com/jquery-2.0.3.min.js" integrity="sha256-sTy1mJ4I/LAjFCCdEB4RAvPSmRCb3CU7YqodohyeOLo=" crossorigin="anonymous"></script>
+  <script src='js/umich.js'></script>
+
+</head>
+<body>
+
+
+<div id='navwrap'>
+<div id='nav'>
+    <% if site.fetched %>
+    <p>
+      Last Update
+    </p>
+    <p class='small'>
+        <%= site.fetched.strftime('%A, %d. %B %Y %H:%M') %>
+    </p>
+    <% end %>
+
+    <p>Subscriptions</p>
+    <ul class='subscriptions small' >
+     <% site.feeds.each do |feed| %>
+      <li>
+        <i class="fas fa-rss-square" style="color:#f26522;"></i>
+        <%= link_to feed.title, feed.url %>
+      </li>
+     <% end %>
+     </ul>
+
+    <p>Meta</p>
+    <p class='small'>Powered by <a href='https://github.com/feedreader'>Pluto</a>.</p>
+    <p class='small'>Last updated on <%= Time.current.in_time_zone("America/Detroit").strftime('%A %B %d, %Y at %H:%M') %>.</p>
+</div>
+</div>
+
+
+<div id='opts'>
+  <div style='width: 100%; text-align: right;'>
+   <i class="fas fa-align-justify" id='show-headlines' title='Show Headlines Only'></i>
+   <i class="fas fa-bars" id='show-snippets' title='Show Snippets'></i>
+   <i class="fas fa-equals" id='show-fulltext' title='Show Full Text'></i>
+  </div>
+  <div style='width: 100%; text-align: right;'>
+    Style |
+      <%= link_to 'Standard', "index.html" %> &bull;
+      <%= link_to 'Cards', "index.cards.html" %>
+  </div>
+</div>
+
+
+<h1><%= site.title %></h1>
+<%
+   items = site.items.latest.limit(24)
+   ItemCursor.new( items ).each do |item, new_date, new_feed|
+%>
+
+<% if new_date %>
+ <h2 class='new-date'>
+  <%= item.published.strftime('%A, %d. %B %Y') %>
+ </h2>
+<% else %>
+  <hr class='item-seperator'>
+<% end %>
+
+<article class='item'>
+
+<% if new_feed %>
+<h4 class='feed-title'>
+  <%= link_to item.feed.title, item.feed.url %>
+</h4>
+<% end %>
+
+<h3 class='item-title'>
+ <i class='icon-caret-down item-collapse item-close item-opened'></i>
+ <i class='icon-caret-right item-expand item-open item-closed'></i>
+ <%= link_to item.title, item.url %>
+</h3>
+
+<div class='item-body'>
+
+<div class='item-snippet'>
+<% if item.summary %>
+  <%= textify( item.summary )[0..400] %>
+<% elsif item.content %>
+  <%= textify( item.content )[0..400] %>
+<% else %>
+  -/-
+<% end %>
+</div>
+
+<div class='item-content item-summary'>
+
+<% if item.content %>
+  <%= textify( item.content ) %>
+<% elsif item.summary %>
+  <%= textify( item.summary ) %>
+<% else %>
+  -/-
+<% end %>
+
+</div>
+
+</div>
+
+</article>
+
+<% end %>
+
+</body>
+</html>

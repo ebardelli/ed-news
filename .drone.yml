@@ -1,0 +1,44 @@
+---
+kind: pipeline
+type: docker
+name: Update ed-news website
+
+steps:
+    - name: Restore cache
+      image: alpine 
+      volumes:
+        - name: cache
+          path: /cache
+      commands:
+        - cp /cache/ed-news.db .
+
+    - name: Fetch feeds
+      image: ebardelli/ed-news
+      commands:
+        - pluto update --dbname=ed-news.db
+        - sqlite3 ed-news.db 'UPDATE "items" SET "published" = "created_at" WHERE "published" > CURRENT_TIMESTAMP;'
+        - pluto merge --dbname=ed-news.db --output=ed-news --template umich
+
+    - name: Cache database
+      image: alpine
+      volumes:
+        - name: cache
+          path: /cache
+      commands:
+        - cp ed-news.db /cache/
+
+    - name: Update netlify
+      image: pacbard/drone-netlify
+      settings:
+        path: ./ed-news/
+        site_id: 
+          from_secret: netlify_site_id
+      environment:
+        NETLIFY_TOKEN:
+          from_secret: netlify_token
+
+volumes:
+    - name: cache
+      host:
+        path: /data/drone/cache
+...

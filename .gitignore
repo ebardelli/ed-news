@@ -1,0 +1,5 @@
+Gemfile.lock
+.bundle/
+
+ed-news.db
+ed-news/
