@@ -36,6 +36,15 @@ steps:
       environment:
         NETLIFY_TOKEN:
           from_secret: netlify_token
+    
+    - name: Update GH Pages
+      image: plugins/gh-pages
+      settings:
+        username:
+          from_secret: gh_username
+        password:
+          from_secret: gh_token
+        pages_directory: ed-news/
 
 volumes:
     - name: cache
