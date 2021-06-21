@@ -46,8 +46,19 @@ steps:
           from_secret: gh_token
         pages_directory: ed-news/
 
+    - name: update server
+      image: drillster/drone-rsync
+      volumes:
+        - name: www_dir
+          path: /www
+      commands:
+        - rsync -rltvzc --delete --omit-dir-times --no-o --no-g ed-news/ /www/
+
 volumes:
     - name: cache
       host:
         path: /data/drone/cache
+    - name: www_dir
+      host:
+        path: /data/www/ed-news
 ...
