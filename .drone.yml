@@ -5,27 +5,39 @@ name: update ed-news website
 
 steps:
     - name: restore cache
-      image: alpine 
+      image: meltwater/drone-cache:dev
+      pull: true
+      settings:
+        backend: "filesystem"
+        restore: true
+        cache_key: "volume"
+        archive_format: "gzip"
+        mount:
+          - 'cache'
       volumes:
-        - name: cache
-          path: /cache
-      commands:
-        - cp /cache/ed-news.db .
+      - name: cache
+        path: /tmp/cache
 
     - name: fetch feeds
       image: ebardelli/ed-news
       commands:
-        - pluto update --dbname=ed-news.db
-        - sqlite3 ed-news.db 'UPDATE "items" SET "published" = "created_at" WHERE "published" > CURRENT_TIMESTAMP;'
-        - pluto merge --dbname=ed-news.db --output=ed-news --template umich
+        - pluto update --dbname=cache/ed-news.db
+        - sqlite3 cache/ed-news.db 'UPDATE "items" SET "published" = "created_at" WHERE "published" > CURRENT_TIMESTAMP;'
+        - pluto merge --dbname=cache/ed-news.db --output=ed-news --template umich
 
-    - name: cache database
-      image: alpine
+    - name: rebuild cache
+      image: meltwater/drone-cache:dev
+      pull: true
+      settings:
+        backend: "filesystem"
+        rebuild: true
+        cache_key: "volume"
+        archive_format: "gzip"
+        mount:
+          - 'cache'
       volumes:
-        - name: cache
-          path: /cache
-      commands:
-        - cp ed-news.db /cache/
+      - name: cache
+        path: /tmp/cache
 
     - name: update netlify
       image: pacbard/drone-netlify
