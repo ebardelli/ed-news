@@ -1,6 +1,6 @@
 # Ed-News - An aggregator of recent publications in education
 
-[![Build Status](https://drone.pacbard.duckdns.org/api/badges/ebardelli/ed-news/status.svg)](https://drone.pacbard.duckdns.org/ebardelli/ed-news)
+[![Build Status](https://drone.ebardelli.com/api/badges/ebardelli/ed-news/status.svg)](https://drone.ebardelli.com/ebardelli/ed-news)
 
 This website collects recent publications in education using RSS feeds.
 
