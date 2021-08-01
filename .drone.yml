@@ -40,7 +40,7 @@ steps:
         path: /tmp/cache
 
     - name: update netlify
-      image: pacbard/drone-netlify
+      image: techknowlogick/drone-netlify
       settings:
         path: ./ed-news/
         site_id: 
