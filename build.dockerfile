@@ -10,3 +10,12 @@ WORKDIR /app
 
 COPY Gemfile /app
 RUN bundle install
+
+RUN cd /tmp && \
+    git clone https://github.com/pacbard/webclient.git && \
+    cd webclient/fetcher && \
+    gem install hoe && \
+    rake gem && \
+    gem install pkg/fetcher-0.4.5.gem && \
+    cd ../../ && \
+    rm -rf webclient
