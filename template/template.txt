@@ -1,0 +1,10 @@
+# pakman manifest
+
+index.html        index.html.erb
+index.cards.html  index.cards.html.erb
+index.rss         index.rss.erb
+
+css/style.css
+css/style.cards.css
+
+js/script.js

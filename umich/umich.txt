@@ -1,9 +1,0 @@
-# pakman manifest
-
-index.html        umich.html.erb
-index.cards.html  umich.cards.html.erb
-
-css/umich.css
-css/umich.cards.css
-
-js/umich.js

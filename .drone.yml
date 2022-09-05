@@ -23,7 +23,7 @@ steps:
       commands:
         - pluto update --dbname=cache/ed-news.db
         - sqlite3 cache/ed-news.db 'UPDATE "items" SET "published" = "created_at" WHERE "published" > CURRENT_TIMESTAMP;'
-        - pluto merge --dbname=cache/ed-news.db --output=ed-news --template umich
+        - pluto merge --dbname=cache/ed-news.db --output=ed-news --template template
 
     - name: rebuild cache
       image: meltwater/drone-cache:dev
