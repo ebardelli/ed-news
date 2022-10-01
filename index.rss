@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Design Parameters for Planning the Sample Size of Individual-Level Randomized Controlled Trials in Community Colleges</title>
+        <description>
+          
+            Evaluation Review, Ahead of Print. &lt;br/&gt;The last two decades have seen a dramatic increase in randomized controlled trials (RCTs) conducted in community colleges. Yet, there is limited empirical information on the design parameters necessary to plan the sample size for RCTs in this context. We provide empirical estimates of key design parameters, discussing lessons based on the pattern of estimates across outcomes, semesters, and studies. Nearly all RCTs in community colleges use student random assignment within blocks (colleges or cohorts). Key design parameters for the minimum detectable true effect (MDTE) are the within-block outcome standard deviation [math] and the within-block outcome variance explained by baseline covariates like student characteristics [math]. The main analyses use student-level data from 8 to 14 RCTs including 5,649–7,099 students (depending on the outcome) with follow-up data for 3 years. A public database created for this paper includes parameter estimates for 30 RCTs including 65,637 students. Enrollment, credits earned, credential attainment, and grade point average. The within-block standard deviation [math] and therefore the MDTE can be much larger in later semesters for enrollment outcomes and cumulative credits earned. There is substantial variation across studies in [math] for degree attainment. Baseline covariates explain less than 10% of the variation in student outcomes. When planning the sample size for a study, researchers should be mindful of the follow-up period, use a range of values to calculate the MDTE for outcomes that vary across studies, and assume a value of [math] between 0 and 0.05.
+          
+        </description>
+        <pubDate>10-01-2022 07:25</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/0193841X221121236?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>The Relations of Morphological Awareness with Language and Literacy Skills Vary Depending on Orthographic Depth and Nature of Morphological Awareness</title>
         <description>
           
@@ -277,18 +288,6 @@
         </description>
         <pubDate>09-28-2022 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s10649-022-10183-z</link>
-      </item>
-      
-      <item>
-        <title>Students’ understanding and development of the definition of circle in Taxicab and Euclidean geometries: an APOS perspective with schema interaction</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;Action-Process-Object-Schema (APOS) theory and the triad of schema development are used as the framework in this study to investigate students’ understanding of the concept of &lt;em class=&quot;a-plus-plus&quot;&gt;circle&lt;/em&gt;. In this report, results are presented from the data analysis of responses to questions in semi-structured interviews of 15 students enrolled in a college geometry course at a university. This report utilizes a framework describing the interaction of the &lt;em class=&quot;a-plus-plus&quot;&gt;Taxicab geometry&lt;/em&gt; and &lt;em class=&quot;a-plus-plus&quot;&gt;Euclidean geometry&lt;/em&gt; schemata to determine what components of these, and what relationships between them, were evoked when these participating students elaborated on their understanding of the circle concept. By adapting and transferring their knowledge of concepts back and forth between these two geometries, the participants demonstrated a variety of levels of schema interaction when responding to interview questions pertaining to circles. As a result, a model of schema interaction and pedagogical suggestions to help students better develop their &lt;em class=&quot;a-plus-plus&quot;&gt;circle schema&lt;/em&gt; are provided.&lt;/p&gt;
-          
-        </description>
-        <pubDate>09-28-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s10649-022-10180-2</link>
       </item>
       
   </channel>
