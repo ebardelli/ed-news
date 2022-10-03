@@ -12,6 +12,28 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Development of a High-Accuracy and Effective Online Calibration Method in CD-CAT Based on Gini Index</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;To improve the calibration accuracy and calibration efficiency of cognitive diagnostic computerized adaptive testing (CD-CAT) for new items and, ultimately, contribute to the widespread application of CD-CAT in practice, the current article proposed a Gini-based online calibration method that can simultaneously calibrate the Q-matrix and item parameters of new items. Three simulation studies with simulated and real item banks were conducted to investigate the performance of the proposed method and compare it with the joint estimation algorithm (JEA) and the single-item estimation (SIE) methods. The results indicated that the proposed Gini-based online calibration method yielded higher calibration efficiency than those of the SIE method and outperformed the JEA method on item calibration tasks in terms of both accuracy and efficiency under most experimental conditions.
+          
+        </description>
+        <pubDate>10-03-2022 10:54</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986221126741?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Dual Identification? The Effects of English Learner (EL) Status on Subsequent Special Education (SPED) Placement in an Equity-Focused District</title>
+        <description>
+          
+            Educational Evaluation and Policy Analysis, Ahead of Print. &lt;br/&gt;This study examines the effects of English Learner (EL) status on subsequent Special Education (SPED) placement. Through a research-practice partnership, we link student demographic data and initial English proficiency assessment data across seven cohorts of test takers and observe EL and SPED programmatic participation for these students over 7 years. Our regression discontinuity (RD) estimates at the English proficiency margin consistently differ substantively from positive associations generated through regression analyses. RD evidence indicates that EL status had no effect on SPED placement at the English proficiency threshold. Grade-by-grade and subgroup RD analyses at this margin suggest that ELs were modestly underidentified for SPED during Grade 5 and that ELs whose primary language was Spanish were underidentified for SPED.
+          
+        </description>
+        <pubDate>10-03-2022 04:00</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/01623737221121786?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Evaluating the Importance of Monetary Policy Uncertainty: The Long- and Short-Term Effects and Responses</title>
         <description>
           
@@ -263,30 +285,6 @@
         </description>
         <pubDate>09-29-2022 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s11858-022-01409-8</link>
-      </item>
-      
-      <item>
-        <title>“How to meme it”: reverse engineering the creative process of mathematical Internet memes</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;Mathematical Internet memes are examples of how the creative thrust characterising the Web 2.0 environment reaches the field of mathematics, translating mathematical statements into a new digital form endowed with an epistemic potential that is capable of initiating a process of mathematical argumentation. The research presented in this paper aims to shed light on the creative process of mathematical memes, contributing to building a body of knowledge on mathematical memes that, prospectively, could enable educators to profit from these objects in their teaching. Theoretically, this is based on a widened concept of creativity that focuses on the connection linking digital culture with mathematics, and on distinguishing and merging three perspectives to disclose the meanings of mathematical memes. Methodologically, the process of mathematical memes’ creation is investigated through a reverse engineering approach on a dataset of about 2100 items collected in a 3-year-long ethnographic observation within online communities. The result is a heuristic action model of the creation process, that is validated by creating two new mathematical Internet memes that are shared online within the observed communities to explore if they retain the mathematical and epistemic characteristics of Web-found ones.&lt;/p&gt;
-          
-        </description>
-        <pubDate>09-29-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s10649-022-10173-1</link>
-      </item>
-      
-      <item>
-        <title>The multi-dimensionality of early algebraic thinking: background, overarching dimensions, and new directions</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;Early algebraic thinking is the reasoning engaged in by 5- to 12-year-olds as they build meaning for the objects and ways of thinking to be encountered within the later study of secondary school algebra. Ever since the 1990s when interest in developing algebraic thinking in the earlier grades began to emerge, there has been a steady growth in the research devoted to exploring ways of fostering this thinking. While in its early days this research had to grapple with the question of what kinds of algebraic thinking might be feasible for the younger student, the evolution of the field over the past 30 years has led to an ever-increasing range of activity that is truly multi-dimensional. In this survey paper, I have framed the multi-dimensionality of early algebraic thinking according to three overarching types, namely, that of analytic thinking, structural thinking, and functional thinking, with generalizing being the scarlet thread that runs through all three. The first part of the paper looks back to the history of the notion of early algebra and the initial research efforts aimed at characterizing early algebraic thinking. The second part delineates the three overarching theoretical dimensions of early algebraic thinking, presents a sampling of past empirical findings, and points to some of the more recent work in the field, including the contributions to this Special Issue. The paper concludes by highlighting the new directions of this domain of research and offering suggestions for further research.&lt;/p&gt;
-          
-        </description>
-        <pubDate>09-28-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-022-01435-6</link>
       </item>
       
   </channel>
