@@ -12,6 +12,160 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Panel unit-root tests with structural breaks</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 664-678, September 2022. &lt;br/&gt;In this article, we introduce a new community-contributed command called xtbunitroot, which implements the panel-data unit-root tests developed by Karavias and Tzavalis (2014, Computational Statistics and Data Analysis 76: 391–407). These tests allow for one or two structural breaks in deterministic components of the series and can be seen as panel-data counterparts of the tests by Zivot and Andrews (1992, Journal of Business and Economic Statistics 10: 251–270) and Lumsdaine and Papell (1997, Review of Economics and Statistics 79: 212–218). The dates of the breaks can be known or unknown. The tests allow for intercepts and linear trends, nonnormal errors, and cross-section heteroskedasticity and dependence. They have power against homogeneous and heterogeneous alternatives and can be applied to panels with small or large time-series dimensions.
+          
+        </description>
+        <pubDate>10-06-2022 12:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124541?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>xtusreg: Software for dynamic panel regression under irregular time spacing</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 713-724, September 2022. &lt;br/&gt;We introduce a new command, xtusreg, that estimates parameters of fixed-effects dynamic panel regression models under unequal time spacing. After reviewing the method, we examine the finite-sample performance of the command using simulated data. We also illustrate the command with the National Longitudinal Survey Original Cohorts: Older Men, whose personal interviews took place in the unequally spaced years of 1966, 1967, 1969, 1971, 1976, 1981, and 1990. The methods underlying xtusreg are those discussed by Sasaki and Xin (2017, Journal of Econometrics 196: 320–330).
+          
+        </description>
+        <pubDate>10-06-2022 12:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124567?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Software Updates</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 725-725, September 2022. &lt;br/&gt;
+          
+        </description>
+        <pubDate>10-06-2022 12:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124568?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>ivcrc: An instrumental-variables estimator for the correlated random-coefficients model</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 469-495, September 2022. &lt;br/&gt;We discuss the ivcrc command, which implements an instrumental-variables (IV) estimator for the linear correlated random-coefficients model. The correlated random-coefficients model is a natural generalization of the standard linear IV model that allows for endogenous, multivalued treatments and unobserved heterogeneity in treatment effects. The estimator implemented by ivcrc uses recent semiparametric identification results that allow for flexible functional forms and permit instruments that may be binary, discrete, or continuous. The ivcrc command also allows for the estimation of varying-coefficient regressions, which are closely related in structure to the proposed IV estimator. We illustrate the use of ivcrc by estimating the returns to education in the National Longitudinal Survey of Young Men.
+          
+        </description>
+        <pubDate>10-06-2022 12:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124449?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>A Stata implementation of second-generation p-values</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 496-520, September 2022. &lt;br/&gt;In this article, I introduce new commands to calculate second-generation p-values (SGPVs) for common estimation commands in Stata. The sgpv command and its companions allow the easy calculation of SGPVs and their associated diagnostics, as well as the plotting of SGPVs against the standard p-values.
+          
+        </description>
+        <pubDate>10-06-2022 12:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124466?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Announcements</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 726-727, September 2022. &lt;br/&gt;
+          
+        </description>
+        <pubDate>10-06-2022 12:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124569?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Bunching estimation of elasticities using Stata</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 597-624, September 2022. &lt;br/&gt;Typical censoring models have mass points at the upper or lower tails, or at both tails, of an otherwise continuous outcome distribution. In contrast, we consider a censoring model with a mass point in the interior of the outcome distribution. We refer to this mass point as “bunching” and use it to estimate model parameters. For example, economic theory suggests that, for increasing marginal income tax rates, many taxpayers will report income exactly at the threshold where the tax rate increases. This translates into a censoring model with bunching at the threshold. The size of this mass point of taxpayers can be used to estimate an elasticity parameter that summarizes taxpayers’ responses to taxes. In this article, we introduce the command bunching, which implements new nonparametric and semiparametric identification methods for estimating elasticities developed by Bertanha, McCallum, and Seegert (2021, Technical Report 2021-002, Board of Governors of the Federal Reserve System). These methods rely on weaker assumptions than what are currently made in the literature and result in meaningfully different estimates of the elasticity.
+          
+        </description>
+        <pubDate>10-06-2022 12:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124534?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Flexible parametric survival analysis with multiple timescales: Estimation and implementation using stmt</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 679-701, September 2022. &lt;br/&gt;In this article, we describe methodology that allows for multiple timescales using flexible parametric survival models without the need for time splitting. When one fits flexible parametric survival models on the log-hazard scale, numerical integration is required in the log likelihood to fit the model. The use of numerical integration allows incorporation of arbitrary functions of time into the model and hence lends itself to the inclusion of multiple timescales in an appealing way. We describe and exemplify these methods and show how to use the command stmt , which implements these methods, alongside its postestimation commands.
+          
+        </description>
+        <pubDate>10-06-2022 12:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124552?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>The inverse hyperbolic sine transformation and retransformed marginal effects</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 702-712, September 2022. &lt;br/&gt;In this article, I show how to calculate consistent marginal effects on the original scale of the outcome variable in Stata after estimating a linear regression with a dependent variable that has been transformed by the inverse hyperbolic sine function. The method uses a nonparametric retransformation of the error term and accounts for any scaling of the dependent variable. The inverse hyperbolic sine function is not invariant to scaling, which is known to shift marginal effects between those from an untransformed dependent variable to those of a logtransformed dependent variable, when all observations are positive.
+          
+        </description>
+        <pubDate>10-06-2022 12:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124553?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Computing decomposable multigroup indices of segregation</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 521-556, September 2022. &lt;br/&gt;Eight multigroup segregation indices are decomposable into a between and a within term. They are two versions of 1) the mutual information index, 2) the symmetric Atkinson index, 3) the relative diversity index, and 4) Theil’s H index. In this article, we present the command dseg, which obtains all of them. It contributes to the stock of segregation commands in Stata by 1) implementing the decomposition in a single call, 2) providing the weights and local indices used in the computation of the within term, 3) facilitating the deployment of the decomposability properties of the eight indices in complex scenarios that demand tailor-made solutions, and 4) leveraging sample data with bootstrapping and approximate randomization tests. We analyze 2017 census data of public schools in the United States to illustrate the use of dseg. The subject topic is school racial segregation.
+          
+        </description>
+        <pubDate>10-06-2022 12:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124471?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Panel stochastic frontier models with endogeneity</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 643-663, September 2022. &lt;br/&gt;In this article, I introduce xtsfkk as a new command for fitting panel stochastic frontier models with endogeneity. The advantage of xtsfkk is that it can control for the endogenous variables in the frontier and the inefficiency term in a longitudinal setting. Hence, xtsfkk performs better than standard panel frontier estimators such as xtfrontier that overlook endogeneity by design. Moreover, xtsfkk uses Mata’s moptimize() functions for substantially faster execution and completion speeds. I also present a set of Monte Carlo simulations and examples demonstrating the performance and usage of xtsfkk.
+          
+        </description>
+        <pubDate>10-06-2022 12:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124539?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>A mixture of ordered probit models with endogenous switching between two latent classes</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 557-596, September 2022. &lt;br/&gt;Ordinal responses can be generated, in a cross-sectional context, by different unobserved classes of population or, in a time-series context, by different latent regimes. We introduce a new command, swopit, that fits a mixture of ordered probit models with exogenous or endogenous switching between two latent classes (regimes). Switching is endogenous if unobservables in the classassignment model are correlated with unobservables in the outcome models. We provide a battery of postestimation commands; assess via Monte Carlo experiments the finite-sample performance of the maximum likelihood estimator of the parameters, probabilities, and their standard errors (both the asymptotic and bootstrap ones); and apply the new command to model the monetary policy interest rates.
+          
+        </description>
+        <pubDate>10-06-2022 12:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124516?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>graphiclasso: Graphical lasso for learning sparse inverse-covariance matrices</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 625-642, September 2022. &lt;br/&gt;In modern multivariate statistics, where high-dimensional datasets are ubiquitous, learning large (inverse-) covariance matrices is imperative for data analysis. A popular approach to estimating a large inverse-covariance matrix is to regularize the Gaussian log-likelihood function by imposing a convex penalty function. In a seminal article, Friedman, Hastie, and Tibshirani (2008, Biostatistics 9: 432–441) proposed a graphical lasso (Glasso) algorithm to efficiently estimate sparse inverse-covariance matrices from the convex regularized log-likelihood function. In this article, I first explore the Glasso algorithm and then introduce a new graphiclasso command for the large inverse-covariance matrix estimation. Moreover, I provide a useful command for tuning parameter selection in the Glasso algorithm using the extended Bayesian information criterion, the Akaike information criterion, and cross-validation. I demonstrate the use of Glasso using simulation results and real-world data analysis.
+          
+        </description>
+        <pubDate>10-06-2022 12:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124538?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Commentary on “Obtaining Interpretable Parameters From Reparameterized Longitudinal Models: Transformation Matrices Between Growth Factors in Two Parameter Spaces”</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;To model growth over time, statistical techniques are available in both structural equation modeling (SEM) and random effects modeling frameworks. Liu et al. proposed a transformation and an inverse transformation for the linear–linear piecewise growth model with an unknown random knot, an intrinsically nonlinear function, in the SEM framework. This method allowed for the incorporation of time-invariant covariates. While the proposed method made novel contributions in this area of research, the use of transformations introduces some challenges to model estimation and dissemination. This commentary aims to illustrate the significant contributions of the authors’ proposed method in the SEM framework, along with presenting the challenges involved in implementing this method and opportunities available in an alternative framework.
+          
+        </description>
+        <pubDate>10-06-2022 01:14</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986221126747?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Correction</title>
         <description>
           
@@ -121,172 +275,6 @@
         </description>
         <pubDate>10-03-2022 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s11858-022-01430-x</link>
-      </item>
-      
-      <item>
-        <title>Design Parameters for Planning the Sample Size of Individual-Level Randomized Controlled Trials in Community Colleges</title>
-        <description>
-          
-            Evaluation Review, Ahead of Print. &lt;br/&gt;The last two decades have seen a dramatic increase in randomized controlled trials (RCTs) conducted in community colleges. Yet, there is limited empirical information on the design parameters necessary to plan the sample size for RCTs in this context. We provide empirical estimates of key design parameters, discussing lessons based on the pattern of estimates across outcomes, semesters, and studies. Nearly all RCTs in community colleges use student random assignment within blocks (colleges or cohorts). Key design parameters for the minimum detectable true effect (MDTE) are the within-block outcome standard deviation [math] and the within-block outcome variance explained by baseline covariates like student characteristics [math]. The main analyses use student-level data from 8 to 14 RCTs including 5,649–7,099 students (depending on the outcome) with follow-up data for 3 years. A public database created for this paper includes parameter estimates for 30 RCTs including 65,637 students. Enrollment, credits earned, credential attainment, and grade point average. The within-block standard deviation [math] and therefore the MDTE can be much larger in later semesters for enrollment outcomes and cumulative credits earned. There is substantial variation across studies in [math] for degree attainment. Baseline covariates explain less than 10% of the variation in student outcomes. When planning the sample size for a study, researchers should be mindful of the follow-up period, use a range of values to calculate the MDTE for outcomes that vary across studies, and assume a value of [math] between 0 and 0.05.
-          
-        </description>
-        <pubDate>10-01-2022 07:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/0193841X221121236?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>A curriculum for mathematical competitions</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;In this paper, we consider mathematical competitions for pre-university students, such as the &lt;em class=&quot;a-plus-plus&quot;&gt;International Mathematical Olympiad&lt;/em&gt; (IMO) and many national and regional Olympiads following a similar model. The problems proposed in these contests must be solvable by ‘elementary’ methods (i.e., without using calculus) and belong traditionally to four areas, namely, algebra, combinatorics, geometry, and number theory. Usually there is no explicit curriculum prescribing what parts of these subjects may be involved in the problems, however there is a &lt;em class=&quot;a-plus-plus&quot;&gt;hidden curriculum&lt;/em&gt; (HC) that may be deduced from the problems proposed and from what is considered a complete solution. In this paper, we try to characterize this HC showing typical problems, subjects, solutions, and strategies for each of the main areas. We also make a comparison of the HC with the traditional secondary school curriculum (SSC), with the following two goals: (1) to identify the main points that should be addressed in the preparation of students aspiring to participate in mathematical competitions, and (2) to suggest possible changes to it and diminish the gap between school and contemporary mathematics.&lt;/p&gt;
-          
-        </description>
-        <pubDate>10-01-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-022-01389-9</link>
-      </item>
-      
-      <item>
-        <title>Mathematics competitions in China: practice and influence</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;Competitions and related activities are an essential part of mathematics education for gifted students. China has been one of the most successful countries in recent decades in the International Mathematical Olympiad. To illustrate the Chinese experience of mathematics competitions, in this paper we first present a historical sketch of Chinese mathematics competitions, then provide a comprehensive description of its pyramidal selection and training systems, including the introduction of main competitions for high school students, some examples of competition problems, and the training of students and tutors. Furthermore, to investigate the influence of mathematics competitions on contestants, an empirical study of 372 former contestants was conducted and is reported. The results showed that most of the contestants majored in mathematics or areas closely related to mathematics. Nearly half of the contestants intended to do mathematics research or work highly related to mathematics. A majority of the contestants held positive attitudes toward their mathematics competition experiences and affirmed the value of these experiences in cultivating personal interests and developing mathematics abilities. Some negative influences of competition experiences on contestants are also identified. Finally, problems existing in the development of Chinese mathematics competitions and future research directions are discussed.&lt;/p&gt;
-          
-        </description>
-        <pubDate>10-01-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-021-01325-3</link>
-      </item>
-      
-      <item>
-        <title>Writing and choosing problems for a popular high school mathematics competition</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;In this paper, we consider the issues involved in creating appropriate problems for a popular mathematics competition, and how such problems differ from problems typically encountered in a classroom. We discuss the differences and similarities in school curricula versus the generally agreed upon topics encountered in international competitions. The question of inspiration for the development of competition problems is dealt with from the standpoint of the problem author, while aspects related to the motivation of the contest participant, objective and subjective problem difficulty and mathematical precision in mathematics competitions are also discussed.&lt;/p&gt;
-          
-        </description>
-        <pubDate>10-01-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-022-01351-9</link>
-      </item>
-      
-      <item>
-        <title>Mathematics Challenge for Young Australians</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;Mathematics Challenge for Young Australians is a unique enrichment program that has been produced annually by the Australian Mathematics Trust since 1991. In its present form, it is divided into four levels and caters for talented students from years 3 to 10. In a typical year, it attracts over 15,000 entries. Individual schools arrange a period of up to four weeks in the first half of the academic year for students to work on their prescribed set of the problems and write full solutions. Limited collaboration among students is permitted and encouraged. There is a strong emphasis on articulating clearly the reasoning in solutions with sound and complete presentation. A guide containing marking schemes is provided for teachers to help them assess their students&#39; work. It also includes discussion points and extension questions, which are relevant to each problem and may be used by the teacher for further enrichment activity. This paper discusses the history, aims, and structure of the program. It describes how problems are designed by the Challenge Committee to engage the students and develop their problem-solving skills. A range of past Challenge problems are presented to illustrate their construction, diversity, levels of difficulty, and relevance to educational objectives.&lt;/p&gt;
-          
-        </description>
-        <pubDate>10-01-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-022-01342-w</link>
-      </item>
-      
-      <item>
-        <title>Mathematical competitions in Africa: their prevalence and relevance to students and teachers</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;Mathematical competitions feature in most developed countries as a part of the secondary school experience, but to a lesser extent in developing countries. In this paper we investigate how widespread these competitions are in Africa, both historically as well as currently, focussing both on national Olympiads and on the participation of African countries in competitions beyond their borders, such as the continent-wide Pan African Mathematical Olympiad and the global International Mathematical Olympiad. Since we could not find a consolidated source of information on African competitions, we include many details and links, hoping that this paper will serve as a valuable starting point for future investigators. Next, we present some survey findings on the attitudes towards and experiences of mathematical competitions, both from the perspective of teachers in secondary schools as well as from secondary school students, and whether these experiences have served to improve or degrade their perceptions of mathematics in general. Among other results, we find that teachers view their students’ participation in mathematics competitions as being important, with the biggest barrier to participation being that there are not enough competitions at appropriate levels available, and that students enjoy mathematics competitions and are more likely to pursue a STEM career because of them. Finally, we present some suggestions on how this research may be taken further, and on how the state of mathematical competition culture in Africa may be improved.&lt;/p&gt;
-          
-        </description>
-        <pubDate>10-01-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-022-01347-5</link>
-      </item>
-      
-      <item>
-        <title>The Soifer (formerly Colorado) Mathematical Olympiad, why it was founded, bridge between its problems and mathematics, and lives of its winners: an essay</title>
-        <description>
-          
-            
-          
-        </description>
-        <pubDate>10-01-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-021-01320-8</link>
-      </item>
-      
-      <item>
-        <title>The Iberoamerican mathematics olympiad, competition and community</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;The Iberoamerican Mathematics Olympiad (IbMO) is one of the most successful and established regional Olympiads in the world with the participation of all Iberoamerican countries. Its origins are a confluence of two mayor events: on the one hand the organization of the International Mathematical Olympiad (IMO) in the Americas for the very first time in 1981 and on the other hand a Latin American effort for the modernization and improvement of mathematics education embodied by the CIAEM—Comité Interamericano de Educación Matemática (or, alternately, the Congreso Interamericano de Educación Matemática). This localized Olympiad with a more homogeneous population proved very quickly to be an important steppingstone for Iberoamerican countries to prepare their participation in the IMO resulting in a collaborative effort to improve mathematics education in the region. Other very successful smaller regional mathematics Olympiads in Iberoamerica sprouted from this effort as well as from Iberoamerican efforts to establish similar experiences for other cohorts of students, such as younger students, university students and students of other sciences. In that same decade, other regional olympiads were born around the world, such as the Pan African Mathematics Olympiad (1987), the Asian Pacific (1989) or the Balkan Mathematical Olympiad (1985). Their impact in the regions was appreciated, recognized and adapted to other regional Olympiads worldwide.&lt;/p&gt;
-          
-        </description>
-        <pubDate>10-01-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-022-01338-6</link>
-      </item>
-      
-      <item>
-        <title>Perspectives on mathematics competitions and their relationship with mathematics education</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;The nature of the area of mathematical competitions as a design science is considered, historical roots of mathematical problem-solving competitions are traced, the complementary aspects of mathematics as theory building and as problem solving are touched upon in relation to the practice of competitions. Two historical figures, Euler and Erdős, emerge, and the appropriateness of many of Euler’s mathematical ventures are seen as role models for competition mathematics as first put into practice in mathematical competitions towards the end of the nineteenth century. Distinctions and definitions are made, a venture into identifying competition syllabi and the principal types of reasoning employed in solving competition problems is explored, and a description of the many different types of competitions is considered. Interaction between the field of mathematics itself and problem-solving competitions is briefly explored, as are the possibilities that open when competitions and their access to huge amounts of data, both national and international, are taken into account in research belonging to mathematics education. Finally, the range of topics addressed in this special issue of ZDM is covered, along with some possible conclusions relating to the components of the overview.&lt;/p&gt;
-          
-        </description>
-        <pubDate>10-01-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-022-01404-z</link>
-      </item>
-      
-      <item>
-        <title>The role and significance of the World Federation of National Mathematics Competitions in the International Mathematics Education Community</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;The World Federation of National Mathematics Competitions (WFNMC) was founded in 1984 as a professional organization that provides the possibility of international collaboration among mathematicians and mathematics educators working in the area of mathematics contests. Over the last decades the field, which has come to be called “competition mathematics for school students”, has developed new methods for two important activities in mathematics education, namely, problem posing and problem solving. Because of this development, competition mathematics has shaped itself into a separate branch of mathematics education with its particular features, trends and needs. It not only contains the seeds of many fields of contemporary mathematics, but has also stimulated rich contributions to important research areas of mathematics education, in the intersection of the interests of both professional communities. Mathematics competitions serve also to identify mathematical talent worldwide and to promote the attraction of young people of higher ability to professional careers in mathematics. In many cases, problems posed in mathematical contests inspire mathematical research and new methods of teaching mathematician. In this paper I briefly describe the history of WFNMC. I focus on the main activities of the Federation, including conferences, awards, publications, and research areas of the members. As the only international professional organization in this field, the WFNMC supports activities that have their own particular significance, which are discussed in the paper.&lt;/p&gt;
-          
-        </description>
-        <pubDate>10-01-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-022-01329-7</link>
-      </item>
-      
-      <item>
-        <title>Mathematics competitions: an integral part of the educational process</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;For a century and a half, the scene of mathematics competitions underwent a remarkable transformation from isolated and geographically scattered events to a full-scale and a full-featured vibrant global ecosystem comprising an impressive variety of competitions, school students, university students, teachers, mentors, scientists, schools, universities, research institutions, journals, websites, civil society organizations, educational authorities, parents, etc. The evolution, the current state, the functioning of this ecosystem as well as its role for the identification and development of talent, its impact on the educational process, and the institutions involved with it, is briefly reflected on. Some relatively new online competitions are presented that cultivate the use of dynamic geometry software systems for a deeper understanding of mathematical facts and phenomena, and for finding approximate numerical solutions to problems that are not part of a typical school curriculum, but often arise from real-life practice.&lt;/p&gt;
-          
-        </description>
-        <pubDate>10-01-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-022-01348-4</link>
-      </item>
-      
-      <item>
-        <title>The perceived impact of mathematics competitions on teachers and their classrooms in Puerto Rico, Switzerland and the UK</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;This article presents the results of a small-scale, comparative study on the perceived impact that having students enter Mathematics competitions has on Mathematics teachers in Puerto Rico, Switzerland and the UK and on their classroom practice. The study surveyed a small number of Mathematics teachers in the three countries who teach in both public and private schools and in both rural and urban regions. The perceived advantages and disadvantages to students from taking part in competitions and to teachers who have students taking part in competitions are discussed and the findings compared across the three countries. The effect that Mathematics competitions have on the identification and development of the mathematical talent of students is considered together with the contribution of these activities to the academic environment of the classroom. For the teachers who did have students taking Mathematics competitions, the limitations of entry and the different methods in which teachers prepare or assist students to prepare for the competitions are compared between countries. Since the study is small in scale, no firm conclusions are drawn but suggestions are made as to where future, larger scale, studies might be carried out to see if the classroom experiences of all could be positively influenced by exposure to Mathematics competitions.&lt;/p&gt;
-          
-        </description>
-        <pubDate>10-01-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-022-01414-x</link>
-      </item>
-      
-      <item>
-        <title>Outreach by the International Mathematical Olympiad to the mathematics education community</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;The International Mathematical Olympiad, now 62 years old, has catalyzed the formation of a remarkable international community that meets for 2 weeks each year to celebrate mathematical problem solving. It has influenced and expanded the greater global mathematical culture, and the value of problem-solving in numerous countries. It is time for the mathematics competition community to reach out and pose questions for serious inquiry. What is the extent of this influence? What are its effects? Reciprocally, what effects have different mathematical traditions had on the IMO? Some significant studies have been done to answer such questions, but several remain unanswered, and most remain unposed. We survey the work that has been done, then some anecdotal evidence, including case studies of the participation of individual countries in the IMO. We then suggest some topics needing a deeper inquiry. The intention of this article is to invite the research community to work with the IMO community in a serious investigation of the half-century of experience afforded us by the IMO.&lt;/p&gt;
-          
-        </description>
-        <pubDate>10-01-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-022-01381-3</link>
-      </item>
-      
-      <item>
-        <title>The Brazilian Public Schools Math Olympics (OBMEP): 15 years promoting social mobility through academic achievement</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;In 2005, the Brazilian Public Schools Math Olympics (OBMEP) was created by the Instituto de Matemática Pura e Aplicada. Since then, around 18 million students from the sixth to the twelfth grades have taken part in the competition annually. In each year of the competition, 6500 medals are distributed to public school students. In the following year these students receive a scholarship to participate in a training program disseminated in 225 centers across the country. Perceiving that the greatest impact of OBMEP has occurred in schools engaged with the Olympics, in either the preparation of their students for the competition or the promotion of award ceremonies for students classified as eligible for the second stage, in 2014 OBMEP launched a teacher training program. This article reviews the various OBMEP programs, their objectives and their impacts, and analyzes the obstacles faced. It also discusses the gender gap observed in the Math Olympics. In Brazil, the STEM areas of study, namely the sciences, technology, engineering, and mathematics, attract fewer girls than boys. A similar phenomenon can be observed at the OBMEP. The performance of girls is inferior to that of boys. This distinction is accentuated with the age of the students and in the grades of students in the upper percentiles of the exam.&lt;/p&gt;
-          
-        </description>
-        <pubDate>10-01-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-022-01341-x</link>
       </item>
       
   </channel>
