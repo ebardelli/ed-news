@@ -12,6 +12,39 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Promoting socio-emotional learning competencies in teacher education through online clinical simulations</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>10-11-2022 04:00</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2022.2134006?af=R</link>
+      </item>
+      
+      <item>
+        <title>Narrating Stories about Research Units in Israeli Teacher Education Colleges</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>10-11-2022 03:58</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2022.2133697?af=R</link>
+      </item>
+      
+      <item>
+        <title>Supporting teacher agency during a collaborative inquiry-based in-service teacher education course</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>10-11-2022 03:56</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2022.2132385?af=R</link>
+      </item>
+      
+      <item>
         <title>Primary English teacher education in Portugal: an exploratory study</title>
         <description>
           
@@ -243,39 +276,6 @@
         </description>
         <pubDate>10-06-2022 12:16</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124516?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>graphiclasso: Graphical lasso for learning sparse inverse-covariance matrices</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 625-642, September 2022. &lt;br/&gt;In modern multivariate statistics, where high-dimensional datasets are ubiquitous, learning large (inverse-) covariance matrices is imperative for data analysis. A popular approach to estimating a large inverse-covariance matrix is to regularize the Gaussian log-likelihood function by imposing a convex penalty function. In a seminal article, Friedman, Hastie, and Tibshirani (2008, Biostatistics 9: 432–441) proposed a graphical lasso (Glasso) algorithm to efficiently estimate sparse inverse-covariance matrices from the convex regularized log-likelihood function. In this article, I first explore the Glasso algorithm and then introduce a new graphiclasso command for the large inverse-covariance matrix estimation. Moreover, I provide a useful command for tuning parameter selection in the Glasso algorithm using the extended Bayesian information criterion, the Akaike information criterion, and cross-validation. I demonstrate the use of Glasso using simulation results and real-world data analysis.
-          
-        </description>
-        <pubDate>10-06-2022 12:16</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124538?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Working together as scientific and experiential experts: how do current ethical PAR-principles work in a research team with young adults with Developmental Language Disorder?</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>10-06-2022 08:50</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2022.2130386?af=R</link>
-      </item>
-      
-      <item>
-        <title>Commentary on “Obtaining Interpretable Parameters From Reparameterized Longitudinal Models: Transformation Matrices Between Growth Factors in Two Parameter Spaces”</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;To model growth over time, statistical techniques are available in both structural equation modeling (SEM) and random effects modeling frameworks. Liu et al. proposed a transformation and an inverse transformation for the linear–linear piecewise growth model with an unknown random knot, an intrinsically nonlinear function, in the SEM framework. This method allowed for the incorporation of time-invariant covariates. While the proposed method made novel contributions in this area of research, the use of transformations introduces some challenges to model estimation and dissemination. This commentary aims to illustrate the significant contributions of the authors’ proposed method in the SEM framework, along with presenting the challenges involved in implementing this method and opportunities available in an alternative framework.
-          
-        </description>
-        <pubDate>10-06-2022 01:14</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986221126747?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
