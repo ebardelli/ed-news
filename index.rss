@@ -56,6 +56,17 @@
       </item>
       
       <item>
+        <title>Editors’ Notes</title>
+        <description>
+          
+            &lt;a href=&quot;/toc/uate20/44/4&quot;&gt;Volume 44, Issue 4&lt;/a&gt;, Winter 2022, Page 269-270&lt;br/&gt;. &lt;br/&gt;
+          
+        </description>
+        <pubDate>10-11-2022 02:40</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/01626620.2022.2127303?af=R</link>
+      </item>
+      
+      <item>
         <title>Fiscal Federalism and K–12 Education Funding: Policy Lessons from Two Educational Crises</title>
         <description>
           
@@ -265,17 +276,6 @@
         </description>
         <pubDate>10-06-2022 12:16</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124539?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>A mixture of ordered probit models with endogenous switching between two latent classes</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 557-596, September 2022. &lt;br/&gt;Ordinal responses can be generated, in a cross-sectional context, by different unobserved classes of population or, in a time-series context, by different latent regimes. We introduce a new command, swopit, that fits a mixture of ordered probit models with exogenous or endogenous switching between two latent classes (regimes). Switching is endogenous if unobservables in the classassignment model are correlated with unobservables in the outcome models. We provide a battery of postestimation commands; assess via Monte Carlo experiments the finite-sample performance of the maximum likelihood estimator of the parameters, probabilities, and their standard errors (both the asymptotic and bootstrap ones); and apply the new command to model the monetary policy interest rates.
-          
-        </description>
-        <pubDate>10-06-2022 12:16</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124516?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
