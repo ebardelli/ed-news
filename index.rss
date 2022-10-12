@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Behold the Role of the District in Education Finance</title>
+        <description>
+          
+            &lt;a href=&quot;/toc/hpje20/97/4&quot;&gt;Volume 97, Issue 4&lt;/a&gt;, September-October 2022&lt;br/&gt;. &lt;br/&gt;
+          
+        </description>
+        <pubDate>10-11-2022 08:13</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2022.2125752?af=R</link>
+      </item>
+      
+      <item>
         <title>Promoting socio-emotional learning competencies in teacher education through online clinical simulations</title>
         <description>
           
@@ -265,17 +276,6 @@
         </description>
         <pubDate>10-06-2022 12:16</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124471?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Panel stochastic frontier models with endogeneity</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 643-663, September 2022. &lt;br/&gt;In this article, I introduce xtsfkk as a new command for fitting panel stochastic frontier models with endogeneity. The advantage of xtsfkk is that it can control for the endogenous variables in the frontier and the inefficiency term in a longitudinal setting. Hence, xtsfkk performs better than standard panel frontier estimators such as xtfrontier that overlook endogeneity by design. Moreover, xtsfkk uses Mata’s moptimize() functions for substantially faster execution and completion speeds. I also present a set of Monte Carlo simulations and examples demonstrating the performance and usage of xtsfkk.
-          
-        </description>
-        <pubDate>10-06-2022 12:16</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124539?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
