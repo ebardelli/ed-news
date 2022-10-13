@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Early Birds in Elementary School? School Start Times and Outcomes for Younger Students</title>
+        <description>
+          
+            Educational Evaluation and Policy Analysis, Ahead of Print. &lt;br/&gt;While research supports later start times for secondary schools, there is little evidence regarding start times for elementary schools. We address this gap with a statewide examination of elementary schools and a quasi-experimental analysis of an urban district that recently changed its elementary start times. We find that earlier start times predict less sleep for students. Regarding academic outcomes, our estimates are small in magnitude and suggest that earlier elementary start times have near-zero effects. Earlier start times predict a slight increase in absences and modestly higher math scores, especially for traditionally disadvantaged students. In districts that need to stagger start times, it may be advisable for elementary schools to start earlier to accommodate later secondary school start times.
+          
+        </description>
+        <pubDate>10-12-2022 11:30</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/01623737221121799?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Behold the Role of the District in Education Finance</title>
         <description>
           
@@ -265,17 +276,6 @@
         </description>
         <pubDate>10-06-2022 12:16</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124553?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Computing decomposable multigroup indices of segregation</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 521-556, September 2022. &lt;br/&gt;Eight multigroup segregation indices are decomposable into a between and a within term. They are two versions of 1) the mutual information index, 2) the symmetric Atkinson index, 3) the relative diversity index, and 4) Theil’s H index. In this article, we present the command dseg, which obtains all of them. It contributes to the stock of segregation commands in Stata by 1) implementing the decomposition in a single call, 2) providing the weights and local indices used in the computation of the within term, 3) facilitating the deployment of the decomposability properties of the eight indices in complex scenarios that demand tailor-made solutions, and 4) leveraging sample data with bootstrapping and approximate randomization tests. We analyze 2017 census data of public schools in the United States to illustrate the use of dseg. The subject topic is school racial segregation.
-          
-        </description>
-        <pubDate>10-06-2022 12:16</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124471?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
