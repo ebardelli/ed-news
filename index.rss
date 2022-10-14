@@ -12,6 +12,28 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>The Counter-Deficit Lens in Educational Research: Interrogating Conceptions of Structural Oppression</title>
+        <description>
+          
+            Review of Educational Research, Ahead of Print. &lt;br/&gt;Deficit framings of marginalized students, though maintaining widespread social influence, are thoroughly condemned in recent educational scholarship. The goal of this “counter-deficit” scholarship is to challenge racism in schools and improve opportunities for marginalized youth. To meet the lofty ambition of racial equity in education, how scholarship understands racial oppression is a central concern. Sociologists of race have emphasized the duality of racial oppression. Racism is ideological and structural. Ideologically, racism shapes how communities of color are perceived and how they are treated in educational settings. Structurally, racism is embedded in histories and policies that systematically disadvantage racially minoritized people. Both processes matter to educational inequality. However, in this review of counter-deficit literature, we find that racism is primarily understood by way of ideology and seldom by way of structures. This framing has important implications for how schools can support racially minoritized students to overcome racism in schools and communities.
+          
+        </description>
+        <pubDate>10-14-2022 12:47</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/00346543221125225?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>The Dynamic Financial Implications of the Community College Baccalaureate: An Institutional Exploration</title>
+        <description>
+          
+            AERA Open, &lt;a href=&quot;journals.sagepub.com/toc/eroa/8&quot;&gt;Volume 8, Issue &lt;/a&gt;, January-December 2022. &lt;br/&gt;Using generalized difference-in-difference and synthetic control modeling, this study estimates the influence of the community-college baccalaureate (CCB) on institutional finance over time and by intensity. Leveraging data spanning 19 years (1999–2017), I find no impact on overall revenue but suggestive evidence of upfront costs and slight increases in total spending post-adoption. Coupled with increased enrollment, per-full-time-equivalent (FTE) revenue and spending decrease, on average, by approximately 12% and 6%, respectively. Adoption of an additional CCB is associated with a 3% decrease in revenue and a suggestive 2% reduction in spending per FTE. Additional robustness checks suggest that these impacts may vary by state. These results suggest that institutions should consider the trade-offs in broadening access to baccalaureate-level education with the associated strain on resources. Policymakers should consider how best to financially support adoptive institutions as they work to meet student and workforce needs. Implications for policy, practice, and research are discussed.
+          
+        </description>
+        <pubDate>10-14-2022 12:46</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584221126473?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>How to do action research for transformations at a time of eco-social crisis, by Hilary S. Bradbury. Elgar, 2022. Four characters in search of a book review</title>
         <description>
           
@@ -259,28 +281,6 @@
         </description>
         <pubDate>10-06-2022 12:16</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124567?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Software Updates</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 725-725, September 2022. &lt;br/&gt;
-          
-        </description>
-        <pubDate>10-06-2022 12:16</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124568?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>ivcrc: An instrumental-variables estimator for the correlated random-coefficients model</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 469-495, September 2022. &lt;br/&gt;We discuss the ivcrc command, which implements an instrumental-variables (IV) estimator for the linear correlated random-coefficients model. The correlated random-coefficients model is a natural generalization of the standard linear IV model that allows for endogenous, multivalued treatments and unobserved heterogeneity in treatment effects. The estimator implemented by ivcrc uses recent semiparametric identification results that allow for flexible functional forms and permit instruments that may be binary, discrete, or continuous. The ivcrc command also allows for the estimation of varying-coefficient regressions, which are closely related in structure to the proposed IV estimator. We illustrate the use of ivcrc by estimating the returns to education in the National Longitudinal Survey of Young Men.
-          
-        </description>
-        <pubDate>10-06-2022 12:16</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124449?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
