@@ -45,6 +45,18 @@
       </item>
       
       <item>
+        <title>The Frequentist Approach of Probability, from Random Experiment to Sampling Fluctuation</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;This article deals with an introduction of probability at school through sensory modalities. This approach is based on sampling fluctuation with empirical observations of frequencies. Initially, we analyze how students from high school work on such a task by using dice, pencil, and paper. We then identify the use of schemas and data visualization by students. Considering schemas as a primitive form of algorithmic approaches, we observe interaction with mathematics. In class, students know how to use notion of frequency, but linking frequencies with probability appears to be a difficult issue. This absence of a statistical link leads us to identify entry points for probability teaching. We then decide to analyze primary school students when they have to explore a random experiment by using statistics.&lt;/p&gt;
+          
+        </description>
+        <pubDate>10-14-2022 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s42330-022-00230-5</link>
+      </item>
+      
+      <item>
         <title>Embodied mathematical pedagogy to liberate racialized and multilingual bodies</title>
         <description>
           
@@ -270,17 +282,6 @@
         </description>
         <pubDate>10-06-2022 12:16</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124541?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>xtusreg: Software for dynamic panel regression under irregular time spacing</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/3&quot;&gt;Volume 22, Issue 3&lt;/a&gt;, Page 713-724, September 2022. &lt;br/&gt;We introduce a new command, xtusreg, that estimates parameters of fixed-effects dynamic panel regression models under unequal time spacing. After reviewing the method, we examine the finite-sample performance of the command using simulated data. We also illustrate the command with the National Longitudinal Survey Original Cohorts: Older Men, whose personal interviews took place in the unequally spaced years of 1966, 1967, 1969, 1971, 1976, 1981, and 1990. The methods underlying xtusreg are those discussed by Sasaki and Xin (2017, Journal of Econometrics 196: 320–330).
-          
-        </description>
-        <pubDate>10-06-2022 12:16</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221124567?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
