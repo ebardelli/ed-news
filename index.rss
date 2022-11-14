@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Reviewer Acknowledgments</title>
+        <description>
+          
+            American Educational Research Journal, &lt;a href=&quot;journals.sagepub.com/toc/aera/59/6&quot;&gt;Volume 59, Issue 6&lt;/a&gt;, Page 1265-1270, December 2022. &lt;br/&gt;
+          
+        </description>
+        <pubDate>11-14-2022 04:53</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/00028312221137585?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>BSRLM day conference proceedings</title>
         <description>
           
@@ -275,17 +286,6 @@
         </description>
         <pubDate>11-07-2022 11:29</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/08959048221130352?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Breaking Our Silence on Factor Score Indeterminacy</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Although many textbooks on multivariate statistics discuss the common factor analysis model, few of these books mention the problem of factor score indeterminacy (FSI). Thus, many students and contemporary researchers are unaware of an important fact. Namely, for any common factor model with known (or estimated) model parameters, infinite sets of factor scores can be constructed to fit the model. Because all sets are mathematically exchangeable, factor scores are indeterminate. Our professional silence on this topic is difficult to explain given that FSI was first noted almost 100 years ago by E. B. Wilson, the 24th president (1929) of the American Statistical Association. To help disseminate Wilson’s insights, we demonstrate the underlying mathematics of FSI using the language of finite-dimensional vector spaces and well-known ideas of regression theory. We then illustrate the numerical implications of FSI by describing new and easily implemented methods for transforming factor scores into alternative sets of factor scores. An online supplement (and the fungible R library) includes R functions for illustrating FSI.
-          
-        </description>
-        <pubDate>11-07-2022 11:06</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986221128810?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
