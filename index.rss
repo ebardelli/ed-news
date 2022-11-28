@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Nonparametric Classification Method for Multiple-Choice Items in Cognitive Diagnosis</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;The multiple-choice (MC) item format has been widely used in educational assessments across diverse content domains. MC items purportedly allow for collecting richer diagnostic information. The effectiveness and economy of administering MC items may have further contributed to their popularity not just in educational assessment. The MC item format has also been adapted to the cognitive diagnosis (CD) framework. Early approaches simply dichotomized the responses and analyzed them with a CD model for binary responses. Obviously, this strategy cannot exploit the additional diagnostic information provided by MC items. De la Torre’s MC Deterministic Inputs, Noisy “And” Gate (MC-DINA) model was the first for the explicit analysis of items having MC response format. However, as a drawback, the attribute vectors of the distractors are restricted to be nested within the key and each other. The method presented in this article for the CD of DINA items having MC response format does not require such constraints. Another contribution of the proposed method concerns its implementation using a nonparametric classification algorithm, which predestines it for use especially in small-sample settings like classrooms, where CD is most needed for monitoring instruction and student learning. In contrast, default parametric CD estimation routines that rely on EM- or MCMC-based algorithms cannot guarantee stable and reliable estimates—despite their effectiveness and efficiency when samples are large—due to computational feasibility issues caused by insufficient sample sizes. Results of simulation studies and a real-world application are also reported.
+          
+        </description>
+        <pubDate>11-28-2022 06:04</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986221133088?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Mixed Signals? Economically (Dis)advantaged Students’ College Attendance Under Mandatory College and Career Readiness Assessments</title>
         <description>
           
@@ -266,17 +277,6 @@
         </description>
         <pubDate>11-18-2022 07:02</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X221138837?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Acknowledgments</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, &lt;a href=&quot;journals.sagepub.com/toc/jebb/47/6&quot;&gt;Volume 47, Issue 6&lt;/a&gt;, Page 777-780, December 2022. &lt;br/&gt;
-          
-        </description>
-        <pubDate>11-17-2022 12:26</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986221138055?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
