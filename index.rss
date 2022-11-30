@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Advancing Institutional Change to Encourage Faculty Participation in Research-Practice Partnerships</title>
+        <description>
+          
+            Educational Policy, Ahead of Print. &lt;br/&gt;University faculty have the talent, creativity, and training to tackle the serious challenges confronting our education system today, but the incentive structure in universities is often at odds with real-world contributions. What tensions are experienced by faculty who may be interested in partnership-oriented, engaged scholarship? How can these tensions be addressed? This chapter explores the tensions, particularly in the context of education research-practice partnerships, and provide examples from universities that are taking steps to lessen the tensions and encourage faculty participation in partnerships. By adopting new structures and incentives, these universities are providing a pathway to engaged scholarship that may ultimately increase the power of research to address the problems that educators face each day. However, university leaders who are implementing institutional change must grapple with long-established norms and traditions, and show how new ways of assessing the value of research will benefit universities as well as their communities.
+          
+        </description>
+        <pubDate>11-30-2022 06:50</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/08959048221131564?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>The Long-Term Impacts of Corequisite Mathematics Remediation with Statistics: Degree Completion and Wage Outcomes</title>
         <description>
           
@@ -262,17 +273,6 @@
         </description>
         <pubDate>11-25-2022 05:09</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/23328584221131530?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Unveiling the Causal Mechanisms Within Multidimensional Poverty</title>
-        <description>
-          
-            Evaluation Review, Ahead of Print. &lt;br/&gt;Despite improvements in the design of development interventions from the perspective of the Sustainable Development Goals (SDGs), there is still a lack of evaluation methods able to estimate the impact of these interventions on multiple and interrelated outcomes. This paper proposes a methodological framework for complex causal inference in international development that combines machine learning and econometric designs for causal inference. As a study case, the relationship between multidimensional poverty and violence in Colombia is evaluated following this framework. First, Bayesian networks (BN) are used to create a directed acyclic graph (DAG) able to predict how multidimensional poverty components are interrelated and affected by a violence indicator. Second, the DAG output is used to identify instrumental variables (IV) in order to test the effect of multidimensional poverty on a household’s likelihood to be a victim of violence. Minimum living standards—measured in terms of access to water, connection to the sewage system, and the quality of walls and floors—are strong predictors of the education and health dimensions of poverty. Using 2SLS, the results show that having an illiterate person within a household increases by 0.4% the household’s likelihood to be a victim of violence. BNs have the potential to predict complex causal patterns helping to understand the effect of development interventions on multidimensional outcomes such as poverty. Quasi-experimental econometric designs can then be used to test some of these predicted causal connections.
-          
-        </description>
-        <pubDate>11-24-2022 12:07</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/0193841X221140936?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
