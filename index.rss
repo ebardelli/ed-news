@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>A Case Study of Nonresponse Bias Analysis in Educational Assessment Surveys</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Nonresponse bias is a widely prevalent problem for data on education. We develop a ten-step exemplar to guide nonresponse bias analysis (NRBA) in cross-sectional studies and apply these steps to the Early Childhood Longitudinal Study, Kindergarten Class of 2010–2011. A key step is the construction of indices of nonresponse bias based on proxy pattern-mixture models for survey variables of interest. A novel feature is to characterize the strength of evidence about nonresponse bias contained in these indices, based on the strength of the relationship between the characteristics in the nonresponse adjustment and the key survey variables. Our NRBA improves the existing methods by incorporating both missing at random and missing not at random mechanisms, and all analyses can be done straightforwardly with standard statistical software.
+          
+        </description>
+        <pubDate>12-15-2022 10:40</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986221141074?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Engaging novice statisticians in statistical communications</title>
         <description>
           
@@ -269,18 +280,6 @@
         </description>
         <pubDate>12-09-2022 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s10649-022-10184-y</link>
-      </item>
-      
-      <item>
-        <title>Connecting algorithmics to mathematics learning: a design study of the intermediate value theorem and the bisection algorithm</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;Programming-based activities are becoming more widespread in curricula. Our theoretical and empirical investigation seeks to identify appropriate ways to connect computer programming and algorithmics to mathematical learning. We take the intermediate value theorem as our starting point, as it is covered by the French school curriculum, and because of its links with the bisection algorithm. We build upon the theory of mathematical working spaces, distinguishing between algorithmic and mathematical working spaces. Both working spaces are explored from the semiotic, instrumental, and discursive dimensions that support learning. Our two research questions focus on the suitable algorithmic and mathematical working spaces in which students develop an understanding of the intermediate value theorem, and the bisection algorithm. Our method starts at the reference level, with an epistemological and curricular analysis. Then, a series of tasks is designed for students working in adidacticity, and suitable working spaces are determined a priori. The tasks have been implemented in French classrooms with students aged 16–19. An analysis of their work supports an a posteriori examination of the working spaces. Our findings demonstrate that the students were able to make connections between algorithmics and mathematics in each of the three dimensions, semiotic, instrumental, and discursive, and point out the interplay between these dimensions.&lt;/p&gt;
-          
-        </description>
-        <pubDate>12-09-2022 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s10649-022-10192-y</link>
       </item>
       
   </channel>
