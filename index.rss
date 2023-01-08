@@ -12,6 +12,31 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Rôles des interactions enseignant-élèves dans l&#39;intégration d&#39;un logiciel de géométrie dynamique: le cas d&#39;un enseignant du primaire en Tunisie</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract
+      &lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;In this paper, we investigate how teacher-student interactions taking place while using a technological resource inform teaching practices and how these interactions subsequently influence the integration of the resource into teaching. Using the documentational approach and the theory of instrumental orchestration as a framework, we look at this issue from a documentational genesis perspective. In our study, we examine the documentational work of a primary teacher who is using the technological resource GeoGebra to introduce the properties of parallelograms to grade 6 primary students (age 11–12). Our research reveals the importance of the adjustments the teacher makes to the lesson plan during in-class implementation. New practices begin to take shape, as shown through the emergence of two types of instrumental orchestrations, translating into more precise guidance of the students’ work and stemming from the interactions between the students and the teacher. Such interactions then become a resource for the teacher who is developing in-class practices.&lt;/p&gt;
+          
+        </description>
+        <pubDate>01-08-2023 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s42330-022-00257-8</link>
+      </item>
+      
+      <item>
+        <title>A dialogue between two theoretical perspectives on languages and resource use in mathematics teaching and learning</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;In this paper, we turn to the notion of networking theories with the aim of contrasting two theoretical mathematics education perspectives inspired by Vygotsky’s work, namely, the Theory of Objectification and the Documentational Approach to Didactics. We are interested in comparing/contrasting these theories in accordance with the following three main questions: (a) the role that the theories ascribe to language and resources; (b) the conceptions that the theories bring forward concerning the teacher, and (c) the understandings they offer of the mathematics classroom. In the first part of the paper, some basic concepts of each perspective are presented. The second part includes some episodes from a lesson on the teaching and learning of algebra in a Grade 1 class (6–7-year-old students). The episodes serve as background to carry out, in the third part of the paper, a dialogue between proponents of the theoretical perspectives around the identified main questions. The dialogue shows some theoretical complementarities and differences and reveals, in particular, different conceptions of the teacher and the limits and possibilities that language affords in teaching–learning mathematics.&lt;/p&gt;
+          
+        </description>
+        <pubDate>01-07-2023 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s11858-022-01459-y</link>
+      </item>
+      
+      <item>
         <title>What’s the Point? A Case Study Characterizing Teacher Candidates’ Purposes for Practitioner Inquiry</title>
         <description>
           
@@ -252,28 +277,6 @@
         </description>
         <pubDate>01-05-2023 05:28</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221140943?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>crtrest: A command for ratio estimators of intervention effects on event rates in cluster randomized trials</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/4&quot;&gt;Volume 22, Issue 4&lt;/a&gt;, Page 908-923, December 2022. &lt;br/&gt;We describe five asymptotically unbiased estimators of intervention effects on event rates in nonmatched and matched-pair cluster randomized trials, and we present a bias-corrected version of the estimators for use when the number of clusters is small. The estimators are the ratio of mean counts (r 1), ratio of mean cluster-level event rates (r 2), ratio of event rates (r 3), double ratio of counts (r 4), and double ratio of event rates (r 5). r 1, r 2, and r 3 estimate the total effect, which comprises the direct and indirect effects; r 4 and r 5 estimate the direct effect. We describe a new command, crtrest, that provides these ratio estimators and their standard errors in nonmatched and matched-pair cluster randomized trials.
-          
-        </description>
-        <pubDate>01-05-2023 05:28</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221141012?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Announcements</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/4&quot;&gt;Volume 22, Issue 4&lt;/a&gt;, Page 1005-1006, December 2022. &lt;br/&gt;
-          
-        </description>
-        <pubDate>01-05-2023 05:28</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221141070?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
