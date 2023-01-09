@@ -12,6 +12,28 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>A Randomization P-Value Test for Detecting Copying on Multiple-Choice Exams</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;This article is concerned with the statistical detection of copying on multiple-choice exams. As an alternative to existing permutation- and model-based copy-detection approaches, a simple randomization p-value (RP) test is proposed. The RP test, which is based on an intuitive match-score statistic, makes no assumptions about the distribution of examinees’ answer vectors and hence is broadly applicable. Especially important in this copy-detection setting, the RP test is shown to be exact in that its size is guaranteed to be no larger than a nominal α value. Additionally, simulation results suggest that the RP test is typically more powerful for copy detection than the existing approximate tests. The development of the RP test is based on the idea that the copy-detection problem can be recast as a causal inference and missing data problem. In particular, the observed data are viewed as a subset of a larger collection of potential values, or counterfactuals, and the null hypothesis of “no copying” is viewed as a “no causal effect” hypothesis and formally expressed in terms of constraints on potential variables.
+          
+        </description>
+        <pubDate>01-09-2023 09:57</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986221143515?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Improving a Swedish health practice for refugees through participatory action research: potentials and constraints</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>01-08-2023 08:22</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2023.2165129?af=R</link>
+      </item>
+      
+      <item>
         <title>Rôles des interactions enseignant-élèves dans l&#39;intégration d&#39;un logiciel de géométrie dynamique: le cas d&#39;un enseignant du primaire en Tunisie</title>
         <description>
           
@@ -255,28 +277,6 @@
         </description>
         <pubDate>01-05-2023 05:29</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221141068?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Conditional evaluation of predictive models: The cspa command</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/4&quot;&gt;Volume 22, Issue 4&lt;/a&gt;, Page 924-940, December 2022. &lt;br/&gt;In this article, we introduce a new command, cspa, that implements the conditional superior predictive ability test developed in Li, Liao, and Quaedvlieg (2022, Review of Economic Studies 89: 843–875). With the conditional performance of predictive methods measured nonparametrically by the conditional expectation functions of their predictive losses, we test the null hypothesis that a benchmark model weakly outperforms a collection of competitors uniformly across the conditioning space. The proposed command can implement this test for both independent cross-sectional data and serially dependent time-series data. Confidence sets for the most superior model can be obtained by inverting the test, for which the cspa command also offers a convenient implementation.
-          
-        </description>
-        <pubDate>01-05-2023 05:29</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221141014?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Machine learning using Stata/Python</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/4&quot;&gt;Volume 22, Issue 4&lt;/a&gt;, Page 772-810, December 2022. &lt;br/&gt;I present two related commands, r_ml_stata_cv and c_ml_stata_cv, for fitting popular machine learning methods in both a regression and a classification setting. Using the recent Stata/Python integration platform introduced in Stata 16, these commands provide hyperparameters’ optimal tuning via K-fold cross-validation using grid search. More specifically, they use the Python Scikitlearn application programming interface to carry out both cross-validation and outcome/label prediction.
-          
-        </description>
-        <pubDate>01-05-2023 05:28</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221140944?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
