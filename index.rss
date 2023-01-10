@@ -23,6 +23,28 @@
       </item>
       
       <item>
+        <title>“We Aren’t Only Here to Teach”: Caring Practices of Teachers in the Context of Inclusive Refugee Education in Jordan</title>
+        <description>
+          
+            American Educational Research Journal, Ahead of Print. &lt;br/&gt;This article examines the complex process of teachers’ care for students in contexts of inclusive refugee education in Jordan, where Syrian refugees and Jordanian students study together. I illustrate that while teachers’ caring practices represent efforts to support refugee students, they are limited by teachers’ inability to see the social, structural, and systemic power dynamics that restrict Syrian refugees, reifying unequal relations of power between refugees and nationals. National teachers are embedded in the social fabric of the societies in which they live and not impervious to the discriminatory attitudes towards refugees, thereby limiting the extent of their care. This article illuminates the complexity of inclusive refugee education and concludes with implications for teacher education and professional development.
+          
+        </description>
+        <pubDate>01-09-2023 08:35</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/00028312221138267?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Information Literacy in Context: Skill Development in Pre- and In-Service School Librarians</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>01-09-2023 06:39</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2023.2160118?af=R</link>
+      </item>
+      
+      <item>
         <title>Improving a Swedish health practice for refugees through participatory action research: potentials and constraints</title>
         <description>
           
@@ -255,28 +277,6 @@
         </description>
         <pubDate>01-05-2023 05:29</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221141067?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>rcm: A command for the regression control method</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/4&quot;&gt;Volume 22, Issue 4&lt;/a&gt;, Page 842-883, December 2022. &lt;br/&gt;The regression control method, also known as the panel-data approach for program evaluation (Hsiao, Ching, and Wan, 2012, Journal of Applied Econometrics 27: 705–740; Hsiao and Zhou, 2019, Journal of Applied Econometrics 34: 463–481), is a convenient method for causal inference in panel data that exploits cross-sectional correlation to construct counterfactual outcomes for a single treated unit by linear regression. In this article, we present the rcm command, which efficiently implements the regression control method with or without covariates. Available methods for model selection include best subset, lasso, and forward stepwise and backward stepwise regression, while available selection criteria include the corrected Akaike information criterion, the Akaike information criterion, the Bayesian information criterion, the modified Bayesian information criterion, and cross-validation. Estimation and counterfactual predictions can be made by ordinary least squares, lasso, or postlasso ordinary least squares. For statistical inference, both the in-space placebo test using fake treatment units and the in-time placebo test using a fake treatment time can be implemented. The rcm command produces a series of graphs for visualization along the way. We demonstrate the use of the rcm command by revisiting classic examples of political and economic integration between Hong Kong and mainland China (Hsiao, Ching, and Wan 2012) and German reunification (Abadie, Diamond, and Hainmueller, 2015, American Journal of Political Science 59: 495–510).
-          
-        </description>
-        <pubDate>01-05-2023 05:29</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221140960?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Stata tip 148: Searching for words within strings</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/4&quot;&gt;Volume 22, Issue 4&lt;/a&gt;, Page 998-1003, December 2022. &lt;br/&gt;
-          
-        </description>
-        <pubDate>01-05-2023 05:29</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221141068?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
