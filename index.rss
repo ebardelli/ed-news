@@ -12,6 +12,39 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Misrepresented Funding Gaps in Data for Some States</title>
+        <description>
+          
+            Educational Researcher, Ahead of Print. &lt;br/&gt;This brief describes how several commonly used per-pupil funding measures derived from federal data include passthrough funding in the numerator but exclude students attached to this funding from the denominator, artificially inflating per-pupil ratios. Three forms of passthrough funding for students not educated by the school district where they reside are included in district-level funding totals: payments to private schools (V91), payments to charter schools (V92), and payments to other school systems (Q11). We illustrate this error in Pennsylvania and New Jersey and use data from all 46 impacted states to show how racial and economic funding gaps are understated as a result.
+          
+        </description>
+        <pubDate>01-10-2023 12:58</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X221133396?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Educators Are Not Alright: Mental Health During COVID-19</title>
+        <description>
+          
+            Educational Researcher, Ahead of Print. &lt;br/&gt;Educator mental health sits at the intersection of multiple pressing educational issues. We are among the first to provide estimates of school system employee (SSE) stress, anxiety, and depression during the COVID-19 pandemic. Most participants reported clinically meaningful anxiety and depressive symptoms (77.96% and 53.65%, respectively). Being in the lowest strata of family income was associated with higher stress, a greater likelihood of clinically significant depressive symptoms, and reduced intentions to continue in the same job, portending the current staffing shortages affecting schools. Supporting SSE mental health should become a policy priority.
+          
+        </description>
+        <pubDate>01-10-2023 08:08</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X221142595?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>The Aftermath of Disproportionality Citations: Situating Disability-Race Intersections in Historical, Spatial, and Sociocultural Contexts</title>
+        <description>
+          
+            American Educational Research Journal, Ahead of Print. &lt;br/&gt;We used a situated approach to examine the aftermath of citations for racial disparities in special education and discipline. The study was conducted in one suburban school district and examined staff’s interpretations and responses to multiple disproportionality citations. We found that historical, spatial, and sociocultural contexts mediated stakeholders’ interpretations and reactions to citations and the consequences of their responses. Our findings demonstrate how a history of race relations in the district and the community as well as spatial opportunity structures shaped disability and discipline racial disparities; the consequences of a damaged imagery for multiply marginalized youth and their families in explanations of disproportionality citations; and the shortcomings of the district’s symbolic and predominately color-evasive responses as a consequence of ambiguous federal and state policy mandates.
+          
+        </description>
+        <pubDate>01-10-2023 06:51</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/00028312221147007?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>A Randomization P-Value Test for Detecting Copying on Multiple-Choice Exams</title>
         <description>
           
@@ -245,39 +278,6 @@
         </description>
         <pubDate>01-05-2023 05:29</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221140932?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>portfolio: A command for conducting portfolio analysis in Stata</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/4&quot;&gt;Volume 22, Issue 4&lt;/a&gt;, Page 941-957, December 2022. &lt;br/&gt;Portfolio analysis is widely used in empirical asset pricing to explore the cross-sectional relation between two or more variables. In this article, we introduce the methodology of portfolio analysis and describe a new command, portfolio, that provides a one-step solution for portfolio analysis. portfolio calculates the equal- or value-weighted returns with a t statistic for the portfolio and tests the significance of a long-short strategy in portfolios. portfolio also provides the Newey–West standard-error adjustment option for alleviating the impact of potential autocorrelation and heteroskedasticity in financial time series.
-          
-        </description>
-        <pubDate>01-05-2023 05:29</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221141021?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>printcase: A command for visualizing single observations</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/4&quot;&gt;Volume 22, Issue 4&lt;/a&gt;, Page 958-968, December 2022. &lt;br/&gt;In this article, we introduce the printcase command, which outputs data from a specific observation into an easy-to-read Microsoft Word or PDF document. printcase allows analysts to focus on a single observation within a dataset and view that observation in its entirety. The output displays fields in table format, with all variables identified by their corresponding labels and all responses identified by their corresponding value labels. We explain how printcase works, give examples of circumstances under which this type of table-based quasiquestionnaire would be useful, and provide code for printing single observations.
-          
-        </description>
-        <pubDate>01-05-2023 05:29</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221141022?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>qpair: A command for analyzing paired Q-sorts in Q-methodology</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/4&quot;&gt;Volume 22, Issue 4&lt;/a&gt;, Page 884-907, December 2022. &lt;br/&gt;In this article, we introduce qpair as a new command written in Stata for the analysis of paired Q-sorts in Q-methodology, which is used for studying subjective issues and is a combination of qualitative and quantitative techniques. The quantitative component of Q-methodology employs a by-person factor analysis technique. However, currently there is no systematic approach for analyzing paired Q-sorts or longitudinal data in Q-methodology. We introduce the only statistical command available for the analysis of paired Q-sorts. The qpair command employs the factor extraction and factor rotation techniques in Stata. The command is illustrated using a dataset representing perceptions of 50 information technology professionals on person–organization fit regarding their training and development priorities.
-          
-        </description>
-        <pubDate>01-05-2023 05:29</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221141002?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
