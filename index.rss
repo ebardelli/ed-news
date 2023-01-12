@@ -12,6 +12,39 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Clinical (In)Efficiency in the Prediction of Dangerous Behavior</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;The prediction of dangerous and/or violent behavior is particularly important to the conduct of the U.S. criminal justice system when it makes decisions about restrictions of personal freedom, such as preventive detention, forensic commitment, parole, and in some states such as Texas, when to permit an execution to proceed of an individual found guilty of a capital crime. This article discusses the prediction of dangerous behavior both through clinical judgment and actuarial assessment. The general conclusion drawn is that for both clinical and actuarial prediction of dangerous behavior, we are far from a level of accuracy that could justify routine use. To support this later negative assessment, two topic areas are emphasized: (1) the MacArthur Study of Mental Disorder and Violence, including the actuarial instrument developed as part of this project (the Classification of Violence Risk), along with all the data collected that helped develop the instrument; and (2) the U.S. Supreme Court case of Barefoot v. Estelle (1983) and the American Psychiatric Association “friend of the court” brief on the (in)accuracy of clinical prediction for the commission of future violence. Although now three decades old, Barefoot v. Estelle is still the controlling Supreme Court opinion regarding the prediction of future dangerous behavior and the imposition of the death penalty in states, such as Texas; for example, see Coble v. Texas (2011) and the Supreme Court denial of certiorari in that case.
+          
+        </description>
+        <pubDate>01-12-2023 06:00</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986221144727?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Using critical reflections in action research to enhance students’ interactivity in online EFL learning contexts</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>01-11-2023 08:56</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2023.2165522?af=R</link>
+      </item>
+      
+      <item>
+        <title>Enhancing teaching and learning through the co-creative learning community approach</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>01-11-2023 08:56</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2023.2166090?af=R</link>
+      </item>
+      
+      <item>
         <title>Misrepresented Funding Gaps in Data for Some States</title>
         <description>
           
@@ -247,39 +280,6 @@
         </description>
         <pubDate>01-05-2023 08:33</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/00220671.2022.2158156?af=R</link>
-      </item>
-      
-      <item>
-        <title>Understanding the Stakes: The Influence of Accountability Policy Options on Teachers’ Responses</title>
-        <description>
-          
-            Educational Policy, Ahead of Print. &lt;br/&gt;Under test-based accountability, side-effects —including practices to inflate test results, often seen as cheating—are usually associated to so-called high-stakes policies. However, the influence of different types of stakes in the generation of this type of practices has been overlooked in education research. Based on a survey experiment, our results indicate that the type and level of stakes of accountability systems (e.g., high- vs. low-stakes, material vs. symbolic) do not differ in triggering side-effects. Counterintuitively, individual symbolic consequences trigger similar reactions among teachers than material incentives. In-depth interviews give insights into the social mechanisms that lead to symbolic effects having such an influence in understanding teachers’ reactivity to accountability.
-          
-        </description>
-        <pubDate>01-05-2023 06:30</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/08959048221142048?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Software Updates</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/4&quot;&gt;Volume 22, Issue 4&lt;/a&gt;, Page 1004-1004, December 2022. &lt;br/&gt;
-          
-        </description>
-        <pubDate>01-05-2023 05:29</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221141069?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>power swgee: GEE-based power calculations in stepped wedge cluster randomized trials</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/22/4&quot;&gt;Volume 22, Issue 4&lt;/a&gt;, Page 811-841, December 2022. &lt;br/&gt;Stepped wedge cluster randomized trials (SW-CRTs) are increasingly being used to evaluate interventions in medical, public health, educational, and social science contexts. With the longitudinal and crossover natures of an SW-CRT, complex analysis techniques are often needed, which makes appropriately powering SW-CRTs challenging. In this article, we introduce a newly developed SW-CRT power calculator embedded within the power command in Stata. The power calculator assumes a marginal model (that is, generalized estimating equations) for the primary analysis of SW-CRTs, for which other currently available SW-CRT power calculators may not be suitable. The command accommodates complete cross-sectional and closed-cohort designs and includes multilevel correlation structures appropriate for such designs. We discuss the methods and formulas underlying our SW-CRT calculator and provide illustrative examples of the use of power swgee. We provide suggestions about the choice of parameters in power swgee and conclude by discussing areas of future research that may improve the command.
-          
-        </description>
-        <pubDate>01-05-2023 05:29</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X221140953?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
