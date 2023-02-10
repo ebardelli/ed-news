@@ -12,6 +12,39 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>A Causal Latent Transition Model With Multivariate Outcomes and Unobserved Heterogeneity: Application to Human Capital Development</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;In order to evaluate the effect of a policy or treatment with pre- and post-treatment outcomes, we propose an approach based on a transition model, which may be applied with multivariate outcomes and accounts for unobserved heterogeneity. This model is based on potential versions of discrete latent variables representing the individual characteristic of interest and may be cast in the hidden (latent) Markov literature for panel data. Therefore, it can be estimated by maximum likelihood in a relatively simple way. The approach extends the difference-in-difference method as it is possible to deal with multivariate outcomes. Moreover, causal effects may be expressed with respect to transition probabilities. The proposal is validated through a simulation study, and it is applied to evaluate educational programs administered to pupils in the sixth and seventh grades during their middle school period. These programs are carried out in an Italian region to improve non-cognitive skills (CSs). We study if they impact also on students’ CSs in Italian and Mathematics in the eighth grade, exploiting the pretreatment test scores available in the fifth grade. The main conclusion is that the educational programs aimed to develop noncognitive abilities help the best students to maintain their higher cognitive abilities over time.
+          
+        </description>
+        <pubDate>02-10-2023 07:21</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986221150033?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Assessing Inter-rater Reliability With Heterogeneous Variance Components Models: Flexible Approach Accounting for Contextual Variables</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Inter-rater reliability (IRR), which is a prerequisite of high-quality ratings and assessments, may be affected by contextual variables, such as the rater’s or ratee’s gender, major, or experience. Identification of such heterogeneity sources in IRR is important for the implementation of policies with the potential to decrease measurement error and to increase IRR by focusing on the most relevant subgroups. In this study, we propose a flexible approach for assessing IRR in cases of heterogeneity due to covariates by directly modeling differences in variance components. We use Bayes factors (BFs) to select the best performing model, and we suggest using Bayesian model averaging as an alternative approach for obtaining IRR and variance component estimates, allowing us to account for model uncertainty. We use inclusion BFs considering the whole model space to provide evidence for or against differences in variance components due to covariates. The proposed method is compared with other Bayesian and frequentist approaches in a simulation study, and we demonstrate its superiority in some situations. Finally, we provide real data examples from grant proposal peer review, demonstrating the usefulness of this method and its flexibility in the generalization of more complex designs.
+          
+        </description>
+        <pubDate>02-10-2023 07:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986221150517?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Special Education and Meritocratic Inclusion</title>
+        <description>
+          
+            Educational Policy, Ahead of Print. &lt;br/&gt;In this theoretical article we present our hypothesis on the incompatibility of the inclusive education policy toward students with special educational needs with the meritocratic principle of education. If considering and recognizing the needs of these students is necessary to achieve a successful inclusive environment, we propose that this goal cannot be achieved within current educational systems driven by a meritocratic ideology. We base our rationale on social psychology theories such as system justification and backlash to argue that such incompatibility is particularly visible during the evaluation process. Finally, if we provide some incentives toward greater inclusion while considering the diverse contradictions such inclusivity generates, we also invite researchers to further empirically examine these contradictions in order to guide policy makers within their choices.
+          
+        </description>
+        <pubDate>02-10-2023 05:18</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/08959048231153606?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Does It Matter Who Evaluates Teachers? Principal Versus Teacher-Led Evaluation and Teacher Motivation</title>
         <description>
           
@@ -42,6 +75,17 @@
         </description>
         <pubDate>02-09-2023 05:24</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/14794802.2023.2173640?af=R</link>
+      </item>
+      
+      <item>
+        <title>Practicum experience: the role of practicum demands and resources in first and second career preservice teachers</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>02-09-2023 01:28</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2023.2175662?af=R</link>
       </item>
       
       <item>
@@ -257,54 +301,6 @@
         </description>
         <pubDate>02-03-2023 23:02</pubDate>
         <link>http://link.springer.com/10.1007/s13394-021-00379-6</link>
-      </item>
-      
-      <item>
-        <title>Embracing pivotal teaching moments: elementary teachers’ role in advancing high cognitive levels of mathematics discourse</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;The study of pivotal teaching moments (PTMs) offers significant insights into mathematics classroom interactions. PTMs are student-generated instances within a lesson that provide opportunities for teachers to modify planned instruction (Stockero &amp;amp; Van Zoest, &lt;span class=&quot;a-plus-plus citation-ref citationid-c-r32&quot;&gt;2013&lt;/span&gt;). Given the importance of interactions and discourse in students’ mathematical growth and understanding, we examine them in the context of &lt;em class=&quot;a-plus-plus&quot;&gt;PTM episode triples.&lt;/em&gt; PTM episode triples consist of three main elements: (1) a PTM, (2) a teacher response to the PTM, and (3) the immediately ensuing student utterance. Analysis of data from nine elementary mathematics lessons shows that teacher responses that explicitly “pursued students’ thinking” elicited significantly higher cognitive levels of student discourse than teachers who &amp;quot;ignored or dismissed&amp;quot; PTMs or simply &amp;quot;acknowledged [PTMs] but continued as planned.&amp;quot; While many researchers have focused on PTM episode “doubles” (combinations of student-generated interruptions and the teacher’s response), no studies to our knowledge have addressed PTM episode “triples” as we have. Implications of these findings prove helpful for identifying concrete ways that educators can increase the cognitive level of student discourse within their classrooms. Further, our integration and modification of existing theory and frameworks for analyzing PTM episode triples—incorporating the relationship between PTMs and teachers’ responses to them, on the one hand, and the cognitive level of the ensuing student utterance, on the other hand—are a unique contribution to the field and provide a method by which researchers and educators can study classroom practice.&lt;/p&gt;
-          
-        </description>
-        <pubDate>02-03-2023 23:02</pubDate>
-        <link>http://link.springer.com/10.1007/s13394-021-00374-x</link>
-      </item>
-      
-      <item>
-        <title>Eliciting mathematical reasoning during early primary problem solving</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;Mathematical reasoning, which plays a critical role in students’ capacity to make sense of mathematics, is now emphasised more strongly in various curricula internationally. However, reasoning is sometimes difficult for teachers to recognise, let alone teach. This case study considers video of one teacher’s implementation of a problem-solving lesson in a year 1 primary school class in Australia. It examines the opportunities this teacher provided to leverage reasoning and contributes to the body of knowledge on ways reasoning may be elicited during problem solving. The new Eliciting Mathematical Reasoning Framework arising from the analysis of the data in this study builds on and extends previous research. It provides a tool to support researchers, teacher educators, professional learning providers, and teachers in recognising and eliciting reasoning.&lt;/p&gt;
-          
-        </description>
-        <pubDate>02-03-2023 23:02</pubDate>
-        <link>http://link.springer.com/10.1007/s13394-021-00376-9</link>
-      </item>
-      
-      <item>
-        <title>Making the most of packing away: identifying mathematical opportunities for very young preverbal children</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;Very young preverbal children (aged around 12 months) actively engage with their environment, whether at home, on outings, or in early learning centres. Their engagement with their environment can occur in many different ways involving physical and mental activities. In an early learning centre, there are many activities that very young preverbal children engage with on a daily basis. These activities may be fully child-initiated, fully educator-initiated, or somewhere in-between, but all will involve mathematics. It is important that the mathematics that these very young preverbal children might demonstrate in the actions undertaken during their activities are identified as it will provide the early childhood educator with an indication of the child’s mathematical understandings. Psychological research has demonstrated very young children engage in mathematical thinking, which leads to the question of how the mathematical thinking of very young preverbal children in a learning centre setting can be identified. This paper uses 360° video to explore how an everyday activity that would occur for very young preverbal children—packing away toys—could be used to identify the mathematical thinking the very young preverbal child may engage with by examining their actions. The identified mathematics is linked to research and documentation that outlines what mathematics very young preverbal children may understand. The importance of identifying the mathematics in the actions of very young children as part of the role of the early childhood educator is also considered.&lt;/p&gt;
-          
-        </description>
-        <pubDate>02-03-2023 23:02</pubDate>
-        <link>http://link.springer.com/10.1007/s13394-021-00383-w</link>
-      </item>
-      
-      <item>
-        <title>Can a number of diagrams linked to a proof task in 3D geometry improve proving ability?</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;The current study attempts to investigate whether using multiple diagrams attached to a geometry task could reduce difficulties in the proving process regarding concepts in three-dimensional geometry. Ninety 12th-grade students participated in the study. The research included the use of a questionnaire whose items invited open-ended responses regarding two tasks. Interviews were also conducted with some participants. Qualitative and quantitative analyses were performed. The results revealed a correlation between the students’ responses and the number of diagrams they received. Students who were given several diagrams gave more correct responses and correct and complete proofs than students who were given only one diagram presenting several diagrams attached to the proof task reduce the visual obstacles that students face in constructing geometrical proofs. The findings from the interviews support the results from the questionnaires; interviews revealed presenting further diagrams allow students to adapt their proving processes.&lt;/p&gt;
-          
-        </description>
-        <pubDate>02-03-2023 23:02</pubDate>
-        <link>http://link.springer.com/10.1007/s13394-021-00385-8</link>
       </item>
       
   </channel>
