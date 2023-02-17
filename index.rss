@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Handling Missing Data in Cross-Classified Multilevel Analyses: An Evaluation of Different Multiple Imputation Approaches</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Multiple imputation (MI) is a popular method for handling missing data. In education research, it can be challenging to use MI because the data often have a clustered structure that need to be accommodated during MI. Although much research has considered applications of MI in hierarchical data, little is known about its use in cross-classified data, in which observations are clustered in multiple higher-level units simultaneously (e.g., schools and neighborhoods, transitions from primary to secondary schools). In this article, we consider several approaches to MI for cross-classified data (CC-MI), including a novel fully conditional specification approach, a joint modeling approach, and other approaches that are based on single- and two-level MI. In this context, we clarify the conditions that CC-MI methods need to fulfill to provide a suitable treatment of missing data, and we compare the approaches both from a theoretical perspective and in a simulation study. Finally, we illustrate the use of CC-MI in real data and discuss the implications of our findings for research practice.
+          
+        </description>
+        <pubDate>02-17-2023 04:33</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231151224?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Anxiety in the mathematics classroom: reciprocal relations with control and value, and relations with subsequent achievement</title>
         <description>
           
@@ -68,6 +79,17 @@
         </description>
         <pubDate>02-16-2023 11:22</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.3102/00346543221141658?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Meal Vouchers Matter for Academic Attainment: A Community College Field Experiment</title>
+        <description>
+          
+            Educational Researcher, Ahead of Print. &lt;br/&gt;Given growing awareness of the high prevalence of food insecurity among college students, higher education leaders are implementing various food interventions on their campuses. However, there is little research on the efficacy and impact of these initiatives. Using data from a field randomized control trial, we find that a relatively modest financial investment in campus meal cards coupled with proactive outreach by an existing campus office improved community college students’ academic attainment outcomes. Students who were invited to participate in the meal voucher program attempted and completed more credits during their first year of college and were more likely to graduate in 2 years than otherwise similar peers, indicating that a campus meal program can promote college success.
+          
+        </description>
+        <pubDate>02-16-2023 01:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X231153131?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
       <item>
@@ -263,28 +285,6 @@
         </description>
         <pubDate>02-10-2023 07:21</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.3102/10769986221150033?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Assessing Inter-rater Reliability With Heterogeneous Variance Components Models: Flexible Approach Accounting for Contextual Variables</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Inter-rater reliability (IRR), which is a prerequisite of high-quality ratings and assessments, may be affected by contextual variables, such as the rater’s or ratee’s gender, major, or experience. Identification of such heterogeneity sources in IRR is important for the implementation of policies with the potential to decrease measurement error and to increase IRR by focusing on the most relevant subgroups. In this study, we propose a flexible approach for assessing IRR in cases of heterogeneity due to covariates by directly modeling differences in variance components. We use Bayes factors (BFs) to select the best performing model, and we suggest using Bayesian model averaging as an alternative approach for obtaining IRR and variance component estimates, allowing us to account for model uncertainty. We use inclusion BFs considering the whole model space to provide evidence for or against differences in variance components due to covariates. The proposed method is compared with other Bayesian and frequentist approaches in a simulation study, and we demonstrate its superiority in some situations. Finally, we provide real data examples from grant proposal peer review, demonstrating the usefulness of this method and its flexibility in the generalization of more complex designs.
-          
-        </description>
-        <pubDate>02-10-2023 07:16</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986221150517?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Special Education and Meritocratic Inclusion</title>
-        <description>
-          
-            Educational Policy, Ahead of Print. &lt;br/&gt;In this theoretical article we present our hypothesis on the incompatibility of the inclusive education policy toward students with special educational needs with the meritocratic principle of education. If considering and recognizing the needs of these students is necessary to achieve a successful inclusive environment, we propose that this goal cannot be achieved within current educational systems driven by a meritocratic ideology. We base our rationale on social psychology theories such as system justification and backlash to argue that such incompatibility is particularly visible during the evaluation process. Finally, if we provide some incentives toward greater inclusion while considering the diverse contradictions such inclusivity generates, we also invite researchers to further empirically examine these contradictions in order to guide policy makers within their choices.
-          
-        </description>
-        <pubDate>02-10-2023 05:18</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/08959048231153606?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
