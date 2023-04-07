@@ -12,6 +12,50 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Does the duration of professional development programs influence effects on instruction? An analysis of 174 lessons during a national-scale program</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>04-06-2023 09:51</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2023.2198101?af=R</link>
+      </item>
+      
+      <item>
+        <title>Advancing Research about Mathematics Specialists and Mathematics Teacher Leaders</title>
+        <description>
+          
+            &lt;a href=&quot;/toc/uiml20/15/1&quot;&gt;Volume 15, Issue 1&lt;/a&gt;, January 2023&lt;br/&gt;. &lt;br/&gt;
+          
+        </description>
+        <pubDate>04-06-2023 07:50</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/19477503.2022.2154061?af=R</link>
+      </item>
+      
+      <item>
+        <title>Go for Economic Transformation and Development in China: Financial Development, Higher Education, and Green Technology Evolution</title>
+        <description>
+          
+            Evaluation Review, Ahead of Print. &lt;br/&gt;Technology innovation is the key driving force in achieving economic transformation and development. Financial development and the expansion of higher education can promote technological progress primarily by easing financing constraints and improving the level of human capital. This study examines the impact of financial development and higher education expansion on green technology innovation. It conducts an empirical analysis by constructing a linear panel model and a nonlinear threshold model. The present study sample is based on the urban panel data of China from 2003–2019. (1) Financial development can significantly promote the expansion of higher education. (2) The expansion of higher education can improve energy and environment-based technological progress. (3) Financial development can both directly and indirectly promote green technology evolution by expanding higher education. The joint financial development and higher education expansion can significantly empower green technology innovation. (4) In the process of promoting green technology innovation, financial development has a non-linear influence on it, with higher education as the threshold. The effect of financial development on green technology innovation varies according to the degree of higher education. Based on these findings, we put forward policy proposals for green technology innovation to promote economic transformation and development in China.
+          
+        </description>
+        <pubDate>04-06-2023 04:08</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/0193841X231166741?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Supporting displaced students in US higher education: examining institutional policy and practice</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>04-06-2023 02:58</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2023.2192947?af=R</link>
+      </item>
+      
+      <item>
         <title>Sleep, Activity, and Nutrition Among an Army Sample: Strengths, Deficits, and Demographic Differences</title>
         <description>
           
@@ -230,51 +274,6 @@
         </description>
         <pubDate>04-05-2023 02:44</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231162034?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Two-tier stochastic frontier analysis using Stata</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/1&quot;&gt;Volume 23, Issue 1&lt;/a&gt;, Page 197-229, March 2023. &lt;br/&gt;In this article, we introduce the sftt command, which fits two-tier stochastic frontier (2TSF) models with cross-sectional data. Like most frontier models, a 2TSF model consists of a linear frontier model and a composite error term. The error term is assumed to be a mixture of three components: two onesided inefficiency terms—strictly nonnegative and nonpositive, respectively—and a symmetric noise term. When providing appropriate distributional assumptions, sftt can fit models with exponential and half-normal specifications. sftt also fits 2TSF models with the scaling property to mitigate concerns over distributional specifications. In addition, we provide two subcommands, sftt sigs and sftt eff, to assist in postestimation efficiency analysis. We provide an overview of the 2TSF literature, a description of the sftt command and its options, and examples using simulated and actual data.
-          
-        </description>
-        <pubDate>04-05-2023 02:44</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231162033?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>statacons: An SCons-based build tool for Stata</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/1&quot;&gt;Volume 23, Issue 1&lt;/a&gt;, Page 148-196, March 2023. &lt;br/&gt;In this article, we present statacons, an SCons-based build tool for Stata. Because of the integration of Stata and Python in recent versions of Stata, we are able to adapt SCons for Stata workflows without the use of an external shell or extensive configuration. We discuss the usefulness of build tools generally, provide examples of the use of statacons in Stata workflows, present key elements of the syntax of statacons, and discuss extensions, alternatives, and limitations. We provide recommendations for collaborative workflows and, at the end of the article, installation instructions.
-          
-        </description>
-        <pubDate>04-05-2023 02:44</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231162032?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Higher education-based teacher educators’ researcherly disposition: An international perspective</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>04-05-2023 02:03</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2023.2195974?af=R</link>
-      </item>
-      
-      <item>
-        <title>Young philosophers: fifth-grade students animating the concept of space</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;In many schools across the world, students experience mathematical concepts as ideas empty of wisdom and possibility. In this paper the authors analyze a philosophical conversation in which fifth-grade students were caught up in the animacy of the concept of space. Challenging the common view of mathematics as dealing with absolute truths and certainty, these students, the materials, and the concept itself formed dynamic assemblages that, through movement and the senses reanimated philosophical considerations regarding the concept of space. Over the course of an hour, students emerged as young philosophers whose ideas about space converged with those of philosophers from diverse fields, including physics, indigenous education, feminist theory, and dance. Using a philosophical analysis, the paper focuses on the vibrancy of a space filled with forces—images, movement, ideas, and materials—that shaped students’ relationships with mathematics and language. Based on this analysis, the paper provides insights for reimagining the teaching and learning of mathematical concepts as philosophical topics that can support a renewed understanding of the relationship between learner, language, and mathematics.&lt;/p&gt;
-          
-        </description>
-        <pubDate>04-05-2023 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-023-01483-6</link>
       </item>
       
   </channel>
