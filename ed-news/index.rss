@@ -12,6 +12,39 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Unpacking Response Process Issues Encountered When Developing a Mathematics Teachers’ Pedagogical Content Knowledge (PCK) Assessment</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>04-12-2023 06:09</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/19477503.2023.2201115?af=R</link>
+      </item>
+      
+      <item>
+        <title>Compliance, Chaos, or Coherence? How Superintendents, Districts, and Schools Craft Coherence From School Turnaround Policy</title>
+        <description>
+          
+            Educational Evaluation and Policy Analysis, Ahead of Print. &lt;br/&gt;This mixed-method study examines Michigan’s Partnership policy for school turnaround, which positions the district and superintendents as key policy implementation actors. We first interviewed 21 of 35 Partnership superintendents/leaders across Michigan and surveyed teachers to understand the initial response to the turnaround policy and the strategic planning process. We then used our understanding of these leaders’ responses to conduct a purposively sampled embedded multiple comparative case study of three varied districts. These case studies helped us more deeply understand and compare how districts engaged in the process of crafting coherence and school-level stakeholders’ perceptions of activities related to coherence and implementation of the reform. Based on these two levels of data collection and analysis, we found that many leaders used the opportunity to create new changes, roles, and partnerships, but the majority also symbolically adopted policy demands by aligning their turnaround plans with pre-existing efforts. Using cross-case comparisons of our three districts, we argue that some degree of strategic buffering from policy demands may be warranted, especially when districts have low capacity and face significant challenges recruiting and retaining teachers.
+          
+        </description>
+        <pubDate>04-12-2023 05:31</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/01623737231161363?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Supporting Teachers in Argument Writing Instruction at Scale: A Replication Study of the College, Career, and Community Writers Program (C3WP)</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>04-11-2023 02:34</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/19345747.2023.2179953?af=R</link>
+      </item>
+      
+      <item>
         <title>Evaluating mathematics lessons for cognitive demand: Applying a discursive lens to the process of achieving inter-rater reliability</title>
         <description>
           
@@ -246,39 +279,6 @@
         </description>
         <pubDate>04-05-2023 02:44</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231161977?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Stata tip 151: Puzzling out some logical operators</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/1&quot;&gt;Volume 23, Issue 1&lt;/a&gt;, Page 293-297, March 2023. &lt;br/&gt;
-          
-        </description>
-        <pubDate>04-05-2023 02:44</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231162009?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>artcat: Sample-size calculation for an ordered categorical outcome</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/1&quot;&gt;Volume 23, Issue 1&lt;/a&gt;, Page 3-23, March 2023. &lt;br/&gt;We describe a new command, artcat, that calculates sample size or power for a randomized controlled trial or similar experiment with an ordered categorical outcome, where analysis is by the proportional-odds model. artcat implements the method of Whitehead (1993, Statistics in Medicine 12: 2257–2271). We also propose and implement a new method that 1) allows the user to specify a treatment effect that does not obey the proportional-odds assumption, 2) offers greater accuracy for large treatment effects, and 3) allows for noninferiority trials. We illustrate the command and explore the value of an ordered categorical outcome over a binary outcome in various settings. We show by simulation that the methods perform well and that the new method is more accurate than Whitehead’s method.
-          
-        </description>
-        <pubDate>04-05-2023 02:44</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231161934?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Software Updates</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/1&quot;&gt;Volume 23, Issue 1&lt;/a&gt;, Page 298-299, March 2023. &lt;br/&gt;
-          
-        </description>
-        <pubDate>04-05-2023 02:44</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231162008?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
