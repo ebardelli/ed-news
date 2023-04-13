@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Practicum in teacher education: the role of psychological detachment and supervisors’ feedback and reflection in student teachers’ well-being</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>04-13-2023 03:32</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2023.2201874?af=R</link>
+      </item>
+      
+      <item>
         <title>Unpacking Response Process Issues Encountered When Developing a Mathematics Teachers’ Pedagogical Content Knowledge (PCK) Assessment</title>
         <description>
           
@@ -31,6 +42,18 @@
         </description>
         <pubDate>04-12-2023 05:31</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.3102/01623737231161363?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Cheap plot tricks and plot holes in mathematical stories</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;Good stories, literary or mathematical, have the ability to keep the reader engaged and wanting for more. However, poorly designed stories may also elicit a negative aesthetic reaction and thereby reduce engagement. By drawing on literary theory and Dietiker’s (&lt;em class=&quot;a-plus-plus&quot;&gt;For the Learning of Mathematics&lt;/em&gt; 33(3):14–19, &lt;span class=&quot;a-plus-plus citation-ref citationid-c-r10&quot;&gt;2013&lt;/span&gt;; &lt;em class=&quot;a-plus-plus&quot;&gt;Educational Studies in Mathematics&lt;/em&gt; 90(3):285–302, &lt;span class=&quot;a-plus-plus citation-ref citationid-c-r11&quot;&gt;2015&lt;/span&gt;) theoretical framework of mathematical stories, this essay conceptualises two aspects of mathematical stories that are likely to be perceived by the readers as aesthetic deficiencies: mathematical cheap plot tricks and mathematical plot holes. Additionally, examples of them are proposed from various areas of mathematics curriculum and some ideas of how they can be avoided, so as not to hinder engagement, are offered.&lt;/p&gt;
+          
+        </description>
+        <pubDate>04-12-2023 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s10649-023-10216-1</link>
       </item>
       
       <item>
@@ -257,28 +280,6 @@
         </description>
         <pubDate>04-05-2023 02:44</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231161971?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Finite mixture models for linked survey and administrative data: Estimation and postestimation</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/1&quot;&gt;Volume 23, Issue 1&lt;/a&gt;, Page 53-85, March 2023. &lt;br/&gt;Researchers use finite mixture models to analyze linked survey and administrative data on labor earnings, while also accounting for various types of measurement error in each data source. Different combinations of error-ridden and error-free observations characterize latent classes. Latent class probabilities depend on the probabilities of the different types of error. We introduce a suite of commands to fit finite mixture models to linked survey-administrative data: there is a general model and seven simpler variants. We also provide postestimation commands for assessment of reliability, marginal effects, data simulation, and prediction of hybrid variables that combine information from both data sources about the outcome of interest. Our commands can also be used to study measurement errors in other variables besides labor earnings.
-          
-        </description>
-        <pubDate>04-05-2023 02:44</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231161976?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>robustpf: A command for robust estimation of production functions</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/1&quot;&gt;Volume 23, Issue 1&lt;/a&gt;, Page 86-96, March 2023. &lt;br/&gt;We introduce a new command, robustpf, to estimate parameters of Cobb–Douglas production functions. The command is robust against two potential problems. First, it is robust against optimization errors in firms’ input choice, unobserved idiosyncratic cost shocks, and measurement errors in proxy variables. In particular, the command relaxes the conventional assumption of scalar unobservables. Second, it is also robust against the functional dependence problem of static input choice, which is known today as a cause of identification failure. The main method is proposed by Hu, Huang, and Sasaki (2020, Journal of Econometrics 215: 375–398).
-          
-        </description>
-        <pubDate>04-05-2023 02:44</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231161977?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
