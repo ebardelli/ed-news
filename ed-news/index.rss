@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>“There Was Nothing Here”: School Leaders Using Dual Language Bilingual Education Programs as a Formula to Re-Engineer Student Populations for School Turnaround</title>
+        <description>
+          
+            Educational Policy, Ahead of Print. &lt;br/&gt;New York City offers an example of the national trend to expand dual language bilingual education (DLBE) programs, yet only a small proportion of multilingual learners are enrolled in these programs in city schools. Our examination of new DLBE programs in three city schools builds on research about the “gentrification” of DLBE. Specifically, our findings show how school leaders opened DLBE programs to re-engineer the demographics of their student population by enrolling more White, privileged students in the name of “school turnaround”—namely, to increase enrollment and popularity in a school choice context and improve performance on accountability measures.
+          
+        </description>
+        <pubDate>04-13-2023 11:13</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/08959048231159919?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Practicum in teacher education: the role of psychological detachment and supervisors’ feedback and reflection in student teachers’ well-being</title>
         <description>
           
@@ -269,17 +280,6 @@
         </description>
         <pubDate>04-05-2023 02:44</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231160122?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>artbin: Extended sample size for randomized trials with binary outcomes</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/1&quot;&gt;Volume 23, Issue 1&lt;/a&gt;, Page 24-52, March 2023. &lt;br/&gt;We describe the command artbin, which offers various new facilities for the calculation of sample size for binary outcome variables that are not otherwise available in Stata. While artbin has been available since 2004, it has not been previously described in the Stata Journal. artbin has been recently updated to include new options for different statistical tests, methods and study designs, improved syntax, and better handling of noninferiority trials. In this article, we describe the updated version of artbin and detail the various formulas used within artbin in different settings.
-          
-        </description>
-        <pubDate>04-05-2023 02:44</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231161971?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
