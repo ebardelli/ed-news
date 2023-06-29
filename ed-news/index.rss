@@ -12,6 +12,19 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>On designing better structures for feedback in practice-based professional development: Using “failure” to innovate</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;This research article contributes to the growing literature highlighting the potential for innovation in mathematics education through design cycles that involve creative risk-taking and failure-based learning. Specifically, we explore how “failed” cycles of Story&lt;em class=&quot;a-plus-plus&quot;&gt;Circles&lt;/em&gt;—a practice-based professional development approach that centers on teacher collaboration—have been productive in fostering innovations within the program. Our focus is on the challenges that arose in our efforts to enable feedback mechanisms within the Story&lt;em class=&quot;a-plus-plus&quot;&gt;Circles&lt;/em&gt; system that support teachers’ interrogation of their own instructional practice, as they collaboratively develop lessons and expand their collective knowledge base for teaching mathematics. Through examples of three challenges, we illustrate how various lesson artifacts, including those constructed by teachers in anticipation of implementation and those extracted from actual implementations, failed to serve as the sole source of feedback for supporting teachers’ growth.
+      &lt;/p&gt;
+          
+        </description>
+        <pubDate>06-29-2023 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s10857-023-09588-1</link>
+      </item>
+      
+      <item>
         <title>“Then the Nettle People Won’t Be Lonely”: Recognizing the Personhood of Plants in an Indigenous STEAM Summer Program</title>
         <description>
           
@@ -266,17 +279,6 @@
         </description>
         <pubDate>06-22-2023 11:19</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231175265?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Consistent subsets: Computing the Houtman–Maks index in Stata</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/2&quot;&gt;Volume 23, Issue 2&lt;/a&gt;, Page 578-588, June 2023. &lt;br/&gt;The Houtman–Maks index is a measure of the size of a violation of utility-maximizing (that is, rational) behavior. In this article, we introduce the command hmindex, which calculates the Houtman–Maks index for a dataset of prices and observed choices of a consumer. The command is illustrated with an empirical application.
-          
-        </description>
-        <pubDate>06-22-2023 11:19</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231175345?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
