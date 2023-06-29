@@ -12,6 +12,28 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Noticing for Equity in Written Work: Exploring One Teacher’s Student Work Analysis Practices</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>06-29-2023 08:11</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/10986065.2023.2223767?af=R</link>
+      </item>
+      
+      <item>
+        <title>Authentic assessment as a support for student teachers’ reflection</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>06-29-2023 05:20</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2023.2229004?af=R</link>
+      </item>
+      
+      <item>
         <title>On designing better structures for feedback in practice-based professional development: Using “failure” to innovate</title>
         <description>
           
@@ -22,6 +44,28 @@
         </description>
         <pubDate>06-29-2023 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s10857-023-09588-1</link>
+      </item>
+      
+      <item>
+        <title>Developing early career teachers’ professional digital competence: a systematic literature review</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>06-28-2023 12:42</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2023.2229006?af=R</link>
+      </item>
+      
+      <item>
+        <title>How can practitioner action research support the design, implementation, and evaluation of on-campus mental health and addiction services?</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>06-28-2023 12:15</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2023.2229402?af=R</link>
       </item>
       
       <item>
@@ -235,50 +279,6 @@
         </description>
         <pubDate>06-22-2023 11:19</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231175333?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>A Lagrange multiplier test for the mean stationarity assumption in dynamic panel-data models</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/2&quot;&gt;Volume 23, Issue 2&lt;/a&gt;, Page 418-437, June 2023. &lt;br/&gt;In this article, we describe the xttestms command, which implements the Lagrange multiplier test proposed by Magazzini and Calzolari (2020, Econometric Reviews 39: 115–134). The test verifies the validity of the initial conditions in dynamic panel-data models, which is required for consistency of the system generalized method of moments estimator.
-          
-        </description>
-        <pubDate>06-22-2023 11:19</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231175276?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Visualizing uncertainty in a two-dimensional estimate using confidence and comparison regions</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/2&quot;&gt;Volume 23, Issue 2&lt;/a&gt;, Page 455-490, June 2023. &lt;br/&gt;Recently, Eckert and Vach (2020, Biometrical Journal 62: 598–609) pointed out that both confidence and comparison regions are useful tools to visualize uncertainty in a two-dimensional estimate. Both types of regions can be based on inverting Wald tests or likelihood-ratio tests. confcomptwo enables Stata users to draw both types of regions following one of the two principles for various two-dimensional estimation problems. The use of confcomptwo is illustrated by several examples.
-          
-        </description>
-        <pubDate>06-22-2023 11:19</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231175314?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Color palettes for Stata graphics: An update</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/2&quot;&gt;Volume 23, Issue 2&lt;/a&gt;, Page 336-385, June 2023. &lt;br/&gt;This article is an update to Jann (2018a, Stata Journal 18: 765–785). It contains a comprehensive discussion of the colorpalette command, including various changes and additions that have been made to the software since its first publication. Command colorpalette provides colors for use in Stata graphics. In addition to Stata’s default colors, colorpalette supports a variety of named colors, a selection of palettes that have been proposed by users, numerous collections of palettes and colormaps from sources such as ColorBrewer, Carto, D3.js, or Matplotlib, as well as color generators in different color spaces. Furthermore, a new command called colorcheck is presented that can be used to evaluate whether colors are distinguishable by people suffering from color vision deficiency.
-          
-        </description>
-        <pubDate>06-22-2023 11:19</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231175264?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>lgrgtest: Lagrange multiplier test after constrained maximum-likelihood estimation</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/2&quot;&gt;Volume 23, Issue 2&lt;/a&gt;, Page 386-401, June 2023. &lt;br/&gt;Besides the Wald and likelihood-ratio tests, the Lagrange multiplier test (Rao, 1948, Mathematical Proceedings of the Cambridge Philosophical Society 44: 50–57; Aitchison and Silvey, 1958, Annals of Mathematical Statistics 29: 813–828; Silvey, 1959, Annals of Mathematical Statistics 30: 389–407) is the third canonical approach to testing hypotheses after maximum likelihood estimation. While the Stata commands test and lrtest implement the first two, Stata does not have an official command for implementing the third. The community-contributed boottest package (Roodman et al., 2019, Stata Journal 19: 4–60) focuses on methods of bootstrap inference and also implements the Lagrange multiplier test functionality. In this article, I introduce the new community-contributed postestimation command lgrgtest, which allows for straightforwardly using the Lagrange multiplier test after constrained maximum-likelihood estimation. lgrgtest is intended to be compatible with all Stata estimation commands that use maximum likelihood and allow for the options constraints(), iterate(), and from(). lgrgtest can also be used after cnsreg.
-          
-        </description>
-        <pubDate>06-22-2023 11:19</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231175265?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
