@@ -12,6 +12,39 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>‘I realised it when we played with the doll!’: nursing students’ learning from participation in an action research project that included manikins</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>08-01-2023 07:43</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2023.2242425?af=R</link>
+      </item>
+      
+      <item>
+        <title>The Ecology of Rural Cross-Sector School-Community Partnerships: A Literature Review</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>07-31-2023 02:20</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2023.2238521?af=R</link>
+      </item>
+      
+      <item>
+        <title>Introduction: NREA’s Rural Education Research Agenda 2016–2021</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>07-31-2023 02:06</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2023.2238487?af=R</link>
+      </item>
+      
+      <item>
         <title>Meaning and Structure of Mathematical Connections in the Classroom</title>
         <description>
           
@@ -249,39 +282,6 @@
         </description>
         <pubDate>07-24-2023 04:00</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.3102/01623737231182751?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Bayesian Change-Point Analysis Approach to Detecting Aberrant Test-Taking Behavior Using Response Times</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, &lt;a href=&quot;journals.sagepub.com/toc/jebb/48/4&quot;&gt;Volume 48, Issue 4&lt;/a&gt;, Page 490-520, August 2023. &lt;br/&gt;Change-point analysis (CPA) is a method for detecting abrupt changes in parameter(s) underlying a sequence of random variables. It has been applied to detect examinees’ aberrant test-taking behavior by identifying abrupt test performance change. Previous studies utilized maximum likelihood estimations of ability parameters, focusing on detecting one change point for each examinee. This article proposes a Bayesian CPA procedure using response times (RTs) to detect abrupt changes in examinee speed, which may be related to aberrant responding behaviors. The lognormal RT model is used to derive a procedure for detecting aberrant RT patterns. The method takes the numbers and locations of the change points as parameters in the model to detect multiple change points or multiple aberrant behaviors. Given the change points, the corresponding speed of each segment in the test can be estimated, which enables more accurate inferences about aberrant behaviors. Simulation study results indicate that the proposed procedure can effectively detect simulated aberrant behaviors and estimate change points accurately. The method is applied to data from a high-stakes computerized adaptive test, where its applicability is demonstrated.
-          
-        </description>
-        <pubDate>07-24-2023 01:11</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231151961?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>An Improved Inferential Procedure to Evaluate Item Discriminations in a Conditional Maximum Likelihood Framework</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;A modified and improved inductive inferential approach to evaluate item discriminations in a conditional maximum likelihood and Rasch modeling framework is suggested. The new approach involves the derivation of four hypothesis tests. It implies a linear restriction of the assumed set of probability distributions in the classical approach that represents scenarios of different item discriminations in a straightforward and efficient manner. Its improvement is discussed, compared to classical procedures (tests and information criteria), and illustrated in Monte Carlo experiments as well as real data examples from educational research. The results show an improvement of power of the modified tests of up to 0.3.
-          
-        </description>
-        <pubDate>07-20-2023 05:37</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231183335?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Latent Trait Item Response Models for Continuous Responses</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;A general framework of latent trait item response models for continuous responses is given. In contrast to classical test theory (CTT) models, which traditionally distinguish between true scores and error scores, the responses are clearly linked to latent traits. It is shown that CTT models can be derived as special cases, but the model class is much wider. It provides, in particular, appropriate modeling of responses that are restricted in some way, for example, if responses are positive or are restricted to an interval. Restrictions of this sort are easily incorporated in the modeling framework. Restriction to an interval is typically ignored in common models yielding inappropriate models, for example, when modeling Likert-type data. The model also extends common response time models, which can be treated as special cases. The properties of the model class are derived and the role of the total score is investigated, which leads to a modified total score. Several applications illustrate the use of the model including an example, in which covariates that may modify the response are taken into account.
-          
-        </description>
-        <pubDate>07-20-2023 05:37</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231184147?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
