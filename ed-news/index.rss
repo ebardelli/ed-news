@@ -12,6 +12,39 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>The significance of children’s olfactory experiences in a Norwegian kindergarten: an olfactory researcher-practitioner collaboration</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>08-04-2023 09:45</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2023.2240391?af=R</link>
+      </item>
+      
+      <item>
+        <title>The battle for curriculum: arrested semantics and reconciling racism with critical race theory and Ethnic Studies</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>08-03-2023 12:04</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2023.2239726?af=R</link>
+      </item>
+      
+      <item>
+        <title>“Placing Equity Front and Center” for Teacher Education in a Time of Crisis</title>
+        <description>
+          
+            Journal of Teacher Education, &lt;a href=&quot;journals.sagepub.com/toc/jtea/74/4&quot;&gt;Volume 74, Issue 4&lt;/a&gt;, Page 293-298, September/October 2023. &lt;br/&gt;
+          
+        </description>
+        <pubDate>08-03-2023 08:58</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/00224871231189792?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Segregating Gotham’s Youngest: Racial/Ethnic Sorting and the Choice Architecture of New York City’s Pre-K for All</title>
         <description>
           
@@ -31,6 +64,17 @@
         </description>
         <pubDate>08-03-2023 07:50</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2023.2243644?af=R</link>
+      </item>
+      
+      <item>
+        <title>Evaluating the Stroke Risk of Patients using Machine Learning: A New Perspective from Sichuan and Chongqing</title>
+        <description>
+          
+            Evaluation Review, Ahead of Print. &lt;br/&gt; Stroke is the leading cause of death and disability among people in China, and it leads to heavy burdens for patients, their families and society. An accurate prediction of the risk of stroke has important implications for early intervention and treatment. In light of recent advances in machine learning, the application of this technique in stroke prediction has achieved plentiful promising results. To detect the relationship between potential factors and the risk of stroke and examine which machine learning method significantly can enhance the prediction accuracy of stroke. We employed six machine learning methods including logistic regression, naive Bayes, decision tree, random forest, K-nearest neighbor and support vector machine, to model and predict the risk of stroke. Participants were 233 patients from Sichuan and Chongqing. Four indicators (accuracy, precision, recall and F1 metric) were examined to evaluate the predictive performance of the different models. The empirical results indicate that random forest yields the best accuracy, recall and F1 in predicting the risk of stroke, with an accuracy of .7548, precision of .7805, recall of .7619 and F1 of .7711. Additionally, the findings show that age, cerebral infarction, PM 8 (an anti-atrial fibrillation drug), and drinking are independent risk factors for stroke. Further studies should adopt a broader assortment of machine learning methods to analyze the risk of stroke, by which better accuracy can be expected. In particular, RF can successfully enhance the forecasting accuracy for stroke.
+          
+        </description>
+        <pubDate>08-03-2023 07:33</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/0193841X231193468?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
       <item>
@@ -230,50 +274,6 @@
         </description>
         <pubDate>08-01-2023 00:00</pubDate>
         <link>https://pubs.nctm.org/view/journals/mtlt/116/8/article-p621.xml</link>
-      </item>
-      
-      <item>
-        <title>GPS: Teaching Shapes Inclusively</title>
-        <description>
-          
-            Journal Name: Mathematics Teacher: Learning and Teaching PK-12&lt;br/&gt;Volume: 116&lt;br/&gt;Issue: 8&lt;br/&gt;Pages: 626-630
-          
-        </description>
-        <pubDate>08-01-2023 00:00</pubDate>
-        <link>https://pubs.nctm.org/view/journals/mtlt/116/8/article-p626.xml</link>
-      </item>
-      
-      <item>
-        <title>Revisiting How to Foster and Improve S3D</title>
-        <description>
-          
-            Journal Name: Mathematics Teacher: Learning and Teaching PK-12&lt;br/&gt;Volume: 116&lt;br/&gt;Issue: 8&lt;br/&gt;Pages: 631-632
-          
-        </description>
-        <pubDate>08-01-2023 00:00</pubDate>
-        <link>https://pubs.nctm.org/view/journals/mtlt/116/8/article-p631.xml</link>
-      </item>
-      
-      <item>
-        <title>“Mathematics: The Universal Language?”</title>
-        <description>
-          
-            Journal Name: Mathematics Teacher: Learning and Teaching PK-12&lt;br/&gt;Volume: 116&lt;br/&gt;Issue: 8&lt;br/&gt;Pages: 633-643
-          
-        </description>
-        <pubDate>08-01-2023 00:00</pubDate>
-        <link>https://pubs.nctm.org/view/journals/mtlt/116/8/article-p633.xml</link>
-      </item>
-      
-      <item>
-        <title>The Mathematics of Sewing</title>
-        <description>
-          
-            Journal Name: Mathematics Teacher: Learning and Teaching PK-12&lt;br/&gt;Volume: 116&lt;br/&gt;Issue: 8&lt;br/&gt;Pages: 644-644
-          
-        </description>
-        <pubDate>08-01-2023 00:00</pubDate>
-        <link>https://pubs.nctm.org/view/journals/mtlt/116/8/article-p644.xml</link>
       </item>
       
   </channel>
