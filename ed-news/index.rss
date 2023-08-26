@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Edgar H. Schein 1928-2023: A Reflective Appreciation by David Coghlan</title>
+        <description>
+          
+            Action Research, Ahead of Print. &lt;br/&gt;
+          
+        </description>
+        <pubDate>08-26-2023 04:35</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/14767503231199535?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Grasping Psychological Evidence: Integrating Evidentiary Practices in Psychology Instruction</title>
         <description>
           
@@ -20,6 +31,17 @@
         </description>
         <pubDate>08-25-2023 06:35</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/07370008.2023.2248641?af=R</link>
+      </item>
+      
+      <item>
+        <title>Cross-Classified Item Response Theory Modeling With an Application to Student Evaluation of Teaching</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;The cross-classified data structure is ubiquitous in education, psychology, and health outcome sciences. In these areas, assessment instruments that are made up of multiple items are frequently used to measure latent constructs. The presence of both the cross-classified structure and multivariate categorical outcomes leads to the so-called item-level data with cross-classified structure. An example of such data structure is the routinely collected student evaluation of teaching (SET) data. Motivated by the lack of research on multilevel IRT modeling with crossed random effects and the need of an approach that can properly handle SET data, this study proposed a cross-classified IRT model, which takes into account both the cross-classified data structure and properties of multiple items in an assessment instrument. A new variant of the Metropolis–Hastings Robbins–Monro (MH-RM) algorithm was introduced to address the computational complexities in estimating the proposed model. A preliminary simulation study was conducted to evaluate the performance of the algorithm for fitting the proposed model to data. The results indicated that model parameters were well recovered. The proposed model was also applied to SET data collected at a large public university to answer empirical research questions. Limitations and future research directions were discussed.
+          
+        </description>
+        <pubDate>08-25-2023 06:20</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231193351?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
       <item>
@@ -187,7 +209,7 @@
             Action Research, Ahead of Print. &lt;br/&gt;Spiritual care is increasingly seen as a task of all health care professionals. This is challenging for chaplains working in health care, who hold spiritual care at the heart of their profession but don’t feel rooted in a strong professional identity. In this article we discuss a participatory action research that aimed at strengthening the professional identity of health care chaplains by forming collaborative learning communities of chaplains and general practice mental health. The focus is on the ‘boundary work’ and how participatory action research contributes to this. Relational professionalism, Dialogical Self Theory and Boundary Theory are combined to interpret the complex relational-dialogical processes of negotiating one’s identity within the relationships with diverse others: clients, mental health nurses and society. The result is a more articulated and at the same time flexible professional identity for healthcare chaplains. Participatory action research contributes to these boundary processes by stimulating reflection, explicating, eliciting or encouraging different voices and facilitating the dialogue between these professionals.
           
         </description>
-        <pubDate>08-22-2023 10:05</pubDate>
+        <pubDate>08-22-2023 12:16</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/14767503231195418?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
@@ -257,29 +279,6 @@
         </description>
         <pubDate>08-19-2023 12:20</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/14794802.2023.2241433?af=R</link>
-      </item>
-      
-      <item>
-        <title>The landscape of US elementary mathematics teacher education: course requirements for mathematics content and methods</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;The adequate preparation of future teachers of mathematics is critical, requiring sufficient opportunities to develop both pedagogical skill and content knowledge. Yet, despite new recommendations for mathematics teacher preparation, we know little about the landscape of course-based learning opportunities in US elementary teacher education programs. To what extent do US elementary teacher education programs meet the &lt;em class=&quot;a-plus-plus&quot;&gt;Standards for Preparing Teachers of Mathematics&lt;/em&gt; outlined by the Association of Mathematics Teacher Educators (AMTE) for mathematics content and methods courses? Based on an a priori power analysis, we gathered a random sample of 291 higher education institutions. Within these institutions, we analyzed 736 programs, including Bachelor’s, Master’s, and Credential programs. We found that overwhelmingly US elementary teacher education programs do not meet the aspirations outlined in the AMTE standards, with Master’s and Credential programs and those covering all elementary grades particularly falling short. Potential explanations for these challenges and implications for teacher education program design are discussed.&lt;/p&gt;
-          
-        </description>
-        <pubDate>08-19-2023 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s10857-023-09593-4</link>
-      </item>
-      
-      <item>
-        <title>Revisiting “Radical Equations: Civil Rights from Mississippi to the Algebra Project&amp;quot; by Robert P. Moses and Charles E. Cobb, Jr.</title>
-        <description>
-          
-            
-          
-        </description>
-        <pubDate>08-18-2023 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s10857-023-09596-1</link>
       </item>
       
   </channel>
