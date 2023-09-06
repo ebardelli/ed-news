@@ -12,6 +12,28 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Identifying Informative Predictor Variables With Random Forests</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Random forests are a nonparametric machine learning method, which is currently gaining popularity in the behavioral sciences. Despite random forests’ potential advantages over more conventional statistical methods, a remaining question is how reliably informative predictor variables can be identified by means of random forests. The present study aims at giving a comprehensible introduction to the topic of variable selection with random forests and providing an overview of the currently proposed selection methods. Using simulation studies, the variable selection methods are examined regarding their statistical properties, and comparisons between their performances and the performance of a conventional linear model are drawn. Advantages and disadvantages of the examined methods are discussed, and practical recommendations for the use of random forests for variable selection are given.
+          
+        </description>
+        <pubDate>09-06-2023 10:10</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231193327?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Examining Race in LatCrit: A Systematic Review of Latinx Critical Race Theory in Education</title>
+        <description>
+          
+            Review of Educational Research, Ahead of Print. &lt;br/&gt;This systematic review includes 125 peer-reviewed education-research articles that employ a LatCrit framework (from a search including articles published from 1995 to 2020). The author examines how the literature utilizes LatCrit and advances ideas about race, Latinxs, and Latinidad in education. The author presents significant patterns and divergences in the literature’s strengths, challenges, and tensions. Some strengths include detailing Latinxs’ experiences and valuing experiential knowledge. The author problematizes four research practices: (1) describing LatCrit with select tenets of CRT; (2) not defining race or other relevant concepts (language, culture, etc.); (3) claiming Latinxs are unique because of their multidimensionality; and (4) exceeding LatCrit’s scope by rationalizing the study’s use of LatCrit because its participants are Latinxs. The author argues that these complications lead to a paradox: even though LatCrit emerges from critical race theory and is described as for Latinxs, the literature largely undertheorizes race and lacks clarity about conceptualizing Latinxs as a racialized group. The author recommends four framing ideas that are particular to LatCrit and that help advance the specificity of Latinidad in education.
+          
+        </description>
+        <pubDate>09-05-2023 10:45</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/00346543231192685?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Study of modeling questions in a first-year university mathematics online course</title>
         <description>
           
@@ -273,30 +295,6 @@
         </description>
         <pubDate>09-01-2023 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s13394-021-00402-w</link>
-      </item>
-      
-      <item>
-        <title>Design-based research in mathematics education: trends, challenges and potential</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;Originating from the learning sciences community, design-based research (DBR) is attracting interest from many educational researchers including those focused on mathematics. Beyond its research role, it is being seen as a collaborative way to engage teachers in deep professional development leading not only to changes in skill but also in purpose. Previous reviews of the approach, however, have offered only cautious optimism for the capacity of DBR to support widespread or scalable change. This paper will use methods drawn from the &lt;em class=&quot;a-plus-plus&quot;&gt;digital humanities and social sciences&lt;/em&gt; to explore patterns relating to regional differences, theoretical underpinnings, practical implementation and methodological choice in recent DBR research in the domain of mathematics education. The findings suggest that much of the work presented as DBR might be better characterized as ‘implementation studies’ as they contain only limited commitment to theoretical development capable of supporting the scaling of innovation. The exceptions appear to occur in settings with well-developed research capacity which recognizes the need for ontological innovation of theory whilst iteratively and comprehensively exploring the complexities of authentic learning interventions. An example of a rich mathematical research study using DBR is provided to point to the potential for this methodology to achieve its overarching aims more fully.&lt;/p&gt;
-          
-        </description>
-        <pubDate>09-01-2023 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s13394-021-00407-5</link>
-      </item>
-      
-      <item>
-        <title>Natural number bias on evaluations of the effect of multiplication and division: the role of the type of numbers</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;Over the last years, there is a growing interest in studying students’ difficulties with rational numbers from a cognitive/developmental perspective, focusing on the role of prior knowledge in students’ understanding of rational numbers. The present study tests the effect of the &lt;em class=&quot;a-plus-plus&quot;&gt;whole&lt;/em&gt; or &lt;em class=&quot;a-plus-plus&quot;&gt;natural number bias&lt;/em&gt; (i.e., the tendency to count on natural number knowledge to interpret information about rational numbers and deal with rational number tasks), on students’ expectations about the &lt;em class=&quot;a-plus-plus&quot;&gt;size&lt;/em&gt; (i.e., bigger or smaller) and the &lt;em class=&quot;a-plus-plus&quot;&gt;type&lt;/em&gt; (i.e., natural number or decimal) of the results of multiplication and division. Items that were congruent and incongruent with students’ assumed expectations were administered to 91 seventh and eighth graders, asking them to evaluate equalities presenting multiplication and division between given and missing numbers. The results showed that besides the already well-documented effect of the size of results (i.e., &lt;em class=&quot;a-plus-plus&quot;&gt;multiplication makes bigger&lt;/em&gt; and &lt;em class=&quot;a-plus-plus&quot;&gt;division makes smaller&lt;/em&gt;), students tended to think that the numbers involved in multiplication and division should be of the same type (i.e., natural or non-natural, e.g., decimals). Both size and type of the numbers involved in the operations were significant factors affecting students’ evaluations, with size being stronger than type.&lt;/p&gt;
-          
-        </description>
-        <pubDate>09-01-2023 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s13394-021-00398-3</link>
       </item>
       
   </channel>
