@@ -12,6 +12,29 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Correction</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>09-26-2023 10:47</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2023.2259678?af=R</link>
+      </item>
+      
+      <item>
+        <title>Exploring the Impact of the Corequisite Classroom Climate on Students’ Attitudes Toward Mathematics</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;Many postsecondary institutions across the United States have adopted the corequisite model of academic support to facilitate student learning and the successful completion of introductory mathematics courses within students’ first year of college enrollment. While research have highlighted the benefits of corequisites in terms of academic outcomes, there is little qualitative research on the impact of this model of academic support on students beyond course grades. Through student narratives, this study documents how one university implemented their College Algebra corequisite and investigates the impact of the classroom climate of a corequisite course on students’ attitudes toward mathematics. This study shows that though the classroom climate positively impacted the participants’ attitudes toward mathematics in general, the climate of the corequisite specifically had a greater impact on their beliefs about mathematics and perceptions of themselves as learners of mathematics. However, there were some identified drawbacks to the corequisite course including time-consuming coursework and occasionally unproductive group collaboration. These findings highlight the potential for corequisites to foster positive attitudes toward mathematics, yet it also demonstrated a need for greater intention in the course development to ensure a coherent course structure where course activities and assessments give way to meaningful and productive student engagement.&lt;/p&gt;
+          
+        </description>
+        <pubDate>09-26-2023 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s40753-023-00226-y</link>
+      </item>
+      
+      <item>
         <title>Different Methods for Assessing Preservice Teachers’ Instruction: Why Measures Matter</title>
         <description>
           
@@ -252,28 +275,6 @@
         </description>
         <pubDate>09-22-2023 07:25</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231196288?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Iterative intercensal single-decrement life tables using Stata</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/3&quot;&gt;Volume 23, Issue 3&lt;/a&gt;, Page 813-834, September 2023. &lt;br/&gt;One way to estimate mortality in countries with incomplete data is to utilize intercensal methods, which do not require model life tables and provide accurate results even in the presence of age distortions and death underregistration. In this article, I revisit three of these techniques (census based, death distribution, and an iterative procedure) and introduce ilt, a command to calculate singledecrement life tables and the net flow of migrants by age. The required inputs are two age-specific population distributions and the average number of deaths between them. The empirical example draws on data from Vietnam, but the methods are extendable to any context and period.
-          
-        </description>
-        <pubDate>09-22-2023 07:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231196441?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Estimating text regressions using txtreg_train</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/3&quot;&gt;Volume 23, Issue 3&lt;/a&gt;, Page 799-812, September 2023. &lt;br/&gt;In this article, I introduce new commands to estimate text regressions for continuous, binary, and categorical variables based on text strings. The command txtreg_train automatically handles text cleaning, tokenization, model training, and cross-validation for lasso, ridge, elastic-net, and regularized logistic regressions. The txtreg_predict command obtains the predictions from the trained text regression model. Furthermore, the txtreg_analyze command facilitates the analysis of the coefficients of the text regression model. Together, these commands provide a convenient toolbox for researchers to train text regressions. They also allow sharing of pretrained text regression models with other researchers.
-          
-        </description>
-        <pubDate>09-22-2023 07:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231196349?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
