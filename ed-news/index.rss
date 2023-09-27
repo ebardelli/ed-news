@@ -12,6 +12,39 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>The influence of critical friendships on secondary student teachers engaged in collaborative action research</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>09-27-2023 06:02</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2023.2263492?af=R</link>
+      </item>
+      
+      <item>
+        <title>A Tale of Two Systems: Choice and Equity in the District of Columbia’s Charter Schools</title>
+        <description>
+          
+            Educational Policy, Ahead of Print. &lt;br/&gt;Advocates often predict that school choice policies will expand access to high-quality schools, particularly for marginalized communities. To interrogate this assumption, we employed a sequential mixed-methods analysis examining the state of charter reform in the District of Columbia. We observed that stakeholders consistently defined equity as uniform processes, evident in data distribution and enrollment practices. We also uncovered persistent disparities in where students live versus learn. We conclude that race-neutral conceptions of equity may hinder attempts to improve school access by ignoring structural inequalities tied to race, place, and income and by overlooking privileged households’ efforts to remain separate.
+          
+        </description>
+        <pubDate>09-26-2023 12:28</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/08959048231198816?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Restorative Justice in Education: A Content Analysis of US State Legislation From 2010 to 2020</title>
+        <description>
+          
+            Educational Policy, Ahead of Print. &lt;br/&gt;This study sought to understand how state-level policies inform and promote the implementation of restorative justice in education (RJE). A content analysis of 60 laws revealed that definitions, structures, and supports varied greatly, causing us to question whether policies support a systematic implementation of RJE and how policies can prevent the misuse of RJE as an alternative system of punishment. We recommend that laws clearly define the paradigm shift underlying RJE, and provide sustained support to promote a realignment of policies and practices with attention to incorporating measures of accountability to larger values surrounding equity and justice.
+          
+        </description>
+        <pubDate>09-26-2023 12:19</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/08959048231198813?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Correction</title>
         <description>
           
@@ -20,6 +53,17 @@
         </description>
         <pubDate>09-26-2023 10:47</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2023.2259678?af=R</link>
+      </item>
+      
+      <item>
+        <title>Utilizing Real-Time Test Data to Solve Attenuation Paradox in Computerized Adaptive Testing to Enhance Optimal Design</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;To solve the attenuation paradox in computerized adaptive testing (CAT), this study proposes an item selection method, the integer programming approach based on real-time test data (IPRD), to improve test efficiency. The IPRD method turns information regarding the ability distribution of the population from real-time test data into feasible test constraints to reversely assembled shadow tests for item selection to prevent the attenuation paradox by integer programming. A simulation study was conducted to thoroughly investigate IPRD performance. The results indicate that the IPRD method can efficiently improve CAT performance in terms of the precision of trait estimation and satisfaction of all required test constraints, especially for conditions with stringent exposure control.
+          
+        </description>
+        <pubDate>09-26-2023 06:52</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231197666?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
       <item>
@@ -231,50 +275,6 @@
         </description>
         <pubDate>09-22-2023 07:25</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231196496?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Cluster randomized controlled trial analysis at the cluster level: The clan command</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/3&quot;&gt;Volume 23, Issue 3&lt;/a&gt;, Page 754-773, September 2023. &lt;br/&gt;In this article, we introduce a new command, clan, that conducts a cluster-level analysis of cluster randomized trials. The command simplifies adjusting for individual- and cluster-level covariates and can also account for a stratified design. It can be used to analyze a continuous, binary, or rate outcome.
-          
-        </description>
-        <pubDate>09-22-2023 07:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231196294?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Speaking Stata: Replacing missing values: The easiest problems</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/3&quot;&gt;Volume 23, Issue 3&lt;/a&gt;, Page 884-896, September 2023. &lt;br/&gt;Missing values are common in real datasets, and what to do about them is a large and challenging question. This column focuses on the easiest problems in which a researcher is clear, or at least highly confident, about what missing values should be instead, implying a deterministic replacement. The main tricks are copying values from observation to observation and using the ipolate command. Both may often be extended simply to panel or longitudinal datasets or to other datasets with a group structure, such as data on individuals within families or households. This column includes how to satisfy constraints that interpolation is confined to filling gaps between values known to be equal or to observations moderately close to a known value in time or in some other sequence or position variable.
-          
-        </description>
-        <pubDate>09-22-2023 07:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231196519?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Review of Multilevel and Longitudinal Modeling Using Stata, Fourth Edition, by Sophia Rabe-Hesketh and Anders Skrondal</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/3&quot;&gt;Volume 23, Issue 3&lt;/a&gt;, Page 901-904, September 2023. &lt;br/&gt;This article reviews Multilevel and Longitudinal Modeling Using Stata, Fourth Edition, by Rabe-Hesketh and Skrondal (2022, Stata Press).
-          
-        </description>
-        <pubDate>09-22-2023 07:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231196518?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>hdps: A suite of commands for applying high-dimensional propensity-score approaches</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/3&quot;&gt;Volume 23, Issue 3&lt;/a&gt;, Page 683-708, September 2023. &lt;br/&gt;Large healthcare databases are increasingly used for research investigating the effects of medications. However, a key challenge is capturing hard-to-measure concepts (often relating to frailty and disease severity) that can be crucial for successful confounder adjustment. The high-dimensional propensity score has been proposed as a data-driven method to improve confounder adjustment within healthcare databases and was developed in the context of administrative claims databases. We present hdps, a suite of commands implementing this approach in Stata that assesses the prevalence of codes, generates high-dimensional propensity-score covariates, performs variable selection, and provides investigators with graphical tools for inspecting the properties of selected covariates.
-          
-        </description>
-        <pubDate>09-22-2023 07:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231196288?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
