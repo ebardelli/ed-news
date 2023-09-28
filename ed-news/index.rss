@@ -12,6 +12,28 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Context Matters as Racialization Evolves: Exploring Bias in Preservice Teacher Responses to Children</title>
+        <description>
+          
+            American Educational Research Journal, Ahead of Print. &lt;br/&gt;This study explores preservice teacher attributions to children’s behaviors portrayed in specific emotion-laden school scenarios. Participants included 178 preservice teachers from three universities. The preservice teachers viewed video vignettes of Black and White child actors in six different school scenarios. Our team constructed two themes from the preservice teachers’ narratives about what they saw: (a) context matters (i.e., different scenarios activate different preservice teacher attributions), and (b) racialization evolves (i.e., preservice teachers make different attributions about Black and White boys engaged in the same behaviors). Findings underscore the importance of teacher education and professional development for novice teachers that address racial bias in attributions of student behaviors.
+          
+        </description>
+        <pubDate>09-27-2023 10:53</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/00028312231200016?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Preparing the Expert Novice: Preservice Teacher Thinking and Efficacy in Inquiry Design</title>
+        <description>
+          
+            Journal of Teacher Education, Ahead of Print. &lt;br/&gt;In this study, we share the understandings and the reflections of preservice teachers as they engage in focus group interviews about inquiry in social studies, generally, and their reactions to publicly available Inquiry Design Model blueprints. These preservice teachers first discussed their understanding of inquiry, which was rooted in their university coursework. They then described their self-efficacy for implementing inquiry, generally, and the IDM blueprint, specifically, in their current field placements and future classrooms. This envisioned implementation often involved adaptations of the blueprints. Our goal in this research was to reconsider how preservice teachers experience and learn about social studies inquiry and, as a result of these experiences, whether and how they see themselves implementing social studies inquiry with students. This study can inform teacher educators to proactively address common barriers and better support preservice teachers.
+          
+        </description>
+        <pubDate>09-27-2023 08:24</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/00224871231202956?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>The influence of critical friendships on secondary student teachers engaged in collaborative action research</title>
         <description>
           
@@ -253,28 +275,6 @@
         </description>
         <pubDate>09-22-2023 07:25</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231196497?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Facilities for optimizing and designing multiarm multistage (MAMS) randomized controlled trials with binary outcomes</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/3&quot;&gt;Volume 23, Issue 3&lt;/a&gt;, Page 774-798, September 2023. &lt;br/&gt;We introduce two commands, nstagebin and nstagebinopt, that can be used to facilitate the design of multiarm multistage (MAMS) trials with binary outcomes. MAMS designs are a class of efficient and adaptive randomized clinical trials that have successfully been used in many disease areas, including cancer, tuberculosis, maternal health, COVID-19, and surgery. The nstagebinopt command finds a class of efficient “admissible” designs based on an optimality criterion using a systematic search procedure. The nstagebin command calculates the stagewise sample sizes, trial timelines, and overall operating characteristics of MAMS designs with binary outcomes. Both commands allow the use of Dunnett’s correction to account for multiple testing. We also use the ROSSINI 2 MAMS design, an ongoing MAMS trial in surgical wound infection, to illustrate the capabilities of both commands. The new commands facilitate the design of MAMS trials with binary outcomes where more than one research question can be addressed under one protocol.
-          
-        </description>
-        <pubDate>09-22-2023 07:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231196295?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>iefieldkit: Commands for primary data collection and cleaning (update)</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/3&quot;&gt;Volume 23, Issue 3&lt;/a&gt;, Page 875-883, September 2023. &lt;br/&gt;Data collection and cleaning workflows implement highly repetitive but extremely important processes. In this article, we describe an update to iefieldkit, a package developed to standardize and simplify best practices for high-quality primary data collection across the World Bank’s Development Impact Evaluation department. The first release of iefieldkit provided workflows to automate error checking for Open Data Kit-based survey modules, duplicate management, data cleaning, and codebook creation. This update to the package includes improved commands to document and implement data point corrections, verify the structure or contents of data using codebooks, and create replicationready data through automated variable subsetting.
-          
-        </description>
-        <pubDate>09-22-2023 07:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231196496?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
