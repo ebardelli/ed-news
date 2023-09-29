@@ -23,6 +23,29 @@
       </item>
       
       <item>
+        <title>Political Polarization of Educational Politics and its Implications for Democratic Education</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>09-29-2023 02:37</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2023.2261303?af=R</link>
+      </item>
+      
+      <item>
+        <title>Open modelling problems: cognitive barriers and instructional prompts</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;Open mathematical modelling problems that can be solved with multiple methods and have multiple possible results are an important part of school curricula in mathematics and science. Solving open modelling problems in school should prepare students to apply their mathematical knowledge in their current and future lives. One characteristic of these problems is that information that is essential for solving the problems is missing. In the present study, we aimed to analyze students’ cognitive barriers while they solved open modelling problems, and we evaluated the effects of instructional prompts on their success in solving such problems. A quantitative experimental study (&lt;em class=&quot;a-plus-plus&quot;&gt;N&lt;/em&gt; = 263) and a qualitative study (&lt;em class=&quot;a-plus-plus&quot;&gt;N&lt;/em&gt; = 4) with secondary school students indicated that identifying unknown quantities and making numerical assumptions about these quantities are important cognitive barriers to solving open modelling problems. Task-specific instructional prompts helped students overcome these barriers and improved their solution rates. Students who were given instructional prompts included numerical assumptions in their solutions more often than students who were not given such prompts. These findings contribute to theories about solving open modelling problems by uncovering cognitive barriers and describing students’ cognitive processes as they solve these problems. In addition, the findings contribute to improving teaching practice by indicating the potential and limitations of task-specific instructional prompts that can be used to support students’ solution processes in the classroom.&lt;/p&gt;
+          
+        </description>
+        <pubDate>09-29-2023 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s10649-023-10265-6</link>
+      </item>
+      
+      <item>
         <title>Special Issue Commentary: A Meditation on Abolitionist Democratic Education</title>
         <description>
           
@@ -253,28 +276,6 @@
         </description>
         <pubDate>09-22-2023 07:25</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231196291?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>cntraveltime: Travel distance and travel time in China</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/3&quot;&gt;Volume 23, Issue 3&lt;/a&gt;, Page 730-753, September 2023. &lt;br/&gt;In this article, we introduce the command cntraveltime, which can calculate both the travel distance and the travel time between two locations in China with respect to different modes of transportation (driving, public transport, and cycling). Existing commands such as georoute, traveltime, and mqtime have difficulties in parsing Chinese locations. cntraveltime solves this outstanding challenge via a feature that enables it to call route-planning services from the Baidu Maps Open Platform. The results of rigorous testing on the features of the command show that, relative to similar existing commands, cntraveltime has the highest capacity in terms of functionality and precision. This suggests that it can be regarded as a useful complement to other existing commands, especially when calculating travel distance and time for locations within China.
-          
-        </description>
-        <pubDate>09-22-2023 07:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231196292?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Robit regression in Stata</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/3&quot;&gt;Volume 23, Issue 3&lt;/a&gt;, Page 658-682, September 2023. &lt;br/&gt;Logistic and probit models are the most popular regression models for binary outcomes. A simple robust alternative is the robit model, which replaces the underlying normal distribution in the probit model with a Student’s t distribution. The heavier tails of the t distribution (compared with the normal distribution) mean that model outliers are less influential. Robit regression models can be fit as generalized linear models with the link function defined as the inverse cumulative t distribution function with a specified number of degrees of freedom; they have been advocated as being particularly suitable for estimating inverse-probability weights and propensity scoring more generally. Here we describe a new command, robit, that implements robit regression in Stata.
-          
-        </description>
-        <pubDate>09-22-2023 07:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231195288?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
