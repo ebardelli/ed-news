@@ -12,6 +12,39 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>A Two-Level Adaptive Test Battery</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;A test battery with two different levels of adaptation is presented: a within-subtest level for the selection of the items in the subtests and a between-subtest level to move from one subtest to the next. The battery runs on a two-level model consisting of a regular response model for each of the subtests extended with a second level for the joint distribution of their abilities. The presentation of the model is followed by an optimized MCMC algorithm to update the posterior distribution of each of its ability parameters, select the items to Bayesian optimality, and adaptively move from one subtest to the next. Thanks to extremely rapid convergence of the Markov chain and simple posterior calculations, the algorithm can be used in real-world applications without any noticeable latency. Finally, an empirical study with a battery of short diagnostic subtests is shown to yield score accuracies close to traditional one-level adaptive testing with subtests of double lengths.
+          
+        </description>
+        <pubDate>11-07-2023 06:41</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231209447?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Analyzing Polytomous Test Data: A Comparison Between an Information-Based IRT Model and the Generalized Partial Credit Model</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Item response theory (IRT) models the relationship between the possible scores on a test item against a test taker’s attainment of the latent trait that the item is intended to measure. In this study, we compare two models for tests with polytomously scored items: the optimal scoring (OS) model, a nonparametric IRT model based on the principles of information theory, and the generalized partial credit (GPC) model, a widely used parametric alternative. We evaluate these models using both simulated and real test data. In the real data examples, the OS model demonstrates superior model fit compared to the GPC model across all analyzed datasets. In our simulation study, the OS model outperforms the GPC model in terms of bias, but at the cost of larger standard errors for the probabilities along the estimated item response functions. Furthermore, we illustrate how surprisal arc length, an IRT scale invariant measure of ability with metric properties, can be used to put scores from vastly different types of IRT models on a common scale. We also demonstrate how arc length can be a viable alternative to sum scores for scoring test takers.
+          
+        </description>
+        <pubDate>11-07-2023 06:39</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231207879?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Reviewer Acknowledgments</title>
+        <description>
+          
+            American Educational Research Journal, &lt;a href=&quot;journals.sagepub.com/toc/aera/60/6&quot;&gt;Volume 60, Issue 6&lt;/a&gt;, Page 1301-1306, December 2023. &lt;br/&gt;
+          
+        </description>
+        <pubDate>11-07-2023 06:30</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/00028312231213815?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Mathematical competencies in the digital era: Mathematics education in the digital era</title>
         <description>
           
@@ -248,40 +281,6 @@
         </description>
         <pubDate>11-02-2023 12:09</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/14794802.2023.2261435?af=R</link>
-      </item>
-      
-      <item>
-        <title>Primary teachers’ preferred fraction models and manipulatives for solving fraction tasks and for teaching</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                    &lt;p class=&quot;a-plus-plus&quot;&gt;When teaching fractions, teachers make instructional decisions about if, when, and how to use the many different types of fraction models and manipulatives. In this study, we sought insights into their pedagogical reasoning with fraction representations via their preferences, both for solving tasks themselves and for teaching (in general and for specific fraction concepts and operations). Nearly 200 practising Australian primary teachers participated in an online survey and we drew on a Fraction Schemes theorisation to analyse quantitative and qualitative data. A majority of teachers indicated a personal preference for the set model for four out of five schemes; for one scheme most teachers preferred the circle model. Their reasons suggested that the nature of each task in a scheme and the specific fractions involved, played a role in influencing their preferences. With respect to teaching fractions, the teachers also indicated a high level of preference for teaching with the set model in general, and secondly for the rectangle model. Their preferences, except for number lines, were not found to be associated with the teachers’ nominated year level. We found that a high personal preference for a set model was associated with a preference for teaching with the same model in general, but not for teaching with the matching manipulative (counters or chips). The teachers indicated a high level of preference for teaching with the fraction bars manipulative for several fraction concepts, but this was not associated with a personal preference for linear models. Implications for further research are discussed.&lt;/p&gt;
-          
-        </description>
-        <pubDate>11-02-2023 10:05</pubDate>
-        <link>http://link.springer.com/10.1007/s10857-022-09542-7</link>
-      </item>
-      
-      <item>
-        <title>Nearby Nature: An Interdisciplinary Science, Literacy, and Technology Project Situated within a Traditional Teacher Preparation Program</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>11-02-2023 05:56</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/01626620.2023.2270923?af=R</link>
-      </item>
-      
-      <item>
-        <title>Using Existing School Messaging Platforms to Inform Parents about Their Child’s Attendance</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>11-02-2023 04:43</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/19345747.2023.2264841?af=R</link>
       </item>
       
   </channel>
