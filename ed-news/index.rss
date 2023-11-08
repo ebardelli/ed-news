@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>The Geography of Mathematical (Dis)Advantage: An Application of Multilevel Simultaneous Autoregressive (MSAR) Models to Public Data in Education Research</title>
+        <description>
+          
+            AERA Open, &lt;a href=&quot;journals.sagepub.com/toc/eroa/9&quot;&gt;Volume 9, Issue &lt;/a&gt;, January-December 2023. &lt;br/&gt;Research has shown that mathematical proficiency gaps are related to students’ and schools’ indicators of poverty, with fewer studies on neighborhood effects on achievement gaps. Although this literature has accounted for students’ nesting within schools, so far, methodological constraints have not allowed researchers to formally account for multilevel and spatial effects. I contribute to this discussion by simultaneously considering test-takers’ own socioeconomic standing and the impact of their nesting schools and neighborhood structures. Multilevel simultaneous autoregressive (MSAR) models and population-level data of 2.09 million test-takers, whose standardized performances were measured at Grades 3–8 in New York State, revealed the presence of geography of mathematical (dis)advantage. Because mathematical performance is spatially dependent across schools and neighborhoods, moving forward, applied researchers should rely on MSAR to account for sources of spatially driven bias that cannot be handled with multilevel models alone. Full replication code and data are provided at cutt.ly/N4zRstL.
+          
+        </description>
+        <pubDate>11-08-2023 05:52</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584231198452?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>17th Annual AERA Brown Lecture in Education Research: The Segregation Pandemic: Brown as Treatment or Placebo?</title>
         <description>
           
@@ -270,17 +281,6 @@
         </description>
         <pubDate>11-03-2023 11:59</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/19477503.2023.2253023?af=R</link>
-      </item>
-      
-      <item>
-        <title>Mathematics Teachers’ Beliefs About Which Practices They Implement: A Q-Sort Analysis</title>
-        <description>
-          
-            &lt;a href=&quot;/toc/uiml20/15/4&quot;&gt;Volume 15, Issue 4&lt;/a&gt;, October 2023, Page 331-347&lt;br/&gt;. &lt;br/&gt;
-          
-        </description>
-        <pubDate>11-03-2023 11:59</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/19477503.2023.2253077?af=R</link>
       </item>
       
   </channel>
