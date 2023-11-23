@@ -12,6 +12,39 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Sample Size Calculation and Optimal Design for Multivariate Regression-Based Norming</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Normative studies are needed to obtain norms for comparing individuals with the reference population on relevant clinical or educational measures. Norms can be obtained in an efficient way by regressing the test score on relevant predictors, such as age and sex. When several measures are normed with the same sample, a multivariate regression-based approach must be adopted for at least two reasons: (1) to take into account the correlations between the measures of the same subject, in order to test certain scientific hypotheses and to reduce misclassification of subjects in clinical practice, and (2) to reduce the number of significance tests involved in selecting predictors for the purpose of norming, thus preventing the inflation of the type I error rate. A new multivariate regression-based approach is proposed that combines all measures for an individual through the Mahalanobis distance, thus providing an indicator of the individual’s overall performance. Furthermore, optimal designs for the normative study are derived under five multivariate polynomial regression models, assuming multivariate normality and homoscedasticity of the residuals, and efficient robust designs are presented in case of uncertainty about the correct model for the analysis of the normative sample. Sample size calculation formulas are provided for the new Mahalanobis distance-based approach. The results are illustrated with data from the Maastricht Aging Study (MAAS).
+          
+        </description>
+        <pubDate>11-23-2023 06:07</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231210807?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>“Mainstreaming action research”: Olav Eikeland’s legacy for our shared future</title>
+        <description>
+          
+            &lt;a href=&quot;/toc/reac20/31/5&quot;&gt;Volume 31, Issue 5&lt;/a&gt;, December 2023, Page 848-851&lt;br/&gt;. &lt;br/&gt;
+          
+        </description>
+        <pubDate>11-22-2023 01:10</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2023.2277562?af=R</link>
+      </item>
+      
+      <item>
+        <title>Editorial: (Re)searching for integrity</title>
+        <description>
+          
+            &lt;a href=&quot;/toc/reac20/31/5&quot;&gt;Volume 31, Issue 5&lt;/a&gt;, December 2023, Page 843-847&lt;br/&gt;. &lt;br/&gt;
+          
+        </description>
+        <pubDate>11-22-2023 01:10</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2023.2277557?af=R</link>
+      </item>
+      
+      <item>
         <title>Meta-Analyses and Narrative Review of Home-Based Interventions to Improve Literacy and Mathematics Outcomes for Children Between the Ages of 3 and 5 Years Old</title>
         <description>
           
@@ -242,41 +275,6 @@
         </description>
         <pubDate>11-16-2023 04:10</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/14794802.2023.2260356?af=R</link>
-      </item>
-      
-      <item>
-        <title>On understanding mathematical problem-posing processes</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;Problem posing engages students in generating new problems based on given situations (including mathematical expressions or diagrams) or changing (i.e., reformulating) existing problems. Problem posing has been at the forefront of discussion over the past few decades. One of the important topics studied is the process of problem posing as experienced by students and teachers. This paper focuses on problem-posing processes and models thereof. We first provide an overview of previous research and then present the results of a scoping review regarding recent research on problem-posing processes. This review covers 75 papers published between 2017 and 2022 in top mathematics education research journals. We found that some of the prior research directly attempted to examine problem-posing processes, whereas others examined task variables related to problem-posing processes. We conclude this paper by proposing a model for problem-posing processes that encompasses four phases: orientation, connection, generation, and reflection. We also provide descriptions of the four phases of the model. The paper ends with suggestions for future research related to problem-posing processes in general and the problem-posing model proposed in particular.&lt;/p&gt;
-          
-        </description>
-        <pubDate>11-16-2023 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-023-01536-w</link>
-      </item>
-      
-      <item>
-        <title>Real and illusionary difficulties in conceptual learning in mathematics: comparison between constructivist and inferentialist perspectives</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;Due to the learning paradox, students cannot have real difficulty in understanding a mathematical concept that they have not yet understood. There is a gap between real difficulties, directly experienced by students, and illusionary ones, only observed by researchers. This paper aims to offer a critical reflection on our understanding of the term &lt;em class=&quot;a-plus-plus&quot;&gt;difficulty&lt;/em&gt; in mathematics education research. We start this paper by arguing that a constructivist perspective, which has often been adopted in researches on mathematical task design, can deal with difficulties in solving a mathematical problem, but it cannot theoretically deal with those in understanding a mathematical concept. Therefore, we need the alternative philosophy of Robert Brandom’s inferentialism to capture students’ real difficulties in conceptual learning. From an inferentialist perspective, we introduce the idea of illusionary and real difficulties. The former is defined as what students cannot do, but they are not conscious of what they should do, while the latter is defined as what students cannot do despite their consciousness of what they should do. Through an eighth grade classroom episode, we argue that it is important in mathematics education research to focus not only on illusionary difficulties but also on the transition from illusionary to real difficulties. Researchers are encouraged to design a learning environment in which students become conscious of what they cannot do and to observe their mathematics learning in such an environment.&lt;/p&gt;
-          
-        </description>
-        <pubDate>11-15-2023 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s13394-023-00478-6</link>
-      </item>
-      
-      <item>
-        <title>A Tribute to Anna Sierpińska</title>
-        <description>
-          
-            
-          
-        </description>
-        <pubDate>11-15-2023 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s40753-023-00231-1</link>
       </item>
       
   </channel>
