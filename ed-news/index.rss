@@ -12,6 +12,61 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Mixed-Effects Location Scale Models for Joint Modeling School Value-Added Effects on the Mean and Variance of Student Achievement</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;School value-added models are widely applied to study, monitor, and hold schools to account for school differences in student learning. The traditional model is a mixed-effects linear regression of student current achievement on student prior achievement, background characteristics, and a school random intercept effect. The latter is referred to as the school value-added score and measures the mean student covariate-adjusted achievement in each school. In this article, we argue that further insights may be gained by additionally studying the variance in this quantity in each school. These include the ability to identify both individual schools and school types that exhibit unusually high or low variability in student achievement, even after accounting for differences in student intakes. We explore and illustrate how this can be done via fitting mixed-effects location scale versions of the traditional school value-added model. We discuss the implications of our work for research and school accountability systems.
+          
+        </description>
+        <pubDate>11-28-2023 05:49</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231210808?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>A Comparison of Latent Semantic Analysis and Latent Dirichlet Allocation in Educational Measurement</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Topic models are mathematical and statistical models used to analyze textual data. The objective of topic models is to gain information about the latent semantic space of a set of related textual data. The semantic space of a set of textual data contains the relationship between documents and words and how they are used. Topic models are becoming more common in educational measurement research as a method for analyzing students’ responses to constructed-response items. Two popular topic models are latent semantic analysis (LSA) and latent Dirichlet allocation (LDA). LSA uses linear algebra techniques, whereas LDA uses an assumed statistical model and generative process. In educational measurement, LSA is often used in algorithmic scoring of essays due to its high reliability and agreement with human raters. LDA is often used as a supplemental analysis to gain additional information about students, such as their thinking and reasoning. This article reviews and compares the LSA and LDA topic models. This article also introduces a methodology for comparing the semantic spaces obtained by the two models and uses a simulation study to investigate their similarities.
+          
+        </description>
+        <pubDate>11-28-2023 05:46</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231209446?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>The Relationships Between State Higher Education Funding Strategies and College Access and Success</title>
+        <description>
+          
+            Educational Researcher, Ahead of Print. &lt;br/&gt;We compiled the first longitudinal data set with detailed state funding information to examine whether different funding strategies for public higher education correlate with college access and completion, with a focus on outcomes among racially minoritized students. We found no relationships between funding mechanisms and student outcomes at public universities. However, at community colleges, we found that funding strategies that combine base adjustments and enrollment or performance components may increase enrollment, but not completions.
+          
+        </description>
+        <pubDate>11-27-2023 12:55</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X231208964?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>The Promise of Tutoring for PreK–12 Learning: A Systematic Review and Meta-Analysis of the Experimental Evidence</title>
+        <description>
+          
+            American Educational Research Journal, Ahead of Print. &lt;br/&gt;Tutoring ranks among the most versatile and potentially transformative educational tools available. Dozens of randomized experiments have evaluated preK–12 tutoring programs, varying widely in approaches, contexts, and costs. This article presents results from a systematic review and meta-analysis of tutoring field experiments. We develop a framework for understanding variation in tutoring program impact and examine effect sizes (ESs) across a range of characteristics. We find that tutoring programs yield consistently substantial positive impacts on learning, with an overall pooled ES of 0.288 SD (SE = 0.029, p &amp;lt; .001). ESs tend to be largest for programs that use teachers or paraprofessionals as tutors, are held in earlier grades, occur at least 3 days per week, and are held during school.
+          
+        </description>
+        <pubDate>11-27-2023 12:48</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/00028312231208687?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>AACTE, the Profession, and the Future</title>
+        <description>
+          
+            Journal of Teacher Education, &lt;a href=&quot;journals.sagepub.com/toc/jtea/75/1&quot;&gt;Volume 75, Issue 1&lt;/a&gt;, Page 5-12, January/February 2024. &lt;br/&gt;
+          
+        </description>
+        <pubDate>11-27-2023 10:01</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/00224871231212975?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Exploring cultural dynamism of ethnomodelling as a pedagogical action for students from minority cultural groups</title>
         <description>
           
@@ -222,62 +277,6 @@
         </description>
         <pubDate>11-21-2023 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s11858-023-01515-1</link>
-      </item>
-      
-      <item>
-        <title>The role of digital technologies in mathematics education: purposes and perspectives</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;Over the last decades, digital technologies (DTs) have become ubiquitous in mathematics education. Still, their integration into classroom teaching and learning varies enormously. In this narrative overview, we focus on the different purposes for which DTs are used in mathematics education in order to study how the effectiveness of DTs depends on researchers’ underlying goals and perspectives. We set up an experience- and literature-based framework including five different purposes. Applying this framework gave rise to the following results: (1) there is evidence for the benefit of using DTs for mathematics learning; (2) research on DTs leads to new theoretical developments and (3) to new design paradigms; (4) issues of equity with respect to access to and use of DTs are important but under-researched; and (5) DTs challenge curricula and teaching and assessment practices. While early research on the use of DTs focused on questions such as “does it work?” or “does it work better?”, the maturing of the field has shifted to more nuanced questions. As a future research agenda, we recommend further study of how the use of DTs in mathematics education impacts the time required for learning as well as the temporality of teaching and learning, how it changes the nature of doing mathematics and the relation to basic skills and higher-order skills in particular, how curricula, teaching practices, and assessment might change due to the availability of sophisticated mathematical tools, how DTs and other resources might be combined in teaching and learning, and how they may help to address equity issues in education. These questions will prompt the development of new theoretical constructs and approaches.&lt;/p&gt;
-          
-        </description>
-        <pubDate>11-21-2023 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-023-01535-x</link>
-      </item>
-      
-      <item>
-        <title>Effective School District Policies and Practices: Synthesizing Theoretical Frameworks and Empirical Findings across Disciplines</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>11-20-2023 08:13</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/19345747.2023.2269923?af=R</link>
-      </item>
-      
-      <item>
-        <title>Performance Evaluation of Urban Emergency Governance: Conceptual Connotations and Empirical Research Based on the Crisis Life Cycle Theory</title>
-        <description>
-          
-            Evaluation Review, Ahead of Print. &lt;br/&gt;Although scholars have discussed in depth about the evaluation content and the construction of evaluation index system of emergency management and crisis management, a unified and standardized interpretation of system construction concepts and empirical research on the performance evaluation of urban emergency management is still lacking. In view of this, this paper is based on the theory of the  crisis life cycle, with the four phases of urban emergency management and the content of the task as a clue, constructed a performance evaluation index system containing 12 primary indicators and 44 secondary indicators, and centered on the emergency management work situation of S city. The study reveals that emergency management underperforms in S city, with a score of 5.948, qualifying as the “defined level”. The “prevention and preparedness stage” receives poor evaluation, indicating a significant bias for crisis response instead of prevention. The report suggests the improvement of emergency material stockpile planning, the formation of grassroots emergency response teams, the emergency management publicity, and special emergency drill plans, etc., with a view to providing reference for city managers to comprehensively review and evaluate the emergency management system, and to promote the construction of a more systematic, complete and scientific urban emergency management system.
-          
-        </description>
-        <pubDate>11-20-2023 01:50</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/0193841X231215208?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Correction</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>11-18-2023 05:38</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2023.2281118?af=R</link>
-      </item>
-      
-      <item>
-        <title>Acknowledgments</title>
-        <description>
-          
-            Educational Evaluation and Policy Analysis, &lt;a href=&quot;journals.sagepub.com/toc/epaa/45/4&quot;&gt;Volume 45, Issue 4&lt;/a&gt;, Page 696-701, December 2023. &lt;br/&gt;
-          
-        </description>
-        <pubDate>11-18-2023 05:00</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/01623737231213600?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
