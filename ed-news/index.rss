@@ -23,6 +23,17 @@
       </item>
       
       <item>
+        <title>A Bayesian Analysis of a Cognitive-Behavioral Therapy Intervention for High-Risk People on Probation</title>
+        <description>
+          
+            Evaluation Review, Ahead of Print. &lt;br/&gt;This analysis employs a Bayesian framework to estimate the impact of a Cognitive-Behavioral Therapy (CBT) intervention on the recidivism of high-risk people under community supervision. The study relies on the reanalysis of experimental datal using a Bayesian logistic regression model. In doing so, new estimates of programmatic impact were produced using weakly informative Cauchy priors and the Hamiltonian Monte Carlo method. The Bayesian analysis indicated that CBT reduced the prevalence of new charges for total, non-violent, property, and drug crimes. However, the effectiveness of the CBT program varied meaningfully depending on the participant&#39;s age. The probability of the successful reduction of drug offenses was high only for younger individuals (&amp;lt;26 years old), while there was an impact on property offenses only for older individuals (&amp;gt;26 years old). In general, the probability of the successful reduction of new charges was higher for the older group of people on probation. Generally, this study demonstrates that Bayesian analysis can complement the more commonplace Null Hypothesis Significance Test (NHST) analysis in experimental research by providing practically useful probability information. Additionally, the specific findings of the reestimation support the principles of risk-needs responsivity and risk-stratified community supervision and align with related findings, though important differences emerge. In this case, the Bayesian estimations suggest that the effect of the intervention may vary for different types of crime depending on the age of the participants. This is informative for the development of evidence-based correctional policy and effective community supervision programming.
+          
+        </description>
+        <pubDate>12-08-2023 06:30</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/0193841X231203737?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Children’s subtraction by addition strategy use and their subtraction-related conceptual knowledge</title>
         <description>
           
@@ -269,17 +280,6 @@
         </description>
         <pubDate>12-04-2023 10:51</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/23328584231213083?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>The accountability paradigm post-NCLB: Policy Ideas and Moral Narratives</title>
-        <description>
-          
-            Educational Policy, Ahead of Print. &lt;br/&gt;For decades, policymakers in the U.S. have leveraged accountability policy as a governing tool to lift school performance and close the achievement gap. Accountability become so widespread that it arguably became a “policy paradigm” with the passage of the federal No Child Left Behind (NCLB) Act in 2002. Yet after just 13 years of implementation, policymakers replaced NCLB with the Every Student Succeeds Act (ESSA), which gave states more control over the policy tools and mechanisms to regulate school improvement. This qualitative project captured the evolution of the accountability paradigm by studying the policy ideas and moral narratives of policy elites in California and Tennessee during the transition period between NCLB and ESSA. The study finds that interview participants legitimized the core design features of ESSA, but attached their underlying worldviews and beliefs to the flexible design features, which created unique accountability models with different institutional arrangements.
-          
-        </description>
-        <pubDate>12-04-2023 05:48</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/08959048231215487?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
