@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Effective Teacher Professional Development: New Theory and a Meta-Analytic Test</title>
+        <description>
+          
+            Review of Educational Research, Ahead of Print. &lt;br/&gt;Multiple meta-analyses have now documented small positive effects of teacher professional development (PD) on pupil test scores. However, the field lacks any validated explanatory account of what differentiates more from less effective in-service training. As a result, researchers have little in the way of advice for those tasked with designing or commissioning better PD. We set out to remedy this by developing a new theory of effective PD based on combinations of causally active components targeted at developing teachers’ insights, motivating change, developing teaching techniques, and then embedding these changes in teachers’ practice. We test two important implications of the theory using data identified through a systematic review and meta-analysis of 104 randomized controlled trials, finding qualified empirical support for the theory. The main contribution of the article is to provide a testable theory of what makes PD more effective, which can be used to guide future empirical research on this topic.
+          
+        </description>
+        <pubDate>12-27-2023 06:54</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/00346543231217480?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>How to identify actions to improve in the practices of a professional learning community: a study of an action research project</title>
         <description>
           
@@ -20,6 +31,28 @@
         </description>
         <pubDate>12-26-2023 12:24</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2023.2298424?af=R</link>
+      </item>
+      
+      <item>
+        <title>Why teacher education matters even more</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-26-2023 10:52</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2023.2298631?af=R</link>
+      </item>
+      
+      <item>
+        <title>Career-related concerns and opportunities in the times of COVID-19 pandemic among preservice teachers</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-26-2023 10:46</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2023.2296351?af=R</link>
       </item>
       
       <item>
@@ -241,39 +274,6 @@
         </description>
         <pubDate>12-21-2023 12:07</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231212454?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Leverage, influence, and the jackknife in clustered regression models: Reliable inference using summclust</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/4&quot;&gt;Volume 23, Issue 4&lt;/a&gt;, Page 942-982, December 2023. &lt;br/&gt;We introduce a new command, summclust, that summarizes the cluster structure of the dataset for linear regression models with clustered disturbances. The key unit of observation for such a model is the cluster. We therefore propose cluster-level measures of leverage, partial leverage, and influence and show how to compute them quickly in most cases. The measures of leverage and partial leverage can be used as diagnostic tools to identify datasets and regression designs in which cluster–robust inference is likely to be challenging. The measures of influence can provide valuable information about how the results depend on the data in the various clusters. We also show how to calculate two jackknife variance matrix estimators efficiently as a by-product of our other computations. These estimators, which are already available in Stata, are generally more conservative than conventional variance matrix estimators. The summclust command computes all the quantities that we discuss.
-          
-        </description>
-        <pubDate>12-21-2023 12:07</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231212433?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Improving flexibility and ease of matrix subsetting: The submatrix command</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/4&quot;&gt;Volume 23, Issue 4&lt;/a&gt;, Page 1045-1056, December 2023. &lt;br/&gt;Matrix manipulation in Stata can be a time-consuming and tedious task, especially when it is necessary to subset or rearrange elements from large matrices based on nonconsecutive elements. Compared with Mata, these tasks require more time, more code, and sometimes more complex output. The purpose of this article is to introduce submatrix, a command to manipulate matrix elements using row (and column) names, numbers, and equations.
-          
-        </description>
-        <pubDate>12-21-2023 12:07</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231212439?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Announcements</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/4&quot;&gt;Volume 23, Issue 4&lt;/a&gt;, Page 1097-1098, December 2023. &lt;br/&gt;
-          
-        </description>
-        <pubDate>12-21-2023 12:07</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231212455?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
