@@ -12,6 +12,39 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Recasting Race-Conscious Admissions: Sylvia Wynter and Higher Education Policy After “Man”</title>
+        <description>
+          
+            Educational Policy, Ahead of Print. &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-28-2023 10:16</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/08959048231218207?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Developing student-researchers in primary schools through inclusive inquiry</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-28-2023 05:11</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2023.2298418?af=R</link>
+      </item>
+      
+      <item>
+        <title>Students’ mathematical thinking of the tree concept: an integration of APOS with Tall’s three worlds of mathematics</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-27-2023 11:53</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/14794802.2023.2292260?af=R</link>
+      </item>
+      
+      <item>
         <title>Grandmother Cedar as Educator: Teacher Learning Through Native Knowledges and Sovereignty Curriculum</title>
         <description>
           
@@ -241,39 +274,6 @@
         </description>
         <pubDate>12-21-2023 12:07</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231212437?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>An Introduction to Stata for Health Researchers review</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/4&quot;&gt;Volume 23, Issue 4&lt;/a&gt;, Page 1082-1085, December 2023. &lt;br/&gt;In this article, I review An Introduction to Stata for Health Researchers, by Svend Juul and Morten Frydenberg (2021, Stata Press).
-          
-        </description>
-        <pubDate>12-21-2023 12:07</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231212452?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>csa2sls: A complete subset approach for many instruments using Stata</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/4&quot;&gt;Volume 23, Issue 4&lt;/a&gt;, Page 932-941, December 2023. &lt;br/&gt;We developed a command, csa2sls, that implements the complete subset averaging two-stage least-squares (CSA2SLS) estimator in Lee and Shin (2021, Econometrics Journal 24: 290–314). The CSA2SLS estimator is an alternative to the two-stage least-squares estimator that remedies the bias issue caused by many correlated instruments. We conduct Monte Carlo simulations and confirm that the CSA2SLS estimator reduces both the mean squared error and the estimation bias substantially when instruments are correlated. We illustrate the usage of csa2sls in Stata with an empirical application.
-          
-        </description>
-        <pubDate>12-21-2023 12:07</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231212432?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Speaking Stata: Finding the denominator: Minimum sample size from percentages</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/4&quot;&gt;Volume 23, Issue 4&lt;/a&gt;, Page 1086-1095, December 2023. &lt;br/&gt;Percentage breakdowns for a series of classes or categories are sometimes reported without a specification of class frequencies or even the total sample size. This column surveys the problem of estimating the minimum sample size and class frequencies consistent with a reported breakdown and a particular resolution. I introduce and explain a new command, find_denom. Rounding quirks whereby a total is reported as above or below 100% are discussed as a complication.
-          
-        </description>
-        <pubDate>12-21-2023 12:07</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231212453?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
