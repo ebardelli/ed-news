@@ -12,6 +12,18 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Demonstrating mathematics learning as the emergence of eye–hand dynamic equilibrium</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;This paper combines recent developments in theories of knowledge (complex dynamic systems), technologies (embodied interactions), and research tools (multimodal data collection and analysis) to offer new insights into how conceptual mathematical understanding can emerge. A complex dynamic system view models mathematics learning in terms of a multimodal agent who encounters a set of task constraints. The learning process in this context includes destabilizing a systemic configuration (for example, coordination of eye and hand movements) and forming new dynamic stability adapted to the task constraints. To test this model empirically, we applied a method developed to study complex systems, recurrence quantification analysis (RQA), to investigate students’ eye–hand dynamics during a touchscreen mathematics activity for the concept of proportionality. We found that across participants (&lt;em class=&quot;a-plus-plus&quot;&gt;n&lt;/em&gt; = 32), fluently coordinated hand-movement solutions coincided with more stable and predictable gaze patterns. We present a case study of a prototypical participant’s hand–eye RQA and audio–video data to show how the student’s cognitive system transitioned out of prior coordination reflective of additive thinking into a new coordination that can ground multiplicative thinking. These findings constitute empirical substantiation in mathematics education research for cognition as a complex system transitioning among dynamic equilibria.&lt;/p&gt;
+          
+        </description>
+        <pubDate>12-29-2023 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s10649-023-10279-0</link>
+      </item>
+      
+      <item>
         <title>Recasting Race-Conscious Admissions: Sylvia Wynter and Higher Education Policy After “Man”</title>
         <description>
           
@@ -31,6 +43,17 @@
         </description>
         <pubDate>12-28-2023 05:11</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2023.2298418?af=R</link>
+      </item>
+      
+      <item>
+        <title>An analysis of prospective primary school teachers’ action research: the case of Lithuania</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-28-2023 01:47</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2023.2298744?af=R</link>
       </item>
       
       <item>
@@ -252,28 +275,6 @@
         </description>
         <pubDate>12-21-2023 12:07</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231212426?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Review of Alan Acock’s A Gentle Introduction to Stata, Revised Sixth Edition</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/4&quot;&gt;Volume 23, Issue 4&lt;/a&gt;, Page 1074-1081, December 2023. &lt;br/&gt;In this article, I review A Gentle Introduction to Stata, Revised Sixth Edition, by Alan Acock (2023, Stata Press).
-          
-        </description>
-        <pubDate>12-21-2023 12:07</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231212448?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>ardl: Estimating autoregressive distributed lag and equilibrium correction models</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/4&quot;&gt;Volume 23, Issue 4&lt;/a&gt;, Page 983-1019, December 2023. &lt;br/&gt;We present a command, ardl, for the estimation of autoregressive distributed lag (ARDL) models in a time-series context. The ardl command can be used to fit an ARDL model with the optimal number of autoregressive and distributed lags based on the Akaike or Bayesian (Schwarz) information criterion. The regression results can be displayed in the ARDL levels form or in the error-correction representation of the model. The latter separates long-run and short-run effects and is available in two different parameterizations of the long-run (cointegrating) relationship. The popular bounds-testing procedure for the existence of a long-run levels relationship is implemented as a postestimation feature. Comprehensive critical values and approximate p-values obtained from response-surface regressions facilitate statistical inference.
-          
-        </description>
-        <pubDate>12-21-2023 12:07</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231212434?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
