@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Charles Hohensee and Joanne Lobato (Eds.). Transfer of learning: progressive perspectives for mathematics education and related fields</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-29-2023 01:05</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/10986065.2023.2299062?af=R</link>
+      </item>
+      
+      <item>
         <title>Demonstrating mathematics learning as the emergence of eye–hand dynamic equilibrium</title>
         <description>
           
@@ -264,17 +275,6 @@
         </description>
         <pubDate>12-21-2023 12:07</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231212425?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>pystacked: Stacking generalization and machine learning in Stata</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/23/4&quot;&gt;Volume 23, Issue 4&lt;/a&gt;, Page 909-931, December 2023. &lt;br/&gt;The pystacked command implements stacked generalization (Wolpert, 1992, Neural Networks 5: 241–259) for regression and binary classification via Python’s scikit-learn. Stacking combines multiple supervised machine learners—the “base” or “level-0” learners—into one learner. The currently supported base learners include regularized regression, random forest, gradient boosted trees, support vector machines, and feed-forward neural nets (multilayer perceptron). pystacked can also be used as a “regular” machine learning program to fit one base learner and thus provides an easy-to-use application programming interface for scikit-learn‘s machine learning algorithms.
-          
-        </description>
-        <pubDate>12-21-2023 12:07</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X231212426?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
