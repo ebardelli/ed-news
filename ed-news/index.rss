@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>The impact of service learning supported by the ePortfolio on the development of professional competencies</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>01-02-2024 01:58</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/10476210.2023.2281396?af=R</link>
+      </item>
+      
+      <item>
         <title>The Effects and Local Implementation of School Finance Reforms on Teacher Salary, Hiring, and Turnover</title>
         <description>
           
@@ -265,17 +276,6 @@
         </description>
         <pubDate>12-22-2023 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s13394-023-00480-y</link>
-      </item>
-      
-      <item>
-        <title>A Simple Technique Assessing Ordinal and Disordinal Interaction Effects</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Previous research explicates ordinal and disordinal interactions through the concept of the “crossover point.” This point is determined via simple regression models of a focal predictor at specific moderator values and signifies the intersection of these models. An interaction effect is labeled as disordinal (or ordinal) when the crossover point falls within (or outside) the observable range of the focal predictor. However, this approach might yield erroneous conclusions due to the crossover point’s intrinsic nature as a random variable defined by mean and variance. To statistically evaluate ordinal and disordinal interactions, a comparison between the observable range and the confidence interval (CI) of the crossover point is crucial. Numerous methods for establishing CIs, including reparameterization and bootstrap techniques, exist. Yet, these alternative methods are scarcely employed in social science journals for assessing ordinal and disordinal interactions. This note introduces a straightforward approach for calculating CIs, leveraging an extension of the Johnson–Neyman technique.
-          
-        </description>
-        <pubDate>12-21-2023 12:28</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231217472?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
