@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Cluster Randomized Trials Designed to Support Generalizable Inferences</title>
+        <description>
+          
+            Evaluation Review, Ahead of Print. &lt;br/&gt;When planning a cluster randomized trial, evaluators often have access to an enumerated cohort representing the target population of clusters. Practicalities of conducting the trial, such as the need to oversample clusters with certain characteristics in order to improve trial economy or support inferences about subgroups of clusters, may preclude simple random sampling from the cohort into the trial, and thus interfere with the goal of producing generalizable inferences about the target population. We describe a nested trial design where the randomized clusters are embedded within a cohort of trial-eligible clusters from the target population and where clusters are selected for inclusion in the trial with known sampling probabilities that may depend on cluster characteristics (e.g., allowing clusters to be chosen to facilitate trial conduct or to examine hypotheses related to their characteristics). We develop and evaluate methods for analyzing data from this design to generalize causal inferences to the target population underlying the cohort. We present identification and estimation results for the expectation of the average potential outcome and for the average treatment effect, in the entire target population of clusters and in its non-randomized subset. In simulation studies, we show that all the estimators have low bias but markedly different precision. Cluster randomized trials where clusters are selected for inclusion with known sampling probabilities that depend on cluster characteristics, combined with efficient estimation methods, can precisely quantify treatment effects in the target population, while addressing objectives of trial conduct that require oversampling clusters on the basis of their characteristics.
+          
+        </description>
+        <pubDate>01-18-2024 05:36</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/0193841X231169557?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Evaluating a Hypothetical Learning Trajectory for nets of rectangular prisms: A teaching experiment</title>
         <description>
           
@@ -43,6 +54,17 @@
         </description>
         <pubDate>01-17-2024 07:22</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/23328584231221793?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>“No me dejaran ir porque they needed me here”: spatializing corrective representatives by critiquing latinx teacher role model discourse</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>01-17-2024 01:58</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2024.2306413?af=R</link>
       </item>
       
       <item>
@@ -259,28 +281,6 @@
         </description>
         <pubDate>01-12-2024 07:18</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/01626620.2023.2282417?af=R</link>
-      </item>
-      
-      <item>
-        <title>Applying an Equity Framework to Develop Inclusive Visions of STEM Teaching: Honoring the Voices of Students with Dis/Abilities</title>
-        <description>
-          
-            &lt;a href=&quot;/toc/uate20/46/1&quot;&gt;Volume 46, Issue 1&lt;/a&gt;, Spring 2024, Page 75-93&lt;br/&gt;. &lt;br/&gt;
-          
-        </description>
-        <pubDate>01-12-2024 07:18</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/01626620.2023.2290250?af=R</link>
-      </item>
-      
-      <item>
-        <title>White Preservice Teachers and Antiracist Practice: Enabling Trajectories of Learning and Identity in Teacher Preparation</title>
-        <description>
-          
-            &lt;a href=&quot;/toc/uate20/46/1&quot;&gt;Volume 46, Issue 1&lt;/a&gt;, Spring 2024, Page 56-74&lt;br/&gt;. &lt;br/&gt;
-          
-        </description>
-        <pubDate>01-12-2024 07:18</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/01626620.2023.2292628?af=R</link>
       </item>
       
   </channel>
