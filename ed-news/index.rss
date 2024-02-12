@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>The Role of Preservice Teachers’ Quantitative and Covariational Reasoning in Understanding Climate Change</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>02-12-2024 05:33</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/07370008.2024.2314499?af=R</link>
+      </item>
+      
+      <item>
         <title>Teacher practitioner enquiry: a process for developing teacher learning and practice?</title>
         <description>
           
@@ -20,6 +31,18 @@
         </description>
         <pubDate>02-11-2024 05:32</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2024.2313085?af=R</link>
+      </item>
+      
+      <item>
+        <title>Moving beyond reflection and toward disruption in the post-field context of mathematics teacher education</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;Prospective teachers bring countless stories of success and failure from different mathematics classrooms to their post-field teacher education courses. These reflective stories often glorify school mathematics classrooms and dominant traditions within, instead of confronting the marginalization of diverse groups in school environments. Mathematics teacher educators have a significant role to play in teaching prospective teachers to reflect critically on their field experiences and, in doing so, create spaces for &lt;em class=&quot;a-plus-plus&quot;&gt;disruption&lt;/em&gt; and &lt;em class=&quot;a-plus-plus&quot;&gt;disruptive pedagogies&lt;/em&gt;. Drawing on critical and equity-based theories applied within the fields of mathematics education and teacher education research, we propose a &lt;em class=&quot;a-plus-plus&quot;&gt;disruptive pedagogy&lt;/em&gt; analytical framework that enables us to study the roles and practices of mathematics teacher educators as they conduct their work in these post-field contexts of teacher education. In this paper, we introduce our disruptive pedagogy framework and present the results that followed from using it to analyze data from a research study in which mathematics teacher educators from across Canada and Norway were interviewed. We claim that our analytical framework can be used to identify those disruptive and transformative practices initiated by mathematics teacher educators—practices that are necessary to bring about shifts in inequitable and unjust classroom practices of school mathematics and in becoming a teacher. Unfortunately, however, results reported here point to the need for further shifts and growth toward more explicitly disruptive practices initiated by mathematics teacher educators in the post-field context.&lt;/p&gt;
+          
+        </description>
+        <pubDate>02-11-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s11858-024-01547-1</link>
       </item>
       
       <item>
@@ -256,28 +279,6 @@
         </description>
         <pubDate>02-05-2024 05:00</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.3102/01623737231221503?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Participation and Educational Conservatism Among Lower Secondary School Students in a Disadvantaged Neighborhood in Finland: A Request for Visible Pedagogies</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>02-05-2024 04:04</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2024.2307797?af=R</link>
-      </item>
-      
-      <item>
-        <title>Using Regularization to Identify Measurement Bias Across Multiple Background Characteristics: A Penalized Expectation–Maximization Algorithm</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Testing for differential item functioning (DIF) has undergone rapid statistical developments recently. Moderated nonlinear factor analysis (MNLFA) allows for simultaneous testing of DIF among multiple categorical and continuous covariates (e.g., sex, age, ethnicity, etc.), and regularization has shown promising results for identifying DIF among many covariates. However, computationally inefficient estimation methods have hampered practical use of the regularized MNFLA method. We develop a penalized expectation–maximization (EM) algorithm with soft- and firm-thresholding to more efficiently estimate regularized MNLFA parameters. Simulation and empirical results show that, compared to previous implementations of regularized MNFLA, the penalized EM algorithm is faster, more flexible, and more statistically principled. This method also yields similar recovery of DIF relative to previous implementations, suggesting that regularized DIF detection remains a preferred approach over traditional methods of identifying DIF.
-          
-        </description>
-        <pubDate>02-05-2024 01:20</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986231226439?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
