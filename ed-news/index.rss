@@ -34,6 +34,17 @@
       </item>
       
       <item>
+        <title>Bayesian Adaptive Lasso for the Detection of Differential Item Functioning in Graded Response Models</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;The detection of differential item functioning (DIF) is important in psychological and behavioral sciences. Standard DIF detection methods perform an item-by-item test iteratively, often assuming that all items except the one under investigation are DIF-free. This article proposes a Bayesian adaptive Lasso method to detect DIF in graded response models (GRMs), where the DIF effects for all items can be identified simultaneously. The multiple-group GRMs are specified, and the possible DIF effects for each item are reparameterized using the increment components. Then, a Bayesian adaptive Lasso procedure is developed for parameter estimation, in which DIF effects can be automatically obtained. Our method is evaluated and compared with the commonly used likelihood ratio test method in a simulation study. The results show that our method can recover most model parameters well and has better control of false positive rates in almost all conditions. An application is presented using data from the National Longitudinal Study of Adolescent to Adult Health (Add Health).
+          
+        </description>
+        <pubDate>03-07-2024 01:38</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241233777?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Teacher-Student Race Match and Identification for Discretionary Educational Services</title>
         <description>
           
@@ -56,6 +67,17 @@
       </item>
       
       <item>
+        <title>The impact of online lesson study on students’ achievement in mathematics in China</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>03-06-2024 01:24</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2024.2325665?af=R</link>
+      </item>
+      
+      <item>
         <title>Parents and teachers collaborating to disrupt asymmetrical power positions in mathematics education</title>
         <description>
           
@@ -65,6 +87,18 @@
         </description>
         <pubDate>03-06-2024 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s11858-024-01555-1</link>
+      </item>
+      
+      <item>
+        <title>Self-efficacy in teaching mathematics and the use of effective pedagogical practices in New Zealand primary schools</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;This study explored teachers’ self-efficacy in teaching mathematics (SETM) as related to their teaching profile and pedagogical practices. Using data from 327 New Zealand primary teachers, a multilevel structural equation model was constructed and analyzed that looked at the relationships among SETM and effective pedagogical practice scales and included characteristics related to the teachers and their schools. No significant gender, year level, or school socioeconomic differences were found with teachers’ SETM. Experienced teachers had significantly higher SETM scores than their inexperienced colleagues. Teachers who were self-efficacious in their mathematics teaching reported pedagogical practices known to be effective in the mathematics classroom in contrast to their low self-efficacy colleagues.&lt;/p&gt;
+          
+        </description>
+        <pubDate>03-06-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s10857-024-09623-9</link>
       </item>
       
       <item>
@@ -241,39 +275,6 @@
         </description>
         <pubDate>03-05-2024 03:35</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/00317217241238103?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Poll Points: What does the public think about expanding time in school?</title>
-        <description>
-          
-            Phi Delta Kappan, &lt;a href=&quot;journals.sagepub.com/toc/pdka/105/6&quot;&gt;Volume 105, Issue 6&lt;/a&gt;, Page 72-72, March 2024. &lt;br/&gt;The PDK poll shows that a majority of Americans would support expanding the amount of time students spend in school, with more Americans preferring longer school years to longer school days. This infographic shows how the data breaks down by race, region, and type of community.
-          
-        </description>
-        <pubDate>03-05-2024 03:35</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/00317217241238119?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>The Editor’s Note: Change for the change-averse</title>
-        <description>
-          
-            Phi Delta Kappan, &lt;a href=&quot;journals.sagepub.com/toc/pdka/105/6&quot;&gt;Volume 105, Issue 6&lt;/a&gt;, Page 4-4, March 2024. &lt;br/&gt;Many people who resist change are actually resisting changes that don’t make a difference but only pile on more work. Teresa Preston, editor-in-chief of Kappan, previews the March issue of Kappan, which focuses on how education leaders can make changes that have value.
-          
-        </description>
-        <pubDate>03-05-2024 03:35</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/00317217241238098?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Policy Solutions: We need a school board election holiday</title>
-        <description>
-          
-            Phi Delta Kappan, &lt;a href=&quot;journals.sagepub.com/toc/pdka/105/6&quot;&gt;Volume 105, Issue 6&lt;/a&gt;, Page 60-61, March 2024. &lt;br/&gt;Voter turnout for school board elections is historically low, with tiny percentages deciding who governs schools. Columnist Jonathan E. Collins proposes a new federal holiday, School Board Election Day, to increase voter turnout and public involvement and interest in public schools. School board elections would be held on the same day nationally, and voters would be encouraged to visit schools not only to vote but to participate in forums and projects to benefit schools.
-          
-        </description>
-        <pubDate>03-05-2024 03:35</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/00317217241238112?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
