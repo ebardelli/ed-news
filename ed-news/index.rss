@@ -12,6 +12,138 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Software Updates</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/1&quot;&gt;Volume 24, Issue 1&lt;/a&gt;, Page 182-184, March 2024. &lt;br/&gt;
+          
+        </description>
+        <pubDate>03-19-2024 10:37</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241233681?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Announcements</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/1&quot;&gt;Volume 24, Issue 1&lt;/a&gt;, Page 185-187, March 2024. &lt;br/&gt;
+          
+        </description>
+        <pubDate>03-19-2024 10:37</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241233680?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Ordinary least squares and instrumental-variables estimators for any outcome and heterogeneity</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/1&quot;&gt;Volume 24, Issue 1&lt;/a&gt;, Page 72-92, March 2024. &lt;br/&gt;Given an exogenous treatment d and covariates x, an ordinary least-squares (OLS) estimator is often applied with a noncontinuous outcome y to find the effect of d, despite the fact that the OLS linear model is invalid. Also, when d is endogenous with an instrument z, an instrumental-variables estimator (IVE) is often applied, again despite the invalid linear model. Furthermore, the treatment effect is likely to be heterogeneous, say, µ1(x), not a constant as assumed in most linear models. Given these problems, the question is then what kind of effect the OLS and IVE actually estimate. Under some restrictive conditions such as a “saturated model”, the estimated effect is known to be a weighted average, say, E{ω(x)µ1(x)}, but in general, OLS and the IVE applied to linear models with a noncontinuous outcome or heterogeneous effect fail to yield a weighted average of heterogeneous treatment effects. Recently, however, it has been found that E{ω(x)µ1(x)} can be estimated by OLS and the IVE without those restrictive conditions if the “propensity-score residual” d − E(d| x) or the “instrument-score residual” z−E(z| x) is used. In this article, we review this recent development and provide a command for OLS and the IVE with the propensity- and instrument-score residuals, which are applicable to any outcome and any heterogeneous effect.
+          
+        </description>
+        <pubDate>03-19-2024 10:37</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241233645?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Nearly collinear robust procedures for 2SLS estimation</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/1&quot;&gt;Volume 24, Issue 1&lt;/a&gt;, Page 93-112, March 2024. &lt;br/&gt;Stata’s two-stage least-squares (2SLS) computation procedures are sensitive to near collinearity among regressors, allowing situations in which reported results depend upon factors as irrelevant as the order of the data and variables. This article illustrates this claim with the public-use data of Oreopoulos (2006, American Economic Review 96: 152–175), where the instrumented coefficient estimate can be made to vary between 0.012 and 30.0 in one specification by permuting the order of the variables. Different methods for improving the accuracy of 2SLS estimates are reviewed, and a Stata command for collinearity-robust 2SLS estimation is provided.
+          
+        </description>
+        <pubDate>03-19-2024 10:37</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241233668?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>ddml: Double/debiased machine learning in Stata</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/1&quot;&gt;Volume 24, Issue 1&lt;/a&gt;, Page 3-45, March 2024. &lt;br/&gt;In this article, we introduce a package, ddml, for double/debiased machine learning in Stata. Estimators of causal parameters for five different econometric models are supported, allowing for flexible estimation of causal effects of endogenous variables in settings with unknown functional forms or many exogenous variables. ddml is compatible with many existing supervised machine learning programs in Stata. We recommend using double/debiased machine learning in combination with stacking estimation, which combines multiple machine learners into a final predictor. We provide Monte Carlo evidence to support our recommendation.
+          
+        </description>
+        <pubDate>03-19-2024 10:37</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241233641?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Identify latent group structures in panel data: The classifylasso command</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/1&quot;&gt;Volume 24, Issue 1&lt;/a&gt;, Page 46-71, March 2024. &lt;br/&gt;In this article, we introduce a new command, classifylasso, that implements the classifier-lasso method (Su, Shi, and Phillips, 2016, Econometrica 84: 2215–2264) to simultaneously identify and estimate unobserved parameter heterogeneity in panel-data models using penalized techniques. We document the functionality of this command, including 1) penalized least-squares estimation of group-specific coefficients and classification of unknown group membership under a certain number of groups; 2) two lasso-type estimators with robust standard errors, namely, classifier-lasso and postlasso; and 3) determination of the number of groups based on an information criterion. We further develop some postestimation commands to display and visualize the estimation results.
+          
+        </description>
+        <pubDate>03-19-2024 10:37</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241233642?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>A Bayesian method for addressing multinomial misclassification with applications for alcohol epidemiological modeling</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/1&quot;&gt;Volume 24, Issue 1&lt;/a&gt;, Page 113-137, March 2024. &lt;br/&gt;In this article, we describe a new command, bamm, that implements a Bayesian method for addressing misclassification in multinomial data; see Swartz et al. (2004, Canadian Journal of Statistics 32: 285–302). We also describe a postestimation command, bammdx, that was developed to provide additional estimation diagnostics. We describe the method and the new commands and then present results from both a simulation study demonstrating bamm’s performance under a known misclassification data-generating process and an empirical example from alcohol epidemiology modeling.
+          
+        </description>
+        <pubDate>03-19-2024 10:37</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241233671?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Stata tip 153: Extracting text data from webpages</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/1&quot;&gt;Volume 24, Issue 1&lt;/a&gt;, Page 169-173, March 2024. &lt;br/&gt;
+          
+        </description>
+        <pubDate>03-19-2024 10:37</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241233678?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Stata tip 154: Computing power and sample size for prospective diagnostic accuracy studies using Stata’s official power commands</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/1&quot;&gt;Volume 24, Issue 1&lt;/a&gt;, Page 174-181, March 2024. &lt;br/&gt;
+          
+        </description>
+        <pubDate>03-19-2024 10:37</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241233679?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Browse and cite Stata manuals easily: The wwwhelp command</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/1&quot;&gt;Volume 24, Issue 1&lt;/a&gt;, Page 161-168, March 2024. &lt;br/&gt;In this article, we describe a new command, wwwhelp, that facilitates direct access to online versions of Stata’s official help files or PDF documentation. Addressing the challenges associated with storing, citing, and sharing documentation, wwwhelp complements the help command by enabling access to documentation outside the Stata environment. In addition to fully using the abundant resources available on Stata’s website, wwwhelp enhances the convenience of citing Stata commands in articles and blog posts, thereby promoting the utilization and dissemination of Stata commands.
+          
+        </description>
+        <pubDate>03-19-2024 10:37</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241233676?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Announcement of the Stata Journal Editors’ Prize 2024</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/1&quot;&gt;Volume 24, Issue 1&lt;/a&gt;, Page 1-2, March 2024. &lt;br/&gt;
+          
+        </description>
+        <pubDate>03-19-2024 10:37</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241233638?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>sendemails: An automated email package with multiple applications</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/1&quot;&gt;Volume 24, Issue 1&lt;/a&gt;, Page 138-160, March 2024. &lt;br/&gt;In this article, we illustrate the sendemails command, which allows users to automatically send emails with Stata through PowerShell. Researchers can use this package to perform several email tasks, such as contacting students or colleagues with standardized messages. Additionally, researchers can perform more complex tasks that entail sending randomized messages with multiple attachments from multiple accounts; these tasks are often necessary to conduct correspondence audit tests. This article introduces the sendemails command and illustrates multiple examples of its application. The online appendix discusses an application of this package to correspondence audits.
+          
+        </description>
+        <pubDate>03-19-2024 10:37</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241233672?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>The Academic Effects of Moving to Middle School on Students With Disabilities Relative to Their General Education Peers</title>
         <description>
           
@@ -20,6 +152,17 @@
         </description>
         <pubDate>03-18-2024 04:00</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.3102/01623737241229990?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>The Effects of Grade Retention on High School Outcomes: Evidence from New York City Schools</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>03-18-2024 02:56</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/19345747.2023.2287607?af=R</link>
       </item>
       
       <item>
@@ -131,150 +274,6 @@
         </description>
         <pubDate>03-15-2024 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s11858-024-01556-0</link>
-      </item>
-      
-      <item>
-        <title>Research on curriculum resources in mathematics education: a survey of the field</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;This survey describes the structure of the field of research on curriculum resources in mathematics education in the period from 2018 till 2023. Based on the procedures of a systematic review relevant literature was identified using Web of Science as a database. The included literature was analyzed and categorized according to the type of curriculum resource and the area of study. Seven areas of studies were identified: studies on the role of curriculum resources, content analysis, user studies, studies on the effects of curriculum resources, studies on curriculum resource design, curriculum resources as data, and reviews. The areas were further subdivided into different subcategories based on the research questions of the included papers. The findings show that research on mathematics textbooks is still predominant in the field. The most popular areas of research are content analysis, user studies, studies on design, and studies on effects. Emerging areas are research on students’ use of curriculum resources and the employment of user data from digital curriculum resources as data basis in mathematics education research.&lt;/p&gt;
-          
-        </description>
-        <pubDate>03-15-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-024-01559-x</link>
-      </item>
-      
-      <item>
-        <title>Collaboration and co-creation in autism research: a reflection on the challenges and benefits of participatory approaches in doctoral research</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>03-14-2024 10:40</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2024.2329195?af=R</link>
-      </item>
-      
-      <item>
-        <title>Femmenoir pedagogies: rescripting the reproduction of Black women’s marginalization in education</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>03-14-2024 07:13</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2024.2327110?af=R</link>
-      </item>
-      
-      <item>
-        <title>Poststructural Analysis of Anti-LGBTQ + Educational Policies</title>
-        <description>
-          
-            Educational Policy, Ahead of Print. &lt;br/&gt;We draw on several critical paradigms, disciplines, and theories to interrogate 13 anti-LGBTQ+ educational policy texts. Using Institutional Theory (Anagnostopoulos et al., 2010; Carpenter &amp;amp; Feroz, 2001) and Poststructural Policy Analysis (Bacchi &amp;amp; Goodwin, 2016), we explore how these texts may cause separations between policy and practice, how they construct “teachers” and “students” as subjects and objects of the state, and how they promote cisheteropatriarchy. The terms reactive evasion and identity evasiveness are presented to describe central discursive mechanisms in the texts. The term identity specificity, or the humanizing practices of recognizing diverse identities, is coined as a fundamental component of educational quality. We situate our work as an enunciation of critical resistance within anti-oppressive discourses and assert three main arguments: (a) these dictates will adversely affect educational institutions; (b) a fundamental component of educational quality is identity specificity; and (c) policy not centered on the humanizing testimony of those about whom that policy is generated reinforces oppressive regimes.
-          
-        </description>
-        <pubDate>03-14-2024 06:40</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/08959048241237718?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Student activists for racially equitable change: lessons for higher education leaders from a critical participatory action research project</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>03-14-2024 05:25</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2024.2329172?af=R</link>
-      </item>
-      
-      <item>
-        <title>Examining the role of emotion in culturally and linguistically diverse students’ classroom underlife</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>03-13-2024 06:17</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2024.2323781?af=R</link>
-      </item>
-      
-      <item>
-        <title>Shared Responsibility for Multilingual Learners Across Levels of the Education System</title>
-        <description>
-          
-            Educational Researcher, Ahead of Print. &lt;br/&gt;Educational change efforts that prioritize equity for multilingual learners (MLs) require attention to several interconnected components of the education system. We build on prior literature and our collective research to clarify the concept of shared responsibility for ML students and to operationalize the concept at the school, district, and state levels. Drawing on institutional theory and a racialized organizations lens, we argue that shared responsibility is embedded in the mindsets, norms, and structures that shape education systems. We also attend to the complexities of fostering shared responsibility in practice, such as grappling with pervasive educator burnout and developing innovative strategies that span levels of the system. We conclude with directions for future research, including studies examining effective approaches for shifting the mindsets, norms, and routines comprising shared responsibility, and recommendations for researchers to play a more active role in shaping shared responsibility for ML students.
-          
-        </description>
-        <pubDate>03-13-2024 06:09</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X241227913?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Feeling anti-racism: how neoliberal multiculturalism and racialized emotions impede equity in the aftermath of George Floyd</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>03-13-2024 06:05</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2024.2323773?af=R</link>
-      </item>
-      
-      <item>
-        <title>Leveraging a University to Create Local Equity-Oriented K–12 Learning Opportunities: A Conversation Starter</title>
-        <description>
-          
-            Educational Researcher, Ahead of Print. &lt;br/&gt;This article shares our university center’s efforts to act as a boundary spanner supporting colleagues across our university to contribute collectively to more equitable educational opportunities for local K–12 students and their teachers. We focus here on the ongoing critical reflection and collaboration needed to tap such university resources to support K–12 students typically underresourced and underserved in K–12 systems. We consider examples and challenges of our work through five equity-oriented principles. We seek to highlight the role of research-practice teams on campuses that help (or could help) university partners contribute to local K–12 schools, programs, and systems with equity in mind. Finally, we hope to convince other higher education institutions to leverage their resources more to grow K–12 education opportunities locally where needs are greatest.
-          
-        </description>
-        <pubDate>03-13-2024 05:56</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X241227887?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Are Changes in Reported Social-Emotional Skills Just Noise? The Predictive Power of Longitudinal Differences in Self-Reports</title>
-        <description>
-          
-            AERA Open, &lt;a href=&quot;journals.sagepub.com/toc/eroa/10&quot;&gt;Volume 10, Issue &lt;/a&gt;, January-December 2024. &lt;br/&gt;Prior work has shown that students’ self-reported levels on social-emotional measures predict achievement levels and gains, but we have little evidence on whether within-student changes in self-reports on social-emotional surveys are predictive of changes in theoretically related academic and behavioral outcomes. We use large-scale data from the California CORE districts to examine whether changes in individual reports on social-emotional measures from one school year to the next predict changes in state math and English language arts test scores and attendance. We show that changes in self-reported social-emotional measures predict changes in both achievement and attendance. These results are robust across model specifications. Moreover, the relationships between SEL and achievement and attendance outcomes are consistent across student subgroups.
-          
-        </description>
-        <pubDate>03-13-2024 05:55</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584241233277?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Quantifying and Predicting Variation in the Medium-Term Effects of an Oversubscribed Prekindergarten Program</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>03-13-2024 05:13</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/19345747.2023.2286280?af=R</link>
-      </item>
-      
-      <item>
-        <title>Mentor teachers’ achievement goal orientations for mentoring during the practicum</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>03-13-2024 04:32</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2024.2328060?af=R</link>
-      </item>
-      
-      <item>
-        <title>Defending the Color Line: White Supremacy and the Legacy of Brown</title>
-        <description>
-          
-            Educational Researcher, Ahead of Print. &lt;br/&gt;Building on W. E. B. Du Bois’s color line concept, I argue that white supremacy is deeply embedded in U.S. educational organizations and that White racial actors, opportunity hoarding, and the cultivation of racial ideology and racial ignorance help sustain it. In doing this, I seek to move away from the aspirational progress narratives often associated with Brown to the racial hierarchies and various forms of harm that schools reproduce, even when they are racially diverse. Taking the recent attacks against critical race theory as a backdrop, I argue that educational institutions not only contribute to educational inequity but also socialize people into relations of racial domination and subordination through organizational practices and individual actions. In the article’s conclusion, I highlight my efforts to disrupt these patterns and work toward the creation of more liberatory education spaces.
-          
-        </description>
-        <pubDate>03-13-2024 03:39</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X231216450?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
