@@ -12,6 +12,39 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>A Novel Numerical Method for Solving Unknown Statistical Quantities in Multivariate Regression Models</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Simulation studies are the basic tools of quantitative methodologists used to obtain empirical solutions to statistical problems that may be impossible to derive through direct mathematical computations. The successful execution of many simulation studies relies on the accurate generation of correlated multivariate data that adhere to a particular model with known parameter values. In this article, we use a kernel inspired by path tracing rules to algebraically solve unknown causal effects in the context of a multivariate general linear model. The algebraic solution is the basis of the mathematical extension, which integrates a model solver. Examples are used to illustrate a range of applications, where information regarding parameter values and predictor correlations can be partially specified. Code for examples is provided.
+          
+        </description>
+        <pubDate>04-08-2024 04:36</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241240083?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Using Extant Data to Improve Estimation of the Standardized Mean Difference</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;This article presents methods for using extant data to improve the properties of estimators of the standardized mean difference (SMD) effect size. Because samples recruited into education research studies are often more homogeneous than the populations of policy interest, the variation in educational outcomes can be smaller in these samples than is reflective of the true variation in the population. This affects effect size estimation since the sample standard deviation is used in the denominator of the SMD. We propose leveraging extant data on sample variance estimates from multiple studies, made available via clearinghouse databases such as the What Works Clearinghouse, to standardize a mean difference. This allows effect sizes to be benchmarked across a common and broad population, thus enabling better comparability across studies and interventions. We derive the new estimators of the population variance and the corresponding SMD, which pool sample variances from multiple studies using both an analysis of variance and a meta-analytic framework. We demonstrate the properties of these estimators via analytic and simulation results and offer recommendations for when these estimators are appropriate in practice.
+          
+        </description>
+        <pubDate>04-08-2024 04:36</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241238478?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Strive for Measurement, Set New Standards, and Try Not to Be Evil</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;I consider recent attempts to establish standards, principles, and goals for artificial intelligence (AI) through the lens of educational measurement. Distinctions are made between generative AI and AI-adjacent methods and applications of AI in formative versus summative assessment contexts. While expressing optimism about its possibilities, I caution that the examples of truly generative AI in educational testing have the potential to be overexaggerated, that efforts to establish standards for AI should complement the Standards for Educational and Psychological Testing and focus attention on the issues of fairness and social responsibility, and that scientific advance and transparency in the development and application of AI in educational assessment may be incompatible with the competitive marketplace that is funding this development.
+          
+        </description>
+        <pubDate>04-08-2024 04:36</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241238479?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Understanding Heterogeneous Patterns of Family Engagement With Educational Technology to Inform School-Family Communication in Linguistically Diverse Communities</title>
         <description>
           
@@ -244,39 +277,6 @@
         </description>
         <pubDate>04-02-2024 08:05</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/19345747.2024.2333734?af=R</link>
-      </item>
-      
-      <item>
-        <title>Coding and Computational Thinking Across the Curriculum: A Review of Educational Outcomes</title>
-        <description>
-          
-            Review of Educational Research, Ahead of Print. &lt;br/&gt;Teaching coding and computational thinking is an emerging educational imperative, now embedded in compulsory curriculum in the United States, Finland, the UK, Germany, Belgium, the Netherlands, New Zealand, and Australia. This meta-synthesis of 49 studies critically reviews recent international research (2009–2022) of coding and computational thinking as core and integrated across the curriculum. It addresses four essential problems: (a) What are the key features of learning environments that successfully develop students’ coding and computational thinking? (b) What is the impact of student engagement in coding and computational thinking on learning outcomes across curriculum areas? (c) What pedagogical constraints are evident for coding and computational thinking, including across curriculum areas? and (d) Which conceptual frameworks support coding and computational thinking, and what has been marginalized or excluded? The review advances knowledge of coding and computational thinking—vital to guide and develop future AI-based solutions to real-world problems that challenge disciplinary boundaries.
-          
-        </description>
-        <pubDate>04-02-2024 04:40</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/00346543241241327?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Race(ism), Power, Intimidation, &amp; Domestic Terrorism: A Critical Content Analysis of HBCU Bomb Threats on Social Media</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>04-02-2024 01:49</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2024.2331939?af=R</link>
-      </item>
-      
-      <item>
-        <title>Correction to: Book Review: Humanizing Disability in Mathematics Education: Forging New Paths. Paulo Tan, Alexis Padilla, Erica N. Mason, and James Sheldon (Eds.)</title>
-        <description>
-          
-            
-          
-        </description>
-        <pubDate>04-02-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s13394-024-00486-0</link>
       </item>
       
   </channel>
