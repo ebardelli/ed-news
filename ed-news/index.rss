@@ -45,6 +45,29 @@
       </item>
       
       <item>
+        <title>Correction to: Awareness as an enactivist framework for the mathematical learning of teachers, mentors and institutions</title>
+        <description>
+          
+            
+          
+        </description>
+        <pubDate>04-15-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s11858-024-01569-9</link>
+      </item>
+      
+      <item>
+        <title>Navigating around marginalizing complexities: the case of mathematics teachers in the Philippines</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;Marginalization, widely associated with poverty, inequality, and underdevelopment restricts access to resources, limits freedom of choice, inhibits the development of individual capabilities, and makes it challenging to escape from marginalized circumstances. We examine marginality in mathematics teaching and its complexities in the tightly centralized educational system in the Philippines by identifying the different situations that contribute to how mathematics teachers can be excluded from certain educational practices that would normally fall within their mandate as professional teachers. Adopting Gatzweiler and Baumüller’s (Marginality: Addressing the nexus of poverty, exclusion and ecology, Springer:27–40, 2014) framework, we interviewed 15 mathematics teachers from different geographical locations around the country. We identified and organized the drivers of marginality into biophysical and societal causal clusters that enable or constrain teachers to act as professionals. Biophysical causal clusters include mathematics curriculum and mathematics assessments among others while societal causal clusters include various directives, interpretations, and realities surrounding the biophysical causal clusters. Discussions about the complexities brought about by these clusters and how teachers act or respond as they navigate around them are highlighted. Recommendations for concrete de-marginalization actions are offered.&lt;/p&gt;
+          
+        </description>
+        <pubDate>04-15-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s11858-024-01571-1</link>
+      </item>
+      
+      <item>
         <title>“I’m a bit out of place here.”—Preservice teachers’ positioning in the figured world of university mathematics</title>
         <description>
           
@@ -257,28 +280,6 @@
         </description>
         <pubDate>04-08-2024 06:29</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/07370008.2024.2334697?af=R</link>
-      </item>
-      
-      <item>
-        <title>A Novel Numerical Method for Solving Unknown Statistical Quantities in Multivariate Regression Models</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Simulation studies are the basic tools of quantitative methodologists used to obtain empirical solutions to statistical problems that may be impossible to derive through direct mathematical computations. The successful execution of many simulation studies relies on the accurate generation of correlated multivariate data that adhere to a particular model with known parameter values. In this article, we use a kernel inspired by path tracing rules to algebraically solve unknown causal effects in the context of a multivariate general linear model. The algebraic solution is the basis of the mathematical extension, which integrates a model solver. Examples are used to illustrate a range of applications, where information regarding parameter values and predictor correlations can be partially specified. Code for examples is provided.
-          
-        </description>
-        <pubDate>04-08-2024 04:36</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241240083?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Using Extant Data to Improve Estimation of the Standardized Mean Difference</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;This article presents methods for using extant data to improve the properties of estimators of the standardized mean difference (SMD) effect size. Because samples recruited into education research studies are often more homogeneous than the populations of policy interest, the variation in educational outcomes can be smaller in these samples than is reflective of the true variation in the population. This affects effect size estimation since the sample standard deviation is used in the denominator of the SMD. We propose leveraging extant data on sample variance estimates from multiple studies, made available via clearinghouse databases such as the What Works Clearinghouse, to standardize a mean difference. This allows effect sizes to be benchmarked across a common and broad population, thus enabling better comparability across studies and interventions. We derive the new estimators of the population variance and the corresponding SMD, which pool sample variances from multiple studies using both an analysis of variance and a meta-analytic framework. We demonstrate the properties of these estimators via analytic and simulation results and offer recommendations for when these estimators are appropriate in practice.
-          
-        </description>
-        <pubDate>04-08-2024 04:36</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241238478?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
