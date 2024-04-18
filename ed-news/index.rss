@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Multiply by 37 (or Divide by 0.027): A Surprisingly Accurate Rule of Thumb for Converting Effect Sizes From Standard Deviations to Percentile Points</title>
+        <description>
+          
+            Educational Evaluation and Policy Analysis, Ahead of Print. &lt;br/&gt;Educational researchers often report effect sizes in standard deviation units (SD), but SD effects are hard to interpret. Effects are easier to interpret in percentile points, but converting SDs to percentile points involves a calculation that is not transparent to educational stakeholders. We show that if the outcome variable is normally distributed, we can approximate the percentile-point effect simply by multiplying the SD effect by 37 (or, equivalently, dividing the SD effect by 0.027). For students in the middle three-fifths of a normal distribution, this rule of thumb is always accurate to within 1.6 percentile points for effect sizes of up to 0.8 SD. Two examples show that the rule can be just as accurate for empirical effects from real studies. Applying the rule to empirical benchmarks, we find that the least effective third of educational interventions raise scores by 0 to 2 percentile points; the middle third raise scores by 2 to 7 percentile points; and the most effective third raise scores by more than 7 percentile points.
+          
+        </description>
+        <pubDate>04-18-2024 12:15</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/01623737241239677?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Ecological perspectives in early language education: Parent, teacher, peer and child agency in interaction</title>
         <description>
           
@@ -267,18 +278,6 @@
         </description>
         <pubDate>04-10-2024 07:22</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/01626620.2024.2335891?af=R</link>
-      </item>
-      
-      <item>
-        <title>Effects of a Learning Trajectory for statistical inference on 9th-grade students’ statistical literacy</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;In our data-driven society, it is essential for students to become statistically literate. A core domain within Statistical Literacy is Statistical Inference, the ability to draw inferences from sample data. Acquiring and applying inferences is difficult for students and, therefore, usually not included in the pre-10th-grade curriculum. However, recent studies suggest that developing a good understanding of key statistical concepts at an early age facilitates the understanding of Statistical Inference later on. This study evaluates the effects of a Learning Trajectory for Statistical Inference on Dutch 9th-grade students’ Statistical Literacy. Theories on informal Statistical Inference and repeated sampling guided the Learning Trajectory’s design. For the evaluation, we used a pre-post research design with an intervention group (&lt;em class=&quot;a-plus-plus&quot;&gt;n&lt;/em&gt; = 267). The results indicated that students made significant progress on Statistical Literacy and on the ability to make inferences in particular, but also on the other domains of Statistical Literacy. To further interpret the learning gains of this group, we compared students’ results with national baseline achievements from a comparison group (&lt;em class=&quot;a-plus-plus&quot;&gt;n&lt;/em&gt; = 217) who followed the regular 9th-grade curriculum, and with international studies using similar test items. Both comparisons confirmed a significant positive effect on all domains of Statistical Literacy. These findings suggest that current statistics curricula for grades 7–9, usually with a strong descriptive focus, can be enriched with an inferential focus.&lt;/p&gt;
-          
-        </description>
-        <pubDate>04-10-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s13394-024-00487-z</link>
       </item>
       
   </channel>
