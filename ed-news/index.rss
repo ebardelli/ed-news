@@ -23,6 +23,18 @@
       </item>
       
       <item>
+        <title>Using the proof assistant Lean in undergraduate mathematics classrooms</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;In this paper we develop a case for introducing a new teaching tool to undergraduate mathematics. Lean is an interactive theorem prover that instantly checks the correctness of every step and provides immediate feedback. Teaching with Lean might present a challenge, in that students must write their proofs in a formal way using a specific syntax. Accordingly, this paper addresses the issue of formalism from both a theoretical and a practical point of view. First, we examine the nature of proof, referring to historical and contemporary debates on formalization, and then show that in mathematical practice there is a growing rapprochement between strictly formal proof and proofs-in-practice. Next, we look at selections from the mathematics education literature that discuss how and when students advance through higher levels of mathematical maturity to reach a point at which they can cope with the demands of rigorous formalism. To probe the integration of Lean into teaching from an empirical point of view, we conducted an exploratory study that investigated how three undergraduate students approached the proof of double negation with Lean. The findings suggest that the rigorous nature of Lean is not an obstacle for students and does not stifle students’ creativity in writing proofs. On the contrary, proving with Lean offers a great deal of flexibility, allowing students to follow different paths to creating a valid proof.&lt;/p&gt;
+          
+        </description>
+        <pubDate>04-22-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s11858-024-01577-9</link>
+      </item>
+      
+      <item>
         <title>Socio-ecological gestures of mathematics education</title>
         <description>
           
@@ -266,18 +278,6 @@
         </description>
         <pubDate>04-15-2024 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s11858-024-01571-1</link>
-      </item>
-      
-      <item>
-        <title>“I’m a bit out of place here.”—Preservice teachers’ positioning in the figured world of university mathematics</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;Preservice mathematics teachers are sometimes trained in programs so that they have both their own courses and joint courses with mathematics majors from the beginning of their studies. While this is thought to provide them with both deep mathematical knowledge and teaching-specific content right from the start, many of them report disaffection with and disengagement from mathematics during their very first semester. Current approaches often frame this from an individual’s perspective, investigating cognitive and affective individual differences among students. In contrast, we aim to understand this issue from a sociocultural perspective, examining underlying social processes. In this study, we thus explored preservice teachers’ experiences of the mathematics component of their training, using Holland and colleagues’ theory of figured worlds as a theoretical lens. Three group interviews with 14 preservice higher secondary teachers in a common mixed setting in Germany (one course specific to preservice teachers, one general mathematics course together with major students) were analyzed. Our findings displayed that the preservice teachers experienced two dichotomous figured worlds of mathematics and mathematics teaching. Our further analysis of their positioning between these worlds provided new insights to explain their disaffection, disengagement, and consequent learning behavior. We discuss practical implications, focusing on different teaching systems and interventions in teacher education.&lt;/p&gt;
-          
-        </description>
-        <pubDate>04-15-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s10649-024-10315-7</link>
       </item>
       
   </channel>
