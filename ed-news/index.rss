@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Modeling Partial Knowledge in Multiple-Choice Cognitive Diagnostic Assessment</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Diagnostic tests are typically administered in a multiple-choice (MC) format due to their advantages of objectivity and time efficiency. The MC-deterministic input, noisy “and” gate (DINA) family of models, a representative class of cognitive diagnostic models for MC items, efficiently and parsimoniously estimates the mastery profiles of examinees. However, the existing models often overestimate the latent traits of examinees when they respond with partial knowledge, which is often observed in educational assessment. Therefore, the novel models of the MC-DINA family that can appropriately handle such responses were developed in this study. Unlike the existing models, the proposed models placed no restrictions on the Q-vector, which represents attribute specifications. Simulation and empirical studies verified that the proposed approach could resolve the overestimation problem.
+          
+        </description>
+        <pubDate>05-06-2024 09:32</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241245707?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Exploring the reliability and validity of multiple mini-interviews in admission to teacher education</title>
         <description>
           
@@ -263,17 +274,6 @@
         </description>
         <pubDate>05-01-2024 00:00</pubDate>
         <link>https://pubs.nctm.org/view/journals/mtlt/117/5/article-p388.xml</link>
-      </item>
-      
-      <item>
-        <title>“Kenta, Kilts, and ­Kimonos: Exploring ­Cultures and Mathematics through Fabrics”</title>
-        <description>
-          
-            Journal Name: Mathematics Teacher: Learning and Teaching PK-12&lt;br/&gt;Volume: 117&lt;br/&gt;Issue: 5&lt;br/&gt;Pages: 392-399
-          
-        </description>
-        <pubDate>05-01-2024 00:00</pubDate>
-        <link>https://pubs.nctm.org/view/journals/mtlt/117/5/article-p392.xml</link>
       </item>
       
   </channel>
