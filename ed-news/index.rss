@@ -12,6 +12,39 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>What Do Teacher Job Postings Tell Us About School Hiring Needs and Equity?</title>
+        <description>
+          
+            Educational Evaluation and Policy Analysis, Ahead of Print. &lt;br/&gt;While decades of research document inequity in the distribution of teachers across schools, few studies consider the distribution of teacher vacancies and other school hiring needs. We use teacher job postings, a direct proxy of school hiring needs, to document how these hiring needs vary across districts, schools, and subject areas. We first validate job postings as an indicator of school hiring needs by showing that filled postings closely line up with eventual teacher hires. We then show that schools serving more students of color had greater hiring needs throughout the year and that hiring needs for special education and science, technology, engineering, and math positions were considerably higher than for elementary positions according to both the number and duration of job postings.
+          
+        </description>
+        <pubDate>05-10-2024 10:04</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/01623737241246548?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Artificial Intelligence and Educational Measurement: Opportunities and Threats</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;I review opportunities and threats that widely accessible Artificial Intelligence (AI)-powered services present for educational statistics and measurement. Algorithmic and computational advances continue to improve approaches to item generation, scale maintenance, test security, test scoring, and score reporting. Predictable misuses of AI for these purposes will result in biased scores, construct underrepresentation, and differential impact over time. Recent efforts to develop standards for AI use in testing like those of Burstein are promising. I argue that similar efforts to develop AI standards for educational measurement will benefit from increased attention to the context of test use and explicit commitment to ongoing monitoring of bias and scale drift over time.
+          
+        </description>
+        <pubDate>05-09-2024 12:06</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241248771?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Using Permutation Tests to Identify Statistically Sound and Nonredundant Sequential Patterns in Educational Event Sequences</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Frequent sequential pattern mining is a valuable technique for capturing the relative arrangement of learning events, but current algorithms often return excessive learning event patterns, many of which may be noise or redundant. These issues exacerbate researchers’ burden when interpreting the patterns to derive actionable insights into learning processes. This study proposed permutation tests for identifying sequential patterns whose occurrences are statistically significantly greater than the chance value and different from their superpatterns. Simulations demonstrated that the test for detecting sound patterns had a low false discovery rate and high power, while the test for detecting nonredundant patterns also showed a high accuracy. Empirical data analyses found that the patterns detected in training data were generalizable to test data.
+          
+        </description>
+        <pubDate>05-09-2024 12:06</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241248772?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Towards right to work: A reflexive analysis on an action research</title>
         <description>
           
@@ -257,39 +290,6 @@
         </description>
         <pubDate>05-06-2024 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s40753-024-00237-3</link>
-      </item>
-      
-      <item>
-        <title>Exploring the reliability and validity of multiple mini-interviews in admission to teacher education</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>05-05-2024 03:58</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2024.2351068?af=R</link>
-      </item>
-      
-      <item>
-        <title>Racialized Patterns in the Distribution of Congressional Pork: Implications for Postsecondary Equity and Organizational Transformation</title>
-        <description>
-          
-            AERA Open, &lt;a href=&quot;journals.sagepub.com/toc/eroa/10&quot;&gt;Volume 10, Issue &lt;/a&gt;, January-December 2024. &lt;br/&gt;Troubled by the inequities in competitive grantmaking, we use critical quantitative methods to analyze the FY2023 federal academic earmarks as a potential mechanism for racialized change work. Specifically, we ask: To what extent does Congress distribute academic earmarks in ways that reinforce or weaken the racialized stratification of resources across organizations in the field? Accordingly, we identify distribution patterns of academic earmarks, considering the allocation of dollars and types of earmarks (i.e., general capacity-building versus specialized grants) across colleges and universities, between White-serving institutions and minority-serving institutions (MSIs), and among MSIs. Based on our analysis, Congress favored a racially reproductive funding portfolio, driven by smaller and more restrictive allocations, not fewer earmarks. However, the distribution of earmarks among MSIs defied normed expectations, as Congress did not privilege whiter, more prestigious MSIs, signaling the potential of pork-barrel politics for racially reparative work.
-          
-        </description>
-        <pubDate>05-04-2024 12:40</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584241245973?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Acceptable dark skinned women and egotistical light skinned women: black women speak on colorism and colorist microaggressions within the black community on campus</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>05-04-2024 10:13</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2024.2349870?af=R</link>
       </item>
       
   </channel>
