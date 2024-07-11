@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Inside the Black Box: Detecting and Mitigating Algorithmic Bias Across Racialized Groups in College Student-Success Prediction</title>
+        <description>
+          
+            AERA Open, &lt;a href=&quot;journals.sagepub.com/toc/eroa/10&quot;&gt;Volume 10, Issue &lt;/a&gt;, January-December 2024. &lt;br/&gt;Colleges and universities are increasingly turning to algorithms that predict college-student success to inform various decisions, including those related to admissions, budgeting, and student-success interventions. Because predictive algorithms rely on historical data, they capture societal injustices, including racism. In this study, we examine how the accuracy of college student success predictions differs between racialized groups, signaling algorithmic bias. We also evaluate the utility of leading bias-mitigating techniques in addressing this bias. Using nationally representative data from the Education Longitudinal Study of 2002 and various machine learning modeling approaches, we demonstrate how models incorporating commonly used features to predict college-student success are less accurate when predicting success for racially minoritized students. Common approaches to mitigating algorithmic bias are generally ineffective at eliminating disparities in prediction outcomes and accuracy between racialized groups.
+          
+        </description>
+        <pubDate>07-10-2024 11:30</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584241258741?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Patterning strategies in grade 1 students with low and high number sense proficiency</title>
         <description>
           
@@ -272,17 +283,6 @@
         </description>
         <pubDate>07-02-2024 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s13394-024-00496-y</link>
-      </item>
-      
-      <item>
-        <title>Building mathematical micro-identities through supporting productive struggle</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>07-01-2024 11:54</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/10986065.2024.2372711?af=R</link>
       </item>
       
   </channel>
