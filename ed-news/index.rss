@@ -12,6 +12,30 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>The role of an online learning environment in teacher care for secondary mathematics students</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;Students’ mathematical learning is bolstered when they have caring relationships with their teachers, yet there is little research on how learning environments may constrain or facilitate teacher care. In this study, I investigate how secondary mathematics teachers understood their care for students online during the COVID-19 pandemic. Through analysis of interview and focus group transcripts, I theorize the role of the learning environment in how teachers care for students and their dispositions toward that work. Findings show how an online learning environment both constrained and facilitated teacher care. An obscuration of student thinking online made it difficult for teachers to care for students’ mathematical thinking. The online learning environment contributed to a curtailment of collaborative problem-solving, which in person had supported teacher care for student–student relationships. Teachers described greater privacy with some students online but difficulty getting to know most students. Teachers also reported their care to be conditional on students’ relational initiation or reciprocity. This study highlights the need for professional development for teachers when learning environments shift and future research about learning environments and relational power.&lt;/p&gt;
+          
+        </description>
+        <pubDate>07-27-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s10649-024-10350-4</link>
+      </item>
+      
+      <item>
+        <title>Students’ techniques for approaching defining properties of functions</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;Functions are an essential concept in mathematics. The studies that have examined functions in advanced contexts have primarily focused on students’ reasoning about specific types of functions (such as binary operations and isomorphisms) but not on the core characteristics of well-definedness and everywhere-definedness. Here, we report on a study in which we conducted task-based clinical interviews to gain insight into students’ techniques for addressing “is the given relation a function?” tasks. We found that the techniques students employed necessarily extended far beyond those reported in the literature (such as the vertical line test) and relied on the previously undocumented notions of sameness, convention, and ambiguity (for well-defined) and notions of containment, existence, and set operations (for everywhere-defined). These techniques coordinated the domain, codomain, and rule, which previous research has highlighted the importance of but stopped short of directly investigating. Two contributions of this work include identifying successful techniques (as the landscape of functions literature predominantly focuses on challenges and difficulties) and identifying techniques for everywhere-definedness (which had not previously received any direct attention in the literature).&lt;/p&gt;
+          
+        </description>
+        <pubDate>07-27-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s10649-024-10344-2</link>
+      </item>
+      
+      <item>
         <title>The edTPA as a Barrier to Preparing Antiracist Teachers in California</title>
         <description>
           
@@ -119,6 +143,18 @@
         </description>
         <pubDate>07-26-2024 05:26</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/00224871241263803?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Assessing the quality of conceptual knowledge through dynamic constructions</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;In this contribution, we address the gap that has appeared in mathematics education research and practice with the emergence of dynamic geometry environments and build on the opportunities these environments offer to school geometry. In our qualitative empirical study, we investigate how to elaborate on the general model of conceptual knowledge to make it applicable to dynamic geometry tasks, specifically to tasks including dynamic geometric constructions. We present a design of dynamic constructions of quadrilaterals that comply with Euclidean constructions, derive an assessment instrument based on them, and study what information the instrument can provide about the quality of students’ conceptual knowledge. We present the results in the form of an assessment framework consisting of an example of the assessment instrument and an ordered system of qualitative categories serving as an assessment codebook for interpreting students’ responses in terms of the quality of conceptual knowledge. To clarify the relations between the assessment framework and the general model of conceptual knowledge, we establish a system of subdimensions of conceptual knowledge that indicates how conceptual knowledge can be understood in the context of dynamic geometric constructions and identifies the conceptual knowledge needed to achieve individual categories of the assessment framework.&lt;/p&gt;
+          
+        </description>
+        <pubDate>07-26-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s10649-024-10349-x</link>
       </item>
       
       <item>
@@ -240,39 +276,6 @@
         </description>
         <pubDate>07-25-2024 04:25</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241257801?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Fitting mixed random regret minimization models using maximum simulated likelihood</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/2&quot;&gt;Volume 24, Issue 2&lt;/a&gt;, Page 250-272, June 2024. &lt;br/&gt;In this article, we describe the mixrandregret command, which extends the randregret command introduced in Gutiérrez-Vargas, Meulders, and Vandebroek (2021, Stata Journal 21: 626–658) by allowing random coefficients in random regret minimization models. The newly developed mixrandregret command allows the user to specify a combination of fixed and random coefficients in the regret function of the classical random regret minimization model introduced in Chorus (2010, European Journal of Transport and Infrastructure Research 10: 181–196). In addition, the user can specify normal and lognormal distributions for the random coefficients using the appropriate command’s options. The models are fit by maximum simulated likelihood estimation using numerical integration to approximate the choice probabilities.
-          
-        </description>
-        <pubDate>07-25-2024 04:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241257802?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Speaking Stata: The joy of sets: Graphical alternatives to Euler and Venn diagrams</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/2&quot;&gt;Volume 24, Issue 2&lt;/a&gt;, Page 329-361, June 2024. &lt;br/&gt;Membership of overlapping or intersecting sets may be recorded in a bundle of (0, 1) indicator variables. Annotated Euler or Venn diagrams may be used to show graphically the frequencies of subsets so defined, but beyond just a few sets such diagrams can be hard to draw and use effectively. This column presents two new commands for graphical alternatives: upsetplot and vennbar. Each command produces a bar chart by default, but there is scope to recast to different graphical forms. The differences between the new commands reflect the divide in Stata between twoway commands and other graph commands. They also provide some flexibility in graph design to match tastes and circumstances. The discussion includes many historical details and references.
-          
-        </description>
-        <pubDate>07-25-2024 04:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241258010?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Stata tip 155: How to perform high-frequency event studies</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/2&quot;&gt;Volume 24, Issue 2&lt;/a&gt;, Page 362-368, June 2024. &lt;br/&gt;
-          
-        </description>
-        <pubDate>07-25-2024 04:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241258013?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
