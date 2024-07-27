@@ -36,6 +36,18 @@
       </item>
       
       <item>
+        <title>Multivariable Calculus Instructors’ Reports of Resource use</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;Given the challenge of visualizing the main constructs of two-variable functions and their differential and integral calculus, it is essential to consider instructional resources’ use and perceived potential to contribute to students’ understanding. This case study considers how four instructors selected and used digital and physical resources in multivariable calculus and their motivations for doing so. We use the teaching triad of &lt;em class=&quot;a-plus-plus&quot;&gt;sensitivity to students&lt;/em&gt;, &lt;em class=&quot;a-plus-plus&quot;&gt;mathematical challenge&lt;/em&gt;, and &lt;em class=&quot;a-plus-plus&quot;&gt;management of learning&lt;/em&gt; to consider the reasons for resource adoption, studying how these instructors think about the resources they use. We also consider how instructors, students, and resources are reported to interact in multivariable calculus. Findings suggest that the instructors’ concern for students’ learning and their conviction that visualization is crucial in multivariable calculus moved them to explore and adopt different resources, especially ones that were free and easy to use. However, visualization was not the only spatial literacy aspect considered. As the instructors gained more experience with the instructional resources they were using, they reported adopting more student-centered use of these resources that allowed them to do more than facilitate visualization during a lecture. The resources began serving as referents for students as they communicated and reasoned about tasks with the instructor as well as among themselves.&lt;/p&gt;
+          
+        </description>
+        <pubDate>07-27-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s40753-024-00243-5</link>
+      </item>
+      
+      <item>
         <title>The edTPA as a Barrier to Preparing Antiracist Teachers in California</title>
         <description>
           
@@ -265,17 +277,6 @@
         </description>
         <pubDate>07-25-2024 04:25</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241258016?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Two-step analysis of hierarchical data</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/2&quot;&gt;Volume 24, Issue 2&lt;/a&gt;, Page 213-249, June 2024. &lt;br/&gt;In this article, we describe the package twostep, a bundle of programs to perform analyses of hierarchical data applying the two-step approach. We consider a two-level data setup in which “microlevel” units are nested within “macrolevel” units. One-step models (which can be fit using, for example, mixed) are the most common approach to modeling two-level data. The two-step approach is an alternative in which parameters associated with microlevel and macrolevel predictors are estimated separately for each level. It can be used as an alternative to one-step models if the estimand is a cross-level interaction. We also show how the two-step approach usefully complements one-step approaches by providing exploratory data analysis, descriptive graphs, and regression diagnostics.
-          
-        </description>
-        <pubDate>07-25-2024 04:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241257801?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
