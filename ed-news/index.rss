@@ -12,6 +12,61 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Teachers’ Beliefs About Language Diversity and Multilingual Learners: A Systematic Review of the Literature</title>
+        <description>
+          
+            Review of Educational Research, Ahead of Print. &lt;br/&gt;Teachers’ beliefs influence their teaching practices. Given the U.S. Secretary of Education’s push to increase multilingualism, this systematic literature review examines teachers’ beliefs about language diversity and multilingual learners in relation to teacher experiences, teaching practices, and external factors. Using 17 search terms, we searched seven databases for empirical, peer-reviewed studies that examined K–12 teachers’ language beliefs. We analyzed 63 studies that met our criteria using a framework of teacher beliefs. Our findings indicate that researchers use myriad terms to capture the participating teachers’ beliefs. These terms could be grouped into dominant language, subtractive, additive, and pluralist beliefs. We also found connections between teachers’ beliefs on one side and their life experiences, instructional practices, and external factors, such as high-stakes tests and school contexts, on the other side. We added teachers’ beliefs about families, content and knowledge, and diversity to the framework, as well as external factors.
+          
+        </description>
+        <pubDate>07-27-2024 10:40</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/00346543241257533?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Dually Noted: Examining the Implications of Dual Enrollment Course Structure for Students’ Course and College Enrollment Outcomes</title>
+        <description>
+          
+            American Educational Research Journal, Ahead of Print. &lt;br/&gt;Dual enrollment (DE)—where students earn college credits during high school—is expanding rapidly. To facilitate DE, institutional actors across K-12 schools and colleges must build or repurpose structures across separate organizations to determine course offerings, assignments, modality, and composition. Yet the organization and implications of those structures remain a black box. Using statewide administrative data from Texas, we describe DE coursetaking and course characteristics for traditional Texas public high school students and examine how DE course characteristics predict students’ course performance and subsequent college enrollment. Our descriptive analyses illuminate striking differences between academic and career and technical education DE, both in students’ backgrounds and course structures. Our regression analyses illustrate how several malleable DE course characteristics predict student outcomes.
+          
+        </description>
+        <pubDate>07-27-2024 10:15</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/00028312241257453?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Competing practice-based mentoring frameworks for student-teachers: between quasi-residency and expedited alternative teacher preparation</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>07-27-2024 03:11</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2024.2384480?af=R</link>
+      </item>
+      
+      <item>
+        <title>Can we TRU-ly infrastructure instructional change? Book review ofmathematics teaching on target and helping students become powerful mathematical thinkers</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>07-27-2024 02:35</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/10986065.2024.2384013?af=R</link>
+      </item>
+      
+      <item>
+        <title>Transforming learning opportunities in linguistically diverse secondary classrooms through promoting discussions: results of an intervention</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>07-27-2024 02:33</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/10986065.2024.2383803?af=R</link>
+      </item>
+      
+      <item>
         <title>The role of an online learning environment in teacher care for secondary mathematics students</title>
         <description>
           
@@ -222,61 +277,6 @@
         </description>
         <pubDate>07-25-2024 06:43</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2024.2381386?af=R</link>
-      </item>
-      
-      <item>
-        <title>Funding Innovation and Risk: A Grey-Based Startup Investment Decision</title>
-        <description>
-          
-            Evaluation Review, Ahead of Print. &lt;br/&gt;As found in behavioral decision theory, venture capitalists (VCs) rely on heuristics and bias, owing to their bounded rationality, either by limited alternatives or information and resources. India’s booming startup scene challenges VCs in decision-making owing to information overload from numerous evolving ventures, which hinders informed judgment. VC investment behavior, due diligence, and cognitive factors related to decision-making have always drawn the attention of researchers. We provide an alternative approach for an optimal decision by VCs by identifying the attributes that influence investment or funding decisions at an early stage of a venture in tech-based industries. Through a literature review, we identify eight attributes, both on internal and external criteria, that venture investors consider when making investment decisions. Based on interviews with 20 experts, we further identify eight key tech-based sectors. Using grey system theory, we then determine the rankings of eight tech startups for investors’ early-stage investment decisions. This study presents a linguistic variable-based approach of grey numbers to decide weights and ratings, the grey possibility degree to compare and rank different tech startups, and based on the results, suggests the ideal tech startup. We find that agritech ranks first; thus, investors should prefer venturing into such startups for early-stage investment. E-commerce and edutech ranked second and third, respectively, followed by electric vehicle infrastructure, insurtech, fintech, space tech, and software as a service.
-          
-        </description>
-        <pubDate>07-25-2024 06:17</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/0193841X241262887?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Multivariate random-effects meta-analysis for sparse data using smvmeta</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/2&quot;&gt;Volume 24, Issue 2&lt;/a&gt;, Page 301-328, June 2024. &lt;br/&gt;Multivariate meta-analysis is used to synthesize estimates of multiple quantities (“effect sizes”), such as risk factors or treatment effects, accounting for correlation and typically also heterogeneity. In the most general case, estimation can be intractable if data are sparse (for example, many risk factors but few studies) because the number of model parameters that must be estimated scales quadratically with the number of effect sizes. This article presents a new command, smvmeta, that makes estimation tractable by modeling correlation and heterogeneity in a low-dimensional space via random projection. This reduces the number of model parameters to be linear in the number of effect sizes. smvmeta is demonstrated in a meta-analysis of 23 risk factors for pain after total knee arthroplasty. Validation experiments show that, compared with meta-regression (a reasonable alternative model that could be used when data are sparse), smvmeta can provide substantially more precise estimates (that is, narrower confidence intervals) at little cost in bias.
-          
-        </description>
-        <pubDate>07-25-2024 04:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241258008?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Software Updates</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/2&quot;&gt;Volume 24, Issue 2&lt;/a&gt;, Page 369-369, June 2024. &lt;br/&gt;
-          
-        </description>
-        <pubDate>07-25-2024 04:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241258015?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Bounding program benefits when participation is misreported: Estimation and inference with Stata</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/2&quot;&gt;Volume 24, Issue 2&lt;/a&gt;, Page 185-212, June 2024. &lt;br/&gt;Instrumental-variables estimation is an approach commonly used to evaluate the effect of a program in case of noncompliance. However, when the binary treatment status is misreported, standard techniques are not sufficient to point identify and consistently estimate the effect of interest. We present a new command, ivbounds, that implements three partial identification strategies developed by Tommasi and Zhang (2024, Journal of Econometrics 238: 105556) to bound the heterogeneous treatment effect when both noncompliance and misreporting of treatment status are present. We illustrate the use of the command by reassessing the benefits of participating in the 401(k) pension plan on savings in the United States.
-          
-        </description>
-        <pubDate>07-25-2024 04:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241257347?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Announcements</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/2&quot;&gt;Volume 24, Issue 2&lt;/a&gt;, Page 370-371, June 2024. &lt;br/&gt;
-          
-        </description>
-        <pubDate>07-25-2024 04:25</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241258016?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
