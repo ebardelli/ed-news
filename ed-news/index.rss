@@ -12,6 +12,65 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>“I’ll just try to mimic that”: an exploration of students’ analogical structure creation in abstract algebra</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;Despite the prominence of analogies in mathematics, little attention has been given to exploring students’ processes of analogical reasoning, and even less research exists on revealing how students might be empowered to independently and productively reason by analogy to establish new (to them) mathematics. I argue that the lack of a cohesive framework for interpreting students’ approaches to analogical reasoning in mathematics contributes to this issue. To address this, I introduce the Analogical Reasoning in Mathematics (ARM) framework. Constructed from an analysis of interviews with four abstract algebra students, ARM identifies several analogical activities that serve to analyze students’ analogical reasoning with a finer grain size than was previously possible with existing frameworks. Using this framework, I present an analysis of the students’ constructions of a ring-theoretic analogy to subgroup, thus revealing that even constructing simple analogies can elicit diverse pathways of analogical reasoning across students. Implications for further research related to analogies and analogical reasoning in mathematics education are discussed.&lt;/p&gt;
+          
+        </description>
+        <pubDate>08-21-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s10649-024-10345-1</link>
+      </item>
+      
+      <item>
+        <title>Decomposing Impact on Longitudinal Outcome of Time-Varying Covariate into Baseline Effect and Temporal Effect</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Longitudinal processes are often associated with each other over time; therefore, it is important to investigate the associations among developmental processes and understand their joint development. The traditional latent growth curve model (LGCM) with a time-varying covariate (TVC) provides a method to estimate the TVC effect on a longitudinal outcome while modeling the outcome’s change. However, it does not allow the TVC to predict variations in the random growth coefficients. We propose decomposing the TVC into initial trait and temporal states using three methods to address this limitation. In each method, the baseline of the TVC is viewed as an initial trait, and the corresponding effects are obtained by regressing random intercepts and slopes on the baseline value. Temporal states are characterized as (a) interval-specific slopes, (b) interval-specific changes, or (c) changes from the baseline at each measurement occasion, depending on the method. We demonstrate our methods through simulations and real-world data analyses, assuming a linear–linear functional form for the longitudinal outcome. The results demonstrate that LGCMs with a decomposed TVC can provide unbiased and precise estimates with target confidence intervals. We also provide OpenMx and Mplus 8 code for these methods with commonly used linear and nonlinear functions.
+          
+        </description>
+        <pubDate>08-20-2024 10:52</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241263975?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Example-Generation Tasks for Computer-Aided Assessment in University Mathematics Education: Insights From A Study Conducted in Two Educational Contexts</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;In recent decades, there has been rapid development in digital technologies for automated assessment. Through enhanced possibilities in terms of algorithms, grading codes, adaptivity, and feedback, they are suitable for formative assessment. There is a need to develop computer-aided assessment (CAA) tasks that target higher-order mathematical skills to ensure a balanced assessment approach beyond basic procedural skills. To address this issue, research suggests the approach of asking students to generate examples. This study focuses on an example-generation task on polynomial function understanding, proposed to 205 first-year engineering students in Sweden and 111 first-year biotechnology students in Italy. Students were encouraged to collaborate in small groups, but individual elements within the tasks required each group member to provide individual answers. Students&#39; responses kept in the CAA system were qualitatively analyzed to understand the effectiveness of the task in extending the students’ example space in diverse educational contexts. The findings indicate a difference in students’ example spaces when performing the task between the two educational contexts. The results suggest key strengths and possible improvements to the task design.&lt;/p&gt;
+          
+        </description>
+        <pubDate>08-20-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s40753-024-00252-4</link>
+      </item>
+      
+      <item>
+        <title>Active Learning in Proof-Based Mathematics Courses: Pedagogical Approaches and Observations</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;Writing-intensive and proof-based mathematics courses have a variety of unique course outcomes and challenges. As such, active learning in these courses may differ from what we traditionally expect to see in an “active” first-year calculus course: an interactive in-class activity can be replaced with an out-of-class reading and homework problem in a proof-based course. We argue that the latter is no less “active” and claim that reading and writing mathematics form the foundation of how students learn by doing in writing-intensive mathematics courses. In this commentary, we discuss our pedagogical approaches to supporting students’ learning in introductory mathematical writing courses and how we promote active engagement. We outline potential benefits and challenges of these teaching methods and assessment strategies and conclude with some questions for reflection.&lt;/p&gt;
+          
+        </description>
+        <pubDate>08-20-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s42330-024-00329-x</link>
+      </item>
+      
+      <item>
+        <title>Learning to Serve from Service Courses</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;Educators are in a time of change, as the emergence, availability, and growth of AI technology challenge long-standing assumptions about the purpose and pedagogies in higher education. In this commentary, I argue that service course designers and instructors have been facing similar dilemmas for over 30 years. I propose that educators can learn from the practices of service course coordinators, and that a service mindset — where we willingly place ourselves in the role of a servant to our students, colleagues, and other stakeholders — is one that we need if we are going to do big things in the face of the challenges ahead. I provide an illustration of the considerations that I made to serve multiple stakeholders as I designed one aspect of a very large, multisection calculus course, and how a service mindset helped to simplify my work.&lt;/p&gt;
+          
+        </description>
+        <pubDate>08-20-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s42330-024-00326-0</link>
+      </item>
+      
+      <item>
         <title>An examination of Japanese curriculum materials through quantitative and covariational reasoning: the treatment of linear functions</title>
         <description>
           
@@ -224,72 +283,6 @@
         </description>
         <pubDate>08-13-2024 06:48</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/00224871241268577?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>The College Mathematics Beliefs and Belonging Survey: Instrument Development and Validation</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;This paper reports on the development and validation process of a new measure—the College Mathematics Beliefs and Belonging (CMBB) survey. The CMBB provides a contemporary measurement of undergraduate students’ perceptions of their mathematical practices and reasoning, beliefs about mathematics, and sense of belonging in mathematics. Primarily first- and second-year undergraduate students in five mathematics courses at a large public university in the United States completed multiple surveys to provide the data used for survey development. Confirmatory factor analysis (N = 935) along with additional psychometric evidence detailed here indicate that the CMBB is a survey with fifteen factors that adequately measure various aspects of perceived mathematical practices and reasoning, beliefs, and sense of belonging. The CMBB survey is intended for use by researchers and instructors to assess undergraduate students’ perceptions across these three domains with the aim of improving students’ experiences in college mathematics courses.&lt;/p&gt;
-          
-        </description>
-        <pubDate>08-13-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s40753-024-00247-1</link>
-      </item>
-      
-      <item>
-        <title>Mathematicians’ Conceptualizations of Differentials in Calculus and Differential Equations</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;The symbol &lt;span class=&quot;a-plus-plus inline-equation id-i-eq1&quot;&gt;
-                    
-                    &lt;span class=&quot;a-plus-plus equation-source format-t-e-x&quot;&gt;\(dx\)&lt;/span&gt;
-                    
-                  &lt;/span&gt; is one example of a differential, a calculus symbol that is found in multiple settings and expressions. Literature suggests that students have both many and varied conceptualizations of these differentials. For example, is &lt;span class=&quot;a-plus-plus inline-equation id-i-eq2&quot;&gt;
-                    
-                    &lt;span class=&quot;a-plus-plus equation-source format-t-e-x&quot;&gt;\(dx\)&lt;/span&gt;
-                    
-                  &lt;/span&gt; a very small quantity? How small does it have to be? Is it merely notation? For our study, we interviewed ten mathematicians to determine how experts conceptualize differentials presented in multiple mathematical contexts, such as differentiation, integration, and differential equations. Using thematic analysis, we analyzed their responses and found that our interview subjects’ conceptualizations were likewise many and varied, with many different interpretations offered for the same differentials. In this paper, we present results from our study and the initial classification system that emerged from this data, while understanding that ongoing and future research may expand and deepen our initial classification system.&lt;/p&gt;
-          
-        </description>
-        <pubDate>08-13-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s40753-024-00254-2</link>
-      </item>
-      
-      <item>
-        <title>Digital Experiences of Mathematical Cognitive Functions in Learning the Basic Concepts of General Topology</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;This paper aims at defining and exploring design principles in a distance technological setting for an educational activity for mathematics undergraduate students, devoted to the construction of basic concepts in general topology, the promotion of problem-solving processes, the development of metacognitive aspects, and, in general, the development of the students’ mathematical identity. The design exploits the production of examples and investigation of variations and invariants, exploration of problems and generation of conjectures, and an extension intertwining of the ‘inside-out’ model from the Digital Interactive Storytelling in Mathematics with the Thinking Classroom model at university education. We present a didactic activity based on the identified design principles and discuss the preliminary results of a pilot carried out with fifty mathematics undergraduate students, attending their second year of the mathematics degree.&lt;/p&gt;
-          
-        </description>
-        <pubDate>08-13-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s40753-024-00245-3</link>
-      </item>
-      
-      <item>
-        <title>A Long Winter</title>
-        <description>
-          
-            
-          
-        </description>
-        <pubDate>08-13-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s42330-024-00327-z</link>
-      </item>
-      
-      <item>
-        <title>‘A teacher’s work is many things, but one thing it is not is easy’: pre-service teachers’ conceptions of teachers’ work</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>08-12-2024 10:31</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2024.2388630?af=R</link>
       </item>
       
   </channel>
