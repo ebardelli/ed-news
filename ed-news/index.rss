@@ -12,6 +12,28 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Using a Deep Learning-Based Visual Computational Model to Identify Cognitive Strategies in Matrix Reasoning</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Constructive matching and response elimination strategies are two primarily used cognitive strategies in Raven’s Advanced Progressive Matrices (APM), a valid measurement instrument of general intelligence. Identifying strategies is necessary for conducting studies on the relationship between cognitive strategy and other cognitive factors and for cognitive strategy training. However, the strategy identification method used in research is either subjective, or the information in the behavior data is not fully utilized, or it is limited by the size of the sample and cannot be widely used. Therefore, this study trained a convolutional neural network-based visual computational model (CVC) for cognitive strategy identification based on eye movement images. Focusing on the APM, the trained CVC can be used for strategy identification by learning and mining the pattern information in the eye movement images with predefined training labels from a psychometric model. An empirical study was conducted to illustrate the training and application of the CVC. Utilizing the trained CVC and a developed graphical user interface application, the primary finding of the study reveals a high level of agreement in strategy identification between the CVC and the psychometric model, as well as between the CVC and expert judgment. This implies that, akin to the psychometric model, the CVC can be used to identify the two cognitive strategies of constructive matching and response elimination. Overall, the proposed deep learning-based model follows the data-driven perspective and provides a new way of studying cognitive strategy in the APM by presenting objective and quantitative identification results.
+          
+        </description>
+        <pubDate>08-22-2024 12:18</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241268907?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Corrigendum to CTE Mechanisms: The Effects of Career and Technical Education Center Admissions Offers in Baltimore</title>
+        <description>
+          
+            Educational Evaluation and Policy Analysis, Ahead of Print. &lt;br/&gt;
+          
+        </description>
+        <pubDate>08-22-2024 11:53</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/01623737241270353?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Specialized Knowledge, Text-Based Discussion, and Preparing Elementary Teachers for Disciplinary Literacy in English Language Arts Classrooms</title>
         <description>
           
@@ -261,29 +283,6 @@
         </description>
         <pubDate>08-15-2024 07:37</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/19345747.2024.2321438?af=R</link>
-      </item>
-      
-      <item>
-        <title>Rethinking Contradictions and Inconsistencies in Teachers’ Sensemaking and Actions</title>
-        <description>
-          
-            Journal of Teacher Education, Ahead of Print. &lt;br/&gt;Teacher education research, by and large, has been profoundly influenced by psychological interpretations of beliefs, particularly the assumption that teachers attempt to reconcile, rationalize, minimize, or avoid contradictions. Building on research across multiple disciplines, which demonstrates that people live harmoniously with contradictions in many situations, we argue that suppositions that people feel compelled to address contradictions have obscured the multitude of inconsistencies that teachers navigate without notice in their everyday lives. Through a multisited, in-depth analysis of a teacher across planning, teaching, debrief and interview contexts, we show that what appears to be contradictory from the perspective of researchers is not necessarily inconsistent for teachers. We explore the theoretical, methodological, and professional learning implications of this shift in interpreting teacher contradictions and inconsistencies.
-          
-        </description>
-        <pubDate>08-15-2024 06:23</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/00224871241268593?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Mechanisms and evidence of prospective teachers’ learning through enquiry-oriented practices: the case of a lesson study intervention</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;Existing research has highlighted the key role of observation and reflection in teacher learning during lesson study interventions, and how challenging it can be for pre-service teachers. This study focuses on the post-lesson discussion phase and on the observation of the research lesson of a lesson study process. It is carried out with early childhood education pre-service teachers who studied the Theory of Didactical Situations. The aim of our research is two-fold: finding evidence of the activation of pre-service teacher knowledge during the post-lesson discussion, and identifying mechanisms that may explain said activation as well as the potential development of their professional knowledge. To model pre-service teacher knowledge, the notion of teachers’ praxeological equipment from the Anthropological Theory of the Didactic, specified in the Theory of Didactical Situations, is used. It is hypothesised that potential teacher learning is mainly connected to the identification of particularly relevant episodes during the observation phase, henceforth referred to as critical events. The analysis of a group discussion on three critical events shows the activation and development of mathematical and didactic components of pre-service teachers’ praxeological equipment. However, it is found that it depends on the degree of dissonance these events can provoke, and on the quality and depth of the discussion that takes place around them. It is therefore concluded that the identification of critical events followed by productive discussion is a mechanism that explains teacher learning through lesson study, which can be enhanced by the intervention of teacher educators as mediators.&lt;/p&gt;
-          
-        </description>
-        <pubDate>08-15-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-024-01620-9</link>
       </item>
       
   </channel>
