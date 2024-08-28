@@ -57,6 +57,18 @@
       </item>
       
       <item>
+        <title>Defining and measuring quality in students’ mathematical writing: a systematic literature review</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;Mathematical communication, encompassing writing in, about, and for mathematics, is a critical competency. Defining excellent mathematical writing standards, however, remains challenging. To address this, we conducted a systematic review of 48 scholarly works on quality in mathematical writing. Our findings reveal mathematical writing for different purposes under scrutiny, including general mathematical writing, proof writing, reflective writing, expository writing, and descriptive writing during problem solving. To assess quality, researchers explore a variety of facets, such as syntax and semantics. Progression pathways vary, with both quantitative and qualitative evaluations—analysing text structure, writing style, and the use of different semiotic elements. It seems that in mathematics education, a consensus on quality measurement remains elusive. Proof writing is a notable exception. Among reviewed articles examining proof writing, a common set of standards emerges and provides valuable guidance. We propose that mathematical writing, perhaps especially in the context of reporting solutions in problem solving, can draw from proof writing standards. ‘Good’ mathematical writing would then require students to focus on (1) defining assumptions and assigning variables; (2) producing a coherent narrative, including relevant calculations (semantic issues); (3) using correct language, representations, and mathematical symbols (syntax issues); and (4) attending to what is appropriate in the context.&lt;/p&gt;
+          
+        </description>
+        <pubDate>08-28-2024 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s13394-024-00501-4</link>
+      </item>
+      
+      <item>
         <title>Triadic mentoring through the lens of positioning theory and frame analysis</title>
         <description>
           
@@ -274,17 +286,6 @@
         </description>
         <pubDate>08-23-2024 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s11858-024-01625-4</link>
-      </item>
-      
-      <item>
-        <title>Using a Deep Learning-Based Visual Computational Model to Identify Cognitive Strategies in Matrix Reasoning</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Constructive matching and response elimination strategies are two primarily used cognitive strategies in Raven’s Advanced Progressive Matrices (APM), a valid measurement instrument of general intelligence. Identifying strategies is necessary for conducting studies on the relationship between cognitive strategy and other cognitive factors and for cognitive strategy training. However, the strategy identification method used in research is either subjective, or the information in the behavior data is not fully utilized, or it is limited by the size of the sample and cannot be widely used. Therefore, this study trained a convolutional neural network-based visual computational model (CVC) for cognitive strategy identification based on eye movement images. Focusing on the APM, the trained CVC can be used for strategy identification by learning and mining the pattern information in the eye movement images with predefined training labels from a psychometric model. An empirical study was conducted to illustrate the training and application of the CVC. Utilizing the trained CVC and a developed graphical user interface application, the primary finding of the study reveals a high level of agreement in strategy identification between the CVC and the psychometric model, as well as between the CVC and expert judgment. This implies that, akin to the psychometric model, the CVC can be used to identify the two cognitive strategies of constructive matching and response elimination. Overall, the proposed deep learning-based model follows the data-driven perspective and provides a new way of studying cognitive strategy in the APM by presenting objective and quantitative identification results.
-          
-        </description>
-        <pubDate>08-22-2024 12:18</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241268907?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
