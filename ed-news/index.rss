@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Assessing Item Fit Using Expected Score Curve Under Restricted Recalibration</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;In item response theory applications, item fit analysis is often performed for precalibrated items using response data from subsequent test administrations. Because such practices lead to the involvement of sampling variability from two distinct samples that must be properly addressed for statistical inferences, conventional item fit analysis can be revisited and modified. This study extends the item fit analysis originally proposed by Haberman et al., which involves examining the discrepancy between the model-implied and empirical expected score curve. We analytically derive the standard errors that accurately account for the sampling variability from two samples within the framework of restricted recalibration. After derivation, we present the findings from a simulation study that evaluates the performance of our proposed method in terms of the empirical Type I error rate and power, for both dichotomous and polytomous items. An empirical example is also provided, in which we assess the item fit of pediatric short-form scale in the Patient-Reported Outcome Measurement Information System.
+          
+        </description>
+        <pubDate>09-04-2024 12:43</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241268604?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Theory Use in Project Management Research: An Exploratory Content Analysis Approach</title>
         <description>
           
@@ -265,17 +276,6 @@
         </description>
         <pubDate>09-02-2024 02:46</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/00317217241282198?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Backtalk: Simplify schooling: Respect the brain’s information organizers</title>
-        <description>
-          
-            Phi Delta Kappan, &lt;a href=&quot;journals.sagepub.com/toc/pdka/106/1&quot;&gt;Volume 106, Issue 1&lt;/a&gt;, Page 56-58, September 2024. &lt;br/&gt;Competition-based efforts to improve student achievement have not borne fruit. Marion Brady argues that this is because such efforts do not address the problems with the current system of education, in which human knowledge is broken up into separate disciplines. He advocates a systems-based approach that focuses on how ideas and experiences relate to one another.
-          
-        </description>
-        <pubDate>09-02-2024 02:46</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/00317217241282202?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
