@@ -12,6 +12,28 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Redefining Item Response Models for Small Samples</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Popular item response theory (IRT) models are considered complex, mainly due to the inclusion of a random factor variable (latent variable). The random factor variable represents the incidental parameter problem since the number of parameters increases when including data of new persons. Therefore, IRT models require a specific estimation method and large samples for accurate parameter estimation. The two-parameter IRT model is redefined by analytically integrating out the random person factor in the latent response formulation of the model to make it suitable for small sample applications. This IRT Bayesian covariance structure model (IRT-BCSM) describes the clustering of (latent) responses by persons through a structured covariance matrix in which a common covariance parameter represents the dependence implied by a unidimensional random factor variable. The IRT-BCSM is a latent-variable-free model and consists of (fixed) item parameters and a common covariance parameter, where person parameters can be post-hoc sampled. An efficient Gibbs sampler is proposed for parameter estimation. In simulation studies, the performance of the IRT-BCSM is compared to two-parameter IRT models for small samples, and results show an optimal performance of the IRT-BCSM even in sample sizes as small as 50 to 100 persons and 5 to 10 items. Generalizations of the IRT-BCSM show that a redefinition of more complex IRT models also lead to much more efficient parameterizations, which can broaden the scope of IRT applications.
+          
+        </description>
+        <pubDate>09-14-2024 11:30</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241269886?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Evaluating Intersectional Fairness in Algorithmic Decision Making Using Intersectional Differential Algorithmic Functioning</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Ensuring fairness is crucial in developing modern algorithms and tests. To address potential biases and discrimination in algorithmic decision making, researchers have drawn insights from the test fairness literature, notably the work on differential algorithmic functioning (DAF) by Suk and Han. Nevertheless, the exploration of intersectionality in fairness investigations, within both test fairness and algorithmic fairness fields, is still relatively new. In this paper, we propose an extension of the DAF framework to include the concept of intersectionality. Similar to DAF, the proposed notion for intersectionality, which we term “interactive DAF,” leverages ideas from test fairness and algorithmic fairness. We also provide methods based on the generalized Mantel–Haenszel test, generalized logistic regression, and regularized group regression to detect DAF, interactive DAF, or other subtypes of DAF. Specifically, we employ regularized group regression with three different penalties and examine their performance via a simulation study. Finally, we demonstrate our intersectional DAF framework in real-world applications on grade retention and conditional cash transfer programs in education.
+          
+        </description>
+        <pubDate>09-14-2024 11:24</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241269820?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Education is not the problem, but part of the solution</title>
         <description>
           
@@ -255,28 +277,6 @@
         </description>
         <pubDate>09-10-2024 11:58</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241276109?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Does Teacher Professional Development Improve Student Learning? Evidence from Leading Educators’ Fellowship Model</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>09-10-2024 08:03</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/19345747.2024.2361467?af=R</link>
-      </item>
-      
-      <item>
-        <title>The routes to intellectual authority in a prior colonial empire: continued racialised, geopolitical inequalities in the academic staff composition and employment conditions of UK universities</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>09-10-2024 01:48</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2024.2398491?af=R</link>
       </item>
       
   </channel>
