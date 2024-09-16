@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Immigrant students’ experiences of (Re)producing school mathematics in home-School transitions – epistemological positioning</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>09-16-2024 02:27</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/14794802.2024.2401484?af=R</link>
+      </item>
+      
+      <item>
         <title>Transforming fifth graders’ misconceptions in solving probability comparison problems with purposefully designed instructional interventions</title>
         <description>
           
@@ -266,17 +277,6 @@
         </description>
         <pubDate>09-10-2024 11:58</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241276113?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Getting away from the cutoff in regression discontinuity designs</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/3&quot;&gt;Volume 24, Issue 3&lt;/a&gt;, Page 371-401, September 2024. &lt;br/&gt;AbstractRegression discontinuity (RD) designs are highly popular in economic research because of their strong internal validity and straightforward intuition. While RD estimates are local in nature, several recent articles propose methods that generalize RD estimates to units outside a small neighborhood of the cutoff. In this article, I introduce the getaway package, which implements the method proposed by Angrist and Rokkanen (2015, Journal of the American Statistical Association 110: 1331-1344) to extrapolate treatment-effect estimates “away from the cutoff”, relying on a classical unconfoundedness condition. Additionally, the package features a data-driven algorithm designed to identify a set of covariates that fulfills the unconfoundedness assumption. It also incorporates a toolkit intended for testing and visualization purposes.
-          
-        </description>
-        <pubDate>09-10-2024 11:58</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241276108?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
