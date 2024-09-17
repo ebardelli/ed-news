@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Fugitive Care: The Politics of Care Enacted by Afro-Caribbean Women Teachers</title>
+        <description>
+          
+            Journal of Teacher Education, Ahead of Print. &lt;br/&gt;The future of teaching will increasingly rely on overseas-trained teachers (OTTs) to address teacher shortages. While research on OTTs in the United States is expanding, studies focusing on Afro-Caribbean teachers are emerging. Despite the growing call for more teachers of color, Afro-Caribbean OTTs’ contributions are often overlooked due to their immigrant status. We propose the concepts of “radical transparency” and “fugitive care” to articulate how these teachers’ classroom practices offer alternative possibilities for schooling, making the learning process both explicit and equitable for all students. Drawing on a Transnational Black Feminist Framework (TBF), we highlight the unique politics of care practiced by these teachers, revealing gaps in our cultural understanding and underscoring their vital, yet understudied, contributions to education.
+          
+        </description>
+        <pubDate>09-16-2024 12:50</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/00224871241275219?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Immigrant students’ experiences of (Re)producing school mathematics in home-School transitions – epistemological positioning</title>
         <description>
           
@@ -266,17 +277,6 @@
         </description>
         <pubDate>09-10-2024 11:58</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241276112?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>miesize: Effect-size calculation in imputed data</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/3&quot;&gt;Volume 24, Issue 3&lt;/a&gt;, Page 503-513, September 2024. &lt;br/&gt;In this article, I describe the miesize command for the calculation of effect sizes in imputed data. There may be situations where an effect size needs to be estimated for an intervention, an exposure, or a group membership variable but data on the independent or dependent variable are missing. Such missing data are commonly dealt with by multiply imputing plausible values. However, in this circumstance, the estimated effect size and associated standard errors will need to be pooled and estimated from the imputed dataset. The miesize command automates this process and calculates effect sizes for a binary variable from multiply imputed data in wide format. The estimates and standard errors (used to calculate the confidence intervals) are recombined using Rubin’s (1987, Multiple Imputation for Nonresponse in Surveys [Wiley]) rules. These rules are applied such that the average point estimate for the effect size is calculated from the imputed datasets. The pooled standard error, and hence confidence intervals, is calculated to account for both the variance between the imputed datasets and the variance within them. Pooled effect sizes and confidence intervals for Cohen’s (1988, Statistical Power Analysis for the Behavioral Sciences, 2nd ed. [Lawrence Erlbaum]) d, Hedges’s (1981, Journal of Educational Statistics 6: 107-128) g, and Glass’s (Smith and Glass, 1977, American Psychologist 32: 752-760) delta are provided by miesize.
-          
-        </description>
-        <pubDate>09-10-2024 11:58</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241276113?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
