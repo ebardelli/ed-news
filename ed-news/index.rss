@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Mitigating Omitted Variable Bias in Exploratory Differential Item Functioning Assessment: A Propensity Score Adjustment Approach</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Omitted variable bias (OVB) in differential item functioning (DIF) assessment can lead to biased estimates of DIF effects, increasing type I error rates and reducing statistical power. Methodologies for addressing OVB, particularly under exploratory conditions where DIF is assessed without prior information, remain underdeveloped. This study addresses these challenges by applying the propensity score (PS) method to enhance the parsimony of the DIF model. Furthermore, this study incorporated the DIF-free-then-DIF (DFTD) strategy into the PS method, establishing the PS.DFTD method for exploratory DIF assessment. The simulation results reveal that the PS.DFTD method appears promising for mitigating OVB in DIF assessment, demonstrating its potential for practical applications.
+          
+        </description>
+        <pubDate>11-08-2024 10:58</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241280308?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>School Board Elections Before, During, and After the COVID-19 Pandemic</title>
         <description>
           
@@ -263,17 +274,6 @@
         </description>
         <pubDate>11-01-2024 02:25</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2024.2420331?af=R</link>
-      </item>
-      
-      <item>
-        <title>Edgar H. Schein’s Process Consultation: the book that changed my life</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>11-01-2024 02:20</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2024.2421971?af=R</link>
       </item>
       
   </channel>
