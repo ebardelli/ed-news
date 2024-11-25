@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>A Position-Sensitive Mixture Item Response Model</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Standard item response theory (IRT) models are ill-equipped for when the probability of a correct response depends on the location in the test where an item is encountered—a phenomenon we refer to as position effects. Unmodeled position effects complicate comparing respondents taking the same test. We propose a position-sensitive IRT model that is a mixture of two item response functions, capturing the difference in response probability when the item is encountered early versus late in the test. The mixing proportion depends on item location and latent person-level characteristics, separating person and item contributions to position effects. We present simulation studies outlining various features of model performance and end with an application to a large-scale admissions test with observed position effects.
+          
+        </description>
+        <pubDate>11-25-2024 11:56</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241289399?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Building teacher knowledge and identity– career changers´ transition into teaching through a short teacher education programme</title>
         <description>
           
@@ -265,17 +276,6 @@
         </description>
         <pubDate>11-17-2024 02:47</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2024.2430248?af=R</link>
-      </item>
-      
-      <item>
-        <title>Dismissed, Dormant, and Deep-rooted Immigration Distractions and Undocumented College Students’ Academic Experiences</title>
-        <description>
-          
-            AERA Open, &lt;a href=&quot;journals.sagepub.com/toc/eroa/10&quot;&gt;Volume 10, Issue &lt;/a&gt;, January-December 2024. &lt;br/&gt;Evolving or stagnant immigration laws and policies may distinctly shape the experiences of undocumented students by shifting access to rights or opportunities. I draw upon 30 interviews with college students in California to analyze how they encountered legal vulnerability. I argue that legal vulnerability can be dismissed, dormant, or deep-rooted, producing contrasting experiences. Inclusive state and institutional policies set the stage for some students to dismiss legal vulnerability and decouple vulnerability from their academic experiences. However, most encountered dormant legal vulnerability through awakened racist xenophobia following the 2016 presidential election and deep-rooted legal vulnerability via persistent uncertainty about their futures or worries over family. Distracted students lost focus, motivation, and study time, which impacted their classroom participation and overall academic performance. Yet, they attempted to improve their academic engagement with limited effectiveness. Altogether, I theorize the relationship between different types of legal vulnerability and undocumented students’ college experiences.
-          
-        </description>
-        <pubDate>11-16-2024 10:59</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584241297158?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
