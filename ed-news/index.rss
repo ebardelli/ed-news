@@ -12,6 +12,171 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Finessing the system: navigating and negotiating the model minority identity as South Asian American youth</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-24-2024 10:14</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2024.2446210?af=R</link>
+      </item>
+      
+      <item>
+        <title>Software Updates</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 788-789, December 2024. &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297954?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Announcements</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 788-789, December 2024. &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297955?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>On synthetic difference-in-differences and related estimation methods in Stata</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 557-598, December 2024. &lt;br/&gt;In this article, we describe a computational implementation of the synthetic difference-in-differences (SDID) estimator of Arkhangelsky et al. (2021, American Economic Review 111: 4088-4118) for Stata. SDID can be used in many circumstances where treatment effects on some particular policy or event are desired and repeated observations on treated and untreated units are available over time. We lay out the theory underlying SDID both when there is a single treatment adoption date and when adoption is staggered over time, and we discuss estimation and inference in each of these cases. We introduce the sdid command, which implements these methods in Stata, and provide several examples of use, discussing estimation, inference, and visualization of results. Along with SDID, the sdid command allows for the implementation of standard synthetic control and difference-in-differences methods in an identical framework, permitting estimation, inference, and the generation of graphical output in a computationally efficient way.
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297914?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>require: Package dependencies for reproducible research</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 599-613, December 2024. &lt;br/&gt;The ability to conduct reproducible research in Stata is often limited by the lack of version control for community-contributed packages. In this article, we introduce the require command, a tool designed to ensure package dependencies are compatible across users and computer systems. Given a list of packages, require verifies that each package is installed, checks for a minimum or exact version or package release date, and optionally installs the package if prompted by the researcher.
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297915?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Estimating treatment effects when program participation is misreported</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 614-629, December 2024. &lt;br/&gt;Instrumental variables are commonly used to estimate treatment effects in cases of imperfect compliance. However, if participation in the program is misreported, standard techniques can yield severely biased results. We present a new command, ivreg2m, that implements the mismeasured robust local average treatment-effect estimator developed by Calvi, Lewbel, and Tommasi (2022, Journal of Business and Economic Statistics 40: 1701–1717) and Tommasi and Zhang (2024b, Journal of Applied Econometrics, doi.org/10.1002/jae.3079), to estimate the heterogeneous treatment effect of a program in the presence of treatment noncompliance and misreporting. The ivreg2m command can be used as the preferred strategy in cases of exogenous (nondifferential) misclassification.
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297916?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Outlier detection for inequality and poverty analysis</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 630-665, December 2024. &lt;br/&gt;Extreme values are common in survey data and represent a recurring threat to the reliability of both poverty and inequality estimates. The adoption of a consistent criterion for outlier detection is useful in many practical applications, particularly when international and intertemporal comparisons are involved. In this article, we discuss a simple univariate detection procedure to flag outliers. We present outdetect, a command that implements the procedure and provides useful diagnostic tools. The output of outdetect compares statistics obtained before and after the exclusion of outliers, with a focus on inequality and poverty measures. Finally, we carry out an extensive sensitivity exercise where the same outlier detection method is applied consistently to per capita expenditure across more than 30 household budget surveys. The results are clear and provide a sense of the influence of extreme values on poverty and inequality estimates.
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297918?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Stata tip 158: The devil is in the delta</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 777-783, December 2024. &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297950?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Erratum: Power and sample-size calculations for trials that compare slopes over time: Introducing the slopepower command</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 784-787, December 2024. &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297951?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Distinguishing differences in construct from differences in response style: gsem for item response theory models with anchoring vignettes</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 666-686, December 2024. &lt;br/&gt;Item response theory models allow estimation of participant and group-mean trait scores from responses to a set of items, but estimates can be biased when participants vary in their response style. We illustrate models fit in gsem that can account for such response style differences by comparing self-report with their ratings of anchoring vignettes—descriptions of other individuals displaying different levels of the trait. Simulation results from standard item response theory, mean bias, random bias, and free-threshold models are illustrated. We show that unbiased estimates can be recovered when the vignettes rated depend on the participants’ own self-rating or are even rated by a different sample, substantially broadening their scope of application.
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297920?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>gtsheckman: Generalized two-step Heckman estimator</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 687-710, December 2024. &lt;br/&gt;In this article, I introduce the gtsheckman command, which estimates a generalized two-step Heckman sample-selection estimator adjusted for heteroskedasticity. This estimator has been previously proposed in Carlson and Joshi (2024, Journal of Applied Econometrics 39: 237-255), where the presence of heteroskedasticity was motivated by a panel-data setting with random coefficients. The gtsheckman command offers several advantages over the heckman, twostep command, including robust inference, a more general control function specification, and the incorporation of heteroskedasticity. I discuss syntax and the underlying methodology and provide examples showing how the gtsheckman command can be used in a variety of settings
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297921?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Cluster-weighted models using Stata</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 711-745, December 2024. &lt;br/&gt;The cluster-weighted model (CWM) is a member of the family of mixtures of regression models and is also known as a mixture of regressions with random covariates. CWMs refer to the framework of model-based clustering and naturally apply when the research interest requires modeling the relationship between a response variable and a set of covariates using a regression-based approach such as a generalized linear model with the sample being suspected of comprising heterogeneous latent classes. A command for fitting these models is not yet available in Stata, so the aim of this article is to introduce the package cwmglm, which fits CWMs based on the most common generalized linear models with random covariates. Moreover, cwmglm allows the estimation of parsimonious models of Gaussian distributions, with the parameterization of the variance–covariance matrix based on the eigenvalue decomposition. These features are completely new for Stata users. The cwmglm package features goodness-of-fit, bootstrapping, and model-selection tools. We illustrate the use of cwmglm with real and simulated datasets.
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297922?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Calculating the Women’s Empowerment in Agriculture Index (WEAI) using Stata</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 746-765, December 2024. &lt;br/&gt;The Women’s Empowerment in Agriculture Index (WEAI) is a standardized, survey-based tool that has been widely used to track gender equality and measure empowerment, agency, and women’s inclusion in the agricultural sector (Alkire et al., 2013, World Development 52: 71–91). Since the WEAI’s release in 2012, an abbreviated version of the WEAI (A-WEAI) and a project-level version of the WEAI (pro-WEAI) have been developed (Malapit et al., 2017, The abbreviated Women’s Empowerment in Agriculture Index [A-WEAI]; Malapit et al., 2019, Development of the project-level Women’s Empowerment in Agriculture Index [pro-WEAI]). In this article, we review the shared methodology that underlies all members of the WEAI family of indices and introduce a command, weai, that can be used for index calculation. We describe the command and its options and provide empirical examples using publicly available data from the Gender, Agriculture, and Assets Project, Phase 2.
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297923?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Speaking Stata: Getting by without the by() option: Some graphics for unequal groups</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 766-776, December 2024. &lt;br/&gt;The by() option of the graph command is often used to show groups or subsets of some data in separate panels or facets of a graphical display. If groups are unequal in size, the result may seem awkward or inefficient in use of space. Devices to allow such groups to be shown directly without using a by() option are explained and exemplified for graph dot and its siblings and for graph twoway.New variables to show rank within groups and (if needed) separation of groups are easily constructed. Group summaries such as medians may easily be added. Graph types shown are dot charts, quantile plots, and displays using spikes to show differences between variables. Data examples are for ocean salinity and changes in weight of anorexic girls.
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297949?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>The Stata Journal Editors’ Prize 2024: Ian R. White</title>
+        <description>
+          
+            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 553-556, December 2024. &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-24-2024 09:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297909?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>A personal reflection on the importance of participatory action research</title>
         <description>
           
@@ -20,6 +185,28 @@
         </description>
         <pubDate>12-23-2024 06:05</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2024.2444098?af=R</link>
+      </item>
+      
+      <item>
+        <title>Time to Take a Chance: The Promise of Royston-Parmar Proportional Hazard Models for Understanding Caseload Transitions</title>
+        <description>
+          
+            Evaluation Review, Ahead of Print. &lt;br/&gt;In this letter to the editor, we compare six different event history models to estimate which eligible families participated in a subsidized rental housing program and when. Answering these questions can inform efforts to improve program marketing and outreach, staffing and budgeting, triage, bias identification, as well as benchmarking and evaluation. One of six specifications clearly outperforms the others and understanding how will inform similar research pursuits. Although decision-relevant participation patterns are available in state administrative records, deciphering them is difficult for several well-known reasons. Participants enter and exit the eligible risk pool at different times, for different reasons, and at different rates. To answer our questions of when and whom, we restructure the data from calendar to relative months and then employ event history models designed to accurately estimate a complete hypothetical risk trajectory from observed spells of varying lengths, many of which ended before families took up the rental subsidy, (i.e., censored observation spells). We find that eligible parents most likely to take up the subsidy live in high-rent counties, have relatively strong recent work history, short prior adult lifetime TANF receipt, and medium-size families. Program take-up fell substantially during the COVID-19 pandemic. Contrasting the application of six parallel specifications, we find that a Royston-Parmar proportional hazard model achieves an exceptional balance between the descriptive accuracy of discrete time approaches and the elegance of Cox regression.
+          
+        </description>
+        <pubDate>12-23-2024 02:28</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/0193841X241305869?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Opportunity to learn flexible and adaptive strategy use in current and past Dutch mathematics textbooks</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>12-23-2024 01:08</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/10986065.2024.2435827?af=R</link>
       </item>
       
       <item>
@@ -87,197 +274,6 @@
         </description>
         <pubDate>12-20-2024 01:09</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/01626620.2024.2442317?af=R</link>
-      </item>
-      
-      <item>
-        <title>A bibliometric review of studies on mathematics teacher professional development with an emphasis on mathematics coaching research</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;The professional development of mathematics teachers stands as a cornerstone in advancing pedagogical practices and enhancing educational outcomes. Examining the significance of professional growth for mathematics teachers becomes imperative in fostering effective teaching methodologies and enriching students&#39; learning experiences. This bibliometric analysis of 514 articles on Mathematics Teacher Professional Development (MTPD) investigates the realm of professional development among mathematics teachers working at different school levels, specifically centering on the domain of mathematics coaching research. The analysis systematically explores the existing literature on professional development initiatives for mathematics teachers, highlighting the concept of mathematics coaching. The results show that in recent years, studies on MTPD have shifted their focus toward coaching studies. The analysis of 65 coaching-focused articles revealed highlights of the core attributes of mathematics coaching, the impact of mathematics coaching, and mathematics coaching models and strategies and complexity of mathematics coaching.&lt;/p&gt;
-          
-        </description>
-        <pubDate>12-20-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s10857-024-09671-1</link>
-      </item>
-      
-      <item>
-        <title>Workplace Cyberbullying: Nature, Characteristics, and Implications</title>
-        <description>
-          
-            Evaluation Review, Ahead of Print. &lt;br/&gt;The information technology revolution has fundamentally altered company operations around the world. The Internet has significantly enhanced employee connectedness in the workplace, eclipsing the antiquated brick-and-mortar model. Nonetheless, as information technology advances, cyberbullying has grown in popularity in the professional environment. Cyberbullying is not geographically, temporally, or milieu-specific. Arguments concerning this ubiquitous danger have plagued scholars and professionals for several decades as they debated its conception, prevalence, and implications. The current research digs into many facets of cyberbullying to facilitate the creation of constructive policies and effectively manage the labor environment. Additionally, a few ideas and remedies are offered, as well as the future course of action for effectively addressing the crucial issue of cyberbullying.
-          
-        </description>
-        <pubDate>12-19-2024 08:58</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/0193841X241304293?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Preservice subject teachers’ beliefs about teacher subject interest: love for a subject as a resource and a challenge</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>12-19-2024 05:59</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/02619768.2024.2440714?af=R</link>
-      </item>
-      
-      <item>
-        <title>Putting lived experiences at the heart of research: showcasing the creative use of participatory inquiry in health and social care</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>12-19-2024 05:50</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2024.2443310?af=R</link>
-      </item>
-      
-      <item>
-        <title>Are Community-College Students Increasingly Choosing High-Paying Fields of Study? Evidence from Massachusetts</title>
-        <description>
-          
-            AERA Open, &lt;a href=&quot;journals.sagepub.com/toc/eroa/10&quot;&gt;Volume 10, Issue &lt;/a&gt;, January-December 2024. &lt;br/&gt;The labor-market payoff to workers with associate degrees in healthcare and STEM occupations is very high in Massachusetts. We examine whether this induced a growing proportion of students in MA community colleges (MACCs) to earn an associate degree (AD) in one of these fields. We do this by using multinomial logit analysis to compare trends across 12 cohorts of MACC entrants in the proportion of students who earned an AD in a healthcare or STEM program within six years of entry.We find a substantial increase across cohorts in the proportion of students who earned an AD in a STEM program, but not in the proportion who earned an AD in a healthcare program. We found differences in degree attainment by student gender, race/ethnicity, family income, and 10th-Grade mathematics score. Interviews with MACC program leaders revealed that supply constraints hinder expansion of many healthcare AD programs, but not STEM programs.
-          
-        </description>
-        <pubDate>12-19-2024 01:12</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584241304696?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Prospective Mathematics Teachers’ Hiccups and Professional Noticing During Technology-Rich Teaching and Learning</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;This paper presents a case study of two prospective teachers’ perturbations and professional development during lesson demonstrations which focused on technology-rich mathematics teaching and learning by analyzing a series of individual and collaborative video-based reflections to support the prospective teachers’ learning. Drawing on the construct of hiccups in technology-rich mathematics teaching, our analysis highlights the different types of hiccups the prospective teachers noticed in their lesson demonstrations; how they responded to the hiccups they identified; their professional learning from these experiences; and the differences in the prospective teachers’ noticing from the perspectives of the lesson teacher and the student audiences. Results highlight the strengths and limitations of prospective mathematics teachers’ noticing during technology-rich teaching and learning; for example, prospective teachers taking the role of student audiences during lesson demonstrations allows for different and additional in-the-moment noticing compared to them taking the role of teachers. Results also suggest the need for multiple reflection opportunities to help prospective mathematics teachers develop their noticing skills in technology-rich classroom contexts.&lt;/p&gt;
-          
-        </description>
-        <pubDate>12-19-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s42330-024-00340-2</link>
-      </item>
-      
-      <item>
-        <title>Addressing Threats to Validity in Supervised Machine Learning: A Framework and Best Practices for Education Researchers</title>
-        <description>
-          
-            AERA Open, &lt;a href=&quot;journals.sagepub.com/toc/eroa/10&quot;&gt;Volume 10, Issue &lt;/a&gt;, January-December 2024. &lt;br/&gt;Given the rapid adoption of machine learning methods by education researchers, and the growing acknowledgment of their inherent risks, there is an urgent need for tailored methodological guidance on how to improve and evaluate the validity of inferences drawn from these methods. Drawing on an integrative literature review and extending a well-known framework for theorizing validity in the social sciences, this article provides both an overview of threats to validity in supervised machine learning and plausible approaches for addressing such threats. It collates a list of current best practices, brings supervised learning challenges into a unified conceptual framework, and offers a straightforward reference guide on crucial validity considerations. Finally, it proposes a novel research protocol for researchers to use during project planning and for reviewers and scholars to use when evaluating the validity of supervised machine learning applications.
-          
-        </description>
-        <pubDate>12-18-2024 12:32</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584241303495?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Racial Justice Cannot Be Opt-In</title>
-        <description>
-          
-            Educational Researcher, Ahead of Print. &lt;br/&gt;Despite a wave of support for anti-racist pedagogy and practices in the spring of 2020, authentic adoption remained limited, signaling an uphill battle during the present era of racial backlash. This brief, which relies on interviews with 55 New York teachers, found that most teachers showed interest in adopting anti-racist approaches but struggled due to limited support from district and local leadership. These findings suggest that large pedagogical shifts, such as anti-racist curriculum and instruction, are unlikely to be achieved without more broad-based and proactive support from administrators at all levels, especially given the ever-increasing politicization of anti-racist teaching.
-          
-        </description>
-        <pubDate>12-18-2024 12:14</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X241305403?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Personalized Learning Policy and Student Voice: A Statewide Case Study</title>
-        <description>
-          
-            Educational Policy, Ahead of Print. &lt;br/&gt;This qualitative study examines the experiences of student leaders working in partnership with teacher leaders to implement Vermont’s Act 77, a state mandated personalized learning policy. Drawing on a theoretical framework that connects the zones of mediation and knowledge brokering research, this study explores the question: How do youth and adults experience youth leadership around the implementation of Vermont’s Act 77? Drawing on focus group data, interviews, and observations of youth leadership of personalized learning policy implementation across 18 high schools between 2014 and 2018, the study identifies the opportunities challenges of youth acting as knowledge brokers around state education policy in their schools. It concludes with implications for educational leaders and policymakers.
-          
-        </description>
-        <pubDate>12-18-2024 10:21</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/08959048241305532?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Teacher Mental Health and District Employee Support in Rural Communities: A Sequential Exploratory Mixed Methods Study</title>
-        <description>
-          
-            Educational Policy, Ahead of Print. &lt;br/&gt;Although existing research explores the need for mental health for students in P-12 schools, scholarship regarding mental health needs and support for teachers is lacking, particularly in rural contexts. This study used sequential exploratory mixed methods to explore mental health needs and support in school districts in a predominantly rural state. Analysis included qualitative survey data from P-12 teachers in school districts about how teaching impacts mental health, and a quantitative analysis of employee assistance programs in participant school districts. Findings demonstrated teachers struggling with mental health, and a lack of employee support available. Implications and exploration of district policy are discussed.
-          
-        </description>
-        <pubDate>12-18-2024 09:35</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/08959048241305528?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>“They Don’t Even Realize They’re Learning”: Enacting Core Practices in Teacher Education Through Board Games</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>12-18-2024 04:24</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/01626620.2024.2442312?af=R</link>
-      </item>
-      
-      <item>
-        <title>The (activity-)effect of manipulatives on algebraic generalizations: a construtivist teaching experiment</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;To understand the ways that manipulatives might support changes in students’ reasoning about algebraic generalizations, a constructivist teaching experiment was conducted with two sixth-grade students. The students interpreted numerical situations with units of one and could construct units of units in mental activity. Initially, the students’ reasoning about Cuisenaire® rods did not lead to changes in their algebraic generalizations, whereas their reasoning about linking cubes did lead to such changes. The students’ learning with linking cubes is explained by their enactment of physical operations with units of one on the linking cubes, which were consistent with their mental operations in numerical situations. Over time, and after learning to generalize with linking cubes, the students also began to attribute meaning to their physical operations with Cuisenaire® rods. Thus, instruction with manipulatives that reflected the student’s interpretation of numerical situations supported their construction of algebra as generalized arithmetic. Instructional implications are discussed.&lt;/p&gt;
-          
-        </description>
-        <pubDate>12-18-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s10649-024-10371-z</link>
-      </item>
-      
-      <item>
-        <title>First- and third-person mathematics-related teacher identity: capturing the learning pathway of an out-of-field teacher of mathematics acquiring mathematics teacher certification</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;This study captures the teacher learning, understood as identity change, of John, an experienced out-of-field [OOF] teacher of mathematics undertaking a national professional development program, the Professional Diploma in Mathematics for Teaching [PDMT]. This research draws on the commognitive framework to document John’s first-person mathematics-related teacher identity—a collection of stories told by John to a third party about being a mathematics teacher, and John’s third-person mathematics-related teacher identity, a collection of stories told by the researcher about John’s teaching practices. Data, in the form of interviews and lesson video and audio recordings, were collected over a 17 month period to elicit John’s learning pathway while he participated in the PDMT. Sociolinguistic tools and thematic analysis elicited the endorsed narratives that shaped how John viewed himself as a mathematics teacher and his mathematics teaching practices and enabled the researcher to recognise consistencies and changes in John’s mathematics teaching practices across the different timepoints. This methodological approach uncovered unanticipated outcomes of the PDMT that may inform the design of future professional development programs for OOF teachers of mathematics.&lt;/p&gt;
-          
-        </description>
-        <pubDate>12-18-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s10857-024-09672-0</link>
-      </item>
-      
-      <item>
-        <title>Guest Editorial for Special Issue “Digital Experiences in University Mathematics Education: Advances and Expectations”</title>
-        <description>
-          
-            
-          
-        </description>
-        <pubDate>12-18-2024 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s40753-024-00260-4</link>
-      </item>
-      
-      <item>
-        <title>Reviewer Acknowledgments</title>
-        <description>
-          
-            AERA Open, &lt;a href=&quot;journals.sagepub.com/toc/eroa/10&quot;&gt;Volume 10, Issue &lt;/a&gt;, January-December 2024. &lt;br/&gt;
-          
-        </description>
-        <pubDate>12-17-2024 12:53</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584241310025?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Exploring the Link Between Students’ Sense of School Belonging and Shared Leadership in U.S. High Schools</title>
-        <description>
-          
-            AERA Open, &lt;a href=&quot;journals.sagepub.com/toc/eroa/10&quot;&gt;Volume 10, Issue &lt;/a&gt;, January-December 2024. &lt;br/&gt;This study investigated whether and to what extent shared leadership in school was associated with a positive and equitable sense of school belonging among students from diverse backgrounds in the United States. We denoted shared leadership as collective practices that take place in schools in which principals enact inclusive practices in the decision-making process and teachers collaborate with their colleagues to support all students’ learning. We used linear mixed-effects modeling to analyze a nationally representative sample from the base-year data of the High School Longitudinal Study of 2009 (HSLS:09) provided by the National Center for Education Statistics (NCES). Our exploratory analyses revealed that shared leadership practices in school were positively associated with all students’ school belonging. We also found that shared leadership practices in school contributed to American Indian/Alaska Native students’ positive sense of school belonging through a cross-level interaction effect.
-          
-        </description>
-        <pubDate>12-17-2024 06:05</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584241304699?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Geographical and methodological trends in ESM and JRME from 2014–2023</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>12-17-2024 03:29</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/19477503.2024.2439212?af=R</link>
       </item>
       
   </channel>
