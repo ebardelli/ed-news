@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Effects of Large-Scale Early Math Interventions on Student Outcomes: Evidence From Kentucky’s Math Achievement Fund</title>
+        <description>
+          
+            Educational Evaluation and Policy Analysis, Ahead of Print. &lt;br/&gt;Addressing the educational needs of students in math early on is critical given that early gaps in math skills widen further over the course of schooling. This study examines the effectiveness and costs of Kentucky’s Math Achievement Fund—a unique state-level program that combines targeted interventions, peer-coaching, and close collaboration among teachers to improve math achievement in grades K–3. The program is found to improve not only math achievement, but also reading test scores and non-test outcomes including student attendance and disciplinary incidents. The benefits exist across students from various socioeconomic backgrounds, and they are slightly higher for racial minorities.
+          
+        </description>
+        <pubDate>12-31-2024 11:51</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/01623737241303142?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Using Ordering Theory to Learn Attribute Hierarchies From Examinees’ Attribute Profiles</title>
         <description>
           
@@ -265,17 +276,6 @@
         </description>
         <pubDate>12-24-2024 09:03</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297920?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>gtsheckman: Generalized two-step Heckman estimator</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 687-710, December 2024. &lt;br/&gt;In this article, I introduce the gtsheckman command, which estimates a generalized two-step Heckman sample-selection estimator adjusted for heteroskedasticity. This estimator has been previously proposed in Carlson and Joshi (2024, Journal of Applied Econometrics 39: 237-255), where the presence of heteroskedasticity was motivated by a panel-data setting with random coefficients. The gtsheckman command offers several advantages over the heckman, twostep command, including robust inference, a more general control function specification, and the incorporation of heteroskedasticity. I discuss syntax and the underlying methodology and provide examples showing how the gtsheckman command can be used in a variety of settings
-          
-        </description>
-        <pubDate>12-24-2024 09:03</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297921?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
