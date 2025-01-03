@@ -12,6 +12,28 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Examining differences between games and pictorial flashcards on multiplication basic fact fluency</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>01-03-2025 05:44</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/00220671.2024.2446889?af=R</link>
+      </item>
+      
+      <item>
+        <title>Gender Segregation in Secondary School Course Choices: Socioeconomic Gradients and the Protective Role of School Gender Culture</title>
+        <description>
+          
+            American Educational Research Journal, Ahead of Print. &lt;br/&gt;Upper secondary education shapes gender segregation in higher education and the labor market. This study shows gendered elective course enrollment patterns in Chilean upper secondary education across seven subjects, examines their consistency across socioeconomic contexts, and identifies school-level moderators. Using national administrative data from 2012–2021 and multilevel models, we find that students make gender-stereotypical choices regardless of their prior achievement. Notably, in higher-socioeconomic-status schools, gender differences in enrollment are larger, suggesting that socioeconomic context amplifies gendered choices. Additionally, the gender culture of schools moderates segregation in field-of-study choices, indicating that the school environment plays an important role in shaping students’ educational trajectories. These findings highlight the need for targeted policies to address gender and socioeconomic disparities in education.
+          
+        </description>
+        <pubDate>01-02-2025 09:49</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/00028312241308537?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Chronic Absenteeism in Detroit’s Brightmoor Neighborhood: Addressing Systemic &amp; Structural Inequities Through Participatory Action Research</title>
         <description>
           
@@ -254,28 +276,6 @@
         </description>
         <pubDate>12-24-2024 09:03</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297915?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Estimating treatment effects when program participation is misreported</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 614-629, December 2024. &lt;br/&gt;Instrumental variables are commonly used to estimate treatment effects in cases of imperfect compliance. However, if participation in the program is misreported, standard techniques can yield severely biased results. We present a new command, ivreg2m, that implements the mismeasured robust local average treatment-effect estimator developed by Calvi, Lewbel, and Tommasi (2022, Journal of Business and Economic Statistics 40: 1701–1717) and Tommasi and Zhang (2024b, Journal of Applied Econometrics, doi.org/10.1002/jae.3079), to estimate the heterogeneous treatment effect of a program in the presence of treatment noncompliance and misreporting. The ivreg2m command can be used as the preferred strategy in cases of exogenous (nondifferential) misclassification.
-          
-        </description>
-        <pubDate>12-24-2024 09:03</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297916?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Outlier detection for inequality and poverty analysis</title>
-        <description>
-          
-            The Stata Journal, &lt;a href=&quot;journals.sagepub.com/toc/stja/24/4&quot;&gt;Volume 24, Issue 4&lt;/a&gt;, Page 630-665, December 2024. &lt;br/&gt;Extreme values are common in survey data and represent a recurring threat to the reliability of both poverty and inequality estimates. The adoption of a consistent criterion for outlier detection is useful in many practical applications, particularly when international and intertemporal comparisons are involved. In this article, we discuss a simple univariate detection procedure to flag outliers. We present outdetect, a command that implements the procedure and provides useful diagnostic tools. The output of outdetect compares statistics obtained before and after the exclusion of outliers, with a focus on inequality and poverty measures. Finally, we carry out an extensive sensitivity exercise where the same outlier detection method is applied consistently to per capita expenditure across more than 30 household budget surveys. The results are clear and provide a sense of the influence of extreme values on poverty and inequality estimates.
-          
-        </description>
-        <pubDate>12-24-2024 09:03</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/1536867X241297918?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
