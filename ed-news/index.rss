@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>A Hybrid EM Algorithm for Linear Two-Way Interactions With Missing Data</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;We study an Expectation-Maximization (EM) algorithm for estimating product-term regression models with missing data. The study of such problems in the frequentist tradition has thus far been restricted to an EM algorithm method using full numerical integration. However, under most missing data patterns, we show that this problem can be solved analytically, and numerical approximations are only needed under specific conditions. Thus we propose a hybrid EM algorithm, which uses analytic solutions when available and approximate solutions only when needed. The theoretical framework of our algorithm is described herein, along with three empirical experiments using both simulated and real data. We demonstrate that our algorithm provides greater estimation accuracy, exhibits robustness to distributional violations, and confers higher power to detect interaction effects. We conclude with a discussion of extensions and topics of further research.
+          
+        </description>
+        <pubDate>01-09-2025 11:14</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241304015?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Feasibility of the Knowledge, Language, and Inquiry (K.L.I.) intervention for multilingual English learners</title>
         <description>
           
@@ -266,17 +277,6 @@
         </description>
         <pubDate>01-03-2025 06:41</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X241309642?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Examining differences between games and pictorial flashcards on multiplication basic fact fluency</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>01-03-2025 05:44</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/00220671.2024.2446889?af=R</link>
       </item>
       
   </channel>
