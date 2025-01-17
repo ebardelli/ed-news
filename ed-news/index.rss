@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Black Children’s Refusal in a “Hege-Mindful” World</title>
+        <description>
+          
+            AERA Open, &lt;a href=&quot;journals.sagepub.com/toc/eroa/11&quot;&gt;Volume 11, Issue &lt;/a&gt;, January-December 2025. &lt;br/&gt;This case study examines the connections between mindfulness activities and related benefits, including wellness, as 13 Black fifth graders embarked on an 8-week mindfulness program in their public-school classroom. The children responded well to the program and exhibited some wellness outcomes associated with mindfulness. However, hegemonic school and classroom practices emphasizing adult control and minimal child agency prevented the children from practicing new mindfulness skills or sustaining feelings of wellness, mattering, and harmony throughout the school day. We found that classroom mindfulness efforts, when not supported by all classroom teachers and administrators, necessarily limit Black children’s ability to develop a sense of self-awareness and self-efficacy and can in fact reinforce feelings of self-blame. Our findings suggest that mindfulness programs can have a positive impact for Black children when paired with antiracist practices, allowing space for the children to practice refusal and prioritize their right to matter.
+          
+        </description>
+        <pubDate>01-17-2025 06:29</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584241311237?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>An Overlooked Explanation for Increasing Suicidality: LGBQ Stressors Felt by More Students</title>
         <description>
           
@@ -267,17 +278,6 @@
         </description>
         <pubDate>01-10-2025 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s13394-024-00516-x</link>
-      </item>
-      
-      <item>
-        <title>A Hybrid EM Algorithm for Linear Two-Way Interactions With Missing Data</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;We study an Expectation-Maximization (EM) algorithm for estimating product-term regression models with missing data. The study of such problems in the frequentist tradition has thus far been restricted to an EM algorithm method using full numerical integration. However, under most missing data patterns, we show that this problem can be solved analytically, and numerical approximations are only needed under specific conditions. Thus we propose a hybrid EM algorithm, which uses analytic solutions when available and approximate solutions only when needed. The theoretical framework of our algorithm is described herein, along with three empirical experiments using both simulated and real data. We demonstrate that our algorithm provides greater estimation accuracy, exhibits robustness to distributional violations, and confers higher power to detect interaction effects. We conclude with a discussion of extensions and topics of further research.
-          
-        </description>
-        <pubDate>01-09-2025 11:14</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241304015?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
