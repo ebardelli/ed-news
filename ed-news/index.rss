@@ -12,6 +12,17 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Using MLP-F in Three Different Aberrant Behaviors in Education</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Zhu et al. proposed a person-fit method based on the neural network called machine learning person-fit method (MLP-F) and found promising improvements over some traditional methods. MLP-F relies on constructing an appropriate neural network and uses mean square error as a loss function of the neural network. The primary focus of this study is to explore the potential improvement in classifications by replacing mean squared error with cross-entropy. Additionally, the application of MLP-F requires the establishment of a large number of output nodes when dealing with numerous attributes in an exam. However, an excess of nodes in the output layer may diminish classification accuracy and escalate the demand for training data. This article introduces a novel neural network architecture designed to be more versatile and robust. The findings from the research indicate that utilizing a cross-entropy loss function and the new neural network architecture enhances the performance of MLP-F. Simulation studies, considering various aberrant behaviors, demonstrate that MLP-F is effective in identifying aberrant behaviors and particularly excels in shorter tests, showcasing its potential significance in classroom testing.
+          
+        </description>
+        <pubDate>01-27-2025 04:58</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241310527?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Students’ approaches when capturing change in contextual graphs: a study combining eye tracking and stimulated recall interviews</title>
         <description>
           
@@ -269,18 +280,6 @@
         </description>
         <pubDate>01-21-2025 00:00</pubDate>
         <link>http://link.springer.com/10.1007/s10649-024-10379-5</link>
-      </item>
-      
-      <item>
-        <title>Assessing children’s capacity for procedural flexibility with mental addition</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;Children’s number-based procedures for mental computation have been widely studied but few studies have focused on children’s flexibility with mental computation procedures. In this study, we investigated children’s capacity for procedural flexibility with mental addition by developing and testing a novel assessment that required them to recognize an efficient strategy used by another (fictitious) child. Testing was conducted in eight metropolitan primary schools in Australia and involved administering the assessment to children in Years 3 and 4 (&lt;em class=&quot;a-plus-plus&quot;&gt;N&lt;/em&gt; = 853). The final version of the assessment comprised 23 items and produced data that were closely aligned to the Rasch model, reflected a unidimensional construct and showed good precision and excellent reliability. Findings from item analyses confirmed predictions about the problem features that evoke thinking about particular strategies and the comparative difficulty of strategy types. These findings contribute insights into how procedural flexibility may be operationalised, making it possible to compare instructional approaches for promoting procedural flexibility on a large scale.&lt;/p&gt;
-          
-        </description>
-        <pubDate>01-21-2025 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s13394-024-00513-0</link>
       </item>
       
   </channel>
