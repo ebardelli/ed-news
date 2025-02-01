@@ -24,6 +24,17 @@
       </item>
       
       <item>
+        <title>Considering theoretical and methodological eclecticism within JMTE</title>
+        <description>
+          
+            
+          
+        </description>
+        <pubDate>01-31-2025 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s10857-025-09681-7</link>
+      </item>
+      
+      <item>
         <title>Preservice Teachers’ Conceptualizations of Equity and Equality: Tensions Between Technical and Humanizing Approaches</title>
         <description>
           
@@ -267,17 +278,6 @@
         </description>
         <pubDate>01-27-2025 05:00</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/14794802.2024.2444931?af=R</link>
-      </item>
-      
-      <item>
-        <title>Using MLP-F in Three Different Aberrant Behaviors in Education</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Zhu et al. proposed a person-fit method based on the neural network called machine learning person-fit method (MLP-F) and found promising improvements over some traditional methods. MLP-F relies on constructing an appropriate neural network and uses mean square error as a loss function of the neural network. The primary focus of this study is to explore the potential improvement in classifications by replacing mean squared error with cross-entropy. Additionally, the application of MLP-F requires the establishment of a large number of output nodes when dealing with numerous attributes in an exam. However, an excess of nodes in the output layer may diminish classification accuracy and escalate the demand for training data. This article introduces a novel neural network architecture designed to be more versatile and robust. The findings from the research indicate that utilizing a cross-entropy loss function and the new neural network architecture enhances the performance of MLP-F. Simulation studies, considering various aberrant behaviors, demonstrate that MLP-F is effective in identifying aberrant behaviors and particularly excels in shorter tests, showcasing its potential significance in classroom testing.
-          
-        </description>
-        <pubDate>01-27-2025 04:58</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986241310527?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
   </channel>
