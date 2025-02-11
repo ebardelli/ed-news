@@ -23,6 +23,18 @@
       </item>
       
       <item>
+        <title>Understanding student errors in comparing data sets with boxplots</title>
+        <description>
+          
+            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
+                  &lt;p class=&quot;a-plus-plus&quot;&gt;In the boxplot, the box always represents – regardless of its area – the middle half of the data and thus a measure of variability (interquartile range). However, when students first learn about boxplots, they are usual already familiar with other forms of statistical representations (e.g., bar or circle graphs) in which a larger area represents a higher frequency of observations. If students erroneously apply this well-established area-represents-frequency schema to boxplots, it results in a systematic error which we describe as the consequence of an incomplete conceptual change. We empirically validated difficulty-generating characteristics that allow the differentiation between item types with varying complexity (item level) and aimed to identify profiles (person level) that differ depending on which schema was used in which item type. For this purpose, we conducted two cross-sectional studies with &lt;em class=&quot;a-plus-plus&quot;&gt;N&lt;/em&gt; = 100 university students (study 1) and &lt;em class=&quot;a-plus-plus&quot;&gt;N&lt;/em&gt; = 297 participants who finished secondary school or higher (study 2) and used generalized linear mixed models (item level) and k-means clustering with predefined cluster centers (person level) to test our hypotheses. We could replicate the systematic error that was described in previous research and found new difficulty-generating characteristics in boxplot items. Our results support the notion of different profiles potentially emerging based on varying degrees of conceptual change. From an instructional perspective, information about individual progress in conceptual change could be considered for tailoring individualized interventions.&lt;/p&gt;
+          
+        </description>
+        <pubDate>02-10-2025 00:00</pubDate>
+        <link>http://link.springer.com/10.1007/s10649-025-10387-z</link>
+      </item>
+      
+      <item>
         <title>Public engagement of underserved students with open civic data</title>
         <description>
           
@@ -280,17 +292,6 @@
         </description>
         <pubDate>02-01-2025 09:17</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.3102/00346543241310184?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>‘We’re not taught the full story’: Black students’ mistrust of secondary school U.S. history curricula</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>02-01-2025 04:19</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2025.2459946?af=R</link>
       </item>
       
   </channel>
