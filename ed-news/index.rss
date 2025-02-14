@@ -12,6 +12,28 @@
     <description>Recent articles published in education journals</description>
       
       <item>
+        <title>Systematization of the methodology of children and adolescents as co-researchers. The research case on school engagement and contextual factors in Chile</title>
+        <description>
+          
+            Action Research, Ahead of Print. &lt;br/&gt;Scientific research involving children and adolescents as members of research teams are relevant, both because of the possibility of giving voice and leading role to this social group and because it constitutes an expressway of exercising the participation rights enshrined in the Convention on the Rights of the Child (CRC). Increased research involving children and adolescents as co-researchers appears, seeking designs and implementations that safeguard technical, cultural, and ethical aspects. This article reports a methodology implementation of children as co-researchers in a scientific research project associated with school engagement and its contextual factors in Chile. Therefore, the article goes in-depth into the methodology implementation, the conditions of the implementation, and its results. Finally, conclusions and projections for future research in this line are shared.
+          
+        </description>
+        <pubDate>02-14-2025 04:41</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/14767503251320614?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Online Calibration for Multidimensional CAT With Polytomously Scored Items: A Neural Network–Based Approach</title>
+        <description>
+          
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Online calibration is a key technology for calibrating new items in computerized adaptive testing (CAT). As multidimensional polytomous data become popular, online calibration methods applicable to multidimensional CAT with polytomously scored items (P-MCAT) have been proposed. However, the existing methods are mainly based on marginal MLE with an expectation-maximization algorithm (MMLE/EM), making it difficult to accurately estimate parameters in high-dimensional scenarios without sufficient calibration sample size or suitable initial values. To conquer these challenges, a neural network (NN)-based online calibration framework was put forward. The new NN-based methods differ profoundly from the traditional ones in that the parameter estimates of new items are obtained by learning the patterns between input and output data instead of finding solutions to the log-marginal likelihood. Moreover, an alternative solution was proposed for traditional methods to obtain appropriate initial values. Simulation studies were conducted to compare the NN- and MMLE/EM-based methods under various conditions, and further explore the properties of the NN-based methods. Results showed that both the NN-based methods and the alternative solution found their strengths in recovering the item parameters of new items, while the MMLE/EM-based methods struggled to converge when more than three dimensions were involved in the test.
+          
+        </description>
+        <pubDate>02-13-2025 11:28</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986251315531?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
         <title>Action research for character development in 18 classrooms in Latin America: reflections, learnings and challenges</title>
         <description>
           
@@ -20,6 +42,17 @@
         </description>
         <pubDate>02-13-2025 09:13</pubDate>
         <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2025.2465642?af=R</link>
+      </item>
+      
+      <item>
+        <title>Denying Pathology While Implying It? Avoiding Person-Centered Pathology Traps in Counter-Deficit Research</title>
+        <description>
+          
+            Educational Researcher, Ahead of Print. &lt;br/&gt;Pathological thinking surrounding disenfranchised and marginalized communities remains a problem in education policy, popular discourse, and research on marginalized communities. Scholars employ a host of frameworks to challenge such pathological thinking, often through the language of deficits. We argue that in an effort to refute pathological thinking about marginalized communities, counter-deficit frameworks potentially rely on a different logic of pathology through an overreliance on person-centered rationales for educational success and educational inequity. Specifically, this essay demonstrates how scholars, if they are not careful, can fall into two different pathology traps: (a) the “high achievers trap” and (b) the “blaming teachers trap.” We offer guidance of how to avoid such traps through careful attention to structural forces of oppression.
+          
+        </description>
+        <pubDate>02-13-2025 06:30</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X251316273?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
       <item>
@@ -245,41 +278,6 @@
         </description>
         <pubDate>02-10-2025 10:45</pubDate>
         <link>https://journals.sagepub.com/doi/abs/10.3102/00028312241308945?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Editors’ Introduction</title>
-        <description>
-          
-            American Educational Research Journal, &lt;a href=&quot;journals.sagepub.com/toc/aera/62/1&quot;&gt;Volume 62, Issue 1&lt;/a&gt;, Page 3-13, February 2025. &lt;br/&gt;
-          
-        </description>
-        <pubDate>02-10-2025 10:45</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251317246?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Understanding student errors in comparing data sets with boxplots</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;In the boxplot, the box always represents – regardless of its area – the middle half of the data and thus a measure of variability (interquartile range). However, when students first learn about boxplots, they are usual already familiar with other forms of statistical representations (e.g., bar or circle graphs) in which a larger area represents a higher frequency of observations. If students erroneously apply this well-established area-represents-frequency schema to boxplots, it results in a systematic error which we describe as the consequence of an incomplete conceptual change. We empirically validated difficulty-generating characteristics that allow the differentiation between item types with varying complexity (item level) and aimed to identify profiles (person level) that differ depending on which schema was used in which item type. For this purpose, we conducted two cross-sectional studies with &lt;em class=&quot;a-plus-plus&quot;&gt;N&lt;/em&gt; = 100 university students (study 1) and &lt;em class=&quot;a-plus-plus&quot;&gt;N&lt;/em&gt; = 297 participants who finished secondary school or higher (study 2) and used generalized linear mixed models (item level) and k-means clustering with predefined cluster centers (person level) to test our hypotheses. We could replicate the systematic error that was described in previous research and found new difficulty-generating characteristics in boxplot items. Our results support the notion of different profiles potentially emerging based on varying degrees of conceptual change. From an instructional perspective, information about individual progress in conceptual change could be considered for tailoring individualized interventions.&lt;/p&gt;
-          
-        </description>
-        <pubDate>02-10-2025 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s10649-025-10387-z</link>
-      </item>
-      
-      <item>
-        <title>Public engagement of underserved students with open civic data</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;Today, various non-governmental organizations proclaim the need for public engagement of citizens, a concept that is integrated into the notion of global citizenship. However, much of the mathematics that students find in the primary school curriculum falls short to support that need. This lack of curriculum alignment with global needs has implications for the development of communities, but they are much more severe for students from underserved populations who systematically suffer different types of exclusions that increase their social disadvantages. This study explores the traits of global citizenship that students from underserved populations exhibit as they progress through a learning experience with open civic data on a global issue (climate change). The learning experience was used as the basis for an individual interview with five participants (9–10 years old) from public schools in low-income neighborhoods of a metropolitan area in northern Colombia. Participants were offered a dataset (data) ready to use and they were asked to undertake data handling actions (data-ing) using freely available web-based software. Participants were asked “What does this dataset say?” and their verbal statements were analyzed. The main findings suggest that in data and data-ing on open civic data reflecting global issues, participants exhibited understanding, belonging and action which are traits of global citizenship. In terms of understanding, participants described the behavior of the variables, suggested informal inferences, and made associations between variables. In terms of belonging and action, participants’ statements suggested including themselves as part of the community, taking responsibility, and proposing transformative actions.&lt;/p&gt;
-          
-        </description>
-        <pubDate>02-09-2025 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-024-01641-4</link>
       </item>
       
   </channel>
