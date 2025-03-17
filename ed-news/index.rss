@@ -12,270 +12,267 @@
     <description>Recent articles published in education journals</description>
       
       <item>
-        <title>‘We can help when you lose your way.’ High-school students’ reflections on pre-service teachers and the teaching practicum</title>
+        <title>BSRLM Day Conference Proceedings</title>
         <description>
           
             . &lt;br/&gt;
           
         </description>
-        <pubDate>02-15-2025 12:15</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/10476210.2025.2462299?af=R</link>
+        <pubDate>03-17-2025 04:07</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/14794802.2025.2467158?af=R</link>
       </item>
       
       <item>
-        <title>A cross-cultural study of school climate and student agency in literacy</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>02-14-2025 12:25</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/00220671.2025.2464001?af=R</link>
-      </item>
-      
-      <item>
-        <title>Relational Rhythms: Investigating Longitudinal Advice Networks of a Leadership Team During Reform</title>
-        <description>
-          
-            AERA Open, &lt;a href=&quot;journals.sagepub.com/toc/eroa/11&quot;&gt;Volume 11, Issue &lt;/a&gt;, January-December 2025. &lt;br/&gt;This study addressed the limited research on advice networks in educational reform by examining structural, relational, and cognitive factors that shape the formation of advice relationships within a districtwide leadership team in the United States. Using stochastic actor-oriented modeling, we investigated a longitudinal set of leadership data at four points in time in one public school district in California during its reform process. Hierarchical triadic structures consistently played a key role in advice relationships. Close friendships and self-efficacy were significant factors throughout the reform. Leaders preferred advice within their workplace level (homophily), but cross-level ties were critical during the reform’s middle phase. This study underscores the importance of fostering both within-level and cross-level advice-seeking relationships, making advice sources visible, and leveraging experienced leaders to guide colleagues, thereby enhancing self-efficacy and supporting cohesive reform efforts.
-          
-        </description>
-        <pubDate>02-14-2025 09:18</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584251316469?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Review-based learning by teaching promoted deeper learning competencies of the challenged students</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>02-14-2025 06:12</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/00220671.2025.2464043?af=R</link>
-      </item>
-      
-      <item>
-        <title>Systematization of the methodology of children and adolescents as co-researchers. The research case on school engagement and contextual factors in Chile</title>
-        <description>
-          
-            Action Research, Ahead of Print. &lt;br/&gt;Scientific research involving children and adolescents as members of research teams are relevant, both because of the possibility of giving voice and leading role to this social group and because it constitutes an expressway of exercising the participation rights enshrined in the Convention on the Rights of the Child (CRC). Increased research involving children and adolescents as co-researchers appears, seeking designs and implementations that safeguard technical, cultural, and ethical aspects. This article reports a methodology implementation of children as co-researchers in a scientific research project associated with school engagement and its contextual factors in Chile. Therefore, the article goes in-depth into the methodology implementation, the conditions of the implementation, and its results. Finally, conclusions and projections for future research in this line are shared.
-          
-        </description>
-        <pubDate>02-14-2025 04:41</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/14767503251320614?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Professional development research on promoting productive practices for teachers’ handling of typical tasks of mathematics teaching: a systematic review</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;While existing surveys on professional development (PD) programs for mathematics teachers revealed a substantial growth in PD research studies, there has been a call for more in-depth reports. Inspired by reviews on practice-based pre-service teacher education, this systematic review focuses on PD activities developed and investigated for enhancing teachers’ practices for handling relevant tasks of mathematical teaching, to provide an overview of the state of PD research for practicing teachers. To accomplish this, keywords were used to identify relevant research, complemented by hand-searched papers which are in the core of the topic yet do not use the keywords. Based on the full-text analysis of 32 peer-reviewed studies, this systematic review uncovered the emphasis of the most studies on the task of supporting and enhancing student learning followed by noticing and assessing student thinking, with variation in associated teaching practices. Differences in the level of reporting on PD activities were revealed concerning both the PD design and the research about PD. Tendencies in the types of frameworks for designing PD were also found, with almost half the studies situating teacher learning in practice. Overall, this review not only advances the field by making findings on teacher practices to handle tasks of teaching more comparable, but by gaining insights into the types of corresponding PD activities.&lt;/p&gt;
-          
-        </description>
-        <pubDate>02-14-2025 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s11858-025-01659-2</link>
-      </item>
-      
-      <item>
-        <title>Online Calibration for Multidimensional CAT With Polytomously Scored Items: A Neural Network–Based Approach</title>
-        <description>
-          
-            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Online calibration is a key technology for calibrating new items in computerized adaptive testing (CAT). As multidimensional polytomous data become popular, online calibration methods applicable to multidimensional CAT with polytomously scored items (P-MCAT) have been proposed. However, the existing methods are mainly based on marginal MLE with an expectation-maximization algorithm (MMLE/EM), making it difficult to accurately estimate parameters in high-dimensional scenarios without sufficient calibration sample size or suitable initial values. To conquer these challenges, a neural network (NN)-based online calibration framework was put forward. The new NN-based methods differ profoundly from the traditional ones in that the parameter estimates of new items are obtained by learning the patterns between input and output data instead of finding solutions to the log-marginal likelihood. Moreover, an alternative solution was proposed for traditional methods to obtain appropriate initial values. Simulation studies were conducted to compare the NN- and MMLE/EM-based methods under various conditions, and further explore the properties of the NN-based methods. Results showed that both the NN-based methods and the alternative solution found their strengths in recovering the item parameters of new items, while the MMLE/EM-based methods struggled to converge when more than three dimensions were involved in the test.
-          
-        </description>
-        <pubDate>02-13-2025 11:28</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986251315531?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Action research for character development in 18 classrooms in Latin America: reflections, learnings and challenges</title>
-        <description>
-          
-            . &lt;br/&gt;
-          
-        </description>
-        <pubDate>02-13-2025 09:13</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/09650792.2025.2465642?af=R</link>
-      </item>
-      
-      <item>
-        <title>Denying Pathology While Implying It? Avoiding Person-Centered Pathology Traps in Counter-Deficit Research</title>
-        <description>
-          
-            Educational Researcher, Ahead of Print. &lt;br/&gt;Pathological thinking surrounding disenfranchised and marginalized communities remains a problem in education policy, popular discourse, and research on marginalized communities. Scholars employ a host of frameworks to challenge such pathological thinking, often through the language of deficits. We argue that in an effort to refute pathological thinking about marginalized communities, counter-deficit frameworks potentially rely on a different logic of pathology through an overreliance on person-centered rationales for educational success and educational inequity. Specifically, this essay demonstrates how scholars, if they are not careful, can fall into two different pathology traps: (a) the “high achievers trap” and (b) the “blaming teachers trap.” We offer guidance of how to avoid such traps through careful attention to structural forces of oppression.
-          
-        </description>
-        <pubDate>02-13-2025 06:30</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X251316273?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Book Review: M. A. (Ken) Clements, Berinderjeet Kaur, Thomas Lowrie, Vilma Mesa, and Johan Prytz (Eds.) (2024) Fourth international handbook of mathematics education</title>
+        <title>Openness in mathematical modelling: do experiences of competence and autonomy mediate the effects of an intervention on modelling problems on task values and cost?</title>
         <description>
           
             
           
         </description>
-        <pubDate>02-13-2025 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s10649-025-10388-y</link>
+        <pubDate>03-17-2025 00:00</pubDate>
+        <link>/article/10.1007/s11858-025-01670-7</link>
       </item>
       
       <item>
-        <title>Does problem posing affect self-efficacy, task value, and performance in mathematical modelling?</title>
-        <description>
-          
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;Problem posing is a promising teaching method for enhancing motivation and performance in mathematics and more specifically in mathematical modelling. Hence, the goals of our study were twofold: (1) to examine the effects of problem posing on modelling performance, self-efficacy, and task values in solving modelling problems, and (2) to analyze whether problem posing affects modelling performance via self-efficacy and task values. In a randomized control trial involving ninth- and tenth-grade students (&lt;em class=&quot;a-plus-plus&quot;&gt;N&lt;/em&gt; = 210), participants were assigned to either a problem-posing and problem-solving group or to one of two problem-solving groups. Students in the problem-posing and problem-solving group received a booklet with descriptions of real-world situations and were prompted to pose and subsequently solve their own problems. Students in the two problem-solving groups received the same real-world situations with given problems and were asked to solve the problems. Before solving the problems, students in all groups reported their self-efficacy and task values. Prompting students to pose their own problems positively enhanced students’ self-efficacy and partially improved their task values in solving modelling problems. Further, problem posing indirectly affected modelling performance via self-efficacy but not task values. However, problem posing had no total effect on modelling performance. The findings for self-efficacy and task values are in line with expectancy-value theories, adding new insights to the field by highlighting the importance of motivational constructs in problem-posing approaches and instructions aimed at fostering mathematical modelling.&lt;/p&gt;
-          
-        </description>
-        <pubDate>02-13-2025 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s10649-025-10385-1</link>
-      </item>
-      
-      <item>
-        <title>Students Under Surveillance: Big Data Policing and Privacy Rights</title>
-        <description>
-          
-            Educational Researcher, Ahead of Print. &lt;br/&gt;The surveillance and securitization of schools has transformed over the last decade to include predictive analytics and algorithms. In Florida, for example, the Pasco Sheriff’s Office used school record data sets to identify and monitor youth they believed were “destined for a life of crime.” Yet the extent of big data policing as a model of surveillance and control in American public schools has not been addressed in meaningful ways by schools and the courts. This essay argues the burden and risk on student Fourth Amendment and privacy rights place an obligation on the government to actively protect student data and make big data policing efforts transparent. Future research is critical to address the systemic inequities that policing and surveillance have exacerbated on America’s youth.
-          
-        </description>
-        <pubDate>02-12-2025 12:26</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X251318346?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Exploring Deficit Beliefs Among High School Math Teachers</title>
-        <description>
-          
-            Educational Researcher, Ahead of Print. &lt;br/&gt;This brief uses national data from the High School Longitudinal Study of 2009 to investigate deficit beliefs, or beliefs that students’ academic underperformance is primarily attributable to deficiencies in their home environments, among high school math teachers. Descriptive results reveal that students in low-level math courses have teachers with more deficit beliefs. Regression results show that net of extensive control variables for both student and teacher characteristics, having a math teacher with stronger deficit beliefs is significantly and negatively associated with students’ math performance. However, this negative association is not more pronounced for youth from minoritized and low socioeconomic status backgrounds.
-          
-        </description>
-        <pubDate>02-12-2025 12:22</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X251317135?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Prefiguring Research-Practice Partnerships to Pursue Racial Justice in Education</title>
-        <description>
-          
-            AERA Open, &lt;a href=&quot;journals.sagepub.com/toc/eroa/11&quot;&gt;Volume 11, Issue &lt;/a&gt;, January-December 2025. &lt;br/&gt;Processes of integrating explicit anti-racist goals in research-practice partnerships is under-examined in scholarship, yet intentional anti-racist research-practice partnership (RPP) design and implementation can leverage liberatory and collaborative action research approaches that address the root of racial inequities and advance corrective measures to justly service youth and their families. In this paper, authors analyze qualitative data from the first year of their RPP to describe how they approached their design and launching process as a form of prefiguring for racial justice. They pinpoint how their efforts yielded opportunities, challenges, tensions, and benefits. Their process aligned with Akom’s (2011) Black Emancipatory Action Research (BEAR) framework, which is conceptualized with Afrocentric lenses, honors Black communities, and constructs research as a tool for Black liberation and self-determination. Authors detail findings related to inviting authentic community engagement with justice-driven partners, nurturing youth-centered critical care, disrupting Whiteness norms, and revisiting and negotiating RPP expectations.
-          
-        </description>
-        <pubDate>02-12-2025 11:30</pubDate>
-        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584251318299?ai=2b4&mi=ehikzz&af=R</link>
-      </item>
-      
-      <item>
-        <title>Practice-Based Teacher Education Pedagogies Improve Responsiveness: Evidence from a Lab Experiment</title>
+        <title>Learning together: Organizing schools for teacher and student learning</title>
         <description>
           
             . &lt;br/&gt;
           
         </description>
-        <pubDate>02-12-2025 05:04</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/19345747.2025.2456716?af=R</link>
+        <pubDate>03-16-2025 02:56</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/00220671.2025.2476365?af=R</link>
       </item>
       
       <item>
-        <title>Catalyzing Scientific-Professional Learning Communities: A Framework for Conceptualizing the Health and Development of Educational Improvement Networks*</title>
+        <title>Lesson Design Actions: Examining Elementary Preservice Teachers’ Pedagogical Design Capability for Inquiry</title>
         <description>
           
-            &lt;a href=&quot;/toc/hpje20/100/1&quot;&gt;Volume 100, Issue 1&lt;/a&gt;, January-March 2025&lt;br/&gt;. &lt;br/&gt;
+            . &lt;br/&gt;
           
         </description>
-        <pubDate>02-12-2025 02:27</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2025.2444839?af=R</link>
+        <pubDate>03-16-2025 01:02</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/01626620.2025.2476968?af=R</link>
       </item>
       
       <item>
-        <title>Examining the Validity of Practical Measures of Improvement Network Health and Development</title>
+        <title>Metacognitive activities in high school students’ mathematical modelling: findings from an epistemic network analysis</title>
         <description>
           
-            &lt;a href=&quot;/toc/hpje20/100/1&quot;&gt;Volume 100, Issue 1&lt;/a&gt;, January-March 2025&lt;br/&gt;. &lt;br/&gt;
+            
           
         </description>
-        <pubDate>02-12-2025 02:27</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2025.2444840?af=R</link>
+        <pubDate>03-16-2025 00:00</pubDate>
+        <link>/article/10.1007/s11858-025-01664-5</link>
       </item>
       
       <item>
-        <title>The Design of an Information System to Support Network Development</title>
+        <title>Addressing the Disadvantage Gap Through Generative Learning: A Case for the Science Writing Heuristic Approach</title>
         <description>
           
-            &lt;a href=&quot;/toc/hpje20/100/1&quot;&gt;Volume 100, Issue 1&lt;/a&gt;, January-March 2025&lt;br/&gt;. &lt;br/&gt;
+            Educational Researcher, Ahead of Print. &lt;br/&gt;This study investigated the long-term impact of the science writing heuristic (SWH) approach on students’ science achievement, focusing on differences between low and high socioeconomic status (SES) groups. Through a longitudinal design, students were ...
           
         </description>
-        <pubDate>02-12-2025 02:27</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2025.2444842?af=R</link>
+        <pubDate>03-14-2025 12:45</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X251324141?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
       <item>
-        <title>Bringing Scientific-Professional Learning Communities into Practice: Exploring Variation in Educational Improvement Network Health and Development</title>
+        <title>An Evaluation of Aggregated and Disaggregated Approaches to Multilevel Factor Scoring</title>
         <description>
           
-            &lt;a href=&quot;/toc/hpje20/100/1&quot;&gt;Volume 100, Issue 1&lt;/a&gt;, January-March 2025&lt;br/&gt;. &lt;br/&gt;
+            Journal of Educational and Behavioral Statistics, Ahead of Print. &lt;br/&gt;Approaches to multilevel measurement modeling are often distinguished as aggregated or disaggregated. While past research has established the benefits and limitations of these modeling frameworks, none have critically evaluated the reliability of factor ...
           
         </description>
-        <pubDate>02-12-2025 02:27</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2025.2444843?af=R</link>
+        <pubDate>03-14-2025 11:52</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/10769986251321380?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
       <item>
-        <title>Hub Leaders’ Perspectives on Equity in Networked Improvement</title>
+        <title>Dubious Evidence, Valuable Information</title>
         <description>
           
-            &lt;a href=&quot;/toc/hpje20/100/1&quot;&gt;Volume 100, Issue 1&lt;/a&gt;, January-March 2025&lt;br/&gt;. &lt;br/&gt;
+            Evaluation Review, Ahead of Print. &lt;br/&gt;I explore how “low-quality evidence” from program performance might still be useful in decision-making. Conceptually, a local government named “Here” is motivated to consider a program from “Elsewhere” that seems to show year-over-year exemplary ...
           
         </description>
-        <pubDate>02-12-2025 02:27</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2025.2444845?af=R</link>
+        <pubDate>03-14-2025 11:28</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/0193841X251324594?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
       <item>
-        <title>The Practice and Contexts of Hub and District Leadership: New Directions in Research on Educational Improvement Networks</title>
+        <title>Problem posing or mathematical modeling? The process of expert instructional design</title>
         <description>
           
-            &lt;a href=&quot;/toc/hpje20/100/1&quot;&gt;Volume 100, Issue 1&lt;/a&gt;, January-March 2025&lt;br/&gt;. &lt;br/&gt;
+            
           
         </description>
-        <pubDate>02-12-2025 02:27</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2025.2444846?af=R</link>
+        <pubDate>03-14-2025 00:00</pubDate>
+        <link>/article/10.1007/s11858-025-01668-1</link>
       </item>
       
       <item>
-        <title>Measuring Educators’ Perceived Benefits of Participation in Educational Improvement Networks</title>
+        <title>Assessing the Impact of Informational Interventions on Perceptions of School Quality</title>
         <description>
           
-            &lt;a href=&quot;/toc/hpje20/100/1&quot;&gt;Volume 100, Issue 1&lt;/a&gt;, January-March 2025&lt;br/&gt;. &lt;br/&gt;
+            American Educational Research Journal, Ahead of Print. &lt;br/&gt;Perceptions of school quality affect many aspects of education policy and politics. Using two randomized survey experiments, we studied the factors that individuals use to evaluate school quality. Our surveys included two novel components: text analysis ...
           
         </description>
-        <pubDate>02-12-2025 02:27</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2025.2444844?af=R</link>
+        <pubDate>03-13-2025 12:27</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251315740?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
       <item>
-        <title>Introduction to Themed Issue: Educational Improvement Networks: Exploring the Development of Scientific-Professional Learning Communities</title>
+        <title>Weighting for Equity: The Impact and Challenges of Weighted Student Funding Implementation</title>
         <description>
           
-            &lt;a href=&quot;/toc/hpje20/100/1&quot;&gt;Volume 100, Issue 1&lt;/a&gt;, January-March 2025&lt;br/&gt;. &lt;br/&gt;
+            Educational Evaluation and Policy Analysis, Ahead of Print. &lt;br/&gt;This mixed-methods study examines the impact and implementation of Nevada’s weighted student funding (WSF) model that targets funding to students with the greatest need. We use event study models to analyze student achievement data from 2017–2018 to 2021–...
           
         </description>
-        <pubDate>02-12-2025 02:27</pubDate>
-        <link>https://www.tandfonline.com/doi/full/10.1080/0161956X.2025.2444824?af=R</link>
+        <pubDate>03-13-2025 12:15</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/01623737241313470?ai=2b4&mi=ehikzz&af=R</link>
       </item>
       
       <item>
-        <title>Mathematics education for sustainable futures: a strengths-based survey of the field to invite further research action</title>
+        <title>Preservice Elementary Teachers’ Integrated STEM Teaching Self-Efficacy: Contributing Sources Within STEM Education Courses</title>
         <description>
           
-            &lt;h3 class=&quot;a-plus-plus&quot;&gt;Abstract&lt;/h3&gt;
-                  &lt;p class=&quot;a-plus-plus&quot;&gt;In this survey, we introduce and prompt an article collection—&amp;quot;Mathematics Education for Sustainable Futures&amp;quot;—which we are guest editing. The collection will comprise original research articles, written and published over a 2-year period. Recognising the collection title as making reference to what is an emerging area of research, in this introduction, we survey work that has been done. In the spirit of opening and inviting new questions and research directions, we focus on what it means to take mathematics education for sustainable futures seriously, for how we practise and imagine mathematics education, including established topics such as curriculum, knowledge, pedagogy, teacher education, language, modelling, and technology. We structure our review around eight invitations (here arranged into six sections) in the call for collection articles. Each section ends with further invitations for potential authors, or others, wanting to locate and chart their own work in the space. We end drawing out two themes that resonate across the invitations: attention to who and what is marginalised and the importance of a deep reflexivity in our choice/use of concepts. This text is part of the article collection entitled “Mathematics Education for Sustainable Futures” (available at &lt;a href=&quot;link.springer.com/collections/acebaagbha&quot; class=&quot;a-plus-plus&quot;&gt;link.springer.com/collections/acebaagbha&lt;/a&gt;).&lt;/p&gt;
+            AERA Open, January-December 2025. &lt;br/&gt;Elementary teachers often feel underprepared to teach integrated STEM (iSTEM) and describe their preservice teacher preparation as ineffective. The purpose of this study is to investigate the extent to which semester-long STEM methods courses influenced ...
           
         </description>
-        <pubDate>02-12-2025 00:00</pubDate>
-        <link>http://link.springer.com/10.1007/s10649-025-10389-x</link>
+        <pubDate>03-13-2025 03:31</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584251321472?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Role of the Policy Environment in Shaping the Work of Professional Learning Partnerships</title>
+        <description>
+          
+            AERA Open, January-December 2025. &lt;br/&gt;Building on previous work studying research–practice partnerships, we use the framework of policy attributes to explore success and resilience in organizations tasked with quickly adapting to serving teachers and students in school environments vastly ...
+          
+        </description>
+        <pubDate>03-13-2025 03:10</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584251316465?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Mathematics teachers’ ethical decision-making approaches in instructional practices</title>
+        <description>
+          
+            
+          
+        </description>
+        <pubDate>03-13-2025 00:00</pubDate>
+        <link>/article/10.1007/s10649-025-10396-y</link>
+      </item>
+      
+      <item>
+        <title>Researching the expertise of mathematics teacher educators in initial teacher education settings</title>
+        <description>
+          
+            
+          
+        </description>
+        <pubDate>03-13-2025 00:00</pubDate>
+        <link>/article/10.1007/s10857-025-09688-0</link>
+      </item>
+      
+      <item>
+        <title>How do Introduction-to-Proof Textbooks Explain Conditionals and Implications?</title>
+        <description>
+          
+            
+          
+        </description>
+        <pubDate>03-13-2025 00:00</pubDate>
+        <link>/article/10.1007/s40753-024-00263-1</link>
+      </item>
+      
+      <item>
+        <title>Transforming Racial Climate Health on Campus: The Need for Structural Competency in a Legal Context of “Race-Neutrality”</title>
+        <description>
+          
+            Educational Evaluation and Policy Analysis, Ahead of Print. &lt;br/&gt;Campus climate assessment has been an important strategy for improving students’ racialized experiences and racial equity in higher education. But when these assessments lack critical interventions in structural racism, they are easily co-opted to keep ...
+          
+        </description>
+        <pubDate>03-12-2025 11:26</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/01623737241304405?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Latent School-Level Classes of Teacher Working Conditions in Virginia: Description, Teacher Preferences, and Contextual Factors</title>
+        <description>
+          
+            AERA Open, January-December 2025. &lt;br/&gt;Many dimensions of teacher working conditions influence both teacher and student outcomes; yet, analyses of schools’ overall working conditions are challenged by high correlations among the dimensions. Our study overcame this challenge by applying latent ...
+          
+        </description>
+        <pubDate>03-12-2025 10:42</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584251321454?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Leading During Crisis: State and Local Education Leaders’ Equity Focused Approaches During the COVID-19 Pandemic</title>
+        <description>
+          
+            AERA Open, January-December 2025. &lt;br/&gt;The COVID-19 pandemic exacerbated equity issues in education, spanning race, disability, language, and socioeconomic status. However, few studies examine the ways that district or state educational leaders consider equity in their decision-making during a ...
+          
+        </description>
+        <pubDate>03-12-2025 10:36</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/23328584251318993?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>The Case for Preregistering Quasi-Experimental Program and Policy Evaluations</title>
+        <description>
+          
+            Evaluation Review, Ahead of Print. &lt;br/&gt;The recognition that researcher discretion coupled with unconscious biases and motivated reasoning sometimes leads to false findings (“p-hacking”) led to the broad embrace of study preregistration and other open-science practices in experimental research. ...
+          
+        </description>
+        <pubDate>03-12-2025 03:27</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.1177/0193841X251326738?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>Countering Racialized Logics About Black Students and School Attendance</title>
+        <description>
+          
+            Educational Researcher, Ahead of Print. &lt;br/&gt;Deficit narratives about Blackness are embedded in research, discourse, and policies as policymakers and researchers theorize about differences in schooling outcomes between Black students and their peers. We offer a counterstory to prevailing ...
+          
+        </description>
+        <pubDate>03-12-2025 01:03</pubDate>
+        <link>https://journals.sagepub.com/doi/abs/10.3102/0013189X251321448?ai=2b4&mi=ehikzz&af=R</link>
+      </item>
+      
+      <item>
+        <title>What’s Black Got to Do with It? Unsettling Antiblack Logics in Secondary Mathematics Education</title>
+        <description>
+          
+            
+          
+        </description>
+        <pubDate>03-12-2025 00:00</pubDate>
+        <link>/article/10.1007/s42330-025-00347-3</link>
+      </item>
+      
+      <item>
+        <title>The global reach of colorblind racism in education: exemplars from three country contexts</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>03-11-2025 06:35</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/13613324.2025.2474913?af=R</link>
+      </item>
+      
+      <item>
+        <title>A case study on the mathematical communication competency of mathematically gifted and non-gifted students</title>
+        <description>
+          
+            . &lt;br/&gt;
+          
+        </description>
+        <pubDate>03-11-2025 06:01</pubDate>
+        <link>https://www.tandfonline.com/doi/full/10.1080/00220671.2025.2475310?af=R</link>
       </item>
       
   </channel>
