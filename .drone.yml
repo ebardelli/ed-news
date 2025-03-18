@@ -39,25 +39,6 @@ steps:
       - name: cache
         path: /tmp/cache
 
-    - name: update netlify
-      image: techknowlogick/drone-netlify
-      settings:
-        path: ./ed-news/
-        site_id: 
-          from_secret: netlify_site_id
-      environment:
-        NETLIFY_TOKEN:
-          from_secret: netlify_token
-    
-    - name: update GH Pages
-      image: plugins/gh-pages
-      settings:
-        username:
-          from_secret: gh_username
-        password:
-          from_secret: gh_token
-        pages_directory: ed-news/
-
     - name: update server
       image: drillster/drone-rsync
       volumes:
