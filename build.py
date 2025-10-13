@@ -61,9 +61,18 @@ def build(out_dir: Path = BUILD_DIR):
     print("building static site into", out_dir)
     ctx = read_planet(PLANET_FILE) if PLANET_FILE.exists() else {"title": "Latest Research Articles in Education", "feeds": []}
     # add a build timestamp for templates
+    # Prefer using the IANA Pacific timezone so the output shows PST/PDT as appropriate.
     try:
-        ctx["build_time"] = datetime.now().astimezone().strftime("%a, %d %b %Y %H:%M %Z")
+        try:
+            from zoneinfo import ZoneInfo
+
+            tz = ZoneInfo("America/Los_Angeles")
+            ctx["build_time"] = datetime.now(tz).strftime("%a, %d %b %Y %H:%M %Z")
+        except Exception:
+            # Fall back to local timezone-aware time
+            ctx["build_time"] = datetime.now().astimezone().strftime("%a, %d %b %Y %H:%M %Z")
     except Exception:
+        # Final fallback: naive local time
         ctx["build_time"] = datetime.now().strftime("%a, %d %b %Y %H:%M")
     # load latest articles from SQLite DB if present
     if DB_FILE.exists():
