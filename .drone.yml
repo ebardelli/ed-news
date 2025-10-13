@@ -21,6 +21,7 @@ steps:
     - name: fetch feeds
       image: python:3.14-slim
       commands:
+        - apt-get update && apt-get install -y --no-install-recommends curl ca-certificates
         - curl -LsSf https://astral.sh/uv/install.sh | sh
         - mkdir -p cache
         - ln -sf cache/ednews.db ednews.db
