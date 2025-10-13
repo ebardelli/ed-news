@@ -13,21 +13,20 @@
     </header>
     <main>
         <section>
-            <h2>Latest Articles</h2>
             {% if articles %}
                 {% for a in articles %}
                         <div class="item">
                             <h3>{% if a.link %}<a href="{{ a.link }}">{{ a.title or 'Untitled' }}</a>{% else %}{{ a.title or 'Untitled' }}{% endif %}</h3>
                                 <p class="meta">
-                                                                                        {% if a.feed_title %}
-                                                                                            <span class="feed">{{ a.feed_title }}</span>
-                                                                                        {% endif %}
-                                                                                        {% if a.feed_title and a.published %}
-                                                                                            <span class="sep">|</span>
-                                                                                        {% endif %}
-                                                                                        {% if a.published %}
-                                                                                            <span class="date"><a href="#">{{ a.published }}</a></span>
-                                                                                        {% endif %}
+                                    {% if a.feed_title %}
+                                        <span class="feed">{{ a.feed_title }}</span>
+                                    {% endif %}
+                                    {% if a.feed_title and a.published %}
+                                        <span class="sep">|</span>
+                                    {% endif %}
+                                    {% if a.published %}
+                                        <span class="date"><a href="#">{{ a.published }}</a></span>
+                                    {% endif %}
                                 </p>
                             <p class="excerpt">
                                 {% if a.content %}

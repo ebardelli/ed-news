@@ -20,7 +20,7 @@ def read_planet(planet_path: Path):
     patched = "[global]\n" + raw
     cfg = ConfigParser()
     cfg.read_string(patched)
-    site_title = cfg.get("global", "title", fallback="Ed News")
+    site_title = cfg.get("global", "title", fallback="Latest Research Articles in Education")
     feeds = []
     for section in cfg.sections():
         if section == "global":
@@ -59,7 +59,7 @@ def copy_static(out_dir: Path):
 
 def build(out_dir: Path = BUILD_DIR):
     print("building static site into", out_dir)
-    ctx = read_planet(PLANET_FILE) if PLANET_FILE.exists() else {"title": "Ed News", "feeds": []}
+    ctx = read_planet(PLANET_FILE) if PLANET_FILE.exists() else {"title": "Latest Research Articles in Education", "feeds": []}
     # add a build timestamp for templates
     try:
         ctx["build_time"] = datetime.now().astimezone().strftime("%a, %d %b %Y %H:%M %Z")
