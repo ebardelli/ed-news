@@ -4,47 +4,56 @@
     "aerj": {
       "title": "American Educational Research Journal",
       "link": "https://journals.sagepub.com/home/aer",
-      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=aera&type=etoc&feed=rss"
+      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=aera&type=etoc&feed=rss",
+      "publication_id": "10.3102"
     },
     "er": {
       "title": "Educational Researcher",
       "link": "https://journals.sagepub.com/home/edr",
-      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=edra&type=etoc&feed=rss"
+      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=edra&type=etoc&feed=rss",
+      "publication_id": "10.3102"
     },
     "aera_open": {
       "title": "AERA Open",
       "link": "aera open",
-      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=eroa&type=etoc&feed=rss"
+      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=eroa&type=etoc&feed=rss",
+      "publication_id": "10.1177"
     },
     "jebs": {
       "title": "Journal of Educational and Behavioral Statistics",
       "link": "https://journals.sagepub.com/home/jeb",
-      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=jebb&type=etoc&feed=rss"
+      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=jebb&type=etoc&feed=rss",
+      "publication_id": "10.3102"
     },
     "eepa": {
       "title": "Educational Evaluation and Policy Analysis",
       "link": "https://journals.sagepub.com/home/epa",
-      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=epaa&type=etoc&feed=rss"
+      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=epaa&type=etoc&feed=rss",
+      "publication_id": "10.3102"
     },
     "rer": {
       "title": "Review of Educational Research",
       "link": "https://journals.sagepub.com/home/rer",
-      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=rera&type=etoc&feed=rss"
+      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=rera&type=etoc&feed=rss",
+      "publication_id": "10.3102"
     },
     "rre": {
       "title": "Review of Research in Education",
       "link": "https://journals.sagepub.com/home/rre",
-      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=rrea&type=etoc&feed=rss"
+      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=rrea&type=etoc&feed=rss",
+      "publication_id": "10.3102"
     },
     "jer": {
       "title": "The Journal of Educational Research",
       "link": "https://www.tandfonline.com/toc/vjer20/current",
-      "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=vjer20"
+      "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=vjer20",
+      "publication_id": "10.1080/00220671"
     },
     "lni": {
       "title": "Learning and Instruction",
       "link": "https://www.sciencedirect.com/journal/learning-and-instruction",
-      "feed": "https://rss.sciencedirect.com/publication/science/09594752"
+      "feed": "https://rss.sciencedirect.com/publication/science/09594752",
+      "publication_id": "10.1016/j.learninstruc"
     },
     "ed": {
       "title": "Education",
@@ -54,19 +63,21 @@
     "cree": {
       "title": "Race Ethnicity and Education",
       "link": "https://www.tandfonline.com/toc/cree20/current",
-      "feed": "https://www.tandfonline.com/feed/rss/cree20"
+      "feed": "https://www.tandfonline.com/feed/rss/cree20",
+      "publication_id": "10.1080/13613324"
     },
     "pje": {
       "title": "Peabody Journal of Education",
       "link": "https://www.tandfonline.com/toc/hpje20/current",
-      "feed": "https://www.tandfonline.com/feed/rss/hpje20"
+      "feed": "https://www.tandfonline.com/feed/rss/hpje20",
+      "publication_id": "10.1080/0161956X"
     },
     "jree": {
       "title": "Journal of Research on Educational Effectiveness",
       "link": "https://www.tandfonline.com/toc/uree20/current",
-      "feed": "https://www.tandfonline.com/feed/rss/uree20"
+      "feed": "https://www.tandfonline.com/feed/rss/uree20",
+      "publication_id": "10.1080/19345747"
     },
-
     "jrme": {
       "title": "Journal for Research in Mathematics Education",
       "link": "https://www.nctm.org/publications/journal-for-research-in-mathematics-education/",
@@ -75,42 +86,50 @@
     "zmd": {
       "title": "ZDM - Mathematics Education",
       "link": "https://link.springer.com/journal/11858",
-      "feed": "https://link.springer.com/search.rss?facet-journal-id=11858&facet-content-type=Article&sortOrder=newestFirst"
+      "feed": "https://link.springer.com/search.rss?facet-journal-id=11858&facet-content-type=Article&sortOrder=newestFirst",
+      "publication_id": "10.1007"
     },
     "jmb": {
       "title": "The Journal of Mathematical Behavior",
       "link": "https://www.journals.elsevier.com/the-journal-of-mathematical-behavior",
-      "feed": "https://rss.sciencedirect.com/publication/science/07323123"
+      "feed": "https://rss.sciencedirect.com/publication/science/07323123",
+      "publication_id": "10.1016/j.jmathb"
     },
     "esm": {
       "title": "Educational Studies in Mathematics",
       "link": "https://link.springer.com/journal/10649",
-      "feed": "https://link.springer.com/search.rss?facet-journal-id=10649&facet-content-type=Article&sortOrder=newestFirst"
+      "feed": "https://link.springer.com/search.rss?facet-journal-id=10649&facet-content-type=Article&sortOrder=newestFirst",
+      "publication_id": "10.1007"
     },
     "ci": {
       "title": "Cognition and Instruction",
       "link": "https://www.tandfonline.com/loi/hcgi20",
-      "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=hcgi20"
+      "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=hcgi20",
+      "publication_id": "10.1080/07370008"
     },
     "jmte": {
       "title": "Journal of Mathematics Teacher Education",
       "link": "https://link.springer.com/journal/10857",
-      "feed": "https://link.springer.com/search.rss?facet-journal-id=10857&facet-content-type=Article&sortOrder=newestFirst"
+      "feed": "https://link.springer.com/search.rss?facet-journal-id=10857&facet-content-type=Article&sortOrder=newestFirst",
+      "publication_id": "10.1007"
     },
     "merj": {
       "title": "Mathematics Education Research Journal",
       "link": "https://link.springer.com/journal/13394",
-      "feed": "https://link.springer.com/search.rss?facet-journal-id=13394&facet-content-type=Article&sortOrder=newestFirst"
+      "feed": "https://link.springer.com/search.rss?facet-journal-id=13394&facet-content-type=Article&sortOrder=newestFirst",
+      "publication_id": "10.1007"
     },
     "iml": {
       "title": "Investigations in Mathematics Learning",
       "link": "https://www.tandfonline.com/loi/uiml20",
-      "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=uiml20"
+      "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=uiml20",
+      "publication_id": "10.1080/19477503"
     },
     "mtl": {
       "title": "Mathematical Thinking and Learning",
       "link": "https://www.tandfonline.com/loi/hmtl20",
-      "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=hmtl20"
+      "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=hmtl20",
+      "publication_id": "10.1080/10986065"
     },
     "ijmtl": {
       "title": "International Journal for Mathematics Teaching and Learning",
@@ -120,38 +139,44 @@
     "ijrume": {
       "title": "International Journal of Research in Undergraduate Mathematics Education",
       "link": "https://www.springer.com/education+%26+language/mathematics+education/journal/40753",
-      "feed": "https://link.springer.com/search.rss?facet-journal-id=40753&facet-content-type=Article&sortOrder=newestFirst"
+      "feed": "https://link.springer.com/search.rss?facet-journal-id=40753&facet-content-type=Article&sortOrder=newestFirst",
+      "publication_id": "10.1007"
     },
     "rme": {
       "title": "Research in Mathematics Education",
       "link": "https://www.tandfonline.com/loi/rrme20",
-      "feed": "https://www.tandfonline.com/feed/rss/rrme20"
+      "feed": "https://www.tandfonline.com/feed/rss/rrme20",
+      "publication_id": "10.1080/14794802"
     },
     "cjsmte": {
       "title": "Canadian Journal of Science, Mathematics and Technology Education",
       "link": "https://www.springer.com/journal/42330",
-      "feed": "https://link.springer.com/search.rss?facet-journal-id=42330&facet-content-type=Article&sortOrder=newestFirst"
+      "feed": "https://link.springer.com/search.rss?facet-journal-id=42330&facet-content-type=Article&sortOrder=newestFirst",
+      "publication_id": "10.1007"
     },
-
     "tate": {
       "title": "Teaching and Teacher Education",
       "link": "https://www.journals.elsevier.com/teaching-and-teacher-education",
-      "feed": "https://rss.sciencedirect.com/publication/science/0742051X"
+      "feed": "https://rss.sciencedirect.com/publication/science/0742051X",
+      "publication_id": "10.1016/j.tate"
     },
     "jte": {
       "title": "Journal of Teacher Education",
       "link": "Journal of Teacher Education",
-      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=jtea&type=etoc&feed=rss"
+      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=jtea&type=etoc&feed=rss",
+      "publication_id": "10.1177"
     },
     "ate": {
       "title": "Action in Teacher Education",
       "link": "https://www.tandfonline.com/loi/uate20",
-      "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=uate20"
+      "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=uate20",
+      "publication_id": "10.1080/01626620"
     },
     "pdk": {
       "title": "Phi Delta Kappan",
       "link": "https://journals.sagepub.com/home/pdk",
-      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=pdka&type=etoc&feed=rss"
+      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=pdka&type=etoc&feed=rss",
+      "publication_id": "10.1177"
     },
     "mte": {
       "title": "Mathematics Teacher Education",
@@ -161,31 +186,32 @@
     "ejte": {
       "title": "European Journal of Teacher Education",
       "link": "https://www.tandfonline.com/toc/cete20/current",
-      "feed": "https://www.tandfonline.com/feed/rss/cete20"
+      "feed": "https://www.tandfonline.com/feed/rss/cete20",
+      "publication_id": "10.1080/02619768"
     },
     "te": {
       "title": "Teaching Education",
       "link": "https://www.tandfonline.com/toc/cted20/current",
-      "feed": "https://www.tandfonline.com/feed/rss/cted20"
+      "feed": "https://www.tandfonline.com/feed/rss/cted20",
+      "publication_id": "10.1080/10476210"
     },
-
     "mt": {
       "title": "Mathematics Teacher",
       "link": "https://www.nctm.org/publications/mathematics-teacher/",
       "feed": "https://pubs.nctm.org/journalissuetocrss/journals/mtlt/mtlt-overview.xml"
     },
-
     "ear": {
       "title": "Educational Action Research",
       "link": "https://www.tandfonline.com/toc/reac20/current",
-      "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=reac20"
+      "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=reac20",
+      "publication_id": "10.1080/09650792"
     },
     "arj": {
       "title": "Action Research",
       "link": "https://journals.sagepub.com/home/arj",
-      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=arja&type=etoc&feed=rss"
+      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=arja&type=etoc&feed=rss",
+      "publication_id": "10.1177"
     },
-
     "nber_ed": {
       "title": "NBER Working Papers - Econ of Ed",
       "link": "https://www.nber.org",
@@ -199,18 +225,20 @@
     "epxa": {
       "title": "Educational Policy",
       "link": "https://journals.sagepub.com/home/epx",
-      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=epxa&type=etoc&feed=rss"
+      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=epxa&type=etoc&feed=rss",
+      "publication_id": "10.1177"
     },
-
     "erx": {
       "title": "Evaluation Review",
       "link": "https://journals.sagepub.com/loi/erxb",
-      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=erxb&type=etoc&feed=rss"
+      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=erxb&type=etoc&feed=rss",
+      "publication_id": "10.1177"
     },
     "stata": {
       "title": "The Stata Journal",
       "link": "https://journals.sagepub.com/loi/stja?ai=2b4&mi=ehikzz&af=R",
-      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=stja&type=etoc&feed=rss"
+      "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=stja&type=etoc&feed=rss",
+      "publication_id": "10.1177"
     }
   }
 }
