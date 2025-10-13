@@ -46,5 +46,27 @@ ed-news-python
 - The application supports dynamic content rendering through Jinja2 templates.
 - An RSS feed is available at `http://localhost:5000/rss`.
 
+## Cloudflare cache purge (CI)
+
+If you host the site behind Cloudflare you may want to purge the cache automatically after the site is rebuilt.
+
+This repository's Drone CI pipeline includes a `purge cloudflare cache` step which calls the Cloudflare Purge API.
+
+Required Drone secrets:
+
+- `CF_API_TOKEN` — a scoped Cloudflare API token with permission to purge the zone (Zone.Cache Purge: Edit).
+- `CF_ZONE_ID` — the Cloudflare Zone ID for your site.
+
+How to create a token:
+
+1. In the Cloudflare dashboard go to My Profile -> API Tokens -> Create Token.
+2. Use the `Edit zone cache purge` template or create a custom token with the `Zone.Cache Purge` permission for the target zone.
+3. Copy the token and add it to your Drone repository secrets as `CF_API_TOKEN`. Add the zone ID as `CF_ZONE_ID`.
+
+Behavior:
+
+- If the secrets are missing the CI step will skip purging and continue successfully.
+- The CI step sends `{"purge_everything":true}` to Cloudflare. If you prefer a more targeted purge (by URL or tag) the step can be adjusted.
+
 ## Contributing
 Contributions are welcome! Please submit a pull request or open an issue for any enhancements or bug fixes.
