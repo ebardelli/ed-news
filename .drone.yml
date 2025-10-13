@@ -19,11 +19,8 @@ steps:
         path: /tmp/cache
 
     - name: fetch feeds
-      image: python:3.14-slim
+      image: ghcr.io/astral-sh/uv:debian
       commands:
-        - apt-get update && apt-get install -y --no-install-recommends curl ca-certificates
-        - curl -LsSf https://astral.sh/uv/install.sh | sh
-        - source $HOME/.local/bin/env
         - mkdir -p cache
         - ln -sf cache/ednews.db ednews.db
         - uv venv --python 3.14
