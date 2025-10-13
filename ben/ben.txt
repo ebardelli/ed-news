@@ -1,0 +1,4 @@
+# pakman manifest
+
+index.html        index.html.erb
+index.rss         index.rss.erb
