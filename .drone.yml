@@ -50,28 +50,14 @@ steps:
       commands:
         - rsync -rltvzc --delete --omit-dir-times --no-o --no-g build/ /www/
 
-    - name: purge cloudflare cache
-      image: curlimages/curl:latest
-      environment:
-        CF_ZONE_ID:
-          from_secret: CF_ZONE_ID
-        CF_API_TOKEN:
-          from_secret: CF_API_TOKEN
-      commands:
-        - |
-          set -e
-          if [ -z "${CF_API_TOKEN}" ] || [ -z "${CF_ZONE_ID}" ]; then
-            echo "CF_API_TOKEN or CF_ZONE_ID not set; skipping Cloudflare purge"
-            exit 0
-          fi
-          echo "Purging Cloudflare cache for zone ${CF_ZONE_ID}..."
-          response=$(curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
-            -H "Authorization: Bearer ${CF_API_TOKEN}" \
-            -H "Content-Type: application/json" \
-            --data '{"purge_everything":true}')
-          echo "$response"
-          echo "$response" | grep -q '"success":true' || (echo "Cloudflare purge failed" && exit 1)
-          echo "Cloudflare cache purged."
+    - name: invalidate-cloudflare-cache
+      image: jetrails/drone-cloudflare-caching
+      settings:
+          api_token:
+              from_secret: cloudflare_token
+          zone_identifier:
+              from_secret: cloudflare_zone_identifier
+          action: purge_everything
 
 volumes:
     - name: cache
