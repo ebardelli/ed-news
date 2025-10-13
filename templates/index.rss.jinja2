@@ -1,0 +1,18 @@
+<rss version="2.0">
+  <channel>
+    <title>{{ title }}</title>
+    <link>{{ link or "" }}</link>
+    <description>{{ description or title }}</description>
+    <lastBuildDate>{{ last_build_date or "" }}</lastBuildDate>
+    <pubDate>{{ pub_date or "" }}</pubDate>
+    <ttl>1800</ttl>
+    {% for item in articles %}
+    <item>
+      <title>{{ item.title or 'Untitled' }}</title>
+      <link>{{ item.link or '' }}</link>
+      <description>{{ item.content or '' }}</description>
+      <pubDate>{{ item.published or '' }}</pubDate>
+    </item>
+    {% endfor %}
+  </channel>
+</rss>

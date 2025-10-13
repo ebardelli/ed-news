@@ -1,0 +1,57 @@
+---
+kind: pipeline
+type: docker
+name: update ed-news website
+
+steps:
+    - name: restore cache
+      image: meltwater/drone-cache:dev
+      pull: true
+      settings:
+        backend: "filesystem"
+        restore: true
+        cache_key: "volume"
+        archive_format: "gzip"
+        mount:
+          - 'cache'
+      volumes:
+      - name: cache
+        path: /tmp/cache
+
+    - name: fetch feeds
+      image: ebardelli/ed-news
+      commands:
+        - pluto update --dbname=cache/ed-news.db
+        - sqlite3 cache/ed-news.db 'UPDATE "items" SET "published" = "created_at" WHERE "published" > CURRENT_TIMESTAMP;'
+        - pluto merge --dbname=cache/ed-news.db --output=ed-news --template ben
+
+    - name: rebuild cache
+      image: meltwater/drone-cache:dev
+      pull: true
+      settings:
+        backend: "filesystem"
+        rebuild: true
+        cache_key: "volume"
+        archive_format: "gzip"
+        mount:
+          - 'cache'
+      volumes:
+      - name: cache
+        path: /tmp/cache
+
+    - name: update server
+      image: drillster/drone-rsync
+      volumes:
+        - name: www_dir
+          path: /www
+      commands:
+        - rsync -rltvzc --delete --omit-dir-times --no-o --no-g ed-news/ /www/
+
+volumes:
+    - name: cache
+      host:
+        path: /data/drone/cache
+    - name: www_dir
+      host:
+        path: /data/www/ed-news
+...
