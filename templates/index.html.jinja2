@@ -13,6 +13,7 @@
     </header>
     <main>
         <section>
+            <div class="content">
             {% if articles %}
                 {% for a in articles %}
                         <div class="item">
@@ -42,6 +43,34 @@
             {% else %}
                 <p>No articles found.</p>
             {% endif %}
+
+            {# Similar articles list - populated by the view code with a list of titles #}
+            {# Similar articles list - prefer `similar_articles` (list of {title, link}),
+               but keep backward compatibility with `similar_titles` (list of strings) #}
+            {% if similar_articles %}
+                <aside class="similar-articles">
+                    <h4>Similar articles</h4>
+                    <ul>
+                        {% for s in similar_articles %}
+                            {% if s.link %}
+                                <li><a href="{{ s.link }}">{{ s.title }}</a></li>
+                            {% else %}
+                                <li>{{ s.title }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </aside>
+            {% elif similar_titles %}
+                <aside class="similar-articles">
+                    <h4>Similar articles</h4>
+                    <ul>
+                        {% for t in similar_titles %}
+                            <li>{{ t }}</li>
+                        {% endfor %}
+                    </ul>
+                </aside>
+            {% endif %}
+            </div>
         </section>
     </main>
     <footer>

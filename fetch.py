@@ -83,13 +83,63 @@ def init_db(conn):
             abstract TEXT,
             crossref_xml TEXT,
             publication_id TEXT,
+            issn TEXT,
             published TEXT,
             fetched_at TEXT,
             UNIQUE(doi)
         )
         """
     )
+    # Publications table: map a publication identifier (e.g. DOI prefix or ISSN)
+    # to the feed key and feed title from planet.json. This helps lookups that
+    # prefer a feed-level publication identifier when searching CrossRef.
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS publications (
+            publication_id TEXT NOT NULL,
+            feed_id TEXT,
+            feed_title TEXT,
+            issn TEXT NOT NULL,
+            PRIMARY KEY (publication_id, issn)
+        )
+        """
+    )
     conn.commit()
+
+    # Migrate an older single-column PK `publications` table to the new
+    # composite primary key (publication_id, issn) while preserving data.
+    try:
+        cur.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name='publications' LIMIT 1")
+        row = cur.fetchone()
+        if row:
+            sql = row[0] or ''
+            if 'PRIMARY KEY (publication_id, issn)' not in sql:
+                logger.info('migrating publications table to composite primary key (publication_id, issn)')
+                cur.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS publications_new (
+                        publication_id TEXT NOT NULL,
+                        feed_id TEXT,
+                        feed_title TEXT,
+                        issn TEXT NOT NULL,
+                        PRIMARY KEY (publication_id, issn)
+                    )
+                    """
+                )
+                # copy rows, coalescing NULL issn to empty string
+                try:
+                    cur.execute(
+                        "INSERT OR REPLACE INTO publications_new (publication_id, feed_id, feed_title, issn) SELECT publication_id, feed_id, feed_title, COALESCE(issn, '') FROM publications"
+                    )
+                    cur.execute("DROP TABLE IF EXISTS publications")
+                    cur.execute("ALTER TABLE publications_new RENAME TO publications")
+                    conn.commit()
+                    logger.info('publications table migrated')
+                except Exception:
+                    logger.debug('failed to migrate publications table; leaving original in place')
+    except Exception:
+        logger.debug('publications migration check failed')
+
     logger.debug("initialized database and ensured tables exist")
     # If an old `journal_works` table exists, migrate any DOI'd rows into `articles`
     try:
@@ -112,7 +162,7 @@ def init_db(conn):
     # No legacy combined view creation here; `create_combined_view` will be used later
 
 
-def fetch_feed(session, key, feed_title, url, publication_doi=None, timeout=20):
+def fetch_feed(session, key, feed_title, url, publication_doi=None, issn=None, timeout=20):
     """Fetch a feed URL and return parsed feed entries.
 
     Returns: list of dicts with fields matching DB columns.
@@ -143,6 +193,7 @@ def fetch_feed(session, key, feed_title, url, publication_doi=None, timeout=20):
             "_entry": e,
             # attach feed-level publication_id to each entry so save_entries can use it
             "_feed_publication_id": publication_doi,
+            "_feed_issn": issn,
         })
 
     logger.debug("parsed %d entries from feed %s", len(entries), key)
@@ -201,7 +252,9 @@ def save_entries(conn, feed_key, feed_title, entries):
                                     if doi:
                                         # ensure an article row exists and attach doi to the existing item
                                         try:
-                                            ensured = ensure_article_row(conn, doi, title=e.get("title"), authors=None, abstract=None)
+                                            feed_issn = e.get("_feed_issn") if isinstance(e, dict) else None
+                                            feed_pub_id = e.get("_feed_publication_id") if isinstance(e, dict) else None
+                                            ensured = ensure_article_row(conn, doi, title=e.get("title"), authors=None, abstract=None, publication_id=feed_pub_id, issn=feed_issn)
                                         except Exception:
                                             ensured = None
                                         try:
@@ -275,13 +328,18 @@ def save_entries(conn, feed_key, feed_title, entries):
                         except Exception:
                             logger.debug("CrossRef title lookup failed for ScienceDirect title: %s", lookup_title)
 
-            if doi:
-                doi = normalize_doi(doi)
-                title = e.get("title") or (entry_obj.get("title") if isinstance(entry_obj, dict) else None)
-                authors = extract_authors_from_entry(entry_obj) or extract_authors_from_entry(e)
-                abstract = extract_abstract_from_entry(entry_obj) or extract_abstract_from_entry(e)
-                # create a minimal article row (no CrossRef lookup) so items can link to it by DOI
-                ensured = ensure_article_row(conn, doi, title=title, authors=authors, abstract=abstract)
+                if doi:
+                    doi = normalize_doi(doi)
+                    title = e.get("title") or (entry_obj.get("title") if isinstance(entry_obj, dict) else None)
+                    authors = extract_authors_from_entry(entry_obj) or extract_authors_from_entry(e)
+                    abstract = extract_abstract_from_entry(entry_obj) or extract_abstract_from_entry(e)
+                    # create a minimal article row (no CrossRef lookup) so items can link to it by DOI
+                    feed_issn = None
+                    try:
+                        feed_issn = e.get("_feed_issn")
+                    except Exception:
+                        feed_issn = None
+                    ensured = ensure_article_row(conn, doi, title=title, authors=authors, abstract=abstract, publication_id=pub_pid, issn=feed_issn)
                 # attach article doi to the items row if available
                 try:
                     if ensured and item_rowid:
@@ -491,7 +549,7 @@ def extract_abstract_from_entry(entry) -> str | None:
     return None
 
 
-def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstract: str | None):
+def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstract: str | None, publication_id: str | None = None, issn: str | None = None):
     if not doi:
         return False
     cur = conn.cursor()
@@ -537,16 +595,18 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
         # Use INSERT OR REPLACE to update existing records by DOI.
         cur.execute(
             """
-            INSERT INTO articles (doi, title, authors, abstract, crossref_xml, fetched_at)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO articles (doi, title, authors, abstract, crossref_xml, publication_id, issn, fetched_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(doi) DO UPDATE SET
                 title=excluded.title,
                 authors=excluded.authors,
                 abstract=excluded.abstract,
                 crossref_xml=COALESCE(excluded.crossref_xml, articles.crossref_xml),
+                publication_id=COALESCE(excluded.publication_id, articles.publication_id),
+                issn=COALESCE(excluded.issn, articles.issn),
                 fetched_at=excluded.fetched_at
             """,
-            (doi, title, authors, abstract, crossref_raw, now),
+            (doi, title, authors, abstract, crossref_raw, publication_id, issn, now),
         )
         conn.commit()
         # return the article id
@@ -561,12 +621,12 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
             # Fallback: preserve existing crossref_xml by using COALESCE with a subquery
             cur.execute(
                 """
-                INSERT OR REPLACE INTO articles (id, doi, title, authors, abstract, crossref_xml, fetched_at)
+                INSERT OR REPLACE INTO articles (id, doi, title, authors, abstract, crossref_xml, publication_id, issn, fetched_at)
                 VALUES (
-                    (SELECT id FROM articles WHERE doi = ?), ?, ?, ?, ?, COALESCE(?, (SELECT crossref_xml FROM articles WHERE doi = ?)), ?
+                    (SELECT id FROM articles WHERE doi = ?), ?, ?, ?, ?, COALESCE(?, (SELECT crossref_xml FROM articles WHERE doi = ?)), COALESCE((SELECT publication_id FROM articles WHERE doi = ?), ?), COALESCE((SELECT issn FROM articles WHERE doi = ?), ?), ?
                 )
                 """,
-                (doi, doi, title, authors, abstract, crossref_raw, doi, now),
+                (doi, doi, title, authors, abstract, crossref_raw, doi, publication_id, doi, issn, now),
             )
             conn.commit()
             cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
@@ -577,7 +637,7 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
             return False
 
 
-def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | None = None, abstract: str | None = None) -> int | None:
+def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | None = None, abstract: str | None = None, publication_id: str | None = None, issn: str | None = None) -> int | None:
     """Ensure an article row exists for `doi`. Insert minimal data if missing and
     return the article id. Does NOT call CrossRef.
     """
@@ -586,7 +646,10 @@ def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | 
         logger.debug("ensure_article_row called without doi; skipping")
         return None
     try:
-        cur.execute("INSERT OR IGNORE INTO articles (doi, title, authors, abstract, fetched_at) VALUES (?, ?, ?, ?, ?)", (doi, title, authors, abstract, datetime.now(timezone.utc).isoformat()))
+        cur.execute(
+            "INSERT OR IGNORE INTO articles (doi, title, authors, abstract, publication_id, issn, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (doi, title, authors, abstract, publication_id, issn, datetime.now(timezone.utc).isoformat()),
+        )
         conn.commit()
         cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
         row = cur.fetchone()
@@ -742,11 +805,13 @@ def create_combined_view(conn: sqlite3.Connection):
             articles.doi AS doi,
             COALESCE(articles.title, '') AS title,
             ('https://doi.org/' || articles.doi) AS link,
-            COALESCE(articles.publication_id, '') AS feed_title,
+            COALESCE(publications.feed_title, feeds.feed_title, '') AS feed_title,
             COALESCE(articles.abstract, '') AS content,
             COALESCE(articles.published, articles.fetched_at) AS published,
             COALESCE(articles.authors, '') AS authors
         FROM articles
+        	LEFT JOIN publications on publications.issn = articles.issn
+        	LEFT JOIN publications as feeds on feeds.feed_id = articles.publication_id
         WHERE articles.doi IS NOT NULL
         """
     )
@@ -822,8 +887,8 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
 
                     # Only insert if we have a DOI (norm is truthy)
                     cur.execute(
-                        "INSERT OR IGNORE INTO articles (doi, title, authors, abstract, crossref_xml, publication_id, published, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                        (norm, title_text, authors_text, abstract_text, crossref_raw, db_pub_id, published, datetime.now(timezone.utc).isoformat()),
+                        "INSERT OR IGNORE INTO articles (doi, title, authors, abstract, crossref_xml, publication_id, issn, published, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        (norm, title_text, authors_text, abstract_text, crossref_raw, db_pub_id, issn, published, datetime.now(timezone.utc).isoformat()),
                     )
                     if cur.rowcount:
                         inserted += 1
@@ -845,6 +910,39 @@ def main(run_feeds: bool = True, run_journal_works: bool = True):
 
     conn = sqlite3.connect(DB_PATH)
     init_db(conn)
+
+    # Populate publications table from feeds that provide a publication_id.
+    try:
+        cur = conn.cursor()
+        added = 0
+        for item in feeds:
+            # item may be (key, title, url, publication_doi, issn) or older 4-tuples
+            if len(item) == 5:
+                key, title, url, publication_doi, issn = item
+            elif len(item) == 4:
+                key, title, url, publication_doi = item
+                issn = None
+            else:
+                continue
+            # Some feeds may provide only an ISSN (no publication_id). Use the
+            # publication_id when present; otherwise fall back to the ISSN so we
+            # still record the feed in the publications table. We keep the raw
+            # issn value in the `issn` column as well.
+            pub_key = publication_doi or (issn if issn else None)
+            if pub_key:
+                try:
+                    cur.execute(
+                        "INSERT OR REPLACE INTO publications (publication_id, feed_id, feed_title, issn) VALUES (?, ?, ?, ?)",
+                        (pub_key, key, title, issn),
+                    )
+                    added += 1
+                except Exception:
+                    logger.debug("failed to upsert publication row for feed %s (publication_id=%s)", key, pub_key)
+        if added:
+            conn.commit()
+            logger.info("populated publications table with %d entries from planet.json", added)
+    except Exception:
+        logger.debug("failed to populate publications table from feeds")
 
     if run_journal_works:
         # Fetch latest journal works (from CrossRef) for feeds that provide a publication_id

@@ -120,7 +120,7 @@ def read_articles(db_path: Path, limit: int = 30, days: int | None = None):
         try:
             cur.execute(
                 """
-                SELECT title, authors, content, link, published
+                SELECT title, link, feed_title, content, published, authors
                 FROM combined_articles
                 WHERE DATE(published) IN (
                     SELECT DISTINCT DATE(published) AS d
