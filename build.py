@@ -80,7 +80,8 @@ def build(out_dir: Path = BUILD_DIR):
     # load latest articles from SQLite DB if present
     if DB_FILE.exists():
         try:
-            ctx["articles"] = read_articles(DB_FILE, limit=20)
+            # get all articles published on the most recent 5 distinct days
+            ctx["articles"] = read_articles(DB_FILE, days=5)
             logger.info("loaded %d articles from %s", len(ctx["articles"]), DB_FILE)
         except Exception as e:
             logger.warning("failed to load articles from DB: %s", e)
@@ -93,32 +94,64 @@ def build(out_dir: Path = BUILD_DIR):
     logger.info("done")
 
 
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
-    build()
 
+def read_articles(db_path: Path, limit: int = 30, days: int | None = None):
+    """Read articles from the `combined_articles` view.
 
-def read_articles(db_path: Path, limit: int = 30):
-    """Read up to `limit` most-recent articles using the `combined_articles` view.
+    By default this returns up to `limit` most-recent articles. If `days` is
+    provided, return all articles whose publish date (by calendar day) is in
+    the most recent `days` distinct dates present in the view. This lets the
+    caller request "all articles from the last N different publish days".
 
-    This function assumes the view `combined_articles` already exists and is
-    maintained elsewhere. If the view isn't present or the query fails, the
-    function logs a warning and returns an empty list.
+    The function will try to use SQLite DATE() functions to compute distinct
+    publish dates. If that fails (for example, because published values are
+    not parseable by SQLite's DATE()), it falls back to selecting the most
+    recent `limit` rows and performing the date-distinct filtering in Python.
     """
     conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 
-    try:
-        cur.execute(
-            "SELECT title, link, feed_title, content, published, authors FROM combined_articles ORDER BY published DESC LIMIT ?",
-            (limit,),
-        )
-        rows = [dict(r) for r in cur.fetchall()]
-    except Exception as e:
-        logger.warning("combined_articles view missing or query failed: %s", e)
-        conn.close()
-        return []
+    rows = []
+    # If days is provided, try to select articles where DATE(published) is in
+    # the most recent `days` distinct dates. This uses a subquery to extract
+    # the distinct dates then selects rows matching those dates.
+    if days is not None:
+        try:
+            cur.execute(
+                """
+                SELECT title, authors, content, link, published
+                FROM combined_articles
+                WHERE DATE(published) IN (
+                    SELECT DISTINCT DATE(published) AS d
+                    FROM combined_articles
+                    WHERE published IS NOT NULL
+                    ORDER BY d DESC
+                    LIMIT ?
+                )
+                ORDER BY published DESC
+                LIMIT 50
+                """,
+                (days,),
+            )
+            rows = [dict(r) for r in cur.fetchall()]
+        except Exception:
+            # Fall back to a simpler strategy below
+            rows = []
+
+    # If rows still empty (no days requested or SQL failed), fall back to the
+    # original LIMIT-based query.
+    if not rows:
+        try:
+            cur.execute(
+                "SELECT title, link, feed_title, content, published, authors FROM combined_articles ORDER BY published DESC LIMIT ?",
+                (limit,),
+            )
+            rows = [dict(r) for r in cur.fetchall()]
+        except Exception as e:
+            logger.warning("combined_articles view missing or query failed: %s", e)
+            conn.close()
+            return []
 
     conn.close()
 
@@ -156,7 +189,75 @@ def read_articles(db_path: Path, limit: int = 30):
         return s
 
     out = []
+    # If `days` was requested but the SQL date selection failed and we fell
+    # back to a LIMIT-based query above, implement the "last N distinct
+    # publish dates" selection in Python here: group rows by calendar date
+    # parsed from the `published` value, then include all rows whose date is
+    # among the most recent `days` distinct dates.
+    parsed_rows = []
     for r in rows:
+        pub_raw = r.get('published')
+        # try to parse to a date-only key for grouping (ISO YYYY-MM-DD)
+        date_key = None
+        if pub_raw is None:
+            date_key = None
+        else:
+            # try several parsers in order
+            try:
+                if isinstance(pub_raw, datetime):
+                    date_key = pub_raw.date().isoformat()
+                else:
+                    s = str(pub_raw)
+                    try:
+                        dt = parsedate_to_datetime(s)
+                        date_key = dt.date().isoformat()
+                    except Exception:
+                        try:
+                            dt = datetime.fromisoformat(s)
+                            date_key = dt.date().isoformat()
+                        except Exception:
+                            for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+                                try:
+                                    dt = datetime.strptime(s, fmt)
+                                    date_key = dt.date().isoformat()
+                                    break
+                                except Exception:
+                                    continue
+                            if date_key is None:
+                                import re
+
+                                m = re.search(r"(\d{4}-\d{2}-\d{2})", s)
+                                if m:
+                                    try:
+                                        dt = datetime.strptime(m.group(1), "%Y-%m-%d")
+                                        date_key = dt.date().isoformat()
+                                    except Exception:
+                                        date_key = None
+            except Exception:
+                date_key = None
+
+        parsed_rows.append((date_key, r))
+
+    if days is None:
+        # no special grouping requested; return rows up to `limit` as before
+        selected = parsed_rows
+    else:
+        # collect distinct dates in order from newest to oldest
+        distinct_dates = []
+        for dk, _ in parsed_rows:
+            if dk is None:
+                continue
+            if dk not in distinct_dates:
+                distinct_dates.append(dk)
+            if len(distinct_dates) >= days:
+                break
+
+        # include rows whose date_key is in the distinct_dates set
+        allowed = set(distinct_dates)
+        selected = [pr for pr in parsed_rows if pr[0] in allowed]
+
+    out = []
+    for date_key, r in selected:
         pub_raw = r.get('published')
         published_short = format_short_date(pub_raw)
         out.append({
@@ -171,4 +272,5 @@ def read_articles(db_path: Path, limit: int = 30):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
     build()

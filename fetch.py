@@ -23,6 +23,8 @@ import html
 import xml.etree.ElementTree as ET
 import logging
 import time
+import os
+import argparse
 
 
 ROOT = Path(__file__).resolve().parent
@@ -43,7 +45,9 @@ def load_feeds():
         if url:
             # support an optional feed-level publication_id (e.g. journal prefix like 10.1016/j.learninstruc)
             pub_id = info.get("publication_id")
-            results.append((key, info.get("title"), url, pub_id))
+            # new: optional explicit ISSN field on feeds; prefer this when present
+            issn = info.get("issn")
+            results.append((key, info.get("title"), url, pub_id, issn))
     logger.debug("loaded %d feeds from %s", len(results), PLANET)
     return results
 
@@ -78,6 +82,8 @@ def init_db(conn):
             authors TEXT,
             abstract TEXT,
             crossref_xml TEXT,
+            publication_id TEXT,
+            published TEXT,
             fetched_at TEXT,
             UNIQUE(doi)
         )
@@ -85,31 +91,25 @@ def init_db(conn):
     )
     conn.commit()
     logger.debug("initialized database and ensured tables exist")
-    # ensure article_doi column exists for older DBs
-    cur.execute("PRAGMA table_info('items')")
-    cols = [r[1] for r in cur.fetchall()]
+    # If an old `journal_works` table exists, migrate any DOI'd rows into `articles`
     try:
-        cur.execute(
-            """
-            CREATE VIEW IF NOT EXISTS combined_articles AS
-            SELECT
-                COALESCE(items.doi, articles.doi) AS doi,
-                COALESCE(articles.title, items.title) AS title,
-                items.link AS link,
-                items.feed_title AS feed_title,
-                COALESCE(articles.abstract, items.summary) AS content,
-                COALESCE(items.published, articles.fetched_at, items.fetched_at) AS published,
-                articles.authors AS authors
-            FROM items
-                JOIN articles ON articles.doi = items.doi
-
-            where items.doi is not null
-            """
-        )
-        conn.commit()
-        logger.debug("created combined_articles view")
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='journal_works' LIMIT 1")
+        if cur.fetchone():
+            logger.info("migrating data from journal_works into articles (doi-only rows)")
+            # copy rows that have a DOI into articles, preserving publication_id/published/fetched_at
+            cur.execute(
+                "INSERT OR IGNORE INTO articles (doi, title, authors, abstract, crossref_xml, publication_id, published, fetched_at) SELECT doi, title, authors, abstract, crossref_xml, publication_id, published, fetched_at FROM journal_works WHERE doi IS NOT NULL"
+            )
+            conn.commit()
+            try:
+                cur.execute("DROP TABLE IF EXISTS journal_works")
+                conn.commit()
+                logger.info("dropped legacy journal_works table after migration")
+            except Exception:
+                logger.debug("failed to drop legacy journal_works table; leaving it in place")
     except Exception:
-        logger.debug("could not create combined_articles view (db may be locked or readonly)")
+        logger.debug("journal_works migration check failed")
+    # No legacy combined view creation here; `create_combined_view` will be used later
 
 
 def fetch_feed(session, key, feed_title, url, publication_doi=None, timeout=20):
@@ -189,8 +189,30 @@ def save_entries(conn, feed_key, feed_title, entries):
                     cur.execute("SELECT id, doi FROM items WHERE link = ? LIMIT 1", (link_val,))
                     existing = cur.fetchone()
                     if existing:
-                        logger.debug("skipping insert: item with same link already exists (id=%s, link=%s)", existing[0], link_val)
-                        # Skip enrichment and insertion for existing URL
+                        existing_id, existing_doi = existing[0], existing[1]
+                        logger.debug("item with same link already exists (id=%s, link=%s, doi=%s)", existing_id, link_val, existing_doi)
+                        # If the existing row lacks a DOI, attempt to extract one now
+                        if not existing_doi:
+                            try:
+                                entry_obj = e.get("_entry") or {}
+                                doi = extract_doi_from_entry(entry_obj) or extract_doi_from_entry(e)
+                                if doi:
+                                    doi = normalize_doi(doi)
+                                    if doi:
+                                        # ensure an article row exists and attach doi to the existing item
+                                        try:
+                                            ensured = ensure_article_row(conn, doi, title=e.get("title"), authors=None, abstract=None)
+                                        except Exception:
+                                            ensured = None
+                                        try:
+                                            cur.execute("UPDATE items SET doi = ? WHERE id = ?", (doi, existing_id))
+                                            conn.commit()
+                                            logger.info("attached DOI %s to existing item id=%s", doi, existing_id)
+                                        except Exception:
+                                            logger.debug("failed to attach doi %s to existing item id=%s", doi, existing_id)
+                            except Exception:
+                                logger.debug("failed to extract/attach DOI for existing item link=%s", link_val)
+                        # Skip insertion since the URL is already present
                         continue
                 except Exception:
                     # If the lookup fails for some reason, fall back to normal insert
@@ -381,6 +403,29 @@ def extract_doi_from_entry(entry) -> str | None:
         if m:
             return normalize_doi(m.group(1))
 
+    # 3b. NBER working paper URLs often look like /papers/w34339 or /papers/w34339#fromrss
+    # If the feed provides a feed-level publication_id (e.g. 10.3386) use it; otherwise
+    # fall back to known NBER prefix when the link hostname indicates nber.org.
+    try:
+        link_val = (entry.get("link") or "")
+        if link_val:
+            m_nber = re.search(r"/papers/(w\d+)", link_val)
+            if m_nber:
+                suffix = m_nber.group(1)
+                # prefer feed-level publication id if present on the entry
+                feed_pid = None
+                try:
+                    feed_pid = entry.get("_feed_publication_id")
+                except Exception:
+                    feed_pid = None
+                if not feed_pid and "nber.org" in link_val:
+                    feed_pid = "10.3386"
+                if feed_pid:
+                    return normalize_doi(f"{feed_pid}/{suffix}")
+    except Exception:
+        # non-fatal, continue with other heuristics
+        pass
+
     # 4. summary/content
     text_candidates = []
     if entry.get("summary"):
@@ -537,6 +582,9 @@ def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | 
     return the article id. Does NOT call CrossRef.
     """
     cur = conn.cursor()
+    if not doi:
+        logger.debug("ensure_article_row called without doi; skipping")
+        return None
     try:
         cur.execute("INSERT OR IGNORE INTO articles (doi, title, authors, abstract, fetched_at) VALUES (?, ?, ?, ?, ?)", (doi, title, authors, abstract, datetime.now(timezone.utc).isoformat()))
         conn.commit()
@@ -685,25 +733,111 @@ def create_combined_view(conn: sqlite3.Connection):
     cur = conn.cursor()
     # Build a joined view that links items to their article (if any) and
     # exposes a single row per item with article metadata preferred when available.
+    # Build a view that includes both pulled feed `items` and journal-discovered works
+    # joined with the canonical `articles` table for metadata.
     cur.execute(
         """
         CREATE VIEW IF NOT EXISTS combined_articles AS
         SELECT
-            COALESCE(items.article_doi, articles.doi) AS doi,
-            COALESCE(articles.title, items.title) AS title,
-            items.link AS link,
-            items.feed_title AS feed_title,
-            COALESCE(articles.abstract, items.summary) AS content,
-            items.fetched_at AS published,
-            articles.authors AS authors
-        FROM items
-        LEFT JOIN articles ON articles.doi = items.article_doi
+            articles.doi AS doi,
+            COALESCE(articles.title, '') AS title,
+            ('https://doi.org/' || articles.doi) AS link,
+            COALESCE(articles.publication_id, '') AS feed_title,
+            COALESCE(articles.abstract, '') AS content,
+            COALESCE(articles.published, articles.fetched_at) AS published,
+            COALESCE(articles.authors, '') AS authors
+        FROM articles
+        WHERE articles.doi IS NOT NULL
         """
     )
     conn.commit()
 
 
-def main():
+def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int = 30, timeout: int = 10, delay: float = 0.05):
+    """Query CrossRef for the latest works for each feed that has an `issn`.
+    Stores discovered DOIs directly into the `articles` table (only DOIs are
+    accepted). Returns count of inserted article rows.
+    """
+    cur = conn.cursor()
+    session = requests.Session()
+    inserted = 0
+    for item in feeds:
+        # feeds may be tuples of (key, title, url, publication_id, issn)
+        if len(item) == 5:
+            key, title, url, publication_id, issn = item
+        elif len(item) == 4:
+            key, title, url, publication_id = item
+            issn = None
+        else:
+            # unknown shape; skip
+            continue
+
+        # We prefer to look up works by the feed's journal title. If that's
+        # missing, fall back to an explicit ISSN when present, then to
+        # publication_id (DOI prefix) when present. If none of these are
+        # available, skip the feed.
+        if not (issn):
+            continue
+        logger.info("fetching latest works for feed=%s title=%r publication_id=%r issn=%r", key, title, publication_id, issn)
+        try:
+            headers = {"User-Agent": "ed-news-fetcher/1.0", "Accept": "application/json"}
+            params = {"rows": per_journal, "sort": "published", "order": "desc"}
+
+            mailto = os.environ.get("CROSSREF_MAILTO", "your_email@example.com")
+            url = f"https://api.crossref.org/journals/{issn}/works"
+            params = {"sort": "created", "order": "desc", "filter": "type:journal-article", "rows": min(per_journal, 100), "mailto": mailto}
+
+            resp = session.get(url, params=params, headers=headers, timeout=timeout)
+            resp.raise_for_status()
+            data = resp.json()
+            items = data.get("message", {}).get("items", []) or []
+
+            for it in items[:per_journal]:
+                doi = (it.get("DOI") or "").strip()
+                if not doi:
+                    continue
+                norm = normalize_doi(doi)
+                if not norm:
+                    continue
+                published = None
+                if it.get("created") and it.get("created").get("date-time"):
+                    published = it.get("created").get("date-time")
+                elif it.get("published-print") and it.get("published-print").get("date-parts"):
+                    parts = it.get("published-print").get("date-parts")[0]
+                    published = "-".join(str(p) for p in parts)
+                # Insert into articles directly (only DOIs accepted)
+                try:
+                    # record which identifier we used for this feed: prefer issn when present
+                    db_pub_id = issn
+
+                    # extract minimal article metadata from CrossRef item
+                    title_text = it.get("title") and (it.get("title")[0] if isinstance(it.get("title"), list) else it.get("title"))
+                    authors_text = None
+                    if it.get("author"):
+                        authors_text = ", ".join([" ".join(filter(None, [a.get("given"), a.get("family")])) for a in it.get("author") if a])
+                    # CrossRef items may contain abstract in 'abstract'
+                    abstract_text = it.get("abstract") or None
+                    # crossref_xml isn't available from the works endpoint; leave NULL for now
+                    crossref_raw = None
+
+                    # Only insert if we have a DOI (norm is truthy)
+                    cur.execute(
+                        "INSERT OR IGNORE INTO articles (doi, title, authors, abstract, crossref_xml, publication_id, published, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                        (norm, title_text, authors_text, abstract_text, crossref_raw, db_pub_id, published, datetime.now(timezone.utc).isoformat()),
+                    )
+                    if cur.rowcount:
+                        inserted += 1
+                except Exception as e:
+                    logger.debug("failed to insert article doi=%s: %s", norm, e)
+            conn.commit()
+        except Exception as e:
+            logger.warning("failed to fetch latest works for %s (%s): %s", key, publication_id, e)
+        time.sleep(delay)
+    logger.info("inserted %d new articles from CrossRef journal queries", inserted)
+    return inserted
+
+
+def main(run_feeds: bool = True, run_journal_works: bool = True):
     feeds = load_feeds()
     if not feeds:
         logger.error("No feeds found in planet.json")
@@ -712,32 +846,43 @@ def main():
     conn = sqlite3.connect(DB_PATH)
     init_db(conn)
 
-    session = requests.Session()
+    if run_journal_works:
+        # Fetch latest journal works (from CrossRef) for feeds that provide a publication_id
+        try:
+            fetch_latest_journal_works(conn, feeds, per_journal=30, timeout=10, delay=0.05)
+        except Exception as e:
+            logger.warning("failed to fetch latest journal works: %s", e)
 
-    with ThreadPoolExecutor(max_workers=10) as ex:
-        # feeds now have optional publication_doi in their tuple
-        futures = {}
-        for item in feeds:
-            # item is (key, title, url, publication_doi)
-            if len(item) == 4:
-                key, title, url, publication_doi = item
-            else:
-                key, title, url = item
-                publication_doi = None
-            fut = ex.submit(fetch_feed, session, key, title, url, publication_doi)
-            futures[fut] = (key, title, url, publication_doi)
-        for fut in as_completed(futures):
-            meta = futures[fut]
-            try:
-                res = fut.result()
-            except Exception as exc:
-                logger.error("Error fetching %s: %s", meta[2], exc)
-                continue
-            if res.get("error"):
-                logger.warning("Failed: %s -> %s", meta[2], res["error"])
-                continue
-            count = save_entries(conn, res["key"], res["title"], res["entries"])
-            logger.info("%s: fetched %d entries, inserted %d", res["key"], len(res["entries"]), count)
+    if run_feeds:
+        session = requests.Session()
+
+        with ThreadPoolExecutor(max_workers=10) as ex:
+            # feeds now have optional publication_doi in their tuple
+            futures = {}
+            for item in feeds:
+                # item may be (key, title, url, publication_doi, issn) or older 4-tuples
+                if len(item) == 5:
+                    key, title, url, publication_doi, issn = item
+                elif len(item) == 4:
+                    key, title, url, publication_doi = item
+                    issn = None
+                else:
+                    # unknown shape; skip
+                    continue
+                fut = ex.submit(fetch_feed, session, key, title, url, publication_doi)
+                futures[fut] = (key, title, url, publication_doi, issn)
+            for fut in as_completed(futures):
+                meta = futures[fut]
+                try:
+                    res = fut.result()
+                except Exception as exc:
+                    logger.error("Error fetching %s: %s", meta[2], exc)
+                    continue
+                if res.get("error"):
+                    logger.warning("Failed: %s -> %s", meta[2], res["error"])
+                    continue
+                count = save_entries(conn, res["key"], res["title"], res["entries"])
+                logger.info("%s: fetched %d entries, inserted %d", res["key"], len(res["entries"]), count)
 
     # ensure the combined_articles view exists (used by build.py)
     try:
@@ -757,4 +902,14 @@ def main():
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
-    main()
+    parser = argparse.ArgumentParser(description="Fetch feeds and/or fetch latest journal works from CrossRef")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--feeds-only", action="store_true", help="only fetch RSS/Atom feeds listed in planet.json")
+    group.add_argument("--journals-only", action="store_true", help="only fetch latest journal works from CrossRef for journals in planet.json")
+    args = parser.parse_args()
+    if args.feeds_only:
+        main(run_feeds=True, run_journal_works=False)
+    elif args.journals_only:
+        main(run_feeds=False, run_journal_works=True)
+    else:
+        main(run_feeds=True, run_journal_works=True)
