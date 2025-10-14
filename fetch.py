@@ -991,7 +991,7 @@ def main(run_feeds: bool = True, run_journal_works: bool = True):
 
     # Enrich articles from CrossRef in bulk for those missing crossref_xml
     try:
-        updated = enrich_articles_from_crossref(conn, batch_size=50, delay=0.05)
+        updated = enrich_articles_from_crossref(conn, batch_size=100, delay=0.05)
         logger.info("enriched %d articles from CrossRef", updated)
     except Exception as e:
         logger.warning("bulk CrossRef enrichment failed: %s", e)
