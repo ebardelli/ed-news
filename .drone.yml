@@ -21,7 +21,7 @@ steps:
     - name: fetch feeds
       image: ghcr.io/astral-sh/uv:debian
       commands:
-        - apt update; apt install -y cmake
+        - apt update; apt install -y build-essential cmake ninja-build python3-dev
         - mkdir -p cache
         - ln -sf cache/ednews.db ednews.db
         - uv venv --python 3.14
