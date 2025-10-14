@@ -25,7 +25,7 @@ steps:
         - ln -sf cache/ednews.db ednews.db
         - uv venv --python 3.13
         - uv sync
-        - uv run python fetch.py --enrich-sciencedirect
+        - uv run python fetch.py
         - uv run python calculate_vectors.py
         - uv run python build.py
 
