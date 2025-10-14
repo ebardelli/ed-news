@@ -98,7 +98,7 @@ def init_db(conn):
                 items.link AS link,
                 items.feed_title AS feed_title,
                 COALESCE(articles.abstract, items.summary) AS content,
-                COALESCE(articles.published, articles.fetched_ad, items.fetched_at) AS published,
+                COALESCE(items.published, articles.fetched_at, items.fetched_at) AS published,
                 articles.authors AS authors
             FROM items
                 JOIN articles ON articles.doi = items.doi
