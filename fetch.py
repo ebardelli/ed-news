@@ -811,7 +811,7 @@ def create_combined_view(conn: sqlite3.Connection):
             COALESCE(articles.authors, '') AS authors
         FROM articles
         	LEFT JOIN publications on publications.issn = articles.issn
-        	LEFT JOIN publications as feeds on feeds.feed_id = articles.publication_id
+        	LEFT JOIN publications as feeds on feeds.publication_id = articles.publication_id
         WHERE articles.doi IS NOT NULL
         """
     )
