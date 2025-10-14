@@ -111,7 +111,7 @@ def read_articles(db_path: Path, limit: int = 30):
 
     try:
         cur.execute(
-            "SELECT title, link, feed_title, content, published, authors FROM items_for_webpage ORDER BY published DESC LIMIT ?",
+            "SELECT title, link, feed_title, content, published, authors FROM combined_articles ORDER BY published DESC LIMIT ?",
             (limit,),
         )
         rows = [dict(r) for r in cur.fetchall()]
