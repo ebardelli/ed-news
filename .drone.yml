@@ -21,6 +21,7 @@ steps:
     - name: fetch feeds
       image: ghcr.io/astral-sh/uv:debian
       commands:
+        - apt update; apt install -y cmake
         - mkdir -p cache
         - ln -sf cache/ednews.db ednews.db
         - uv venv --python 3.14
@@ -30,10 +31,6 @@ steps:
         - uv run python build.py
 
     - name: rebuild cache
-      when:
-        message:
-          exclude:
-            - "*no-cache*"
       image: meltwater/drone-cache:dev
       pull: true
       settings:
