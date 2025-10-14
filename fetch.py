@@ -60,7 +60,6 @@ def init_db(conn):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             doi TEXT,
             feed_key TEXT,
-            feed_title TEXT,
             guid TEXT,
             title TEXT,
             link TEXT,
@@ -82,6 +81,7 @@ def init_db(conn):
             authors TEXT,
             abstract TEXT,
             crossref_xml TEXT,
+            feed_key TEXT,
             publication_id TEXT,
             issn TEXT,
             published TEXT,
@@ -96,8 +96,8 @@ def init_db(conn):
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS publications (
-            publication_id TEXT NOT NULL,
             feed_id TEXT,
+            publication_id TEXT NOT NULL,
             feed_title TEXT,
             issn TEXT NOT NULL,
             PRIMARY KEY (publication_id, issn)
@@ -106,61 +106,7 @@ def init_db(conn):
     )
     conn.commit()
 
-    # Migrate an older single-column PK `publications` table to the new
-    # composite primary key (publication_id, issn) while preserving data.
-    try:
-        cur.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name='publications' LIMIT 1")
-        row = cur.fetchone()
-        if row:
-            sql = row[0] or ''
-            if 'PRIMARY KEY (publication_id, issn)' not in sql:
-                logger.info('migrating publications table to composite primary key (publication_id, issn)')
-                cur.execute(
-                    """
-                    CREATE TABLE IF NOT EXISTS publications_new (
-                        publication_id TEXT NOT NULL,
-                        feed_id TEXT,
-                        feed_title TEXT,
-                        issn TEXT NOT NULL,
-                        PRIMARY KEY (publication_id, issn)
-                    )
-                    """
-                )
-                # copy rows, coalescing NULL issn to empty string
-                try:
-                    cur.execute(
-                        "INSERT OR REPLACE INTO publications_new (publication_id, feed_id, feed_title, issn) SELECT publication_id, feed_id, feed_title, COALESCE(issn, '') FROM publications"
-                    )
-                    cur.execute("DROP TABLE IF EXISTS publications")
-                    cur.execute("ALTER TABLE publications_new RENAME TO publications")
-                    conn.commit()
-                    logger.info('publications table migrated')
-                except Exception:
-                    logger.debug('failed to migrate publications table; leaving original in place')
-    except Exception:
-        logger.debug('publications migration check failed')
-
-    logger.debug("initialized database and ensured tables exist")
-    # If an old `journal_works` table exists, migrate any DOI'd rows into `articles`
-    try:
-        cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='journal_works' LIMIT 1")
-        if cur.fetchone():
-            logger.info("migrating data from journal_works into articles (doi-only rows)")
-            # copy rows that have a DOI into articles, preserving publication_id/published/fetched_at
-            cur.execute(
-                "INSERT OR IGNORE INTO articles (doi, title, authors, abstract, crossref_xml, publication_id, published, fetched_at) SELECT doi, title, authors, abstract, crossref_xml, publication_id, published, fetched_at FROM journal_works WHERE doi IS NOT NULL"
-            )
-            conn.commit()
-            try:
-                cur.execute("DROP TABLE IF EXISTS journal_works")
-                conn.commit()
-                logger.info("dropped legacy journal_works table after migration")
-            except Exception:
-                logger.debug("failed to drop legacy journal_works table; leaving it in place")
-    except Exception:
-        logger.debug("journal_works migration check failed")
-    # No legacy combined view creation here; `create_combined_view` will be used later
-
+    logger.debug("initialized database")
 
 def fetch_feed(session, key, feed_title, url, publication_doi=None, issn=None, timeout=20):
     """Fetch a feed URL and return parsed feed entries.
@@ -191,7 +137,6 @@ def fetch_feed(session, key, feed_title, url, publication_doi=None, issn=None, t
             "published": published,
             "summary": summary,
             "_entry": e,
-            # attach feed-level publication_id to each entry so save_entries can use it
             "_feed_publication_id": publication_doi,
             "_feed_issn": issn,
         })
@@ -254,7 +199,7 @@ def save_entries(conn, feed_key, feed_title, entries):
                                         try:
                                             feed_issn = e.get("_feed_issn") if isinstance(e, dict) else None
                                             feed_pub_id = e.get("_feed_publication_id") if isinstance(e, dict) else None
-                                            ensured = ensure_article_row(conn, doi, title=e.get("title"), authors=None, abstract=None, publication_id=feed_pub_id, issn=feed_issn)
+                                            ensured = ensure_article_row(conn, doi, title=e.get("title"), authors=None, abstract=None, feed_key=feed_key, publication_id=feed_pub_id, issn=feed_issn)
                                         except Exception:
                                             ensured = None
                                         try:
@@ -339,7 +284,7 @@ def save_entries(conn, feed_key, feed_title, entries):
                         feed_issn = e.get("_feed_issn")
                     except Exception:
                         feed_issn = None
-                    ensured = ensure_article_row(conn, doi, title=title, authors=authors, abstract=abstract, publication_id=pub_pid, issn=feed_issn)
+                    ensured = ensure_article_row(conn, doi, title=title, authors=authors, abstract=abstract, feed_key=feed_key, publication_id=pub_pid, issn=feed_issn)
                 # attach article doi to the items row if available
                 try:
                     if ensured and item_rowid:
@@ -549,7 +494,7 @@ def extract_abstract_from_entry(entry) -> str | None:
     return None
 
 
-def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstract: str | None, publication_id: str | None = None, issn: str | None = None):
+def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstract: str | None, feed_key: str | None = None, publication_id: str | None = None, issn: str | None = None):
     if not doi:
         return False
     cur = conn.cursor()
@@ -595,18 +540,19 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
         # Use INSERT OR REPLACE to update existing records by DOI.
         cur.execute(
             """
-            INSERT INTO articles (doi, title, authors, abstract, crossref_xml, publication_id, issn, fetched_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO articles (doi, title, authors, abstract, crossref_xml, feed_key, publication_id, issn, fetched_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(doi) DO UPDATE SET
                 title=excluded.title,
                 authors=excluded.authors,
                 abstract=excluded.abstract,
                 crossref_xml=COALESCE(excluded.crossref_xml, articles.crossref_xml),
+                feed_key=COALESCE(excluded.feed_key, articles.feed_key),
                 publication_id=COALESCE(excluded.publication_id, articles.publication_id),
                 issn=COALESCE(excluded.issn, articles.issn),
                 fetched_at=excluded.fetched_at
             """,
-            (doi, title, authors, abstract, crossref_raw, publication_id, issn, now),
+            (doi, title, authors, abstract, crossref_raw, feed_key, publication_id, issn, now),
         )
         conn.commit()
         # return the article id
@@ -621,12 +567,12 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
             # Fallback: preserve existing crossref_xml by using COALESCE with a subquery
             cur.execute(
                 """
-                INSERT OR REPLACE INTO articles (id, doi, title, authors, abstract, crossref_xml, publication_id, issn, fetched_at)
+                INSERT OR REPLACE INTO articles (id, doi, title, authors, abstract, crossref_xml, feed_key, publication_id, issn, fetched_at)
                 VALUES (
-                    (SELECT id FROM articles WHERE doi = ?), ?, ?, ?, ?, COALESCE(?, (SELECT crossref_xml FROM articles WHERE doi = ?)), COALESCE((SELECT publication_id FROM articles WHERE doi = ?), ?), COALESCE((SELECT issn FROM articles WHERE doi = ?), ?), ?
+                    (SELECT id FROM articles WHERE doi = ?), ?, ?, ?, ?, COALESCE(?, (SELECT crossref_xml FROM articles WHERE doi = ?)), COALESCE(?, (SELECT feed_key FROM articles WHERE doi = ?)), COALESCE((SELECT publication_id FROM articles WHERE doi = ?), ?), COALESCE((SELECT issn FROM articles WHERE doi = ?), ?), ?
                 )
                 """,
-                (doi, doi, title, authors, abstract, crossref_raw, doi, publication_id, doi, issn, now),
+                (doi, doi, title, authors, abstract, crossref_raw, doi, feed_key, doi, publication_id, doi, issn, now),
             )
             conn.commit()
             cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
@@ -637,7 +583,7 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
             return False
 
 
-def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | None = None, abstract: str | None = None, publication_id: str | None = None, issn: str | None = None) -> int | None:
+def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | None = None, abstract: str | None = None, feed_key: str | None = None, publication_id: str | None = None, issn: str | None = None) -> int | None:
     """Ensure an article row exists for `doi`. Insert minimal data if missing and
     return the article id. Does NOT call CrossRef.
     """
@@ -647,8 +593,8 @@ def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | 
         return None
     try:
         cur.execute(
-            "INSERT OR IGNORE INTO articles (doi, title, authors, abstract, publication_id, issn, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (doi, title, authors, abstract, publication_id, issn, datetime.now(timezone.utc).isoformat()),
+            "INSERT OR IGNORE INTO articles (doi, title, authors, abstract, feed_key, publication_id, issn, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (doi, title, authors, abstract, feed_key, publication_id, issn, datetime.now(timezone.utc).isoformat()),
         )
         conn.commit()
         cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
@@ -810,8 +756,8 @@ def create_combined_view(conn: sqlite3.Connection):
             COALESCE(articles.published, articles.fetched_at) AS published,
             COALESCE(articles.authors, '') AS authors
         FROM articles
-        	LEFT JOIN publications on publications.issn = articles.issn
-        	LEFT JOIN publications as feeds on feeds.publication_id = articles.publication_id
+        	LEFT JOIN publications on publications.feed_key = articles.feed_key
+        	LEFT JOIN publications as feeds on feeds.feed_key = articles.feed_key
         WHERE articles.doi IS NOT NULL
         """
     )
@@ -886,10 +832,13 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
                     crossref_raw = None
 
                     # Only insert if we have a DOI (norm is truthy)
-                    cur.execute(
-                        "INSERT OR IGNORE INTO articles (doi, title, authors, abstract, crossref_xml, publication_id, issn, published, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        (norm, title_text, authors_text, abstract_text, crossref_raw, db_pub_id, issn, published, datetime.now(timezone.utc).isoformat()),
-                    )
+                    try:
+                        # Use upsert_article to insert/update canonical article row
+                        aid = upsert_article(conn, norm, title=title_text, authors=authors_text, abstract=abstract_text, feed_key=key, publication_id=db_pub_id, issn=issn)
+                        if aid:
+                            inserted += 1
+                    except Exception as e:
+                        logger.debug("failed to upsert article doi=%s: %s", norm, e)
                     if cur.rowcount:
                         inserted += 1
                 except Exception as e:
