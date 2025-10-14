@@ -496,10 +496,11 @@ def extract_abstract_from_entry(entry) -> str | None:
         return html.unescape(txt).strip()
     return None
 
-def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstract: str | None, feed_id: str | None = None, publication_id: str | None = None, issn: str | None = None):
+def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstract: str | None, feed_id: str | None = None, publication_id: str | None = None, issn: str | None = None, fetched_at: str | None = None):
     if not doi:
         return False
-    
+    cur = conn.cursor()
+
     if abstract is None or authors is None:
         cur.execute(
             "SELECT crossref_xml, authors, abstract, fetched_at FROM articles WHERE doi = ? LIMIT 1",
@@ -540,6 +541,8 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
 
     cur = conn.cursor()
     now = datetime.now(timezone.utc).isoformat()
+    # prefer provided fetched_at (from CrossRef 'created' date-time) when present
+    used_fetched_at = fetched_at or now
     try:
         # Use INSERT OR REPLACE to update existing records by DOI.
         cur.execute(
@@ -555,7 +558,7 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
                 issn=COALESCE(excluded.issn, articles.issn),
                 fetched_at=excluded.fetched_at
             """,
-            (doi, title, authors, abstract, feed_id, publication_id, issn, now),
+            (doi, title, authors, abstract, feed_id, publication_id, issn, used_fetched_at),
         )
         conn.commit()
         # return the article id
@@ -575,7 +578,7 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
                     (SELECT id FROM articles WHERE doi = ?), ?, ?, ?, ?, COALESCE(?, (SELECT crossref_xml FROM articles WHERE doi = ?)), COALESCE(?, (SELECT feed_id FROM articles WHERE doi = ?)), COALESCE((SELECT publication_id FROM articles WHERE doi = ?), ?), COALESCE((SELECT issn FROM articles WHERE doi = ?), ?), ?
                 )
                 """,
-                (doi, doi, title, authors, abstract, crossref_raw, doi, feed_id, doi, publication_id, doi, issn, now),
+                (doi, doi, title, authors, abstract, crossref_raw, doi, feed_id, doi, publication_id, doi, issn, used_fetched_at),
             )
             conn.commit()
             cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
@@ -735,6 +738,155 @@ def fetch_crossref_metadata(doi: str, timeout: int = 10) -> dict | None:
     return out
 
 
+def normalize_crossref_datetime(dt_str: str) -> str | None:
+    """Normalize a CrossRef date-time string to an ISO8601 timezone-aware string.
+
+    CrossRef usually returns UTC 'Z' times like '2016-12-07T21:52:08Z'. We
+    return an ISO8601 string with timezone info. If parsing fails, return None.
+    """
+    if not dt_str:
+        return None
+    s = str(dt_str).strip()
+    if not s:
+        return None
+    try:
+        # Attempt direct parsing for RFC3339-like strings
+        # Python 3.11+ supports fromisoformat with 'Z' replacement
+        if s.endswith('Z'):
+            s2 = s[:-1] + '+00:00'
+        else:
+            s2 = s
+        dt = datetime.fromisoformat(s2)
+        # Ensure timezone-aware: if naive, assume UTC
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.isoformat()
+    except Exception:
+        # Fallback: try to parse common formats
+        fmts = [
+            "%Y-%m-%dT%H:%M:%S%z",
+            "%Y-%m-%dT%H:%M:%S.%f%z",
+            "%Y-%m-%dT%H:%M:%SZ",
+            "%Y-%m-%dT%H:%M:%S",
+        ]
+        for fmt in fmts:
+            try:
+                if fmt.endswith('Z') and s.endswith('Z'):
+                    # replace trailing Z with +0000 for strptime
+                    t = datetime.strptime(s[:-1], "%Y-%m-%dT%H:%M:%S")
+                    t = t.replace(tzinfo=timezone.utc)
+                else:
+                    t = datetime.strptime(s, fmt)
+                    if t.tzinfo is None:
+                        t = t.replace(tzinfo=timezone.utc)
+                return t.isoformat()
+            except Exception:
+                continue
+    return None
+
+
+def find_sciencedirect_items_missing_metadata(conn: sqlite3.Connection, limit: int | None = None) -> list:
+    """Return items that reference ScienceDirect and their article metadata (if any).
+
+    Each result is a dict with keys: item_id, doi, link, title, article_id, authors, abstract, crossref_xml
+    """
+    cur = conn.cursor()
+    q = (
+        "SELECT i.id, i.doi, i.link, i.title, a.id as article_id, a.authors, a.abstract, a.crossref_xml "
+        "FROM items i LEFT JOIN articles a ON a.doi = i.doi "
+        "WHERE i.link LIKE '%sciencedirect.com%'"
+    )
+    if limit:
+        q = q + f" LIMIT {int(limit)}"
+    cur.execute(q)
+    rows = cur.fetchall()
+    results = []
+    for r in rows:
+        item_id, doi, link, title, article_id, authors, abstract, crossref_xml = r
+        results.append({
+            "item_id": item_id,
+            "doi": doi,
+            "link": link,
+            "title": title,
+            "article_id": article_id,
+            "authors": authors,
+            "abstract": abstract,
+            "crossref_xml": crossref_xml,
+        })
+    return results
+
+
+def enrich_sciencedirect(conn: sqlite3.Connection, limit: int | None = None, apply: bool = False, delay: float = 0.05) -> int:
+    """Enrich ScienceDirect items by querying CrossRef and upserting article rows.
+
+    If `apply` is False the function runs in dry-run mode and only prints actions.
+    Returns the number of article rows updated when `apply` is True.
+    """
+    cur = conn.cursor()
+    candidates = find_sciencedirect_items_missing_metadata(conn, limit=limit)
+    updated = 0
+    if not candidates:
+        logger.info("No ScienceDirect items found for enrichment")
+        return 0
+
+    logger.info("Found %d ScienceDirect items to examine", len(candidates))
+    for c in candidates:
+        doi = c.get("doi")
+        link = c.get("link")
+        title = c.get("title")
+        article_id = c.get("article_id")
+
+        if doi:
+            norm = normalize_doi(doi)
+        else:
+            norm = None
+
+        logger.debug("Candidate: %s doi=%s article_id=%s", link, doi, article_id)
+
+        if not norm and title:
+            # Try CrossRef title lookup (reuse existing helper)
+            try:
+                found = query_crossref_doi_by_title(title)
+                if found:
+                    norm = normalize_doi(found)
+                    logger.info("Title lookup found DOI %s for title: %s", norm, title)
+            except Exception:
+                logger.debug("CrossRef title lookup failed for title: %s", title)
+
+        if not norm:
+            logger.info("Could not determine DOI for %s; skipping", link)
+            continue
+
+        cr = fetch_crossref_metadata(norm)
+        if not cr:
+            logger.info("CrossRef returned no metadata for DOI %s", norm)
+            continue
+
+        authors = cr.get("authors")
+        abstract = cr.get("abstract")
+        raw = cr.get("raw")
+
+        logger.info("CrossRef: doi=%s authors=%s abstract=%s raw_len=%d", norm, bool(authors), bool(abstract), len(raw) if raw else 0)
+
+        if not apply:
+            logger.info("Dry-run: would upsert article with DOI %s", norm)
+            continue
+
+        try:
+            aid = upsert_article(conn, norm, title=title, authors=authors, abstract=abstract, feed_id=None)
+            if aid:
+                updated += 1
+                logger.info("Updated article id=%s for DOI %s", aid, norm)
+        except Exception as e:
+            logger.warning("Failed to upsert article for DOI %s: %s", norm, e)
+
+        time.sleep(delay)
+
+    if apply:
+        conn.commit()
+    return updated
+
+
 def create_combined_view(conn: sqlite3.Connection):
     """Create a combined_articles view that unifies articles and items.
 
@@ -812,12 +964,19 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
                 norm = normalize_doi(doi)
                 if not norm:
                     continue
-                published = None
+                # Prefer CrossRef 'created' date-time as fetched_at when available
+                fetched_at = None
                 if it.get("created") and it.get("created").get("date-time"):
-                    published = it.get("created").get("date-time")
+                    fetched_at_raw = it.get("created").get("date-time")
+                    fetched_at = normalize_crossref_datetime(fetched_at_raw) or fetched_at_raw
                 elif it.get("published-print") and it.get("published-print").get("date-parts"):
                     parts = it.get("published-print").get("date-parts")[0]
-                    published = "-".join(str(p) for p in parts)
+                    # fallback to date-only string for fetched_at
+                    try:
+                        raw = "-".join(str(p) for p in parts)
+                        fetched_at = normalize_crossref_datetime(raw) or raw
+                    except Exception:
+                        fetched_at = None
                 # Insert into articles directly (only DOIs accepted)
                 try:
                     # record which identifier we used for this feed: prefer issn when present
@@ -836,7 +995,7 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
                     # Only insert if we have a DOI (norm is truthy)
                     try:
                         # Use upsert_article to insert/update canonical article row
-                        aid = upsert_article(conn, norm, title=title_text, authors=authors_text, abstract=abstract_text, feed_id=key, publication_id=db_pub_id, issn=issn)
+                        aid = upsert_article(conn, norm, title=title_text, authors=authors_text, abstract=abstract_text, feed_id=key, publication_id=db_pub_id, issn=issn, fetched_at=fetched_at)
                         if aid:
                             inserted += 1
                     except Exception as e:
@@ -955,6 +1114,7 @@ if __name__ == "__main__":
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--feeds-only", action="store_true", help="only fetch RSS/Atom feeds listed in planet.json")
     group.add_argument("--journals-only", action="store_true", help="only fetch latest journal works from CrossRef for journals in planet.json")
+    # NOTE: enrichment runs automatically (no CLI flags)
     args = parser.parse_args()
     if args.feeds_only:
         main(run_feeds=True, run_journal_works=False)
@@ -962,3 +1122,18 @@ if __name__ == "__main__":
         main(run_feeds=False, run_journal_works=True)
     else:
         main(run_feeds=True, run_journal_works=True)
+
+    # Always run ScienceDirect enrichment after fetch and apply updates
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        init_db(conn)
+        # No limit by default; apply changes and use the default polite delay
+        updated = enrich_sciencedirect(conn, limit=None, apply=True, delay=0.05)
+        logger.info("enrich_sciencedirect: updated %d articles", updated)
+    except Exception as e:
+        logger.warning("enrich_sciencedirect failed: %s", e)
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass

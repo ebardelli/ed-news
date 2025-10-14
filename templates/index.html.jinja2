@@ -1,15 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </title>
-            <link rel="stylesheet" href="static/main.css">
-            <link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="static/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+    <title>{{ title }}</title>
 </head>
 <body>
     <header>
-            <h1>{{ title }}</h1>
+        <h1>{{ title }}</h1>
     </header>
     <main>
         <section>
@@ -28,14 +29,37 @@
                                         {% endif %}
                                     </p>
                                     <p class="excerpt">
+                                        {# Prefer `a.content` (from combined_articles view) as abstract/body #}
                                         {% if a.content %}
                                             {{ a.content }}
+                                        {% elif a.raw and a.raw.get('abstract') %}
+                                            {{ a.raw.get('abstract') }}
                                         {% elif a.raw and a.raw.get('summary') %}
                                             {{ a.raw.get('summary') }}
                                         {% else %}
                                             No abstract available.
                                         {% endif %}
                                     </p>
+
+                                    {# Related / similar articles block (populated by build.py) #}
+                                    {% if a.similar_articles %}
+                                        <div class="similar-articles">
+                                            <h4>Related articles</h4>
+                                            <ul>
+                                                {% for s in a.similar_articles %}
+                                                    <li>
+                                                        {% if s.doi %}
+                                                            <a href="https://doi.org/{{ s.doi }}">{{ s.title or s.doi }}</a>
+                                                        {% else %}
+                                                            {{ s.title or 'Untitled' }}
+                                                        {% endif %}
+                                                        {# distance hidden intentionally #}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+
                                 </div>
                             {% endfor %}
                         </div>

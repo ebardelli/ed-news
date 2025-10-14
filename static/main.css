@@ -61,6 +61,19 @@ p a:hover {
     margin-top: 0.25em;
 }
 
+/* Make related articles match excerpt text size and spacing */
+.similar-articles {
+    font-size: 0.8em; /* same as paragraph text */
+    margin-top: 0.25em;
+}
+.similar-articles ul {
+    margin: 0.25em 0 0 1em;
+    padding: 0;
+}
+.similar-articles li {
+    margin-bottom: 0.25em;
+}
+
 footer {
     margin-top: 3em;
     margin-bottom: 3em;

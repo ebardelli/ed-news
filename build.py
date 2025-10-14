@@ -4,9 +4,79 @@ from pathlib import Path
 from configparser import ConfigParser
 from jinja2 import Environment, FileSystemLoader
 import sqlite3
+import sqlite_vec
 from datetime import datetime
 from email.utils import parsedate_to_datetime
 import logging
+
+MODEL_NAME = 'nomic-embed-text-v1.5'
+def get_similar_articles_by_doi(conn, doi, top_n=5, model=MODEL_NAME, store_if_missing: bool = True):
+    """
+    Given an article DOI, return a list of up to `top_n` similar articles.
+
+    Behavior:
+    - Looks up the article `id` and content (title+abstract) by DOI.
+    - If an embedding exists in `articles_vec` for that id, use it.
+    - If missing and `store_if_missing` is True, generate the embedding locally,
+      store it in `articles_vec`, and use it for the similarity search.
+
+    Returns a list of dicts: [{"doi":..., "title":..., "abstract":..., "distance":...}, ...]
+    """
+    # Enable the sqlite-vec extension
+    conn.enable_load_extension(True)
+    sqlite_vec.load(conn)
+
+    cur = conn.cursor()
+
+    cur.execute("SELECT id, title, abstract FROM articles WHERE doi = ? LIMIT 1", (doi,))
+    row = cur.fetchone()
+    if not row:
+        logger.debug("No article found with DOI: %s", doi)
+        return []
+
+    article_id, title, abstract = row
+    title = title or ""
+    abstract = abstract or ""
+    combined = title.strip()
+    if abstract.strip():
+        combined = combined + "\n\n" + abstract.strip() if combined else abstract.strip()
+
+    # Try to fetch existing embedding blob
+    cur.execute("SELECT embedding FROM articles_vec WHERE rowid = ?", (article_id,))
+    res = cur.fetchone()
+    if res and res[0]:
+        target_blob = res[0]
+    else:
+        # No embedding present for this article
+        logger.debug("No embedding found for DOI %s (id=%s)", doi, article_id)
+        return []
+
+    # Query for similar articles using the target blob
+    q = '''
+    SELECT A.doi, A.title, A.abstract, vec_distance_cosine(V.embedding, ?) AS distance
+    FROM articles AS A, articles_vec AS V
+    WHERE A.id = V.rowid AND A.id != ?
+    ORDER BY distance ASC
+    LIMIT ?
+    '''
+
+    results = cur.execute(q, (target_blob, article_id, top_n)).fetchall()
+
+    out_list = []
+    for doi_r, title_r, abstract_r, distance in results:
+        out_list.append({
+            "doi": doi_r,
+            "title": title_r,
+            "abstract": abstract_r,
+            "distance": float(distance) if distance is not None else None,
+        })
+
+    # Log a short summary
+    logger.debug("Found %d similar articles for DOI %s (id=%s)", len(out_list), doi, article_id)
+    for itm in out_list:
+        logger.debug("  - %s (Distance: %.4f) Title: %s", itm['doi'], itm['distance'] if itm['distance'] is not None else 0.0, (itm['title'] or '')[:80])
+
+    return out_list
 
 BUILD_DIR = Path("build")
 TEMPLATES_DIR = Path("templates")
@@ -83,6 +153,47 @@ def build(out_dir: Path = BUILD_DIR):
             # get all articles published on the most recent 5 distinct days
             ctx["articles"] = read_articles(DB_FILE, days=5)
             logger.info("loaded %d articles from %s", len(ctx["articles"]), DB_FILE)
+            # Attach similar articles for each article on the page if possible.
+            if get_similar_articles_by_doi and ctx.get("articles"):
+                try:
+                    conn = sqlite3.connect(str(DB_FILE))
+                    for art in ctx["articles"]:
+                        doi = art.get("doi")
+                        raw = art.get("raw") or {}
+                        doi_source = None
+                        if doi:
+                            doi_source = 'top-level'
+                        elif isinstance(raw, dict) and raw.get('doi'):
+                            doi = raw.get('doi')
+                            doi_source = 'raw'
+                        else:
+                            link = art.get("link")
+                            if isinstance(link, str) and link.startswith("https://doi.org/"):
+                                doi = link[len("https://doi.org/"):]
+                                doi_source = 'link'
+
+                        if not doi:
+                            logger.debug("No DOI for article title=%s; will skip similarity. (link=%s)", art.get('title'), art.get('link'))
+                            art["similar_articles"] = []
+                            continue
+
+                        logger.debug("Looking up similar articles for DOI=%s (source=%s, title=%s)", doi, doi_source, art.get('title'))
+                        try:
+                            sims = get_similar_articles_by_doi(conn, doi, top_n=5, store_if_missing=False)
+                            if not sims:
+                                logger.debug("No similar articles found for DOI=%s (maybe no embedding)", doi)
+                                art["similar_articles"] = []
+                            else:
+                                logger.debug("Found %d similar articles for DOI=%s", len(sims), doi)
+                                art["similar_articles"] = sims
+                        except Exception as e:
+                            logger.exception("Error computing similar articles for DOI=%s: %s", doi, e)
+                            art["similar_articles"] = []
+                finally:
+                    try:
+                        conn.close()
+                    except Exception:
+                        pass
         except Exception as e:
             logger.warning("failed to load articles from DB: %s", e)
             ctx["articles"] = []
@@ -135,7 +246,7 @@ def read_articles(db_path: Path, limit: int = 30, days: int | None = None):
         try:
             cur.execute(
                 """
-                SELECT title, link, feed_title, content, published, authors
+                SELECT doi, title, link, feed_title, content, published, authors
                 FROM combined_articles
                 WHERE DATE(published) IN (
                     SELECT DISTINCT DATE(published) AS d
@@ -159,7 +270,7 @@ def read_articles(db_path: Path, limit: int = 30, days: int | None = None):
     if not rows:
         try:
             cur.execute(
-                "SELECT title, link, feed_title, content, published, authors FROM combined_articles ORDER BY published DESC LIMIT ?",
+                "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles ORDER BY published DESC LIMIT ?",
                 (limit,),
             )
             rows = [dict(r) for r in cur.fetchall()]
@@ -277,6 +388,7 @@ def read_articles(db_path: Path, limit: int = 30, days: int | None = None):
         published_short = format_short_date(pub_raw)
         out.append({
             'title': r.get('title'),
+            'doi': r.get('doi'),
             'link': r.get('link'),
             'feed_title': r.get('feed_title'),
             'content': r.get('content'),

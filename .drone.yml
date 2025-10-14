@@ -25,10 +25,15 @@ steps:
         - ln -sf cache/ednews.db ednews.db
         - uv venv --python 3.14
         - uv sync
-        - uv run python fetch.py
+        - uv run python fetch.py --enrich-sciencedirect
+        - uv run python calculate_vectors.py
         - uv run python build.py
 
     - name: rebuild cache
+      when:
+        message:
+          exclude:
+            - "*no-cache*"
       image: meltwater/drone-cache:dev
       pull: true
       settings:
