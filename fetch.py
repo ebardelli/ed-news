@@ -59,7 +59,7 @@ def init_db(conn):
         CREATE TABLE IF NOT EXISTS items (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             doi TEXT,
-            feed_key TEXT,
+            feed_id TEXT,
             guid TEXT,
             title TEXT,
             link TEXT,
@@ -81,7 +81,7 @@ def init_db(conn):
             authors TEXT,
             abstract TEXT,
             crossref_xml TEXT,
-            feed_key TEXT,
+            feed_id TEXT,
             publication_id TEXT,
             issn TEXT,
             published TEXT,
@@ -171,12 +171,14 @@ def title_suitable_for_crossref_lookup(title: str) -> bool:
     return True
 
 
-def save_entries(conn, feed_key, feed_title, entries):
+def save_entries(conn, feed_id, feed_title, entries):
     cur = conn.cursor()
     inserted = 0
-    logger.debug("saving %d entries for feed %s (%s)", len(entries), feed_key, feed_title)
+    logger.debug("saving %d entries for feed %s (%s)", len(entries), feed_id, feed_title)
     for e in entries:
         try:
+            # ensure doi variable exists for the INSERT parameter list
+            doi = None
             # If the entry has a link, prefer deduping by link first to avoid
             # inserting duplicate items when guid/title/published differ.
             link_val = (e.get("link") or "").strip()
@@ -184,30 +186,31 @@ def save_entries(conn, feed_key, feed_title, entries):
                 try:
                     cur.execute("SELECT id, doi FROM items WHERE link = ? LIMIT 1", (link_val,))
                     existing = cur.fetchone()
+                    # If an existing row was found for this link, skip inserting a new item.
                     if existing:
                         existing_id, existing_doi = existing[0], existing[1]
                         logger.debug("item with same link already exists (id=%s, link=%s, doi=%s)", existing_id, link_val, existing_doi)
-                        # If the existing row lacks a DOI, attempt to extract one now
+                        # If the existing row lacks a DOI, attempt to extract one now and attach it.
                         if not existing_doi:
                             try:
                                 entry_obj = e.get("_entry") or {}
-                                doi = extract_doi_from_entry(entry_obj) or extract_doi_from_entry(e)
-                                if doi:
-                                    doi = normalize_doi(doi)
-                                    if doi:
+                                maybe_doi = extract_doi_from_entry(entry_obj) or extract_doi_from_entry(e)
+                                if maybe_doi:
+                                    maybe_doi = normalize_doi(maybe_doi)
+                                    if maybe_doi:
                                         # ensure an article row exists and attach doi to the existing item
                                         try:
                                             feed_issn = e.get("_feed_issn") if isinstance(e, dict) else None
                                             feed_pub_id = e.get("_feed_publication_id") if isinstance(e, dict) else None
-                                            ensured = ensure_article_row(conn, doi, title=e.get("title"), authors=None, abstract=None, feed_key=feed_key, publication_id=feed_pub_id, issn=feed_issn)
+                                            ensured = ensure_article_row(conn, maybe_doi, title=e.get("title"), authors=None, abstract=None, feed_id=feed_id, publication_id=feed_pub_id, issn=feed_issn)
                                         except Exception:
                                             ensured = None
                                         try:
-                                            cur.execute("UPDATE items SET doi = ? WHERE id = ?", (doi, existing_id))
+                                            cur.execute("UPDATE items SET doi = ? WHERE id = ?", (maybe_doi, existing_id))
                                             conn.commit()
-                                            logger.info("attached DOI %s to existing item id=%s", doi, existing_id)
+                                            logger.info("attached DOI %s to existing item id=%s", maybe_doi, existing_id)
                                         except Exception:
-                                            logger.debug("failed to attach doi %s to existing item id=%s", doi, existing_id)
+                                            logger.debug("failed to attach doi %s to existing item id=%s", maybe_doi, existing_id)
                             except Exception:
                                 logger.debug("failed to extract/attach DOI for existing item link=%s", link_val)
                         # Skip insertion since the URL is already present
@@ -219,12 +222,12 @@ def save_entries(conn, feed_key, feed_title, entries):
             cur.execute(
                 """
                 INSERT OR IGNORE INTO items
-                (feed_key, feed_title, guid, title, link, published, summary, fetched_at)
+                (feed_id, doi, guid, title, link, published, summary, fetched_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
-                    feed_key,
-                    feed_title,
+                    feed_id,
+                    doi,
                     e.get("guid"),
                     e.get("title"),
                     e.get("link"),
@@ -284,7 +287,7 @@ def save_entries(conn, feed_key, feed_title, entries):
                         feed_issn = e.get("_feed_issn")
                     except Exception:
                         feed_issn = None
-                    ensured = ensure_article_row(conn, doi, title=title, authors=authors, abstract=abstract, feed_key=feed_key, publication_id=pub_pid, issn=feed_issn)
+                    ensured = ensure_article_row(conn, doi, title=title, authors=authors, abstract=abstract, feed_id=feed_id, publication_id=pub_pid, issn=feed_issn)
                 # attach article doi to the items row if available
                 try:
                     if ensured and item_rowid:
@@ -295,7 +298,7 @@ def save_entries(conn, feed_key, feed_title, entries):
             # Ignore single-row errors; continue with others
             continue
     conn.commit()
-    logger.info("saved %d new items for feed %s", inserted, feed_key)
+    logger.info("saved %d new items for feed %s", inserted, feed_id)
     return inserted
 
 
@@ -493,66 +496,66 @@ def extract_abstract_from_entry(entry) -> str | None:
         return html.unescape(txt).strip()
     return None
 
-
-def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstract: str | None, feed_key: str | None = None, publication_id: str | None = None, issn: str | None = None):
+def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstract: str | None, feed_id: str | None = None, publication_id: str | None = None, issn: str | None = None):
     if not doi:
         return False
-    cur = conn.cursor()
-    # check for cached CrossRef XML in the articles table
-    cur.execute(
-        "SELECT crossref_xml, authors, abstract, fetched_at FROM articles WHERE doi = ? LIMIT 1",
-        (doi,),
-    )
-    row = cur.fetchone()
-    crossref_raw = None
-    if row:
-        cached_raw, cached_authors, cached_abstract, cached_fetched = row
-        if cached_raw:
-            crossref_raw = cached_raw
-            logger.debug("CrossRef cache hit for %s (fetched_at=%s)", doi, cached_fetched)
-            # prefer cached authors/abstract when incoming values are missing
-            if not authors and cached_authors:
-                authors = cached_authors
-            if not abstract and cached_abstract:
-                abstract = cached_abstract
-        else:
-            logger.debug("articles row exists for %s but no crossref_xml cached", doi)
+    
+    if abstract is None or authors is None:
+        cur.execute(
+            "SELECT crossref_xml, authors, abstract, fetched_at FROM articles WHERE doi = ? LIMIT 1",
+            (doi,),
+        )
+        row = cur.fetchone()
+        crossref_raw = None
+        if row:
+            cached_raw, cached_authors, cached_abstract, cached_fetched = row
+            if cached_raw:
+                crossref_raw = cached_raw
+                logger.debug("CrossRef cache hit for %s (fetched_at=%s)", doi, cached_fetched)
+                # prefer cached authors/abstract when incoming values are missing
+                if not authors and cached_authors:
+                    authors = cached_authors
+                if not abstract and cached_abstract:
+                    abstract = cached_abstract
+            else:
+                logger.debug("articles row exists for %s but no crossref_xml cached", doi)
 
-    # If we still don't have crossref_raw, attempt a network fetch to enrich
-    if not crossref_raw:
-        try:
-            logger.debug("attempting CrossRef enrichment for DOI %s", doi)
-            cr = fetch_crossref_metadata(doi)
-            if cr:
-                found = []
-                if cr.get("authors"):
-                    authors = cr.get("authors")
-                    found.append("authors")
-                if cr.get("abstract"):
-                    abstract = cr.get("abstract")
-                    found.append("abstract")
-                crossref_raw = cr.get("raw")
-                logger.info("CrossRef enrichment for %s found: %s", doi, ",".join(found) or "none")
-        except Exception:
-            logger.warning("CrossRef enrichment attempt failed for %s", doi)
+        # If we still don't have crossref_raw, attempt a network fetch to enrich
+        if not crossref_raw:
+            try:
+                logger.debug("attempting CrossRef enrichment for DOI %s", doi)
+                cr = fetch_crossref_metadata(doi)
+                if cr:
+                    found = []
+                    if cr.get("authors"):
+                        authors = cr.get("authors")
+                        found.append("authors")
+                    if cr.get("abstract"):
+                        abstract = cr.get("abstract")
+                        found.append("abstract")
+                    crossref_raw = cr.get("raw")
+                    logger.info("CrossRef enrichment for %s found: %s", doi, ",".join(found) or "none")
+            except Exception:
+                logger.warning("CrossRef enrichment attempt failed for %s", doi)
+
+    cur = conn.cursor()
     now = datetime.now(timezone.utc).isoformat()
     try:
         # Use INSERT OR REPLACE to update existing records by DOI.
         cur.execute(
             """
-            INSERT INTO articles (doi, title, authors, abstract, crossref_xml, feed_key, publication_id, issn, fetched_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO articles (doi, title, authors, abstract, feed_id, publication_id, issn, fetched_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(doi) DO UPDATE SET
                 title=excluded.title,
                 authors=excluded.authors,
                 abstract=excluded.abstract,
-                crossref_xml=COALESCE(excluded.crossref_xml, articles.crossref_xml),
-                feed_key=COALESCE(excluded.feed_key, articles.feed_key),
+                feed_id=COALESCE(excluded.feed_id, articles.feed_id),
                 publication_id=COALESCE(excluded.publication_id, articles.publication_id),
                 issn=COALESCE(excluded.issn, articles.issn),
                 fetched_at=excluded.fetched_at
             """,
-            (doi, title, authors, abstract, crossref_raw, feed_key, publication_id, issn, now),
+            (doi, title, authors, abstract, feed_id, publication_id, issn, now),
         )
         conn.commit()
         # return the article id
@@ -567,12 +570,12 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
             # Fallback: preserve existing crossref_xml by using COALESCE with a subquery
             cur.execute(
                 """
-                INSERT OR REPLACE INTO articles (id, doi, title, authors, abstract, crossref_xml, feed_key, publication_id, issn, fetched_at)
+                INSERT OR REPLACE INTO articles (id, doi, title, authors, abstract, crossref_xml, feed_id, publication_id, issn, fetched_at)
                 VALUES (
-                    (SELECT id FROM articles WHERE doi = ?), ?, ?, ?, ?, COALESCE(?, (SELECT crossref_xml FROM articles WHERE doi = ?)), COALESCE(?, (SELECT feed_key FROM articles WHERE doi = ?)), COALESCE((SELECT publication_id FROM articles WHERE doi = ?), ?), COALESCE((SELECT issn FROM articles WHERE doi = ?), ?), ?
+                    (SELECT id FROM articles WHERE doi = ?), ?, ?, ?, ?, COALESCE(?, (SELECT crossref_xml FROM articles WHERE doi = ?)), COALESCE(?, (SELECT feed_id FROM articles WHERE doi = ?)), COALESCE((SELECT publication_id FROM articles WHERE doi = ?), ?), COALESCE((SELECT issn FROM articles WHERE doi = ?), ?), ?
                 )
                 """,
-                (doi, doi, title, authors, abstract, crossref_raw, doi, feed_key, doi, publication_id, doi, issn, now),
+                (doi, doi, title, authors, abstract, crossref_raw, doi, feed_id, doi, publication_id, doi, issn, now),
             )
             conn.commit()
             cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
@@ -582,8 +585,7 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
         except Exception:
             return False
 
-
-def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | None = None, abstract: str | None = None, feed_key: str | None = None, publication_id: str | None = None, issn: str | None = None) -> int | None:
+def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | None = None, abstract: str | None = None, feed_id: str | None = None, publication_id: str | None = None, issn: str | None = None) -> int | None:
     """Ensure an article row exists for `doi`. Insert minimal data if missing and
     return the article id. Does NOT call CrossRef.
     """
@@ -593,8 +595,8 @@ def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | 
         return None
     try:
         cur.execute(
-            "INSERT OR IGNORE INTO articles (doi, title, authors, abstract, feed_key, publication_id, issn, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            (doi, title, authors, abstract, feed_key, publication_id, issn, datetime.now(timezone.utc).isoformat()),
+            "INSERT OR IGNORE INTO articles (doi, title, authors, abstract, feed_id, publication_id, issn, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (doi, title, authors, abstract, feed_id, publication_id, issn, datetime.now(timezone.utc).isoformat()),
         )
         conn.commit()
         cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
@@ -756,8 +758,8 @@ def create_combined_view(conn: sqlite3.Connection):
             COALESCE(articles.published, articles.fetched_at) AS published,
             COALESCE(articles.authors, '') AS authors
         FROM articles
-        	LEFT JOIN publications on publications.feed_key = articles.feed_key
-        	LEFT JOIN publications as feeds on feeds.feed_key = articles.feed_key
+        	LEFT JOIN publications on publications.feed_id = articles.feed_id
+        	LEFT JOIN publications as feeds on feeds.feed_id = articles.feed_id
         WHERE articles.doi IS NOT NULL
         """
     )
@@ -834,7 +836,7 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
                     # Only insert if we have a DOI (norm is truthy)
                     try:
                         # Use upsert_article to insert/update canonical article row
-                        aid = upsert_article(conn, norm, title=title_text, authors=authors_text, abstract=abstract_text, feed_key=key, publication_id=db_pub_id, issn=issn)
+                        aid = upsert_article(conn, norm, title=title_text, authors=authors_text, abstract=abstract_text, feed_id=key, publication_id=db_pub_id, issn=issn)
                         if aid:
                             inserted += 1
                     except Exception as e:
