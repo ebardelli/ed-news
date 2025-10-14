@@ -181,6 +181,21 @@ def save_entries(conn, feed_key, feed_title, entries):
     logger.debug("saving %d entries for feed %s (%s)", len(entries), feed_key, feed_title)
     for e in entries:
         try:
+            # If the entry has a link, prefer deduping by link first to avoid
+            # inserting duplicate items when guid/title/published differ.
+            link_val = (e.get("link") or "").strip()
+            if link_val:
+                try:
+                    cur.execute("SELECT id, doi FROM items WHERE link = ? LIMIT 1", (link_val,))
+                    existing = cur.fetchone()
+                    if existing:
+                        logger.debug("skipping insert: item with same link already exists (id=%s, link=%s)", existing[0], link_val)
+                        # Skip enrichment and insertion for existing URL
+                        continue
+                except Exception:
+                    # If the lookup fails for some reason, fall back to normal insert
+                    logger.debug("link existence check failed for link=%s; continuing with insert", link_val)
+
             cur.execute(
                 """
                 INSERT OR IGNORE INTO items
@@ -202,6 +217,14 @@ def save_entries(conn, feed_key, feed_title, entries):
                 inserted += 1
                 # get the inserted item's rowid
                 item_rowid = cur.lastrowid
+            else:
+                # Insert was ignored because an item with the same unique key
+                # (guid/link/title/published) already exists. In that case we
+                # should skip any expensive enrichment (CrossRef/title lookups)
+                # to avoid re-fetching DOIs for feeds that don't include them.
+                existing_link = e.get("link") or ""
+                logger.debug("item already exists (skipping enrichment) for link: %s", existing_link)
+                continue
             # Attempt to extract richer article metadata and upsert into `articles` table.
             entry_obj = e.get("_entry") or {}
             doi = extract_doi_from_entry(entry_obj) or extract_doi_from_entry(e)
