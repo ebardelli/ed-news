@@ -14,67 +14,50 @@
     <main>
         <section>
             <div class="content">
-            {% if articles %}
-                {% for a in articles %}
-                        <div class="item">
-                            <h3>{% if a.link %}<a href="{{ a.link }}">{{ a.title or 'Untitled' }}</a>{% else %}{{ a.title or 'Untitled' }}{% endif %}</h3>
-                                <p class="meta">
-                                    {% if a.feed_title %}
-                                        <span class="feed">{{ a.feed_title }}</span>
-                                    {% endif %}
-                                    {% if a.feed_title and a.published %}
-                                        <span class="sep">|</span>
-                                    {% endif %}
-                                    {% if a.published %}
-                                        <span class="date"><a href="#">{{ a.published }}</a></span>
-                                    {% endif %}
-                                </p>
-                            <p class="excerpt">
-                                {% if a.content %}
-                                    {{ a.content }}
-                                {% elif a.raw and a.raw.get('summary') %}
-                                    {{ a.raw.get('summary') }}
-                                {% else %}
-                                    -/-
-                                {% endif %}
-                            </p>
+            {% if grouped_articles %}
+                {% for publication, pub_articles in grouped_articles.items() %}
+                    <div class="publication">
+                        <h2 class="collapsible">{{ publication }} <span class="icon">+</span></h2>
+                        <div class="article-list">
+                            {% for a in pub_articles %}
+                                <div class="item">
+                                    <h3>{% if a.link %}<a href="{{ a.link }}">{{ a.title or 'Untitled' }}</a>{% else %}{{ a.title or 'Untitled' }}{% endif %}</h3>
+                                    <p class="meta">
+                                        {% if a.published %}
+                                            <span class="date">{{ a.published }}</span>
+                                        {% endif %}
+                                    </p>
+                                    <p class="excerpt">
+                                        {% if a.content %}
+                                            {{ a.content }}
+                                        {% elif a.raw and a.raw.get('summary') %}
+                                            {{ a.raw.get('summary') }}
+                                        {% else %}
+                                            No abstract available.
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            {% endfor %}
                         </div>
+                    </div>
                 {% endfor %}
             {% else %}
                 <p>No articles found.</p>
             {% endif %}
-
-            {# Similar articles list - populated by the view code with a list of titles #}
-            {# Similar articles list - prefer `similar_articles` (list of {title, link}),
-               but keep backward compatibility with `similar_titles` (list of strings) #}
-            {% if similar_articles %}
-                <aside class="similar-articles">
-                    <h4>Similar articles</h4>
-                    <ul>
-                        {% for s in similar_articles %}
-                            {% if s.link %}
-                                <li><a href="{{ s.link }}">{{ s.title }}</a></li>
-                            {% else %}
-                                <li>{{ s.title }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </aside>
-            {% elif similar_titles %}
-                <aside class="similar-articles">
-                    <h4>Similar articles</h4>
-                    <ul>
-                        {% for t in similar_titles %}
-                            <li>{{ t }}</li>
-                        {% endfor %}
-                    </ul>
-                </aside>
-            {% endif %}
             </div>
         </section>
+
+        <!-- Modal -->
+        <div id="abstract-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="modal-abstract">No abstract available</p>
+            </div>
+        </div>
     </main>
     <footer>
         <p>&copy; 2023-{{ year or 2025 }} {{ title }} | Based on a template <a href="https://werd.io" rel="me">by Ben Werdmuller</a> | Updated {{ build_time }}</p>
     </footer>
+    <script src="static/main.js"></script>
 </body>
 </html>

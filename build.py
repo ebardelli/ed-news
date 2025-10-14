@@ -88,6 +88,21 @@ def build(out_dir: Path = BUILD_DIR):
             ctx["articles"] = []
     else:
         ctx["articles"] = []
+    
+    # Group articles by feed_title
+    if "articles" in ctx:
+        grouped_articles = {}
+        for article in ctx["articles"]:
+            publication = article.get("feed_title", "Unknown Publication")
+            if publication not in grouped_articles:
+                grouped_articles[publication] = []
+            grouped_articles[publication].append(article)
+
+        # Add grouped articles to context
+        ctx["grouped_articles"] = grouped_articles
+    else:
+        ctx["grouped_articles"] = {}
+    
     out_dir.mkdir(parents=True, exist_ok=True)
     render_templates(ctx, out_dir)
     copy_static(out_dir)
