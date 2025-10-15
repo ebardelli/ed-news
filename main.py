@@ -81,6 +81,30 @@ def cmd_embed(args):
     conn.close()
 
 
+def cmd_enrich_crossref(args):
+    """Enrich articles missing Crossref XML by querying Crossref for metadata."""
+    conn = sqlite3.connect(str(config.DB_PATH))
+    # ensure DB initialized
+    from ednews.db import init_db, enrich_articles_from_crossref
+    from ednews.crossref import fetch_crossref_metadata
+
+    init_db(conn)
+    # Use the existing fetcher function as a callable that takes a DOI and returns a dict
+    def fetcher(doi):
+        return fetch_crossref_metadata(doi)
+
+    updated_ids = enrich_articles_from_crossref(conn, fetcher, batch_size=args.batch_size, delay=args.delay, return_ids=True)
+    logger.info("Enriched %d articles from Crossref", len(updated_ids) if hasattr(updated_ids, '__len__') else updated_ids)
+    # Update embeddings only for the affected article ids
+    if updated_ids:
+        try:
+            embeddings.create_database(conn)
+            embeddings.generate_and_insert_embeddings_for_ids(conn, updated_ids, model=args.model if hasattr(args, 'model') else None)
+        except Exception:
+            logger.exception("Failed to regenerate embeddings for updated articles after Crossref enrichment")
+    conn.close()
+
+
 def main():
     parser = argparse.ArgumentParser(prog="ednews")
     parser.add_argument("-v", "--verbose", action="store_true")
@@ -97,6 +121,11 @@ def main():
     p_embed.add_argument("--model", help="Embedding model", default=None)
     p_embed.add_argument("--batch-size", type=int, default=64)
     p_embed.set_defaults(func=cmd_embed)
+
+    p_enrich = sub.add_parser("enrich-crossref", help="Enrich articles missing Crossref XML")
+    p_enrich.add_argument("--batch-size", type=int, default=20, help="Number of articles to enrich in one run")
+    p_enrich.add_argument("--delay", type=float, default=0.1, help="Delay between individual fetches (seconds)")
+    p_enrich.set_defaults(func=cmd_enrich_crossref)
 
     args = parser.parse_args()
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")

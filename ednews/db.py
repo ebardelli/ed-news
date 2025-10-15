@@ -150,12 +150,13 @@ def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | 
         return None
 
 
-def enrich_articles_from_crossref(conn, fetcher, batch_size: int = 20, delay: float = 0.1):
+def enrich_articles_from_crossref(conn, fetcher, batch_size: int = 20, delay: float = 0.1, return_ids: bool = False):
     cur = conn.cursor()
     logger.info("Enriching up to %s articles from Crossref", batch_size)
     cur.execute("SELECT articles.doi FROM articles join items on items.doi = articles.doi WHERE crossref_xml IS NULL OR crossref_xml = '' ORDER BY COALESCE(items.published, items.fetched_at, articles.fetched_at) DESC LIMIT ?", (batch_size,))
     rows = cur.fetchall()
     updated = 0
+    updated_ids: list[int] = []
     logger.debug("Found %s articles needing enrichment", len(rows))
     for r in rows:
         doi = r[0]
@@ -174,11 +175,70 @@ def enrich_articles_from_crossref(conn, fetcher, batch_size: int = 20, delay: fl
                 (authors, abstract, raw, doi),
             )
             conn.commit()
+            # lookup article id for targeted embedding updates
+            try:
+                cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
+                row = cur.fetchone()
+                if row and row[0]:
+                    updated_ids.append(row[0])
+            except Exception:
+                logger.debug("Could not fetch id for doi=%s after update", doi)
             updated += 1
             logger.debug("Enriched doi=%s", doi)
         except Exception:
             logger.exception("Failed to enrich doi=%s from Crossref", doi)
+    if return_ids:
+        return updated_ids
     return updated
+
+
+def get_missing_crossref_dois(conn: sqlite3.Connection, limit: int = 100, offset: int = 0) -> list:
+    """Return a list of DOIs for articles where crossref_xml is NULL or empty.
+
+    Results are ordered by a best-effort recency using items.published, items.fetched_at,
+    or articles.fetched_at (descending), similar to the enrichment query.
+    """
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT articles.doi FROM articles LEFT JOIN items on items.doi = articles.doi WHERE articles.doi IS NOT NULL AND (articles.crossref_xml IS NULL OR articles.crossref_xml = '') ORDER BY COALESCE(items.published, items.fetched_at, articles.fetched_at) DESC LIMIT ? OFFSET ?",
+        (limit, offset),
+    )
+    rows = cur.fetchall()
+    dois = [r[0] for r in rows if r and r[0]]
+    logger.debug("get_missing_crossref_dois found %d DOIs (limit=%s offset=%s)", len(dois), limit, offset)
+    return dois
+
+
+def update_article_crossref(conn: sqlite3.Connection, doi: str, authors: str | None = None, abstract: str | None = None, raw: str | None = None, published: str | None = None) -> bool:
+    """Update the articles row for a given DOI with Crossref-derived metadata.
+
+    Fields provided as None will not overwrite existing values. Returns True if
+    the update affected a row, False otherwise.
+    """
+    if not doi:
+        logger.debug("update_article_crossref called without doi; skipping")
+        return False
+    try:
+        cur = conn.cursor()
+        # Build the update using COALESCE so None values don't clobber existing data
+        cur.execute(
+            """
+            UPDATE articles SET
+                authors = COALESCE(?, authors),
+                abstract = COALESCE(?, abstract),
+                crossref_xml = COALESCE(?, crossref_xml),
+                published = COALESCE(?, published)
+            WHERE doi = ?
+            """,
+            (authors, abstract, raw, published, doi),
+        )
+        conn.commit()
+        updated = cur.rowcount if hasattr(cur, 'rowcount') else None
+        logger.debug("update_article_crossref doi=%s updated_rows=%s", doi, updated)
+        return (updated is None) or (updated > 0)
+    except Exception:
+        logger.exception("Failed to update article crossref data for doi=%s", doi)
+        return False
 
 
 def create_combined_view(conn: sqlite3.Connection):
