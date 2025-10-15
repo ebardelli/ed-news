@@ -94,8 +94,6 @@ There is also `ednews.build` which contains the core build logic and is exercise
 
 The generated output will be placed in `build/` and includes `index.html`, `index.rss`, and a `static/` folder with assets.
 
-Note: the build process now also copies the project's SQLite database (`ednews.db`, configured via `ednews.config.DB_PATH`) into the `build/` directory so the database is available alongside the generated site output.
-
 ## Tests
 
 Run the test suite with pytest:

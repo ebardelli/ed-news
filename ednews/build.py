@@ -16,6 +16,7 @@ from datetime import datetime
 from email.utils import parsedate_to_datetime
 import logging
 from . import config
+import duckdb
 
 MODEL_NAME = config.DEFAULT_MODEL
 
@@ -162,29 +163,6 @@ def copy_static(out_dir: Path):
         logger.info("copied static -> %s", dest)
 
 
-def copy_db(out_dir: Path):
-    """Copy the SQLite database file configured by ``config.DB_PATH`` into the
-    build output directory.
-
-    The destination filename will match the source basename (for example
-    ``ednews.db``). If the source DB file does not exist the function
-    does nothing.
-
-    Args:
-        out_dir (pathlib.Path): Destination directory where the DB will be copied.
-    """
-    try:
-        src = DB_FILE
-        if not src.exists():
-            logger.debug("DB file %s does not exist; skipping copy", src)
-            return
-        dest = out_dir / src.name
-        shutil.copy2(src, dest)
-        logger.info("copied DB %s -> %s", src, dest)
-    except Exception as e:
-        logger.warning("failed to copy DB file to build dir: %s", e)
-
-
 def build(out_dir: Path = BUILD_DIR):
     """High-level build function to render the static site.
 
@@ -267,8 +245,11 @@ def build(out_dir: Path = BUILD_DIR):
     out_dir.mkdir(parents=True, exist_ok=True)
     render_templates(ctx, out_dir)
     copy_static(out_dir)
-    # copy the SQLite DB into the build directory so the built site can include it
-    copy_db(out_dir)
+    # export selected DB tables to parquet files under build/db/
+    try:
+        export_db_parquet(out_dir)
+    except Exception:
+        logger.exception("export_db_parquet failed")
     logger.info("done")
 
 
@@ -515,3 +496,58 @@ def read_articles(db_path: Path, limit: int = 30, days: int | None = None, publi
             'raw': r,
         })
     return out
+
+
+def export_db_parquet(out_dir: Path, tables: list | None = None):
+    """Export selected tables from the configured SQLite DB into Parquet files
+
+    Uses DuckDB's sqlite extension to read directly from the SQLite
+    database file and writes each table to ``out_dir/db/{table}.parquet``.
+
+    Args:
+        out_dir (pathlib.Path): Base output directory (typically the build dir).
+        tables (list[str] | None): List of table names to export. If omitted,
+            exports the default set: articles, items, publications, articles_vec.
+    """
+    if tables is None:
+        tables = ["articles", "items", "publications"]
+
+    if not DB_FILE.exists():
+        logger.debug("DB file %s does not exist; skipping parquet export", DB_FILE)
+        return
+
+    db_out = out_dir / "db"
+    db_out.mkdir(parents=True, exist_ok=True)
+
+    con = None
+    try:
+        con = duckdb.connect(database=":memory:")
+        # Try to load sqlite extension which provides sqlite_scan; if not
+        # available the COPY from sqlite_scan may fail and we'll log a warning.
+        try:
+            con.execute("INSTALL sqlite")
+            con.execute("LOAD sqlite")
+        except Exception:
+            # ignore; extension may already be present
+            pass
+
+        for table in tables:
+            dest = db_out / f"{table}.parquet"
+            try:
+                # Use sqlite_scan to read a table directly from the SQLite file
+                sql = (
+                    "COPY (SELECT * FROM sqlite_scan('" + str(DB_FILE) + "', '" + table + "')) "
+                    "TO '" + str(dest) + "' (FORMAT PARQUET)"
+                )
+                con.execute(sql)
+                logger.info("exported table %s -> %s", table, dest)
+            except Exception as e:
+                logger.warning("failed to export table %s: %s", table, e)
+    except Exception as e:
+        logger.warning("duckdb export failed: %s", e)
+    finally:
+        try:
+            if con is not None:
+                con.close()
+        except Exception:
+            pass
