@@ -26,6 +26,7 @@ steps:
       image: ghcr.io/astral-sh/uv:debian
       commands:
         - mkdir -p cache
+        - '[ -f cache/ednews.db ] || touch cache/ednews.db'
         - ln -sf cache/ednews.db ednews.db
         - uv venv --python 3.13
         - uv sync
