@@ -46,7 +46,7 @@ def test_fetch_crossref_metadata_parses_unixref(monkeypatch):
     assert isinstance(res, dict)
     # raw should be present and contain the abstract text
     assert 'raw' in res and 'This is an example abstract.' in res['raw']
-    # published should be formatted as YYYY-MM-DD
-    assert res.get('published') == '2024-05-09'
+    # published should start with YYYY-MM-DD (normalization may add time/tz)
+    assert res.get('published', '').startswith('2024-05-09')
     # authors should include both authors in order
     assert res.get('authors') == 'Jane Doe, John Smith'

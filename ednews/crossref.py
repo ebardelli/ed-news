@@ -172,28 +172,11 @@ def fetch_crossref_metadata(doi: str, timeout: int = 10) -> dict | None:
     # attempt to extract a publication date (best-effort)
     published = None
     try:
-        # Prefer JSON 'created' date-parts when available (this avoids using
-        # published-print which can sometimes be a future print issue date).
         if json_message:
-            # created -> date-parts
-            c = json_message.get('created') or {}
-            dp = c.get('date-parts') if isinstance(c, dict) else None
-            if dp and isinstance(dp, list) and dp and isinstance(dp[0], list) and dp[0]:
-                parts = [str(int(x)).zfill(2) if i > 0 else str(int(x)) for i, x in enumerate(dp[0])]
-                # ensure month/day are zero-padded to two digits if present
-                raw = "-".join(parts)
-                published = raw
-            else:
-                # fallback to other message date fields if present
-                for key in ('published-print', 'published-online', 'issued', 'published'):
-                    mobj = json_message.get(key)
-                    if isinstance(mobj, dict):
-                        dp = mobj.get('date-parts')
-                        if dp and isinstance(dp, list) and dp and isinstance(dp[0], list) and dp[0]:
-                            parts = [str(int(x)).zfill(2) if i > 0 else str(int(x)) for i, x in enumerate(dp[0])]
-                            raw = "-".join(parts)
-                            published = raw
-                            break
+            # Prefer JSON-created date-parts via a helper that centralizes
+            # the various Crossref message fields (created, published-print, ...)
+            published = _extract_published_from_json(json_message)
+
         # If no JSON-derived date, try XML tree parsing as before
         if not published and root is not None:
             for elem in root.iter():
@@ -235,8 +218,66 @@ def fetch_crossref_metadata(doi: str, timeout: int = 10) -> dict | None:
         except Exception:
             pass
     if published:
-        out["published"] = published
+        # Try to normalize the extracted date to an ISO-like full datetime when
+        # possible (so callers can parse via fromisoformat). If normalization
+        # fails (partial dates), keep the original string.
+        normalized = normalize_crossref_datetime(published)
+        out["published"] = normalized if normalized else published
     return out
+
+
+def _extract_published_from_json(message: dict) -> str | None:
+    """Extract an ISO-ish date string from Crossref JSON message date fields.
+
+    Looks for 'created' first, then falls back to 'published-print',
+    'published-online', 'issued', and 'published'. Each of these typically
+    contains a 'date-parts' array of arrays such as [[YYYY, M, D]]. We return
+    a string like 'YYYY', 'YYYY-MM' or 'YYYY-MM-DD' depending on available
+    parts. If the message contains a 'date-time' field, return that string
+    directly.
+    """
+    if not message or not isinstance(message, dict):
+        return None
+
+    def build_from_date_parts(dp_list):
+        if not dp_list or not isinstance(dp_list, list) or not dp_list[0]:
+            return None
+        parts = dp_list[0]
+        try:
+            out_parts = []
+            for i, x in enumerate(parts):
+                if i == 0:
+                    out_parts.append(str(int(x)))
+                else:
+                    out_parts.append(str(int(x)).zfill(2))
+            return "-".join(out_parts)
+        except Exception:
+            return None
+
+    # Prefer created
+    c = message.get('created')
+    if isinstance(c, dict):
+        # direct date-time field (ISO-like)
+        dt = c.get('date-time') or c.get('date_time') or c.get('date')
+        if isinstance(dt, str) and dt.strip():
+            return dt.strip()
+        dp = c.get('date-parts')
+        res = build_from_date_parts(dp)
+        if res:
+            return res
+
+    for key in ('published-print', 'published-online', 'issued', 'published'):
+        mobj = message.get(key)
+        if isinstance(mobj, dict):
+            dt = mobj.get('date-time') or mobj.get('date_time') or mobj.get('date')
+            if isinstance(dt, str) and dt.strip():
+                return dt.strip()
+            dp = mobj.get('date-parts')
+            res = build_from_date_parts(dp)
+            if res:
+                return res
+
+    return None
 
 
 def normalize_crossref_datetime(dt_str: str) -> str | None:
