@@ -5,21 +5,7 @@ from ednews import embeddings
 import types
 
 
-def test_init_db_creates_tables(tmp_path):
-    p = tmp_path / 'ednews.db'
-    conn = sqlite3.connect(str(p))
-    conn.enable_load_extension(True)
-    
-    sqlite_vec.load(conn)
-    db.init_db(conn)
-
-    cur = conn.cursor()
-    cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
-    names = {r[0] for r in cur.fetchall()}
-    assert 'items' in names
-    assert 'articles' in names
-    assert 'publications' in names
-    conn.close()
+# embedding-related tests only
 
 
 def test_embeddings_create_database_in_memory(monkeypatch):

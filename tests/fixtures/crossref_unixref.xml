@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<crossref xmlns="http://www.crossref.org/schema/4.3.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <query_result>
+    <body>
+      <query_status code="resolved"/>
+      <contributors>
+        <person_name sequence="first" contributor_role="author">
+          <given_name>Jane</given_name>
+          <surname>Doe</surname>
+        </person_name>
+        <person_name sequence="additional" contributor_role="author">
+          <given_name>John</given_name>
+          <surname>Smith</surname>
+        </person_name>
+      </contributors>
+      <titles>
+        <title>Example Article</title>
+      </titles>
+      <abstract>This is an example abstract.</abstract>
+      <publication_date>
+        <year>2024</year>
+        <month>5</month>
+        <day>9</day>
+      </publication_date>
+    </body>
+  </query_result>
+</crossref>

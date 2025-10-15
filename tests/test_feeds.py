@@ -22,3 +22,21 @@ def test_fetch_feed_parses_entries(monkeypatch):
     assert isinstance(result, dict)
     assert 'entries' in result
     assert isinstance(result['entries'], list)
+
+
+def test_normalize_doi():
+    # Test valid DOI normalization
+    assert feeds.normalize_doi("https://doi.org/10.1234/abcd") == "10.1234/abcd"
+    assert feeds.normalize_doi("doi:10.1234/abcd") == "10.1234/abcd"
+    assert feeds.normalize_doi("10.1234/abcd") == "10.1234/abcd"
+
+    # Test DOI with extra characters
+    assert feeds.normalize_doi("https://doi.org/10.1234/abcd?param=value") == "10.1234/abcd"
+    assert feeds.normalize_doi("10.1234/abcd.") == "10.1234/abcd"
+
+    # Test invalid DOI
+    assert feeds.normalize_doi("invalid-doi") is None
+
+    # Test empty input
+    assert feeds.normalize_doi("") is None
+    assert feeds.normalize_doi(None) is None
