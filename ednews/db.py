@@ -6,12 +6,19 @@ logger = logging.getLogger("ednews.db")
 
 
 def get_connection(path: str | None = None):
-    if path:
-        return sqlite3.connect(path)
-    return sqlite3.connect()
+    try:
+        if path:
+            logger.debug("Opening SQLite connection to path: %s", path)
+            return sqlite3.connect(path)
+        logger.debug("Opening in-memory SQLite connection")
+        return sqlite3.connect()
+    except Exception:
+        logger.exception("Failed to open SQLite connection (path=%s)", path)
+        raise
 
 
 def init_db(conn: sqlite3.Connection):
+    logger.info("Initializing database schema")
     cur = conn.cursor()
     cur.execute(
         """
@@ -58,6 +65,11 @@ def init_db(conn: sqlite3.Connection):
         )
         """
     )
+    try:
+        # ensure the combined_articles view exists immediately after initializing schema
+        create_combined_view(conn)
+    except Exception:
+        logger.exception("Failed to create combined_articles view during init_db")
     conn.commit()
     logger.debug("initialized database")
 
@@ -65,6 +77,7 @@ def init_db(conn: sqlite3.Connection):
 def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstract: str | None, feed_id: str | None = None, publication_id: str | None = None, issn: str | None = None, fetched_at: str | None = None, published: str | None = None):
     if not doi:
         return False
+    logger.debug("Upserting article doi=%s feed_id=%s publication_id=%s", doi, feed_id, publication_id)
     cur = conn.cursor()
     now = datetime.now(timezone.utc).isoformat()
     used_fetched_at = fetched_at or now
@@ -90,8 +103,10 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
         cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
         row = cur.fetchone()
         aid = row[0] if row and row[0] else None
+        logger.debug("Upsert successful for doi=%s id=%s", doi, aid)
         return aid
     except Exception:
+        logger.exception("Upsert failed, attempting fallback INSERT OR REPLACE for doi=%s", doi)
         try:
             cur.execute(
                 """
@@ -106,15 +121,17 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
             cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
             row = cur.fetchone()
             aid = row[0] if row and row[0] else None
+            logger.debug("Fallback upsert successful for doi=%s id=%s", doi, aid)
             return aid
         except Exception:
+            logger.exception("Fallback upsert failed for doi=%s", doi)
             return False
 
 
 def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | None = None, abstract: str | None = None, feed_id: str | None = None, publication_id: str | None = None, issn: str | None = None) -> int | None:
     cur = conn.cursor()
     if not doi:
-        logging.getLogger("ednews.db").debug("ensure_article_row called without doi; skipping")
+        logger.debug("ensure_article_row called without doi; skipping")
         return None
     try:
         cur.execute(
@@ -124,16 +141,21 @@ def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | 
         conn.commit()
         cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
         row = cur.fetchone()
-        return row[0] if row and row[0] else None
+        aid = row[0] if row and row[0] else None
+        logger.debug("ensure_article_row result for doi=%s id=%s", doi, aid)
+        return aid
     except Exception:
+        logger.exception("ensure_article_row failed for doi=%s", doi)
         return None
 
 
 def enrich_articles_from_crossref(conn, fetcher, batch_size: int = 20, delay: float = 0.1):
     cur = conn.cursor()
+    logger.info("Enriching up to %s articles from Crossref", batch_size)
     cur.execute("SELECT articles.doi FROM articles join items on items.doi = articles.doi WHERE crossref_xml IS NULL OR crossref_xml = '' ORDER BY COALESCE(items.published, items.fetched_at, articles.fetched_at) DESC LIMIT ?", (batch_size,))
     rows = cur.fetchall()
     updated = 0
+    logger.debug("Found %s articles needing enrichment", len(rows))
     for r in rows:
         doi = r[0]
         if not doi:
@@ -141,6 +163,7 @@ def enrich_articles_from_crossref(conn, fetcher, batch_size: int = 20, delay: fl
         try:
             cr = fetcher(doi)
             if not cr:
+                logger.debug("No crossref data for doi=%s", doi)
                 continue
             authors = cr.get("authors")
             abstract = cr.get("abstract")
@@ -151,12 +174,14 @@ def enrich_articles_from_crossref(conn, fetcher, batch_size: int = 20, delay: fl
             )
             conn.commit()
             updated += 1
+            logger.debug("Enriched doi=%s", doi)
         except Exception:
-            pass
+            logger.exception("Failed to enrich doi=%s from Crossref", doi)
     return updated
 
 
 def create_combined_view(conn: sqlite3.Connection):
+    logger.info("Creating combined_articles view")
     cur = conn.cursor()
     cur.execute(
         """
@@ -176,6 +201,7 @@ def create_combined_view(conn: sqlite3.Connection):
         """
     )
     conn.commit()
+    logger.debug("combined_articles view created")
 
 
 def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int = 30, timeout: int = 10, delay: float = 0.05):
@@ -183,6 +209,7 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
     cur = conn.cursor()
     session = requests.Session()
     inserted = 0
+    logger.info("Fetching latest journal works for %s feeds", len(feeds) if hasattr(feeds, '__len__') else 'unknown')
     for item in feeds:
         if len(item) == 5:
             key, title, url, publication_id, issn = item
@@ -217,8 +244,8 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
                     if aid:
                         inserted += 1
                 except Exception:
-                    pass
+                    logger.exception("Failed to upsert article doi=%s from journal %s", doi, issn)
             conn.commit()
         except Exception:
-            pass
+            logger.exception("Failed to fetch works for ISSN=%s (feed=%s)", issn, key)
     return inserted

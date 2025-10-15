@@ -100,7 +100,7 @@ def normalize_doi(doi: str) -> str | None:
         core = core.rstrip(" .;,)/]")
         core = core.strip('"\'<>[]()')
         return core
-    if "/" not in doi:
+    if not re.search(r"10\.\d{4,9}/", doi) and "/" not in doi and title_suitable_for_crossref_lookup(doi):
         try:
             found = crossref.query_crossref_doi_by_title(doi)
             if found:
