@@ -65,6 +65,7 @@ def init_db(conn: sqlite3.Connection):
         )
         """
     )
+
     try:
         # ensure the combined_articles view exists immediately after initializing schema
         create_combined_view(conn)
@@ -202,6 +203,73 @@ def create_combined_view(conn: sqlite3.Connection):
     )
     conn.commit()
     logger.debug("combined_articles view created")
+
+
+def upsert_publication(conn, feed_id: str | None, publication_id: str | None, feed_title: str | None, issn: str | None):
+    """Insert or update a publications row.
+
+    Primary key is (publication_id, issn) per schema. If publication_id is missing,
+    fall back to using feed_id as an identifier when available.
+    """
+    if not publication_id and not feed_id:
+        logger.debug("upsert_publication called without publication_id or feed_id; skipping")
+        return False
+    # prefer explicit issn; ensure non-null string for SQL binding
+    try:
+        cur = conn.cursor()
+        # Use publication_id and issn as primary identifying keys when possible
+        if publication_id and issn:
+            cur.execute(
+                """
+                INSERT INTO publications (feed_id, publication_id, feed_title, issn)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT(publication_id, issn) DO UPDATE SET
+                    feed_id = COALESCE(excluded.feed_id, publications.feed_id),
+                    feed_title = COALESCE(excluded.feed_title, publications.feed_title)
+                """,
+                (feed_id, publication_id, feed_title, issn),
+            )
+        else:
+            # If we don't have an ISSN, try to upsert by publication_id alone by using publication_id as key
+            # Use INSERT OR REPLACE fallback for older SQLite versions or missing ON CONFLICT support
+            cur.execute(
+                "INSERT OR REPLACE INTO publications (feed_id, publication_id, feed_title, issn) VALUES (?, ?, ?, ?)",
+                (feed_id, publication_id or feed_id, feed_title, issn or ''),
+            )
+        conn.commit()
+        logger.debug("upsert_publication succeeded for feed_id=%s publication_id=%s issn=%s", feed_id, publication_id, issn)
+        return True
+    except Exception:
+        logger.exception("upsert_publication failed for feed_id=%s publication_id=%s issn=%s", feed_id, publication_id, issn)
+        return False
+
+
+def sync_publications_from_feeds(conn, feeds_list) -> int:
+    """Synchronize the publications table from a feeds list.
+
+    feeds_list is expected to be the output of `ednews.feeds.load_feeds()` where
+    each item is a tuple like (key, title, url, publication_id, issn).
+
+    Returns the number of feeds successfully upserted.
+    """
+    if not feeds_list:
+        return 0
+    count = 0
+    for item in feeds_list:
+        try:
+            # item shape: (key, title, url, publication_id, issn)
+            key = item[0] if len(item) > 0 else None
+            title = item[1] if len(item) > 1 else None
+            pub_id = item[3] if len(item) > 3 else None
+            issn = item[4] if len(item) > 4 else None
+            ok = upsert_publication(conn, key, pub_id, title, issn)
+            if ok:
+                count += 1
+        except Exception:
+            logger.exception("Failed to sync publication for feed item: %s", item)
+            continue
+    logger.info("Synchronized %d publications from feeds", count)
+    return count
 
 
 def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int = 30, timeout: int = 10, delay: float = 0.05):

@@ -26,6 +26,18 @@ def cmd_fetch(args):
 
     init_db(conn)
 
+    # Ensure publications table is populated/upserted from planet.json feeds
+    try:
+        from ednews.db import sync_publications_from_feeds
+
+        try:
+            synced = sync_publications_from_feeds(conn, feeds_list)
+            logger.info("synced %d publications from feeds", synced)
+        except Exception:
+            logger.debug("failed to sync publications from feeds list")
+    except Exception:
+        logger.debug("failed to import sync_publications_from_feeds")
+
     session = requests.Session()
     with ThreadPoolExecutor(max_workers=8) as ex:
         futures = {}

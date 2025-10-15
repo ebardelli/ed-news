@@ -292,28 +292,72 @@ def save_entries(conn, feed_id, feed_title, entries):
 
             if doi:
                 doi = normalize_doi(doi)
-                title = e.get("title") or (entry_obj.get("title") if isinstance(entry_obj, dict) else None)
-                authors = extract_authors_from_entry(entry_obj) or extract_authors_from_entry(e)
-                abstract = extract_abstract_from_entry(entry_obj) or extract_abstract_from_entry(e)
+                title_feed = e.get("title") or (entry_obj.get("title") if isinstance(entry_obj, dict) else None)
+                authors_feed = extract_authors_from_entry(entry_obj) or extract_authors_from_entry(e)
+                abstract_feed = extract_abstract_from_entry(entry_obj) or extract_abstract_from_entry(e)
                 feed_issn = None
                 try:
                     feed_issn = e.get("_feed_issn")
                 except Exception:
                     feed_issn = None
-                ensured = eddb.ensure_article_row(conn, doi, title=title, authors=authors, abstract=abstract, feed_id=feed_id, publication_id=pub_pid, issn=feed_issn)
+
+                # Try to fetch Crossref metadata for this DOI and prefer its fields
+                cr = None
                 try:
-                    if ensured and item_rowid:
-                        cur.execute("UPDATE items SET doi = ? WHERE id = ?", (doi, item_rowid))
+                    cr = crossref.fetch_crossref_metadata(doi)
+                except Exception:
+                    logger.debug("Crossref lookup failed for DOI=%s", doi)
+
+                authors_final = None
+                abstract_final = None
+                published_final = None
+                raw_crossref = None
+
+                if isinstance(cr, dict):
+                    authors_final = cr.get("authors") or None
+                    abstract_final = cr.get("abstract") or None
+                    published_final = cr.get("published") or None
+                    raw_crossref = cr.get("raw")
+
+                # Prefer Crossref values when available, fall back to feed values
+                title_final = title_feed
+                authors_final = authors_final or authors_feed
+                abstract_final = abstract_final or abstract_feed
+                published_final = published_final or (e.get("published") or None)
+
+                try:
+                    aid = eddb.upsert_article(
+                        conn,
+                        doi,
+                        title=title_final,
+                        authors=authors_final,
+                        abstract=abstract_final,
+                        feed_id=feed_id,
+                        publication_id=pub_pid,
+                        issn=feed_issn,
+                        published=published_final,
+                    )
+                    # If we have raw Crossref XML, store it in the articles.crossref_xml column
+                    if raw_crossref:
                         try:
+                            cur.execute("UPDATE articles SET crossref_xml = ? WHERE doi = ?", (raw_crossref, doi))
+                            conn.commit()
+                        except Exception:
+                            logger.debug("failed to store crossref_xml for doi=%s", doi)
+
+                    # Attach DOI to item and update item.published from article if available
+                    if aid and item_rowid:
+                        try:
+                            cur.execute("UPDATE items SET doi = ? WHERE id = ?", (doi, item_rowid))
                             cur.execute("SELECT published FROM articles WHERE doi = ? LIMIT 1", (doi,))
                             rowp = cur.fetchone()
                             if rowp and rowp[0]:
                                 cur.execute("UPDATE items SET published = ? WHERE id = ?", (rowp[0], item_rowid))
-                                conn.commit()
+                            conn.commit()
                         except Exception:
-                            logger.debug("failed to update item.published for new item id=%s", item_rowid)
+                            logger.debug("failed to attach doi %s to item %s", doi, item_rowid)
                 except Exception:
-                    logger.debug("failed to attach doi %s to item %s", doi, item_rowid)
+                    logger.exception("failed to upsert article for doi=%s", doi)
         except Exception:
             continue
     conn.commit()

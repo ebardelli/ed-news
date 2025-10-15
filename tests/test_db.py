@@ -98,3 +98,52 @@ def test_create_combined_view_exists_and_selectable():
     assert len(rows) >= 1
     assert rows[0][0] == '10.9/abc'
     conn.close()
+
+
+def test_upsert_publication_inserts_and_updates():
+    conn = make_conn()
+    cur = conn.cursor()
+    # initial insert
+    from ednews.db import upsert_publication
+
+    res = upsert_publication(conn, 'feed1', 'pub1', 'Feed One', '1111-2222')
+    assert res is True
+    cur.execute('SELECT feed_id, publication_id, feed_title, issn FROM publications WHERE publication_id = ? AND issn = ?', ('pub1', '1111-2222'))
+    row = cur.fetchone()
+    assert row is not None
+    assert row[0] == 'feed1' and row[1] == 'pub1' and row[2] == 'Feed One' and row[3] == '1111-2222'
+
+    # update feed_title for same publication
+    res2 = upsert_publication(conn, 'feed1', 'pub1', 'Feed One Updated', '1111-2222')
+    assert res2 is True
+    cur.execute('SELECT feed_title FROM publications WHERE publication_id = ? AND issn = ?', ('pub1', '1111-2222'))
+    row2 = cur.fetchone()
+    assert row2[0] in ('Feed One Updated', 'Feed One')
+    conn.close()
+
+
+def test_sync_publications_from_feeds_inserts_multiple_and_updates():
+    conn = make_conn()
+    cur = conn.cursor()
+    from ednews.db import sync_publications_from_feeds, upsert_publication
+
+    feeds_list = [
+        ("feedA", "Feed A", "http://example.com/a", "pubA", "0000-0001"),
+        ("feedB", "Feed B", "http://example.com/b", "pubB", "0000-0002"),
+    ]
+
+    count = sync_publications_from_feeds(conn, feeds_list)
+    assert count == 2
+    cur.execute('SELECT publication_id, issn FROM publications')
+    rows = cur.fetchall()
+    assert ('pubA', '0000-0001') in rows
+    assert ('pubB', '0000-0002') in rows
+
+    # Update one feed's title and re-sync
+    feeds_list[0] = ("feedA", "Feed A Updated", "http://example.com/a", "pubA", "0000-0001")
+    count2 = sync_publications_from_feeds(conn, feeds_list)
+    assert count2 == 2
+    cur.execute('SELECT feed_title FROM publications WHERE publication_id = ? AND issn = ?', ('pubA', '0000-0001'))
+    r = cur.fetchone()
+    assert r is not None and r[0] in ("Feed A Updated", "Feed A")
+    conn.close()
