@@ -1,4 +1,5 @@
 import logging
+import re
 import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
@@ -268,25 +269,27 @@ def _extract_published_from_json(message: dict) -> str | None:
     # Prefer created
     c = message.get('created')
     if isinstance(c, dict):
-        # direct date-time field (ISO-like)
-        dt = c.get('date-time') or c.get('date_time') or c.get('date')
-        if isinstance(dt, str) and dt.strip():
-            return dt.strip()
+        # Prefer explicit date-parts (YYYY, YYYY-MM or YYYY-MM-DD) when present
         dp = c.get('date-parts')
         res = build_from_date_parts(dp)
         if res:
             return res
+        # Fall back to a full date-time string if no structured date-parts exist
+        dt = c.get('date-time') or c.get('date_time') or c.get('date')
+        if isinstance(dt, str) and dt.strip():
+            return dt.strip()
 
     for key in ('published-print', 'published-online', 'issued', 'published'):
         mobj = message.get(key)
         if isinstance(mobj, dict):
-            dt = mobj.get('date-time') or mobj.get('date_time') or mobj.get('date')
-            if isinstance(dt, str) and dt.strip():
-                return dt.strip()
+            # Prefer structured date-parts first, then fallback to any date-time
             dp = mobj.get('date-parts')
             res = build_from_date_parts(dp)
             if res:
                 return res
+            dt = mobj.get('date-time') or mobj.get('date_time') or mobj.get('date')
+            if isinstance(dt, str) and dt.strip():
+                return dt.strip()
 
     return None
 
@@ -297,6 +300,10 @@ def normalize_crossref_datetime(dt_str: str) -> str | None:
     s = str(dt_str).strip()
     if not s:
         return None
+    # If the string is a date-only value like YYYY or YYYY-MM or YYYY-MM-DD,
+    # preserve it as-is (tests expect date-only strings to remain unchanged).
+    if re.match(r"^\d{4}(?:-\d{2}(?:-\d{2})?)?$", s):
+        return s
     try:
         if s.endswith('Z'):
             s2 = s[:-1] + '+00:00'
