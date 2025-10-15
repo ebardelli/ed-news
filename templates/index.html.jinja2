@@ -12,9 +12,82 @@
     <header>
         <h1>{{ title }}</h1>
     </header>
+    <nav class="top-menu">
+        <hr class="menu-line">
+        <div class="menu-center">
+            <a href="?view=articles" class="menu-item" id="menu-articles">Latest Articles</a>
+            <span class="menu-sep">|</span>
+            <a href="?view=tocs" class="menu-item" id="menu-tocs">Latest TOCs</a>
+        </div>
+        <hr class="menu-line">
+    </nav>
     <main>
         <section>
             <div class="content">
+            {# Latest Articles (flat list) - shown when view=articles #}
+            <div id="view-articles" class="view-section" style="display:none;">
+                {% if articles %}
+                    {% for a in articles[:20] %}
+                        <div class="item">
+                            <h3>{% if a.link %}<a href="{{ a.link }}">{{ a.title or 'Untitled' }}</a>{% else %}{{ a.title or 'Untitled' }}{% endif %}</h3>
+                            <p class="meta">
+                                {# Authors: prefer `a.authors`, then raw authors/author #}
+                                {% set authors = a.authors if a.authors else (a.raw.get('authors') if a.raw and a.raw.get('authors') else (a.raw.get('author') if a.raw and a.raw.get('author') else None)) %}
+                                {% if authors %}
+                                    <span class="authors">
+                                        {% if authors is sequence and not authors is string %}
+                                            {{ authors | join(', ') }}
+                                        {% else %}
+                                            {{ authors }}
+                                        {% endif %}
+                                    </span>
+                                    <span class="sep"> | </span>
+                                {% endif %}
+                                <span class="pub">{{ a.feed_title or (a.raw.get('feed_title') if a.raw else '') }}</span>
+                                {% if a.published %}
+                                    <span class="sep"> | </span>
+                                    <span class="date">{{ a.published }}</span>
+                                {% endif %}
+                            </p>
+                            <p class="excerpt">
+                                {% if a.content %}
+                                    {{ a.content }}
+                                {% elif a.raw and a.raw.get('abstract') %}
+                                    {{ a.raw.get('abstract') }}
+                                {% elif a.raw and a.raw.get('summary') %}
+                                    {{ a.raw.get('summary') }}
+                                {% else %}
+                                    No abstract available.
+                                {% endif %}
+                            </p>
+
+                            {# Related / similar articles block (populated by build.py) #}
+                            {% if a.similar_articles %}
+                                <div class="similar-articles">
+                                    <h4>Related articles</h4>
+                                    <ul>
+                                        {% for s in a.similar_articles %}
+                                            <li>
+                                                {% if s.doi %}
+                                                    <a href="https://doi.org/{{ s.doi }}">{{ s.title or s.doi }}</a>
+                                                {% else %}
+                                                    {{ s.title or 'Untitled' }}
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No articles found.</p>
+                {% endif %}
+            </div>
+
+            {# Latest TOCs (existing grouped view) - shown when view=tocs #}
+            <div id="view-tocs" class="view-section">
             {% if grouped_articles %}
                 {% for publication, pub_articles in grouped_articles.items() %}
                     <div class="publication">
@@ -24,7 +97,20 @@
                                 <div class="item">
                                     <h3>{% if a.link %}<a href="{{ a.link }}">{{ a.title or 'Untitled' }}</a>{% else %}{{ a.title or 'Untitled' }}{% endif %}</h3>
                                     <p class="meta">
+                                        {% set authors = a.authors if a.authors else (a.raw.get('authors') if a.raw and a.raw.get('authors') else (a.raw.get('author') if a.raw and a.raw.get('author') else None)) %}
+                                        {% if authors %}
+                                            <span class="authors">
+                                                {% if authors is sequence and not authors is string %}
+                                                    {{ authors | join(', ') }}
+                                                {% else %}
+                                                    {{ authors }}
+                                                {% endif %}
+                                            </span>
+                                            <span class="sep"> | </span>
+                                        {% endif %}
+                                        <span class="pub">{{ publication }}</span>
                                         {% if a.published %}
+                                            <span class="sep"> | </span>
                                             <span class="date">{{ a.published }}</span>
                                         {% endif %}
                                     </p>
@@ -68,6 +154,7 @@
             {% else %}
                 <p>No articles found.</p>
             {% endif %}
+            </div>
             </div>
         </section>
 

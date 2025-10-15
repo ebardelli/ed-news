@@ -136,3 +136,28 @@ footer {
     text-decoration: none;
     cursor: pointer;
 }
+
+/* Top menu styles */
+.top-menu {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+.top-menu .menu-line {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 0.5em 0;
+}
+.top-menu .menu-center {
+    display: flex;
+    justify-content: center; /* center items horizontally */
+    gap: 1em;
+    align-items: center;
+    margin: 0.25em 0;
+}
+.top-menu .menu-item {
+    color: #000;
+    font-weight: 600;
+}
+.top-menu .menu-item.active {
+    text-decoration: underline;
+}

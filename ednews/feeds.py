@@ -64,7 +64,38 @@ def fetch_feed(session, key, feed_title, url, publication_doi=None, issn=None, t
             "_feed_issn": issn,
         })
 
-    logger.debug("parsed %d entries from feed %s", len(entries), key)
+    # Ensure we only return entries that were published on the same (most recent) date
+    # for this feed. Prefer structured `published_parsed` when available, otherwise
+    # try to extract an ISO YYYY-MM-DD with a regex. If no parseable dates are
+    # found at all, fall back to returning all entries.
+    def entry_date_iso(e):
+        ent = e.get("_entry") or {}
+        # feedparser sometimes provides a struct_time in published_parsed
+        pp = ent.get("published_parsed") or ent.get("updated_parsed")
+        if pp:
+            try:
+                return datetime(*pp[:6]).date().isoformat()
+            except Exception:
+                pass
+        # fallback: try to extract YYYY-MM-DD from string
+        pub_s = (e.get("published") or "")
+        m = re.search(r"(\d{4}-\d{2}-\d{2})", pub_s)
+        if m:
+            return m.group(1)
+        return None
+
+    dates = [entry_date_iso(en) for en in entries]
+    parseable = [d for d in dates if d]
+    if parseable:
+        latest_date = max(parseable)
+        filtered = []
+        for i, en in enumerate(entries):
+            d = dates[i]
+            if d == latest_date:
+                filtered.append(en)
+        entries = filtered
+
+    logger.debug("parsed %d entries from feed %s (filtered to %d by latest date)", len(parsed.entries), key, len(entries))
     return {"key": key, "title": feed_title, "url": url, "publication_id": publication_doi, "error": None, "entries": entries}
 
 

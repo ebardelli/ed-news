@@ -127,7 +127,9 @@ def build(out_dir: Path = BUILD_DIR):
 
     if DB_FILE.exists():
         try:
-            ctx["articles"] = read_articles(DB_FILE, days=5)
+            # use `publications=5` to get the latest 5 publications (all articles
+            # from each publication's most recent date)
+            ctx["articles"] = read_articles(DB_FILE, publications=5)
             logger.info("loaded %d articles from %s", len(ctx["articles"]), DB_FILE)
             if get_similar_articles_by_doi and ctx.get("articles"):
                 try:
@@ -185,13 +187,49 @@ def build(out_dir: Path = BUILD_DIR):
     logger.info("done")
 
 
-def read_articles(db_path: Path, limit: int = 30, days: int | None = None):
+def read_articles(db_path: Path, limit: int = 30, days: int | None = None, publications: int | None = None):
     conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 
     rows = []
-    if days is not None:
+
+    # publications takes precedence over days when provided. If publications is set,
+    # return all articles from each of the latest `publications` feeds where the
+    # article's date equals that feed's most recent date.
+    if publications is not None:
+        try:
+            # Load rows with non-null published and feed_title
+            cur.execute("SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE published IS NOT NULL AND feed_title IS NOT NULL")
+            all_rows = [dict(r) for r in cur.fetchall()]
+
+            if all_rows:
+                latest_per_feed = {}
+                for r in all_rows:
+                    ft = r.get('feed_title')
+                    pub = r.get('published') or ''
+                    if ft not in latest_per_feed or (pub and pub > latest_per_feed[ft]):
+                        latest_per_feed[ft] = pub
+
+                sorted_feeds = sorted(latest_per_feed.items(), key=lambda kv: kv[1], reverse=True)
+                top_feeds = [ft for ft, _ in sorted_feeds[:publications]]
+
+                feeds_latest_date = {ft: (latest_per_feed[ft][:10] if latest_per_feed[ft] else None) for ft in top_feeds}
+
+                filtered = []
+                for r in all_rows:
+                    ft = r.get('feed_title')
+                    if ft in feeds_latest_date and feeds_latest_date[ft]:
+                        if (r.get('published') or '')[:10] == feeds_latest_date[ft]:
+                            filtered.append(r)
+
+                rows = sorted(filtered, key=lambda r: r.get('published') or '', reverse=True)
+        except Exception:
+            rows = []
+
+    # If publications not used, and days is provided, use the previous behavior of
+    # selecting articles whose DATE(published) is in the latest `days` distinct dates.
+    elif days is not None:
         try:
             cur.execute(
                 """
@@ -213,6 +251,7 @@ def read_articles(db_path: Path, limit: int = 30, days: int | None = None):
         except Exception:
             rows = []
 
+    # Fallback: select most recent `limit` articles
     if not rows:
         try:
             cur.execute(
@@ -308,7 +347,47 @@ def read_articles(db_path: Path, limit: int = 30, days: int | None = None):
     else:
         distinct_dates = []
         for dk, _ in parsed_rows:
-            if dk is None:
+            # If publications is provided, select articles from the latest N publications
+            # where "latest" is the most recent published date per publication, and
+            # include only articles from that publication that were published on that date.
+            if publications is not None:
+                try:
+                    # Python-driven approach for robustness across SQLite versions.
+                    # 1) Load all rows where published and feed_title are not null.
+                    cur.execute("SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE published IS NOT NULL AND feed_title IS NOT NULL")
+                    all_rows = [dict(r) for r in cur.fetchall()]
+
+                    if not all_rows:
+                        rows = []
+                    else:
+                        # 2) Compute latest published (string compare of timestamp) per feed_title
+                        latest_per_feed = {}
+                        for r in all_rows:
+                            ft = r.get('feed_title')
+                            pub = r.get('published') or ''
+                            # use raw string compare on ISO-like timestamps; ensure longer is greater
+                            if ft not in latest_per_feed or (pub and pub > latest_per_feed[ft]):
+                                latest_per_feed[ft] = pub
+
+                        # 3) Sort feeds by latest published desc and take top-N
+                        sorted_feeds = sorted(latest_per_feed.items(), key=lambda kv: kv[1], reverse=True)
+                        top_feeds = [ft for ft, _ in sorted_feeds[:publications]]
+
+                        # 4) For each top feed, compute YYYY-MM-DD latest date and filter rows
+                        feeds_latest_date = {ft: (latest_per_feed[ft][:10] if latest_per_feed[ft] else None) for ft in top_feeds}
+
+                        filtered = []
+                        for r in all_rows:
+                            ft = r.get('feed_title')
+                            if ft in feeds_latest_date and feeds_latest_date[ft]:
+                                if (r.get('published') or '')[:10] == feeds_latest_date[ft]:
+                                    filtered.append(r)
+
+                        # order by published desc
+                        rows = sorted(filtered, key=lambda r: r.get('published') or '', reverse=True)
+                except Exception:
+                    rows = []
+            elif days is not None:
                 continue
             if dk not in distinct_dates:
                 distinct_dates.append(dk)
