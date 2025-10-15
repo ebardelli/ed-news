@@ -1,7 +1,7 @@
 from pathlib import Path
 import sqlite3
 import pytest
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from ednews import build
 
@@ -34,7 +34,7 @@ def test_read_articles_publications_latest_dates(tmp_path):
     # feed A: latest date = today (2 articles on that date)
     # feed B: latest date = yesterday (1 article)
     # feed C: latest date = 10 days ago (1 article)
-    today = datetime.utcnow().date()
+    today = datetime.now(timezone.utc).date()
     yesterday = today - timedelta(days=1)
     older = today - timedelta(days=10)
 
