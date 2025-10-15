@@ -202,6 +202,19 @@ def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | 
         return None
 
 
+def article_exists(conn: sqlite3.Connection, doi: str) -> bool:
+    """Return True if an article with the given DOI already exists in the articles table."""
+    if not doi:
+        return False
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT 1 FROM articles WHERE doi = ? LIMIT 1", (doi,))
+        return bool(cur.fetchone())
+    except Exception:
+        logger.exception("Failed to check existence for doi=%s", doi)
+        return False
+
+
 def enrich_articles_from_crossref(conn, fetcher, batch_size: int = 20, delay: float = 0.1, return_ids: bool = False):
     cur = conn.cursor()
     logger.info("Enriching up to %s articles from Crossref", batch_size)
@@ -395,6 +408,7 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
     cur = conn.cursor()
     session = requests.Session()
     inserted = 0
+    skipped = 0
     logger.info("Fetching latest journal works for %s feeds", len(feeds) if hasattr(feeds, '__len__') else 'unknown')
     for item in feeds:
         if len(item) == 5:
@@ -426,6 +440,11 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
                 if not norm:
                     continue
                 try:
+                    # If the DOI already exists, skip to avoid re-processing.
+                    if article_exists(conn, norm):
+                        skipped += 1
+                        continue
+
                     # Attempt to enrich the article with Crossref metadata before inserting
                     try:
                         from ednews.crossref import fetch_crossref_metadata
@@ -468,4 +487,5 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
             conn.commit()
         except Exception:
             logger.exception("Failed to fetch works for ISSN=%s (feed=%s)", issn, key)
+    logger.info("ISSN lookup summary: inserted=%d skipped=%d", inserted, skipped)
     return inserted
