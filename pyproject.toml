@@ -1,7 +1,7 @@
 [project]
 name = "ed-news"
 version = "0.1.0"
-description = "Add your description here"
+description = "A static site generator and feed builder for news aggregation."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [

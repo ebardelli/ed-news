@@ -1,5 +1,0 @@
-Flask
-Jinja2
-requests
-gunicorn
-feedparser
