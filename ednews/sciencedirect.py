@@ -1,3 +1,9 @@
+"""Helpers specific to ScienceDirect items.
+
+Provides utilities to find ScienceDirect-hosted items in the DB and to
+attempt enrichment by resolving DOIs and fetching Crossref metadata.
+"""
+
 import logging
 from typing import List
 import sqlite3
@@ -8,6 +14,11 @@ logger = logging.getLogger("ednews.sciencedirect")
 
 
 def find_sciencedirect_items_missing_metadata(conn: sqlite3.Connection, limit: int | None = None) -> List[dict]:
+    """Return ScienceDirect items from `items` joining articles where available.
+
+    This helper selects rows from `items` whose link contains 'sciencedirect.com'
+    and returns a list of dicts describing each candidate for enrichment.
+    """
     cur = conn.cursor()
     q = (
         "SELECT i.id, i.doi, i.link, i.title, a.id as article_id, a.authors, a.abstract, a.crossref_xml "
@@ -35,6 +46,12 @@ def find_sciencedirect_items_missing_metadata(conn: sqlite3.Connection, limit: i
 
 
 def enrich_sciencedirect(conn: sqlite3.Connection, limit: int | None = None, apply: bool = False, delay: float = 0.05) -> int:
+    """Enrich ScienceDirect items by attempting to resolve DOIs and Crossref metadata.
+
+    If `apply` is False this function performs a dry-run and logs actions it
+    would take. When `apply` is True it will insert or update article rows
+    accordingly and commit changes.
+    """
     cur = conn.cursor()
     candidates = find_sciencedirect_items_missing_metadata(conn, limit=limit)
     updated = 0

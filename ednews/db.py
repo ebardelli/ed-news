@@ -1,3 +1,10 @@
+"""Database helpers for ed-news.
+
+This module provides convenience functions to open SQLite connections,
+initialize schema, and perform common upsert and query operations on the
+`items`, `articles`, and `publications` tables used by the project.
+"""
+
 import sqlite3
 from datetime import datetime, timezone
 import logging
@@ -6,6 +13,12 @@ logger = logging.getLogger("ednews.db")
 
 
 def get_connection(path: str | None = None):
+    """Return a SQLite connection.
+
+    If `path` is provided a connection to that file path is opened; otherwise
+    an in-memory connection is returned. Exceptions are propagated after being
+    logged.
+    """
     try:
         if path:
             logger.debug("Opening SQLite connection to path: %s", path)
@@ -18,6 +31,12 @@ def get_connection(path: str | None = None):
 
 
 def init_db(conn: sqlite3.Connection):
+    """Initialize the database schema and create required tables/views.
+
+    This will create the `items`, `articles`, and `publications` tables
+    if they do not exist and attempt to create the `combined_articles`
+    view used elsewhere in the project.
+    """
     logger.info("Initializing database schema")
     cur = conn.cursor()
     cur.execute(
@@ -76,6 +95,12 @@ def init_db(conn: sqlite3.Connection):
 
 
 def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstract: str | None, feed_id: str | None = None, publication_id: str | None = None, issn: str | None = None, fetched_at: str | None = None, published: str | None = None):
+    """Insert or update an article row by DOI.
+
+    Sanitizes inputs and attempts an INSERT with ON CONFLICT DO UPDATE. If
+    that fails, a fallback INSERT OR REPLACE is attempted. Returns the
+    article id on success or False/None on failure.
+    """
     if not doi:
         return False
     logger.debug("Upserting article doi=%s feed_id=%s publication_id=%s", doi, feed_id, publication_id)
@@ -182,6 +207,10 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
 
 
 def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | None = None, abstract: str | None = None, feed_id: str | None = None, publication_id: str | None = None, issn: str | None = None) -> int | None:
+    """Ensure an article row exists for the given DOI.
+
+    Performs an INSERT OR IGNORE and returns the article id (or None).
+    """
     cur = conn.cursor()
     if not doi:
         logger.debug("ensure_article_row called without doi; skipping")
@@ -216,6 +245,12 @@ def article_exists(conn: sqlite3.Connection, doi: str) -> bool:
 
 
 def enrich_articles_from_crossref(conn, fetcher, batch_size: int = 20, delay: float = 0.1, return_ids: bool = False):
+    """Enrich articles missing crossref_xml using the provided fetcher.
+
+    The `fetcher` callable should accept a DOI and return a dict (as returned
+    by `crossref.fetch_crossref_metadata`) or None. Returns either the count of
+    updated articles or a list of updated article ids when `return_ids` is True.
+    """
     cur = conn.cursor()
     logger.info("Enriching up to %s articles from Crossref", batch_size)
     # Use LEFT JOIN so articles that don't have a matching items row are still
@@ -313,6 +348,11 @@ def update_article_crossref(conn: sqlite3.Connection, doi: str, authors: str | N
 
 
 def create_combined_view(conn: sqlite3.Connection):
+    """Create the combined_articles view used by higher-level code.
+
+    The view exposes a normalized set of fields for rendering the site
+    and for selecting recent articles.
+    """
     logger.info("Creating combined_articles view")
     cur = conn.cursor()
     cur.execute(

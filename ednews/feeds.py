@@ -1,3 +1,10 @@
+"""Feed parsing and normalization utilities.
+
+This module loads feed sources from planet files, fetches and parses feeds,
+and provides helpers to extract DOIs, authors, and abstracts from feed
+entries. It also contains logic to persist entries into the project's DB.
+"""
+
 import json
 import logging
 from pathlib import Path
@@ -15,6 +22,10 @@ logger = logging.getLogger("ednews.feeds")
 
 
 def load_feeds() -> List[tuple]:
+    """Load feeds from `planet.json` or fallback to `planet.ini`.
+
+    Returns a list of tuples describing each feed: (key, title, url, publication_id, issn).
+    """
     p = config.PLANET_JSON if config.PLANET_JSON.exists() else config.PLANET_INI
     if not p.exists():
         logger.debug("planet file not found: %s", p)
@@ -37,6 +48,12 @@ def load_feeds() -> List[tuple]:
 
 
 def fetch_feed(session, key, feed_title, url, publication_doi=None, issn=None, timeout=20):
+    """Fetch and parse a single feed URL.
+
+    Returns a dict containing feed metadata and a list of parsed entries. The
+    function attempts to filter entries to those from the feed's most recent
+    publication date when possible.
+    """
     logger.info("fetching feed %s (%s)", key, url)
     try:
         resp = session.get(url, timeout=timeout, headers={"User-Agent": config.USER_AGENT})
@@ -100,6 +117,12 @@ def fetch_feed(session, key, feed_title, url, publication_doi=None, issn=None, t
 
 
 def title_suitable_for_crossref_lookup(title: str) -> bool:
+    """Return True if a title is likely appropriate for a Crossref title lookup.
+
+    Performs simple heuristics such as minimum length, blacklist checks and
+    numeric/DOI detection to decide whether a title should be used for a
+    Crossref query.
+    """
     if not title:
         return False
     t = title.strip()
@@ -117,6 +140,12 @@ def title_suitable_for_crossref_lookup(title: str) -> bool:
 
 
 def normalize_doi(doi: str) -> str | None:
+    """Normalize and canonicalize a DOI-like string.
+
+    Strips common URI prefixes, trailing punctuation and returns the core DOI
+    in lowercase if a DOI pattern is detected. If no DOI is found but the
+    input looks like a title, this function may attempt a Crossref lookup.
+    """
     if not doi:
         return None
     doi = doi.strip()
@@ -153,6 +182,12 @@ def normalize_doi(doi: str) -> str | None:
 
 
 def extract_doi_from_entry(entry) -> str | None:
+    """Try to extract a DOI from a feed entry.
+
+    The function examines common fields such as 'doi', 'links', 'id', and the
+    contents of 'summary' and 'content' looking for DOI patterns or DOI URLs.
+    Returns a normalized DOI or None.
+    """
     for key in ("doi", "dc:identifier", "doi"):
         v = entry.get(key)
         if v:
@@ -225,6 +260,11 @@ def extract_and_normalize_doi(entry) -> str | None:
 
 
 def extract_authors_from_entry(entry) -> str | None:
+    """Extract a comma-separated author string from a feed entry.
+
+    Supports feedparser-style `authors` lists as well as legacy `author` and
+    `dc_creator` fields. Returns a single string or None.
+    """
     authors = []
     if entry.get("authors"):
         for a in entry.get("authors"):
@@ -245,6 +285,11 @@ def extract_authors_from_entry(entry) -> str | None:
 
 
 def extract_abstract_from_entry(entry) -> str | None:
+    """Extract an abstract/summary text from a feed entry.
+
+    Prefers `summary` then the first `content` block. HTML tags are stripped
+    and entities unescaped.
+    """
     abstract = entry.get("summary") or None
     if not abstract:
         for c in entry.get("content", []) or []:
@@ -259,6 +304,11 @@ def extract_abstract_from_entry(entry) -> str | None:
 
 
 def save_entries(conn, feed_id, feed_title, entries):
+    """Persist feed entries into the database `items` table.
+
+    Performs deduplication by link and attempts to attach DOIs and upsert
+    related article records when a DOI is found.
+    """
     cur = conn.cursor()
     inserted = 0
     logger.debug("saving %d entries for feed %s (%s)", len(entries), feed_id, feed_title)

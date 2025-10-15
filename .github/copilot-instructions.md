@@ -75,6 +75,20 @@ uv run pytest
 - **Feeds**: Feeds are defined in `planet.json` or `planet.ini`. JSON is preferred.
 - **Logging**: Modules use `logging` with namespaced loggers (e.g., `ednews.build`).
 
+### Docstrings and format
+
+- Use Google-style docstrings for all new or updated functions and modules.
+- Include a one-line summary at the top of the docstring, followed by a
+	short description when helpful.
+- For functions, include an "Args:" section describing parameters, a
+	"Returns:" section for the return value, and a "Raises:" section if the
+	function raises notable exceptions. Keep descriptions concise.
+- For module-level docstrings, provide a brief module purpose and any
+	cross-module responsibilities or side-effects (for example, which DB
+	tables the module manages).
+- Prefer concrete types and examples for complex return shapes (e.g., list
+	of dicts with specific keys) to aid code readers and tests.
+
 ## External Dependencies
 - `sqlite-vec`: Used for vector similarity calculations.
 - `jinja2`: For template rendering.
@@ -91,5 +105,4 @@ uv run pytest
 - `ednews/feeds.py`: Feed handling.
 - `ednews/db.py`: Database helpers.
 - `templates/index.html.jinja2`: HTML template.
-- `tests/test_build.py`: Tests for build logic.
- - `tests/test_build.py`: Tests for build logic.
+- `templates/rss.xml.jinja2`: RSS template.

@@ -1,3 +1,10 @@
+"""Build utilities for ed-news.
+
+This module contains helpers to render the static site from templates,
+copy static assets and the SQLite database, and read feed/planet
+configuration used to assemble the site.
+"""
+
 import os
 import shutil
 from pathlib import Path
@@ -22,6 +29,23 @@ logger = logging.getLogger("ednews.build")
 
 
 def get_similar_articles_by_doi(conn, doi, top_n=5, model=MODEL_NAME, store_if_missing: bool = True):
+    """Return a list of similar articles for the given DOI using stored embeddings.
+
+    The function looks up the article by DOI, retrieves its embedding from the
+    ``articles_vec`` virtual table and performs a cosine-distance nearest-
+    neighbors query using sqlite-vec.
+
+    Args:
+        conn (sqlite3.Connection): Open SQLite connection with sqlite-vec loaded.
+        doi (str): DOI of the target article to find similarities for.
+        top_n (int): Maximum number of similar articles to return.
+        model (str): Embedding model name (unused here, kept for API compatibility).
+        store_if_missing (bool): Whether to attempt to store a generated embedding
+            if missing (not implemented here; present for compatibility).
+
+    Returns:
+        list: A list of dicts with keys: 'doi', 'title', 'abstract', 'distance'.
+    """
     conn.enable_load_extension(True)
     sqlite_vec.load(conn)
 
@@ -71,6 +95,19 @@ def get_similar_articles_by_doi(conn, doi, top_n=5, model=MODEL_NAME, store_if_m
 
 
 def read_planet(planet_path: Path):
+    """Read a planet.ini-style file and return site metadata and feeds.
+
+    The function wraps the planet file with a ``[global]`` section so that
+    :class:`configparser.ConfigParser` can parse top-level key/value pairs.
+
+    Args:
+        planet_path (pathlib.Path): Path to the planet.ini file to read.
+
+    Returns:
+        dict: A mapping with keys ``title`` and ``feeds``. ``feeds`` is a list
+            of feed descriptor dicts with keys ``id``, ``title``, ``link`` and
+            ``feed``.
+    """
     raw = planet_path.read_text(encoding="utf-8")
     patched = "[global]\n" + raw
     cfg = ConfigParser()
@@ -91,6 +128,13 @@ def read_planet(planet_path: Path):
 
 
 def render_templates(context, out_dir: Path):
+    """Render Jinja2 templates from the templates directory into ``out_dir``.
+
+    Args:
+        context (dict): Template context mapping used when rendering templates.
+        out_dir (pathlib.Path): Output directory where rendered templates will
+            be written.
+    """
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)))
     for tmpl_name in os.listdir(TEMPLATES_DIR):
         if tmpl_name.endswith(".jinja2"):
@@ -103,6 +147,13 @@ def render_templates(context, out_dir: Path):
 
 
 def copy_static(out_dir: Path):
+    """Copy the project's ``static/`` directory into the build output.
+
+    If the destination exists it will be removed before copying.
+
+    Args:
+        out_dir (pathlib.Path): Destination directory for static assets.
+    """
     dest = out_dir / "static"
     if dest.exists():
         shutil.rmtree(dest)
@@ -112,10 +163,15 @@ def copy_static(out_dir: Path):
 
 
 def copy_db(out_dir: Path):
-    """Copy the SQLite DB file (configured in config.DB_PATH) into the build output dir.
+    """Copy the SQLite database file configured by ``config.DB_PATH`` into the
+    build output directory.
 
-    The destination filename will be the same as the source basename (e.g. ednews.db).
-    If the DB file doesn't exist, this is a no-op.
+    The destination filename will match the source basename (for example
+    ``ednews.db``). If the source DB file does not exist the function
+    does nothing.
+
+    Args:
+        out_dir (pathlib.Path): Destination directory where the DB will be copied.
     """
     try:
         src = DB_FILE
@@ -130,6 +186,15 @@ def copy_db(out_dir: Path):
 
 
 def build(out_dir: Path = BUILD_DIR):
+    """High-level build function to render the static site.
+
+    The function collects site metadata, optionally loads recent articles
+    from the configured DB, computes similar-article suggestions, renders
+    templates, copies static assets and the DB into the output directory.
+
+    Args:
+        out_dir (pathlib.Path): Destination directory for the built static site.
+    """
     logger.info("building static site into %s", out_dir)
     ctx = read_planet(PLANET_FILE) if PLANET_FILE.exists() else {"title": "Latest Research Articles in Education", "feeds": []}
     try:
@@ -208,6 +273,26 @@ def build(out_dir: Path = BUILD_DIR):
 
 
 def read_articles(db_path: Path, limit: int = 30, days: int | None = None, publications: int | None = None):
+    """Read recent articles from the ``combined_articles`` view in the DB.
+
+    The function supports several retrieval modes:
+    * If ``publications`` is provided, returns all articles from the latest
+      N publications (one date per publication).
+    * Else if ``days`` is provided, returns articles whose ``DATE(published)``
+      is in the latest ``days`` distinct dates.
+    * Otherwise returns the most recent ``limit`` articles.
+
+    Args:
+        db_path (pathlib.Path): Path to the SQLite database file.
+        limit (int): Fallback limit for the number of articles to return.
+        days (int | None): Optional number of distinct recent dates to include.
+        publications (int | None): Optional number of latest publications to include.
+
+    Returns:
+        list[dict]: A list of article dictionaries containing ``title``, ``doi``,
+            ``link``, ``feed_title``, ``content``, ``published`` (short date
+            string), and ``raw`` (original DB row).
+    """
     conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()

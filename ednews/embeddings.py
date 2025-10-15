@@ -1,3 +1,10 @@
+"""Embedding utilities for ed-news.
+
+This module supports creating the vector storage table, generating local
+embeddings via the nomic embed API, inserting/updating embeddings and
+performing similarity queries against stored vectors.
+"""
+
 import sqlite3
 import numpy as np
 import sqlite_vec
@@ -10,6 +17,12 @@ MODEL_NAME = config.DEFAULT_MODEL
 
 
 def create_database(conn: sqlite3.Connection):
+    """Create the embeddings virtual table required for storing vectors.
+
+    This function attempts to create the `articles_vec` virtual table using the
+    vec0 extension. If the extension is not available the function logs a
+    warning and returns without raising.
+    """
     conn.enable_load_extension(True)
     sqlite_vec.load(conn)
     
@@ -28,6 +41,11 @@ def create_database(conn: sqlite3.Connection):
 
 
 def generate_and_insert_embeddings_local(conn: sqlite3.Connection, model: Optional[str] = None, batch_size: int = 64):
+    """Generate and insert embeddings for all articles using a local model.
+
+    Iterates over all rows in `articles` and writes embeddings into the
+    `articles_vec` table. Skips articles that already have embeddings.
+    """
     model = model or MODEL_NAME
     cursor = conn.cursor()
     conn.enable_load_extension(True)
@@ -110,7 +128,9 @@ def generate_and_insert_embeddings_for_ids(conn: sqlite3.Connection, ids: list[i
 def _generate_and_upsert_embeddings(conn: sqlite3.Connection, items: list[tuple], model: Optional[str] = None, batch_size: int = 64) -> int:
     """Generate embeddings for (id, text) items and upsert them into articles_vec.
 
-    Returns number of embeddings written.
+    The function batches requests to the local embedding provider and serializes
+    float32 arrays into blobs suitable for sqlite-vec storage. Returns the
+    number of embeddings successfully written.
     """
     model = model or MODEL_NAME
     conn.enable_load_extension(True)
@@ -159,6 +179,24 @@ def _generate_and_upsert_embeddings(conn: sqlite3.Connection, items: list[tuple]
 
 
 def find_similar_articles_local(conn: sqlite3.Connection, query_text: str, model: Optional[str] = None, limit: int = 3):
+    """Find similar articles to a query string using local embeddings.
+
+    Parameters
+    ----------
+    conn : sqlite3.Connection
+        Database connection with articles_vec loaded.
+    query_text : str
+        Query text to embed and search.
+    model : str | None
+        Model name to use for embedding generation.
+    limit : int
+        Number of results to return.
+
+    Returns
+    -------
+    list[tuple]
+        List of (title, abstract, distance) tuples ordered by increasing distance.
+    """
     model = model or MODEL_NAME
     try:
         query_output = embed.text(

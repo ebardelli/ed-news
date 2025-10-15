@@ -1,3 +1,11 @@
+"""Crossref integration helpers for ed-news.
+
+This module contains utilities to lookup DOIs by title, fetch Crossref
+metadata (preferring the JSON REST API and falling back to Unixref XML),
+and normalize date strings returned by Crossref. Functions in this module
+are used by feed processing and ScienceDirect enrichment helpers.
+"""
+
 import logging
 import re
 import requests
@@ -11,6 +19,26 @@ from functools import lru_cache
 
 
 def _query_crossref_doi_by_title_uncached(title: str, preferred_publication_id: str | None = None, timeout: int = 8) -> str | None:
+    """Lookup a DOI on Crossref by article title (uncached implementation).
+
+    This function performs a network request to Crossref's /works endpoint
+    searching by title. If a `preferred_publication_id` is provided the
+    implementation will prefer returned DOIs that start with that prefix.
+
+    Parameters
+    ----------
+    title : str
+        Article title to search for.
+    preferred_publication_id : str | None
+        Optional DOI prefix to prefer when selecting a result.
+    timeout : int
+        HTTP request timeout in seconds.
+
+    Returns
+    -------
+    str | None
+        The discovered DOI string or None if not found.
+    """
     if not title:
         return None
     try:
@@ -48,6 +76,25 @@ def query_crossref_doi_by_title(title: str, preferred_publication_id: str | None
 
 
 def fetch_crossref_metadata(doi: str, timeout: int = 10) -> dict | None:
+    """Fetch Crossref metadata for a DOI, preferring JSON and falling back to XML.
+
+    The function will attempt to fetch JSON from the Crossref REST API. If
+    that fails it falls back to the legacy Unixref XML endpoint. It extracts
+    authors, abstract, raw payload and a best-effort publication date.
+
+    Parameters
+    ----------
+    doi : str
+        DOI to lookup.
+    timeout : int
+        HTTP request timeout in seconds.
+
+    Returns
+    -------
+    dict | None
+        Dictionary with any of the keys 'authors', 'abstract', 'raw', 'published'
+        when available, or None if the lookup failed.
+    """
     if not doi:
         return None
     # Try to fetch JSON from the Crossref REST API first and prefer the
@@ -295,6 +342,12 @@ def _extract_published_from_json(message: dict) -> str | None:
 
 
 def normalize_crossref_datetime(dt_str: str) -> str | None:
+    """Normalize a Crossref-derived datetime or date string to ISO format.
+
+    Accepts partial date strings such as 'YYYY' or 'YYYY-MM' and returns them
+    unchanged. For full datetimes attempts to parse via datetime.fromisoformat
+    and returns an ISO 8601 string including timezone information when possible.
+    """
     if not dt_str:
         return None
     s = str(dt_str).strip()
