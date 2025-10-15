@@ -6,7 +6,10 @@ from datetime import datetime, timezone
 logger = logging.getLogger("ednews.crossref")
 
 
-def query_crossref_doi_by_title(title: str, preferred_publication_id: str | None = None, timeout: int = 8) -> str | None:
+from functools import lru_cache
+
+
+def _query_crossref_doi_by_title_uncached(title: str, preferred_publication_id: str | None = None, timeout: int = 8) -> str | None:
     if not title:
         return None
     try:
@@ -33,6 +36,14 @@ def query_crossref_doi_by_title(title: str, preferred_publication_id: str | None
     except Exception as e:
         logger.debug("CrossRef title lookup error for '%s': %s", title, e)
     return None
+
+
+@lru_cache(maxsize=256)
+def query_crossref_doi_by_title(title: str, preferred_publication_id: str | None = None, timeout: int = 8) -> str | None:
+    # Use a cached wrapper around the networked implementation. Note that
+    # lru_cache will treat the (title, preferred_publication_id, timeout)
+    # tuple as the cache key; timeouts should generally be stable for calls.
+    return _query_crossref_doi_by_title_uncached(title, preferred_publication_id, timeout)
 
 
 def fetch_crossref_metadata(doi: str, timeout: int = 10) -> dict | None:

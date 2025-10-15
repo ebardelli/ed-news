@@ -129,19 +129,27 @@ def normalize_doi(doi: str) -> str | None:
     if m:
         core = m.group(1)
         core = core.rstrip(" .;,)/]")
+        # remove surrounding quotes/brackets/angle-brackets if present
         core = core.strip('"\'<>[]()')
-        return core
+        # DOIs are case-insensitive; store canonical lowercase form
+        return core.lower()
     if not re.search(r"10\.\d{4,9}/", doi) and "/" not in doi and title_suitable_for_crossref_lookup(doi):
         try:
             found = crossref.query_crossref_doi_by_title(doi)
             if found:
                 m2 = re.search(r"(10\.\d{4,9}/\S+)", found)
                 if m2:
-                    return m2.group(1).rstrip(" .;,)/]").strip('"\'<>[]()')
-                return found
+                    raw = m2.group(1)
+                    raw = raw.rstrip(" .;,)/]")
+                    raw = raw.strip('"\'<>[]()')
+                    return raw.lower()
+                return str(found).lower()
         except Exception:
             logging.getLogger("ednews.feeds").debug("CrossRef title lookup failed")
         return None
+
+
+# (extract_doi_from_entry is defined below; see helper `extract_and_normalize_doi` after it)
 
 
 def extract_doi_from_entry(entry) -> str | None:
@@ -163,6 +171,12 @@ def extract_doi_from_entry(entry) -> str | None:
         m = re.search(r"(10\.\d{4,9}/[^\s'\"]+)", str(idv))
         if m:
             return normalize_doi(m.group(1))
+    # Check the simple `link` field for DOI URLs (many feeds put doi in link)
+    link_val = (entry.get("link") or "")
+    if link_val:
+        m_link_doi = re.search(r"doi\.org/(10\.\d{4,9}/[^\s'\"]+)", link_val, flags=re.IGNORECASE)
+        if m_link_doi:
+            return normalize_doi(m_link_doi.group(1))
     try:
         link_val = (entry.get("link") or "")
         if link_val:
@@ -184,11 +198,30 @@ def extract_doi_from_entry(entry) -> str | None:
     for txt in text_candidates:
         if not txt:
             continue
+        # If the DOI appears inside an HTML href (e.g., <a href="https://doi.org/...">),
+        # searching the raw text for doi.org URLs can find it before tags are stripped.
+        m_href = re.search(r"doi\.org/(10\.\d{4,9}/[^\s'\"<>]+)", txt, flags=re.IGNORECASE)
+        if m_href:
+            return normalize_doi(m_href.group(1))
         t = re.sub(r"<[^>]+>", " ", txt)
         m = re.search(r"(10\.\d{4,9}/[^\s'\"<>]+)", t)
         if m:
             return normalize_doi(m.group(1))
     return None
+
+
+def extract_and_normalize_doi(entry) -> str | None:
+    """Centralized DOI extraction helper.
+
+    Accepts a feedparser entry or a plain dict. Returns a canonicalized DOI
+    (lowercase, stripped prefixes/punctuation) or None.
+    """
+    # Delegate to the main extractor (defined above) and ensure we return
+    # a canonicalized DOI or None. This wrapper centralizes future changes.
+    try:
+        return extract_doi_from_entry(entry)
+    except Exception:
+        return None
 
 
 def extract_authors_from_entry(entry) -> str | None:
