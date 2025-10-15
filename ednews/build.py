@@ -111,6 +111,24 @@ def copy_static(out_dir: Path):
         logger.info("copied static -> %s", dest)
 
 
+def copy_db(out_dir: Path):
+    """Copy the SQLite DB file (configured in config.DB_PATH) into the build output dir.
+
+    The destination filename will be the same as the source basename (e.g. ednews.db).
+    If the DB file doesn't exist, this is a no-op.
+    """
+    try:
+        src = DB_FILE
+        if not src.exists():
+            logger.debug("DB file %s does not exist; skipping copy", src)
+            return
+        dest = out_dir / src.name
+        shutil.copy2(src, dest)
+        logger.info("copied DB %s -> %s", src, dest)
+    except Exception as e:
+        logger.warning("failed to copy DB file to build dir: %s", e)
+
+
 def build(out_dir: Path = BUILD_DIR):
     logger.info("building static site into %s", out_dir)
     ctx = read_planet(PLANET_FILE) if PLANET_FILE.exists() else {"title": "Latest Research Articles in Education", "feeds": []}
@@ -184,6 +202,8 @@ def build(out_dir: Path = BUILD_DIR):
     out_dir.mkdir(parents=True, exist_ok=True)
     render_templates(ctx, out_dir)
     copy_static(out_dir)
+    # copy the SQLite DB into the build directory so the built site can include it
+    copy_db(out_dir)
     logger.info("done")
 
 
