@@ -64,7 +64,33 @@ To generate the site output into the `build/` directory run the top-level build 
 uv run python build.py
 ```
 
-There is also `ednews.build` which contains the core build logic and is exercised by tests. `main.py` provides a small CLI wrapper.
+You can also use the unified CLI entrypoint in `main.py`, which exposes several useful subcommands. Examples:
+
+```bash
+# Fetch feeds and save entries to the local DB
+uv run python main.py fetch
+
+# Render the static site (same as running build.py)
+uv run python main.py build --out-dir build
+
+# Generate embeddings and store them in the DB (optional model and batch size)
+uv run python main.py embed --model <model-name> --batch-size 64
+
+# Enrich articles by querying Crossref for missing metadata
+uv run python main.py enrich-crossref --batch-size 20 --delay 0.1
+
+# Lookup recent works for journals by ISSN and insert into DB
+uv run python main.py issn-lookup --per-journal 30 --timeout 10 --delay 0.05
+```
+
+Tip: most `main.py` commands accept a global `-v/--verbose` flag to enable debug logging. Example:
+
+```bash
+# Run fetch with verbose logging
+uv run python main.py -v fetch
+```
+
+There is also `ednews.build` which contains the core build logic and is exercised by tests. `main.py` provides a convenient CLI wrapper that calls into the package code.
 
 The generated output will be placed in `build/` and includes `index.html`, `index.rss`, and a `static/` folder with assets.
 

@@ -6,7 +6,12 @@ This repository is a static site generator and feed builder written in Python. I
 ## Key Components
 
 ### Top-Level Scripts
-- `main.py`: CLI entry point with subcommands like `fetch`, `build`, and `embed`. Calls into `ednews` modules.
+- `main.py`: CLI entry point with subcommands for common workflows. Available commands include:
+	- `fetch` — fetch configured feeds and save entries to the database
+	- `build` — render the static site into a directory (same core logic as `build.py`)
+	- `embed` — generate local embeddings and insert into the DB
+	- `enrich-crossref` — query Crossref to enrich articles missing Crossref XML metadata
+	- `issn-lookup` — fetch recent works for journals by ISSN and insert into the DB 
 
 ### `ednews` Package
 - `build.py`: Core build logic, including template rendering and embedding article similarity.
@@ -34,6 +39,28 @@ uv run python build.py
 Use the `fetch` subcommand to download and process feeds:
 ```bash
 uv run python main.py fetch
+```
+
+Other `main.py` examples (also documented in the project `README.md`):
+```bash
+# Render the static site
+uv run python main.py build --out-dir build
+
+# Generate embeddings and store them in the DB
+uv run python main.py embed --model <model-name> --batch-size 64
+
+# Enrich missing Crossref metadata
+uv run python main.py enrich-crossref --batch-size 20 --delay 0.1
+
+# Lookup recent works by ISSN
+uv run python main.py issn-lookup --per-journal 30 --timeout 10 --delay 0.05
+```
+
+Tip: the `main.py` CLI supports a global `-v/--verbose` flag to enable debug logging for commands. Example:
+
+```bash
+# Run fetch with verbose output
+uv run python main.py -v fetch
 ```
 
 ### Running Tests
@@ -65,3 +92,4 @@ uv run pytest
 - `ednews/db.py`: Database helpers.
 - `templates/index.html.jinja2`: HTML template.
 - `tests/test_build.py`: Tests for build logic.
+ - `tests/test_build.py`: Tests for build logic.
