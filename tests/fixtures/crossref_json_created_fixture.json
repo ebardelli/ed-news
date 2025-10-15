@@ -1,0 +1,19 @@
+{
+  "status": "ok",
+  "message-type": "work",
+  "message-version": "1.0.0",
+  "message": {
+    "created": {
+      "date-parts": [[2025, 9, 22]],
+      "date-time": "2025-09-22T22:54:45Z"
+    },
+    "published-print": {
+      "date-parts": [[2026, 3]]
+    },
+    "author": [
+      {"given": "Alice", "family": "Example"}
+    ],
+    "abstract": "<jats:p>This is a JSON abstract.</jats:p>",
+    "DOI": "10.1000/jsoncreated"
+  }
+}

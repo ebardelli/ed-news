@@ -1,0 +1,763 @@
+{
+    "status": "ok",
+    "message-type": "work",
+    "message-version": "1.0.0",
+    "message": {
+        "indexed": {
+            "date-parts": [
+                [
+                    2025,
+                    9,
+                    23
+                ]
+            ],
+            "date-time": "2025-09-23T00:43:23Z",
+            "timestamp": 1758588203610,
+            "version": "3.44.0"
+        },
+        "reference-count": 49,
+        "publisher": "Elsevier BV",
+        "license": [
+            {
+                "start": {
+                    "date-parts": [
+                        [
+                            2026,
+                            3,
+                            1
+                        ]
+                    ],
+                    "date-time": "2026-03-01T00:00:00Z",
+                    "timestamp": 1772323200000
+                },
+                "content-version": "tdm",
+                "delay-in-days": 0,
+                "URL": "https:\/\/www.elsevier.com\/tdm\/userlicense\/1.0\/"
+            },
+            {
+                "start": {
+                    "date-parts": [
+                        [
+                            2026,
+                            3,
+                            1
+                        ]
+                    ],
+                    "date-time": "2026-03-01T00:00:00Z",
+                    "timestamp": 1772323200000
+                },
+                "content-version": "tdm",
+                "delay-in-days": 0,
+                "URL": "https:\/\/www.elsevier.com\/legal\/tdmrep-license"
+            },
+            {
+                "start": {
+                    "date-parts": [
+                        [
+                            2025,
+                            9,
+                            16
+                        ]
+                    ],
+                    "date-time": "2025-09-16T00:00:00Z",
+                    "timestamp": 1757980800000
+                },
+                "content-version": "vor",
+                "delay-in-days": 0,
+                "URL": "http:\/\/creativecommons.org\/licenses\/by\/4.0\/"
+            }
+        ],
+        "content-domain": {
+            "domain": [
+                "elsevier.com",
+                "sciencedirect.com"
+            ],
+            "crossmark-restriction": true
+        },
+        "short-container-title": [
+            "The Journal of Mathematical Behavior"
+        ],
+        "published-print": {
+            "date-parts": [
+                [
+                    2026,
+                    3
+                ]
+            ]
+        },
+        "DOI": "10.1016\/j.jmathb.2025.101284",
+        "type": "journal-article",
+        "created": {
+            "date-parts": [
+                [
+                    2025,
+                    9,
+                    22
+                ]
+            ],
+            "date-time": "2025-09-22T22:54:45Z",
+            "timestamp": 1758581685000
+        },
+        "page": "101284",
+        "update-policy": "https:\/\/doi.org\/10.1016\/elsevier_cm_policy",
+        "source": "Crossref",
+        "is-referenced-by-count": 0,
+        "special_numbering": "C",
+        "title": [
+            "Does understanding moderate aesthetic appraisals of proofs?"
+        ],
+        "prefix": "10.1016",
+        "volume": "81",
+        "author": [
+            {
+                "ORCID": "https:\/\/orcid.org\/0000-0003-4191-4258",
+                "authenticated-orcid": false,
+                "given": "George",
+                "family": "Kinnear",
+                "sequence": "first",
+                "affiliation": []
+            },
+            {
+                "ORCID": "https:\/\/orcid.org\/0000-0001-7617-4689",
+                "authenticated-orcid": false,
+                "given": "Matthew",
+                "family": "Inglis",
+                "sequence": "additional",
+                "affiliation": []
+            }
+        ],
+        "member": "78",
+        "reference": [
+            {
+                "issue": "7",
+                "key": "10.1016\/j.jmathb.2025.101284_b1",
+                "doi-asserted-by": "crossref",
+                "first-page": "193",
+                "DOI": "10.1177\/016146810010200707",
+                "article-title": "Making believe: The collective construction of public mathematical knowledge in the elementary classroom",
+                "volume": "102",
+                "author": "Ball",
+                "year": "2000",
+                "journal-title": "Teachers College Record"
+            },
+            {
+                "issue": "1",
+                "key": "10.1016\/j.jmathb.2025.101284_b2",
+                "doi-asserted-by": "crossref",
+                "first-page": "73",
+                "DOI": "10.3917\/anpsy1.201.0073",
+                "article-title": "A tutorial on conducting and interpreting a Bayesian ANOVA in JASP",
+                "volume": "120",
+                "author": "Bergh",
+                "year": "2020",
+                "journal-title": "L\u2019Ann\u00e9e Psychologique"
+            },
+            {
+                "issue": "1",
+                "key": "10.1016\/j.jmathb.2025.101284_b3",
+                "first-page": "21",
+                "article-title": "A \u201cNovel\u201d approach to texts",
+                "volume": "5",
+                "author": "Borasi",
+                "year": "1985",
+                "journal-title": "For the Learning of Mathematics"
+            },
+            {
+                "issue": "7",
+                "key": "10.1016\/j.jmathb.2025.101284_b4",
+                "doi-asserted-by": "crossref",
+                "first-page": "1553",
+                "DOI": "10.1007\/s11858-024-01628-1",
+                "article-title": "The PRIUM qualitative framework for assessment of proof comprehension: a result of collaboration among mathematicians and mathematics educators",
+                "volume": "56",
+                "author": "Cooley",
+                "year": "2024",
+                "journal-title": "ZDM Mathematics Education"
+            },
+            {
+                "issue": "2",
+                "key": "10.1016\/j.jmathb.2025.101284_b5",
+                "doi-asserted-by": "crossref",
+                "first-page": "181",
+                "DOI": "10.1007\/s10649-020-09984-x",
+                "article-title": "Comparative judgement, proof summaries and proof comprehension",
+                "volume": "105",
+                "author": "Davies",
+                "year": "2020",
+                "journal-title": "Educational Studies in Mathematics"
+            },
+            {
+                "issue": "3",
+                "key": "10.1016\/j.jmathb.2025.101284_b6",
+                "first-page": "14",
+                "article-title": "Mathematical texts as narrative: Rethinking curriculum",
+                "volume": "33",
+                "author": "Dietiker",
+                "year": "2013",
+                "journal-title": "For the Learning of Mathematics"
+            },
+            {
+                "issue": "3",
+                "key": "10.1016\/j.jmathb.2025.101284_b7",
+                "doi-asserted-by": "crossref",
+                "first-page": "285",
+                "DOI": "10.1007\/s10649-015-9627-x",
+                "article-title": "Mathematical story: a metaphor for mathematics curriculum",
+                "volume": "90",
+                "author": "Dietiker",
+                "year": "2015",
+                "journal-title": "Educational Studies in Mathematics"
+            },
+            {
+                "issue": "1",
+                "key": "10.1016\/j.jmathb.2025.101284_b8",
+                "doi-asserted-by": "crossref",
+                "first-page": "1",
+                "DOI": "10.1177\/002205741519500102",
+                "article-title": "What mathematics education can learn from art: The assumptions, values, and vision of mathematics education",
+                "volume": "195",
+                "author": "Dietiker",
+                "year": "2015",
+                "journal-title": "Journal of Education"
+            },
+            {
+                "issue": "4",
+                "key": "10.1016\/j.jmathb.2025.101284_b9",
+                "doi-asserted-by": "crossref",
+                "first-page": "304",
+                "DOI": "10.5951\/mathteacher.110.4.0304",
+                "article-title": "Generating student interest with mathematical stories",
+                "volume": "110",
+                "author": "Dietiker",
+                "year": "2016",
+                "journal-title": "The Mathematics Teacher"
+            },
+            {
+                "issue": "1",
+                "key": "10.1016\/j.jmathb.2025.101284_b10",
+                "doi-asserted-by": "crossref",
+                "first-page": "33",
+                "DOI": "10.1080\/00220671.2023.2182264",
+                "article-title": "The aesthetic effects of a new lesson design approach: Mathematical stories",
+                "volume": "116",
+                "author": "Dietiker",
+                "year": "2023",
+                "journal-title": "The Journal of Educational Research"
+            },
+            {
+                "issue": "3",
+                "key": "10.1016\/j.jmathb.2025.101284_b11",
+                "doi-asserted-by": "crossref",
+                "first-page": "481",
+                "DOI": "10.1007\/s10649-022-10184-y",
+                "article-title": "Narrative characteristics of captivating secondary mathematics lessons",
+                "volume": "112",
+                "author": "Dietiker",
+                "year": "2023",
+                "journal-title": "Educational Studies in Mathematics"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b12",
+                "series-title": "Advances in experimental philosophy of logic and mathematics",
+                "first-page": "63",
+                "article-title": "The Beauty (?) of Mathematical Proofs",
+                "author": "Dutilh Novaes",
+                "year": "2019"
+            },
+            {
+                "issue": "4",
+                "key": "10.1016\/j.jmathb.2025.101284_b13",
+                "doi-asserted-by": "crossref",
+                "first-page": "1082",
+                "DOI": "10.1002\/acp.3814",
+                "article-title": "Spaced mathematics practice improves test scores and reduces overconfidence",
+                "volume": "35",
+                "author": "Emeny",
+                "year": "2021",
+                "journal-title": "Applied Cognitive Psychology"
+            },
+            {
+                "issue": "4",
+                "key": "10.1016\/j.jmathb.2025.101284_b14",
+                "doi-asserted-by": "crossref",
+                "first-page": "487",
+                "DOI": "10.1080\/14926150309556584",
+                "article-title": "The aesthetic in mathematics as story",
+                "volume": "3",
+                "author": "Gadanidis",
+                "year": "2003",
+                "journal-title": "Canadian Journal of Science, Mathematics and Technology Education"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b15",
+                "doi-asserted-by": "crossref",
+                "DOI": "10.1016\/j.metip.2023.100120",
+                "article-title": "Use and misuse of corrections for multiple testing",
+                "volume": "8",
+                "author": "Garc\u00eda-P\u00e9rez",
+                "year": "2023",
+                "journal-title": "Methods in Psychology"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b16",
+                "series-title": "Regression and other stories",
+                "author": "Gelman",
+                "year": "2020"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b17",
+                "doi-asserted-by": "crossref",
+                "first-page": "132",
+                "DOI": "10.1017\/S0031819100038249",
+                "article-title": "Quasi-aesthetic appraisals",
+                "volume": "33",
+                "author": "Harr\u00e9",
+                "year": "1958",
+                "journal-title": "Philosophy"
+            },
+            {
+                "issue": "5",
+                "key": "10.1016\/j.jmathb.2025.101284_b18",
+                "doi-asserted-by": "crossref",
+                "first-page": "1655",
+                "DOI": "10.1007\/s00426-021-01592-5",
+                "article-title": "The role of expertise in the aesthetic evaluation of mathematical equations",
+                "volume": "86",
+                "author": "Hayn-Leichsenring",
+                "year": "2022",
+                "journal-title": "Psychological Research"
+            },
+            {
+                "issue": "4",
+                "key": "10.1016\/j.jmathb.2025.101284_b19",
+                "doi-asserted-by": "crossref",
+                "first-page": "396",
+                "DOI": "10.2307\/749651",
+                "article-title": "A study of proof conceptions in algebra",
+                "volume": "31",
+                "author": "Healy",
+                "year": "2000",
+                "journal-title": "Journal for Research in Mathematics Education"
+            },
+            {
+                "issue": "1",
+                "key": "10.1016\/j.jmathb.2025.101284_b20",
+                "doi-asserted-by": "crossref",
+                "first-page": "62",
+                "DOI": "10.5951\/jresematheduc.45.1.0062",
+                "article-title": "Self-explanation training improves proof comprehension",
+                "volume": "45",
+                "author": "Hodds",
+                "year": "2014",
+                "journal-title": "Journal for Research in Mathematics Education"
+            },
+            {
+                "issue": "1",
+                "key": "10.1016\/j.jmathb.2025.101284_b21",
+                "doi-asserted-by": "crossref",
+                "first-page": "1",
+                "DOI": "10.2307\/421003",
+                "article-title": "An editor recalls some hopeless papers",
+                "volume": "4",
+                "author": "Hodges",
+                "year": "1998",
+                "journal-title": "The Bulletin of Symbolic Logic"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b22",
+                "series-title": "The Abel Prize: 2003\u20132007: The First Five Years",
+                "year": "2010"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b23",
+                "doi-asserted-by": "crossref",
+                "first-page": "43",
+                "DOI": "10.2307\/3129535",
+                "article-title": "The logic of aesthetic concepts",
+                "volume": "36",
+                "author": "Hungerland",
+                "year": "1962",
+                "journal-title": "Proceedings and Addresses of the American Philosophical Association"
+            },
+            {
+                "issue": "1",
+                "key": "10.1016\/j.jmathb.2025.101284_b24",
+                "doi-asserted-by": "crossref",
+                "first-page": "87",
+                "DOI": "10.1093\/philmat\/nku014",
+                "article-title": "Beauty is not simplicity: An analysis of mathematicians\u2019 proof appraisals",
+                "volume": "23",
+                "author": "Inglis",
+                "year": "2015",
+                "journal-title": "Philosophia Mathematica"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b25",
+                "series-title": "mathematical cultures: the London meetings 2012-2014",
+                "first-page": "163",
+                "article-title": "Diversity in proof appraisal",
+                "author": "Inglis",
+                "year": "2016"
+            },
+            {
+                "issue": "6",
+                "key": "10.1016\/j.jmathb.2025.101284_b26",
+                "doi-asserted-by": "crossref",
+                "first-page": "1",
+                "DOI": "10.1007\/s11858-020-01156-8",
+                "article-title": "Are aesthetic judgements purely aesthetic? Testing the social conformity account",
+                "volume": "52",
+                "author": "Inglis",
+                "year": "2020",
+                "journal-title": "ZDM Mathematics Education"
+            },
+            {
+                "issue": "3",
+                "key": "10.1016\/j.jmathb.2025.101284_b27",
+                "doi-asserted-by": "crossref",
+                "first-page": "662",
+                "DOI": "10.1002\/berj.3519",
+                "article-title": "Measuring conceptual understanding in randomised controlled trials: Can comparative judgement help?",
+                "volume": "45",
+                "author": "Jones",
+                "year": "2019",
+                "journal-title": "British Educational Research Journal"
+            },
+            {
+                "issue": "2",
+                "key": "10.1016\/j.jmathb.2025.101284_b28",
+                "doi-asserted-by": "crossref",
+                "first-page": "170",
+                "DOI": "10.1080\/1743727X.2023.2242273",
+                "article-title": "Comparative judgement in education research",
+                "volume": "47",
+                "author": "Jones",
+                "year": "2024",
+                "journal-title": "International Journal of Research & Method in Education"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b29",
+                "doi-asserted-by": "crossref",
+                "first-page": "42",
+                "DOI": "10.1016\/j.jmathb.2017.02.005",
+                "article-title": "Stimulating student aesthetic response to mathematical problems by means of manipulating the extent of surprise",
+                "volume": "46",
+                "author": "Koichu",
+                "year": "2017",
+                "journal-title": "The Journal of Mathematical Behavior"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b30",
+                "series-title": "Proceedings of the 44th conference of the international group for the psychology of mathematics education",
+                "first-page": "222",
+                "article-title": "The effects of a proof comprehension test on comprehending proofs without words",
+                "volume": "3",
+                "author": "Marco",
+                "year": "2021"
+            },
+            {
+                "issue": "1",
+                "key": "10.1016\/j.jmathb.2025.101284_b31",
+                "doi-asserted-by": "crossref",
+                "first-page": "3",
+                "DOI": "10.1007\/s10649-011-9349-7",
+                "article-title": "An assessment model for proof comprehension in undergraduate mathematics",
+                "volume": "79",
+                "author": "Mej\u00eda-Ramos",
+                "year": "2012",
+                "journal-title": "Educational Studies in Mathematics"
+            },
+            {
+                "issue": "2",
+                "key": "10.1016\/j.jmathb.2025.101284_b32",
+                "doi-asserted-by": "crossref",
+                "first-page": "130",
+                "DOI": "10.1080\/14794802.2017.1325776",
+                "article-title": "Developing and validating proof comprehension tests in undergraduate mathematics",
+                "volume": "19",
+                "author": "Mej\u00eda-Ramos",
+                "year": "2017",
+                "journal-title": "Research in Mathematics Education"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b33",
+                "series-title": "Mindstorms: children, computers and powerful ideas",
+                "author": "Papert",
+                "year": "1980"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b34",
+                "series-title": "Science and method",
+                "author": "Poincar\u00e9",
+                "year": "1914"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b35",
+                "series-title": "Hilbert courant",
+                "author": "Reid",
+                "year": "1986"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b36",
+                "doi-asserted-by": "crossref",
+                "DOI": "10.1016\/j.jmathb.2018.08.005",
+                "article-title": "The plot thickens: The aesthetic dimensions of a captivating mathematics lesson",
+                "volume": "54",
+                "author": "Richman",
+                "year": "2019",
+                "journal-title": "The Journal of Mathematical Behavior"
+            },
+            {
+                "issue": "2",
+                "key": "10.1016\/j.jmathb.2025.101284_b37",
+                "doi-asserted-by": "crossref",
+                "first-page": "171",
+                "DOI": "10.1023\/A:1004930722234",
+                "article-title": "The phenomenology of mathematical beauty",
+                "volume": "111",
+                "author": "Rota",
+                "year": "1997",
+                "journal-title": "Synthese"
+            },
+            {
+                "issue": "2",
+                "key": "10.1016\/j.jmathb.2025.101284_b38",
+                "doi-asserted-by": "crossref",
+                "first-page": "249",
+                "DOI": "10.1007\/s10649-017-9754-7",
+                "article-title": "Multimedia resources designed to support learning from written proofs: an eye-movement study",
+                "volume": "96",
+                "author": "Roy",
+                "year": "2017",
+                "journal-title": "Educational Studies in Mathematics"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b39",
+                "doi-asserted-by": "crossref",
+                "first-page": "1",
+                "DOI": "10.1080\/14794802.2024.2379301",
+                "article-title": "Investigating insight and rigour as separate constructs in mathematical proof",
+                "author": "Sangwin",
+                "year": "2024",
+                "journal-title": "Research in Mathematics Education"
+            },
+            {
+                "issue": "2",
+                "key": "10.1016\/j.jmathb.2025.101284_b40",
+                "doi-asserted-by": "crossref",
+                "first-page": "1",
+                "DOI": "10.1177\/002205741619600202",
+                "article-title": "Learning to think mathematically: Problem solving, metacognition, and sense making in mathematics (reprint)",
+                "volume": "196",
+                "author": "Schoenfeld",
+                "year": "2016",
+                "journal-title": "Journal of Education"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b41",
+                "doi-asserted-by": "crossref",
+                "first-page": "1",
+                "DOI": "10.1007\/BF02421320",
+                "article-title": "Die Krisis in Cantor\u2019s mathematischem Schaffen",
+                "volume": "50",
+                "author": "Schoenflies",
+                "year": "1927",
+                "journal-title": "Acta Mathematica"
+            },
+            {
+                "key": "10.1016\/j.jmathb.2025.101284_b42",
+                "doi-asserted-by": "crossref",
+                "first-page": "421",
+                "DOI": "10.2307\/2182490",
+                "article-title": "Aesthetic concepts",
+                "volume": "68",
+                "author": "Sibley",
+                "year": "1959",
+                "journal-title": "The Philosophical Review"
+            },
+            {
+                "issue": "1",
+                "key": "10.1016\/j.jmathb.2025.101284_b43",
+                "first-page": "25",
+                "article-title": "The aesthetic \u201cIs\u201d relevant",
+                "volume": "21",
+                "author": "Sinclair",
+                "year": "2001",
+                "journal-title": "For the Learning of Mathematics"
+            },
+            {
+                "issue": "3",
+                "key": "10.1016\/j.jmathb.2025.101284_b44",
+                "doi-asserted-by": "crossref",
+                "first-page": "303",
+                "DOI": "10.1016\/S0732-3123(02)00131-1",
+                "article-title": "On the interaction of visualization and analysis: the negotiation of a visual representation in expert problem solving",
+                "volume": "21",
+                "author": "Stylianou",
+                "year": "2002",
+                "journal-title": "The Journal of Mathematical Behavior"
+            },
+            {
+                "issue": "1",
+                "key": "10.1016\/j.jmathb.2025.101284_b45",
+                "doi-asserted-by": "crossref",
+                "first-page": "61",
+                "DOI": "10.1080\/02698590802280910",
+                "article-title": "Unmasking the truth beneath the beauty: Why the supposed aesthetic judgements made in science may not be aesthetic at all",
+                "volume": "22",
+                "author": "Todd",
+                "year": "2008",
+                "journal-title": "International Studies in the Philosophy of Science"
+            },
+            {
+                "issue": "2",
+                "key": "10.1016\/j.jmathb.2025.101284_b46",
+                "doi-asserted-by": "crossref",
+                "first-page": "211",
+                "DOI": "10.1093\/philmat\/nkx007",
+                "article-title": "Fitting feelings and elegant proofs: On the psychology of aesthetic evaluation in mathematics",
+                "volume": "26",
+                "author": "Todd",
+                "year": "2018",
+                "journal-title": "Philosophia Mathematica"
+            },
+            {
+                "issue": "1",
+                "key": "10.1016\/j.jmathb.2025.101284_b47",
+                "doi-asserted-by": "crossref",
+                "first-page": "36",
+                "DOI": "10.1080\/00461520.2013.865527",
+                "article-title": "How mathematicians obtain conviction: Implications for mathematics instruction and research on epistemic cognition",
+                "volume": "49",
+                "author": "Weber",
+                "year": "2014",
+                "journal-title": "Educational Psychologist"
+            },
+            {
+                "issue": "1",
+                "key": "10.1016\/j.jmathb.2025.101284_b48",
+                "doi-asserted-by": "crossref",
+                "first-page": "192",
+                "DOI": "10.1177\/016146810710900101",
+                "article-title": "Beyond control and rationality: Dewey, aesthetics, motivation, and educative experiences",
+                "volume": "109",
+                "author": "Wong",
+                "year": "2007",
+                "journal-title": "Teachers College Record"
+            },
+            {
+                "issue": "1",
+                "key": "10.1016\/j.jmathb.2025.101284_b49",
+                "first-page": "40",
+                "article-title": "Lesson plays: Planning teaching versus teaching planning",
+                "volume": "29",
+                "author": "Zazkis",
+                "year": "2009",
+                "journal-title": "For the Learning of Mathematics"
+            }
+        ],
+        "container-title": [
+            "The Journal of Mathematical Behavior"
+        ],
+        "original-title": [],
+        "language": "en",
+        "link": [
+            {
+                "URL": "https:\/\/api.elsevier.com\/content\/article\/PII:S0732312325000483?httpAccept=text\/xml",
+                "content-type": "text\/xml",
+                "content-version": "vor",
+                "intended-application": "text-mining"
+            },
+            {
+                "URL": "https:\/\/api.elsevier.com\/content\/article\/PII:S0732312325000483?httpAccept=text\/plain",
+                "content-type": "text\/plain",
+                "content-version": "vor",
+                "intended-application": "text-mining"
+            }
+        ],
+        "deposited": {
+            "date-parts": [
+                [
+                    2025,
+                    9,
+                    22
+                ]
+            ],
+            "date-time": "2025-09-22T22:54:52Z",
+            "timestamp": 1758581692000
+        },
+        "score": 1,
+        "resource": {
+            "primary": {
+                "URL": "https:\/\/linkinghub.elsevier.com\/retrieve\/pii\/S0732312325000483"
+            }
+        },
+        "subtitle": [],
+        "short-title": [],
+        "issued": {
+            "date-parts": [
+                [
+                    2026,
+                    3
+                ]
+            ]
+        },
+        "references-count": 49,
+        "alternative-id": [
+            "S0732312325000483"
+        ],
+        "URL": "https:\/\/doi.org\/10.1016\/j.jmathb.2025.101284",
+        "relation": {},
+        "ISSN": [
+            "0732-3123"
+        ],
+        "issn-type": [
+            {
+                "value": "0732-3123",
+                "type": "print"
+            }
+        ],
+        "subject": [],
+        "published": {
+            "date-parts": [
+                [
+                    2026,
+                    3
+                ]
+            ]
+        },
+        "assertion": [
+            {
+                "value": "Elsevier",
+                "name": "publisher",
+                "label": "This article is maintained by"
+            },
+            {
+                "value": "Does understanding moderate aesthetic appraisals of proofs?",
+                "name": "articletitle",
+                "label": "Article Title"
+            },
+            {
+                "value": "The Journal of Mathematical Behavior",
+                "name": "journaltitle",
+                "label": "Journal Title"
+            },
+            {
+                "value": "https:\/\/doi.org\/10.1016\/j.jmathb.2025.101284",
+                "name": "articlelink",
+                "label": "CrossRef DOI link to publisher maintained version"
+            },
+            {
+                "value": "article",
+                "name": "content_type",
+                "label": "Content Type"
+            },
+            {
+                "value": "\u00a9 2025 The Authors. Published by Elsevier Inc.",
+                "name": "copyright",
+                "label": "Copyright"
+            }
+        ],
+        "article-number": "101284"
+    }
+}
