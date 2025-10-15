@@ -25,10 +25,12 @@ steps:
     - name: fetch feeds
       image: ghcr.io/astral-sh/uv:debian
       commands:
+        - echo "Creating cache directory if it doesn't exist..."
         - mkdir -p cache
-        - '[ -f cache/ednews.db ] || touch cache/ednews.db'
-        - ln -sf cache/ednews.db ednews.db
-        - uv venv --python 3.13
+        - echo "Checking if ednews.db exists in cache..."
+        - '[ -f cache/ednews.db ] || (echo "ednews.db not found, creating an empty file..." && touch cache/ednews.db)'
+        - echo "Creating symbolic link for ednews.db..."
+        - ln -sf cache/ednews.db ednews.db    - uv venv --python 3.13
         - uv sync
         - uv run python main.py fetch
         - uv run python main.py issn-lookup
