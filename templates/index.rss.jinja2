@@ -10,7 +10,7 @@
     <item>
       <title>{{ item.title or 'Untitled' }}</title>
       <link>{{ item.link or '' }}</link>
-      <description>{{ item.content or '' }}</description>
+  <description>{% if item.abstract %}{{ item.abstract }}{% if item.content %}\n\n{{ item.content }}{% endif %}{% else %}{{ item.content or '' }}{% endif %}</description>
       <pubDate>{{ item.published or '' }}</pubDate>
     </item>
     {% endfor %}
