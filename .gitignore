@@ -5,3 +5,6 @@ build/
 
 ednews.db
 ednews.db-journal
+cache
+
+scripts/make_cache.py

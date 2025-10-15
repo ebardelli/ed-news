@@ -83,6 +83,40 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
     now = datetime.now(timezone.utc).isoformat()
     used_fetched_at = fetched_at or now
     used_published = published
+    # sanitize inputs to avoid SQLite binding errors (sqlite does not accept list/bytes)
+    def _sanitize(val):
+        if val is None:
+            return None
+        # decode bytes
+        if isinstance(val, (bytes, bytearray)):
+            try:
+                return val.decode('utf-8')
+            except Exception:
+                return val.decode('utf-8', errors='replace')
+        # join lists/tuples into a string
+        if isinstance(val, (list, tuple, set)):
+            try:
+                return ", ".join(str(x) for x in val)
+            except Exception:
+                return str(val)
+        # convert other non-str types to string
+        if not isinstance(val, str):
+            try:
+                return str(val)
+            except Exception:
+                return None
+        return val
+
+    # apply sanitization
+    doi = _sanitize(doi)
+    title = _sanitize(title)
+    authors = _sanitize(authors)
+    abstract = _sanitize(abstract)
+    feed_id = _sanitize(feed_id)
+    publication_id = _sanitize(publication_id)
+    issn = _sanitize(issn)
+    used_fetched_at = _sanitize(used_fetched_at)
+    used_published = _sanitize(used_published)
     try:
         cur.execute(
             """
@@ -116,7 +150,25 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
                     (SELECT id FROM articles WHERE doi = ?), ?, ?, ?, ?, COALESCE(?, (SELECT crossref_xml FROM articles WHERE doi = ?)), COALESCE(?, (SELECT feed_id FROM articles WHERE doi = ?)), COALESCE((SELECT publication_id FROM articles WHERE doi = ?), ?), COALESCE((SELECT issn FROM articles WHERE doi = ?), ?), ?, COALESCE(?, (SELECT published FROM articles WHERE doi = ?))
                 )
                 """,
-                (doi, doi, title, authors, abstract, None, doi, feed_id, doi, publication_id, doi, issn, used_fetched_at, used_published, doi),
+                # Parameters must match the 16 '?' placeholders in the VALUES clause
+                (
+                    doi,  # (SELECT id FROM articles WHERE doi = ?)
+                    doi,  # doi value for the doi column
+                    title,
+                    authors,
+                    abstract,
+                    None,  # crossref_xml explicit value
+                    doi,  # (SELECT crossref_xml FROM articles WHERE doi = ?)
+                    feed_id,  # feed_id explicit value for COALESCE
+                    doi,  # (SELECT feed_id FROM articles WHERE doi = ?)
+                    doi,  # (SELECT publication_id FROM articles WHERE doi = ?)
+                    publication_id,  # provided publication_id fallback
+                    doi,  # (SELECT issn FROM articles WHERE doi = ?)
+                    issn,  # provided issn fallback
+                    used_fetched_at,
+                    used_published,  # provided published value for COALESCE
+                    doi,  # (SELECT published FROM articles WHERE doi = ?)
+                ),
             )
             conn.commit()
             cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
@@ -153,7 +205,13 @@ def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | 
 def enrich_articles_from_crossref(conn, fetcher, batch_size: int = 20, delay: float = 0.1, return_ids: bool = False):
     cur = conn.cursor()
     logger.info("Enriching up to %s articles from Crossref", batch_size)
-    cur.execute("SELECT articles.doi FROM articles join items on items.doi = articles.doi WHERE crossref_xml IS NULL OR crossref_xml = '' ORDER BY COALESCE(items.published, items.fetched_at, articles.fetched_at) DESC LIMIT ?", (batch_size,))
+    # Use LEFT JOIN so articles that don't have a matching items row are still
+    # considered for Crossref enrichment (previously an INNER JOIN excluded
+    # articles that only exist in the `articles` table).
+    cur.execute(
+        "SELECT articles.doi FROM articles LEFT JOIN items on items.doi = articles.doi WHERE articles.crossref_xml IS NULL OR articles.crossref_xml = '' ORDER BY COALESCE(items.published, items.fetched_at, articles.fetched_at) DESC LIMIT ?",
+        (batch_size,),
+    )
     rows = cur.fetchall()
     updated = 0
     updated_ids: list[int] = []
@@ -368,9 +426,43 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
                 if not norm:
                     continue
                 try:
-                    aid = upsert_article(conn, norm, title=it.get('title'), authors=None, abstract=it.get('abstract'), feed_id=key, publication_id=issn, issn=issn)
+                    # Attempt to enrich the article with Crossref metadata before inserting
+                    try:
+                        from ednews.crossref import fetch_crossref_metadata
+
+                        cr = fetch_crossref_metadata(norm)
+                    except Exception:
+                        cr = None
+
+                    # Use Crossref-provided authors/abstract/published when available,
+                    # otherwise fall back to the values returned in the journal works list.
+                    authors_val = cr.get('authors') if cr and cr.get('authors') else None
+                    abstract_val = cr.get('abstract') if cr and cr.get('abstract') else it.get('abstract')
+                    published_val = cr.get('published') if cr and cr.get('published') else None
+
+                    aid = upsert_article(
+                        conn,
+                        norm,
+                        title=it.get('title'),
+                        authors=authors_val,
+                        abstract=abstract_val,
+                        feed_id=key,
+                        publication_id=issn,
+                        issn=issn,
+                        fetched_at=None,
+                        published=published_val,
+                    )
                     if aid:
                         inserted += 1
+
+                    # If we fetched raw Crossref data, store it (and re-apply authors/abstract/published
+                    # defensively via update_article_crossref which uses COALESCE so it won't clobber existing values
+                    # with None).
+                    if cr and cr.get('raw'):
+                        try:
+                            update_article_crossref(conn, norm, authors=authors_val, abstract=abstract_val, raw=cr.get('raw'), published=published_val)
+                        except Exception:
+                            logger.debug("Failed to update crossref data for doi=%s after upsert", norm)
                 except Exception:
                     logger.exception("Failed to upsert article doi=%s from journal %s", doi, issn)
             conn.commit()
