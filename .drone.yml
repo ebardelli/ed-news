@@ -3,6 +3,10 @@ kind: pipeline
 type: docker
 name: update ed-news website
 
+platform:
+  os: linux
+  arch: arm64
+
 steps:
     - name: restore cache
       image: meltwater/drone-cache:dev
