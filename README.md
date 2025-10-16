@@ -120,3 +120,12 @@ RUN_CROSSREF_INTEGRATION=1 uv run pytest -q
 ## Contributing
 
 Contributions welcome. Run tests before submitting PRs and follow the existing code style. If you add external integrations, include mocks or fixtures in `tests/fixtures` to keep test runs fast and hermetic.
+
+## Changes
+
+- The site build now requests the most recent articles using a default limit (20 by default).
+    When more than the configured number of articles share the same published DATE as the Nth
+    most recent article, all articles for that date are included so a day's publications are
+    not arbitrarily truncated.
+
+    The default is configurable in code at `ednews.config.ARTICLES_DEFAULT_LIMIT`.

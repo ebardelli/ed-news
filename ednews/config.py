@@ -11,5 +11,11 @@ PLANET_JSON = ROOT / "planet.json"
 PLANET_INI = ROOT / "planet.ini"
 DB_PATH = ROOT / "ednews.db"
 
+# Embedding config
 USER_AGENT = "ed-news-fetcher/1.0"
 DEFAULT_MODEL = "nomic-embed-text-v1.5"
+
+# Default number of articles to include on the site build. When more than this
+# number of articles share the same DATE(published) as the Nth article, all
+# articles for that date are included.
+ARTICLES_DEFAULT_LIMIT = 20

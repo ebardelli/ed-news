@@ -166,9 +166,15 @@ def copy_static(out_dir: Path):
 def build(out_dir: Path = BUILD_DIR):
     """High-level build function to render the static site.
 
-    The function collects site metadata, optionally loads recent articles
-    from the configured DB, computes similar-article suggestions, renders
+    The function collects site metadata, loads recent articles from the
+    configured DB (by default the most recent 20 articles, see
+    :func:`read_articles`), computes similar-article suggestions, renders
     templates, copies static assets and the DB into the output directory.
+
+    Important behaviour: the build always requests the most recent 20
+    articles. When more than 20 articles share the same published DATE as the
+    20th most recent article, all articles with that DATE are included so the
+    site doesn't arbitrarily truncate a day's publications.
 
     Args:
         out_dir (pathlib.Path): Destination directory for the built static site.
@@ -188,9 +194,11 @@ def build(out_dir: Path = BUILD_DIR):
 
     if DB_FILE.exists():
         try:
-            # use `publications=5` to get the latest 5 publications (all articles
-            # from each publication's most recent date)
-            ctx["articles"] = read_articles(DB_FILE, publications=5)
+            # Load the most recent articles according to the configured default.
+            # If more than `ARTICLES_DEFAULT_LIMIT` articles share the same
+            # published DATE as the Nth article, `read_articles` will include them
+            # as well so the site doesn't arbitrarily truncate a day's publications.
+            ctx["articles"] = read_articles(DB_FILE, limit=config.ARTICLES_DEFAULT_LIMIT)
             logger.info("loaded %d articles from %s", len(ctx["articles"]), DB_FILE)
             if get_similar_articles_by_doi and ctx.get("articles"):
                 try:
@@ -261,7 +269,13 @@ def read_articles(db_path: Path, limit: int = 30, days: int | None = None, publi
       N publications (one date per publication).
     * Else if ``days`` is provided, returns articles whose ``DATE(published)``
       is in the latest ``days`` distinct dates.
-    * Otherwise returns the most recent ``limit`` articles.
+    * Otherwise returns the most recent ``limit`` articles. When using the
+      fallback ``limit`` mode (i.e. ``publications`` and ``days`` are not
+      provided), the function will expand the selection so that if the Nth
+      most recent article (ordered by ``published`` desc) shares its
+      DATE(published) with additional articles, those articles are also
+      included. This prevents arbitrarily truncating all articles published
+      on the same date as the Nth article.
 
     Args:
         db_path (pathlib.Path): Path to the SQLite database file.
@@ -340,11 +354,28 @@ def read_articles(db_path: Path, limit: int = 30, days: int | None = None, publi
     # Fallback: select most recent `limit` articles
     if not rows:
         try:
+            # To avoid arbitrarily truncating a day's publications, compute
+            # the DATE(published) of the Nth most recent article and include
+            # all articles whose DATE(published) is on or after that date.
+            # If this fails for any reason, fall back to a simple LIMIT query.
             cur.execute(
-                "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles ORDER BY published DESC LIMIT ?",
-                (limit,),
+                "SELECT DATE(published) as d FROM combined_articles WHERE published IS NOT NULL ORDER BY published DESC LIMIT 1 OFFSET ?",
+                (max(0, limit - 1),),
             )
-            rows = [dict(r) for r in cur.fetchall()]
+            row = cur.fetchone()
+            if row and row[0]:
+                nth_date = row[0]
+                cur.execute(
+                    "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE DATE(published) >= ? ORDER BY published DESC",
+                    (nth_date,),
+                )
+                rows = [dict(r) for r in cur.fetchall()]
+            else:
+                cur.execute(
+                    "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles ORDER BY published DESC LIMIT ?",
+                    (limit,),
+                )
+                rows = [dict(r) for r in cur.fetchall()]
         except Exception as e:
             logger.warning("combined_articles view missing or query failed: %s", e)
             conn.close()
