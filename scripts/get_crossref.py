@@ -18,6 +18,13 @@ try:
 except Exception:  # pragma: no cover - requests should be available in dev env
     requests = None
 
+try:
+    from ednews import http as http_helper
+    from ednews import config as _config
+except Exception:
+    http_helper = None
+    _config = None
+
 
 logger = logging.getLogger("get_crossref")
 
@@ -41,6 +48,19 @@ def fetch_crossref(doi: str, raw: bool = False, timeout: float = 10.0):
     headers = {
         "User-Agent": "ed-news-crossref-helper/1.0 (mailto:you@example.com)"
     }
+
+    if http_helper is not None:
+        connect_to = getattr(_config, 'CROSSREF_CONNECT_TIMEOUT', 5) if _config is not None else 5
+        read_to = timeout
+        used_timeout = (connect_to, read_to)
+        try:
+            if raw:
+                txt = http_helper.get_text(url, headers=headers, timeout=used_timeout, retries=getattr(_config, 'CROSSREF_RETRIES', 3) if _config else 0, backoff=getattr(_config, 'CROSSREF_BACKOFF', 0.3) if _config else 0.3)
+                return 200, txt
+            data = http_helper.get_json(url, headers=headers, timeout=used_timeout, retries=getattr(_config, 'CROSSREF_RETRIES', 3) if _config else 0, backoff=getattr(_config, 'CROSSREF_BACKOFF', 0.3) if _config else 0.3)
+            return 200, data
+        except Exception as e:
+            raise
 
     resp = requests.get(url, headers=headers, timeout=timeout)
     if raw:

@@ -7,6 +7,7 @@ are used by feed processing and ScienceDirect enrichment helpers.
 """
 
 import logging
+import json
 import re
 import requests
 import xml.etree.ElementTree as ET
@@ -16,6 +17,8 @@ logger = logging.getLogger("ednews.crossref")
 
 
 from functools import lru_cache
+from ednews import http as http_helper
+from ednews import config as _config
 
 
 def _query_crossref_doi_by_title_uncached(title: str, preferred_publication_id: str | None = None, timeout: int = 8) -> str | None:
@@ -42,13 +45,14 @@ def _query_crossref_doi_by_title_uncached(title: str, preferred_publication_id: 
     if not title:
         return None
     try:
-        headers = {"User-Agent": "ed-news-fetcher/1.0", "Accept": "application/json"}
+        headers = {"User-Agent": getattr(_config, 'USER_AGENT', 'ed-news-fetcher/1.0'), "Accept": "application/json"}
         params = {"query.title": title, "rows": 20}
         logger.debug("CrossRef title lookup for title: %s", title)
-        resp = requests.get("https://api.crossref.org/works", params=params, headers=headers, timeout=timeout)
-        resp.raise_for_status()
-        data = resp.json()
-        items = data.get("message", {}).get("items", []) or []
+        connect_to = getattr(_config, 'CROSSREF_CONNECT_TIMEOUT', 5)
+        read_to = timeout or getattr(_config, 'CROSSREF_TIMEOUT', 30)
+        used_timeout = (connect_to, read_to)
+        data = http_helper.get_json("https://api.crossref.org/works", params=params, headers=headers, timeout=used_timeout, retries=getattr(_config, 'CROSSREF_RETRIES', 3), backoff=getattr(_config, 'CROSSREF_BACKOFF', 0.3), status_forcelist=getattr(_config, 'CROSSREF_STATUS_FORCELIST', None))
+        items = data.get("message", {}).get("items", []) if isinstance(data, dict) else []
         if not items:
             return None
         if preferred_publication_id:
@@ -109,18 +113,16 @@ def fetch_crossref_metadata(doi: str, timeout: int = 10) -> dict | None:
     raw_xml = None
     root = None
     json_message = None
+    logger.info("CrossRef JSON lookup for DOI %s -> %s", doi, json_url)
+    # Use centralized HTTP helper with configured timeouts/retries
     try:
-        logger.info("CrossRef JSON lookup for DOI %s -> %s", doi, json_url)
-        resp = requests.get(json_url, headers=json_headers, timeout=timeout)
-        resp.raise_for_status()
-        try:
-            data = resp.json()
-            json_message = data.get("message") if isinstance(data, dict) else None
-        except Exception:
-            # Not JSON (or DummyResp in tests) - will fall back to XML below
-            json_message = None
+        connect_to = getattr(_config, 'CROSSREF_CONNECT_TIMEOUT', 5)
+        read_to = timeout or getattr(_config, 'CROSSREF_TIMEOUT', 30)
+        used_timeout = (connect_to, read_to)
+        json_resp = http_helper.get_json(json_url, headers=json_headers, timeout=used_timeout, retries=getattr(_config, 'CROSSREF_RETRIES', 3), backoff=getattr(_config, 'CROSSREF_BACKOFF', 0.3), status_forcelist=getattr(_config, 'CROSSREF_STATUS_FORCELIST', None), requests_module=requests)
     except Exception:
-        json_message = None
+        json_resp = None
+    json_message = json_resp.get('message') if isinstance(json_resp, dict) else None
 
     if not json_message:
         # fallback to legacy unixref XML
@@ -128,9 +130,17 @@ def fetch_crossref_metadata(doi: str, timeout: int = 10) -> dict | None:
         headers = {"Accept": "application/vnd.crossref.unixref+xml", "User-Agent": "ed-news-fetcher/1.0"}
         try:
             logger.info("CrossRef lookup for DOI %s -> %s", doi, url)
-            resp = requests.get(url, headers=headers, timeout=timeout)
-            resp.raise_for_status()
-            raw_xml = resp.content.decode('utf-8', errors='replace')
+            try:
+                connect_to = getattr(_config, 'CROSSREF_CONNECT_TIMEOUT', 5)
+                read_to = timeout or getattr(_config, 'CROSSREF_TIMEOUT', 30)
+                used_timeout = (connect_to, read_to)
+                raw_text = http_helper.get_text(url, headers=headers, timeout=used_timeout, retries=getattr(_config, 'CROSSREF_RETRIES', 3), backoff=getattr(_config, 'CROSSREF_BACKOFF', 0.3), status_forcelist=getattr(_config, 'CROSSREF_STATUS_FORCELIST', None), requests_module=requests)
+            except Exception:
+                raw_text = None
+            if not raw_text:
+                logger.warning("CrossRef lookup failed for %s", doi)
+                return None
+            raw_xml = raw_text
             root = ET.fromstring(raw_xml)
         except Exception:
             logger.warning("CrossRef lookup failed for %s", doi)
@@ -272,8 +282,11 @@ def fetch_crossref_metadata(doi: str, timeout: int = 10) -> dict | None:
     else:
         try:
             # if we fetched JSON, include its text representation
-            if json_message is not None:
-                out["raw"] = resp.content.decode('utf-8', errors='replace')
+            if json_message is not None and json_resp is not None:
+                try:
+                    out["raw"] = json.dumps(json_resp)
+                except Exception:
+                    out["raw"] = str(json_resp)
         except Exception:
             pass
     if published:

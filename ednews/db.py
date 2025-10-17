@@ -447,6 +447,24 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
     import requests, time, os
     cur = conn.cursor()
     session = requests.Session()
+    # allow callers to pass a timeout; otherwise use config defaults (connect, read)
+    try:
+        from ednews import config
+        connect_timeout = getattr(config, 'CROSSREF_CONNECT_TIMEOUT', 5)
+        read_timeout = getattr(config, 'CROSSREF_TIMEOUT', 30)
+        default_retries = getattr(config, 'CROSSREF_RETRIES', 3)
+        backoff = getattr(config, 'CROSSREF_BACKOFF', 0.3)
+        status_forcelist = getattr(config, 'CROSSREF_STATUS_FORCELIST', [429, 500, 502, 503, 504])
+    except Exception:
+        # fallback values
+        connect_timeout = 5
+        read_timeout = 30
+        default_retries = 3
+        backoff = 0.3
+        status_forcelist = [429, 500, 502, 503, 504]
+    # We'll perform an explicit retry loop below so tests can monkeypatch
+    # `requests.Session.get` and exercise retry handling.
+    attempts = max(1, int(default_retries) + 1)
     inserted = 0
     skipped = 0
     logger.info("Fetching latest journal works for %s feeds", len(feeds) if hasattr(feeds, '__len__') else 'unknown')
@@ -461,12 +479,54 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
         if not (issn):
             continue
         try:
-            headers = {"User-Agent": "ed-news-fetcher/1.0", "Accept": "application/json"}
+            # build headers and params (preserve existing mailto behaviour)
+            ua = None
+            try:
+                ua = getattr(config, 'USER_AGENT', None)
+            except Exception:
+                ua = None
+            headers = {"User-Agent": ua or "ed-news-fetcher/1.0", "Accept": "application/json"}
             mailto = os.environ.get("CROSSREF_MAILTO", "your_email@example.com")
             url = f"https://api.crossref.org/journals/{issn}/works"
             params = {"sort": "created", "order": "desc", "filter": "type:journal-article", "rows": min(per_journal, 100), "mailto": mailto}
-            resp = session.get(url, params=params, headers=headers, timeout=timeout)
-            resp.raise_for_status()
+            # allow callers' simple `timeout` param for compatibility; prefer tuple (connect, read)
+            used_timeout = (connect_timeout, timeout if timeout and timeout > 0 else read_timeout)
+            # perform GET with an explicit retry loop
+            resp = None
+            last_exc = None
+            for attempt in range(1, attempts + 1):
+                try:
+                    resp = session.get(url, params=params, headers=headers, timeout=used_timeout)
+                    # If the response status code is in the forcelist, raise to trigger retry
+                    if resp.status_code in status_forcelist:
+                        last_exc = requests.HTTPError(f"status={resp.status_code}")
+                        raise last_exc
+                    resp.raise_for_status()
+                    break
+                except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError) as e:
+                    last_exc = e
+                    logger.warning("Request attempt %d/%d failed for ISSN=%s: %s", attempt, attempts, issn, e)
+                except requests.HTTPError as e:
+                    # treat certain status codes as retryable
+                    last_exc = e
+                    code = getattr(e.response, 'status_code', None) if hasattr(e, 'response') else None
+                    if code in status_forcelist:
+                        logger.warning("HTTP %s on attempt %d/%d for ISSN=%s: will retry", code, attempt, attempts, issn)
+                    else:
+                        # non-retryable HTTP error — re-raise to be caught by outer except
+                        raise
+
+                # backoff between attempts (exponential)
+                if attempt < attempts:
+                    sleep_for = backoff * (2 ** (attempt - 1))
+                    # small jitter
+                    sleep_for = sleep_for + (0.1 * backoff)
+                    time.sleep(sleep_for)
+
+            if resp is None:
+                # all attempts failed
+                raise last_exc if last_exc is not None else Exception("Failed to retrieve Crossref data")
+            data = resp.json()
             data = resp.json()
             items = data.get("message", {}).get("items", []) or []
             for it in items[:per_journal]:
