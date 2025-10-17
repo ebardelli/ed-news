@@ -2,8 +2,8 @@
 """Fetch Crossref metadata for a DOI and print JSON.
 
 Usage:
-    scripts/get_crossref.py 10.1038/s41586-020-2649-2
-    scripts/get_crossref.py --raw 10.1038/s41586-020-2649-2
+    scripts/get_crossref_doi.py 10.1038/s41586-020-2649-2
+    scripts/get_crossref_doi.py --raw 10.1038/s41586-020-2649-2
 
 This is a small helper for debugging and ad-hoc checks.
 """

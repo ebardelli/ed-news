@@ -36,6 +36,13 @@
       "publication_id": "10.3102",
       "issn": "0162-3737"
     },
+    "epaa": {
+      "title": "Educational Policy Analysis Archives",
+      "link": "https://epaa.asu.edu/ojs/",
+      "feed": "https://epaa.asu.edu/ojs/index.php/epaa/oai",
+      "publication_id": "10.14507/epaa",
+      "issn": "1068-2341"
+    },
     "rer": {
       "title": "Review of Educational Research",
       "link": "https://journals.sagepub.com/home/rer",
