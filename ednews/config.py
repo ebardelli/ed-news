@@ -49,3 +49,9 @@ ARTICLES_MAX_SAME_DATE_EXTRA = 20
 # Default date to use when an item has no published/first_seen value.
 # Stored as an ISO date string (YYYY-MM-DD).
 DEFAULT_MISSING_DATE = "2020-01-01"
+
+# RSS feed metadata defaults
+FEED_SITE_LINK = "https://ebardelli.com/ed-news/"
+FEED_TITLE_COMBINED = "Latest Education News"
+FEED_TITLE_ARTICLES = "Latest Education Articles"
+FEED_TITLE_HEADLINES = "Latest Education Headlines"

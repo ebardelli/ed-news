@@ -346,7 +346,194 @@ def build(out_dir: Path = BUILD_DIR):
         ctx["grouped_articles"] = {}
 
     out_dir.mkdir(parents=True, exist_ok=True)
+    # Render standard templates (index.html, index.rss, etc.)
     render_templates(ctx, out_dir)
+
+    # Additionally build separate RSS feeds:
+    # - index.rss (combined): latest 40 items from articles + headlines
+    # - articles.rss: latest HEADLINES_DEFAULT_LIMIT (articles limit is ARTICLES_DEFAULT_LIMIT)
+    # - headlines.rss: latest HEADLINES_DEFAULT_LIMIT
+    try:
+        env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)))
+        # Prefer dedicated templates for articles/headlines when available
+        try:
+            tpl_articles = env.get_template("articles.rss.jinja2")
+        except Exception:
+            tpl_articles = env.get_template("index.rss.jinja2")
+        try:
+            tpl_headlines = env.get_template("headlines.rss.jinja2")
+        except Exception:
+            tpl_headlines = env.get_template("index.rss.jinja2")
+        # Use index template for combined feed
+        tpl_index = env.get_template("index.rss.jinja2")
+
+        # Prepare metadata for feeds: use configured titles/links if present
+        site_link = getattr(config, 'FEED_SITE_LINK', "https://ebardelli.com/ed-news/")
+        feed_meta_combined = {
+            "title": getattr(config, 'FEED_TITLE_COMBINED', "Latest Education News"),
+            "link": site_link,
+            "description": getattr(config, 'FEED_TITLE_COMBINED', "Latest Education News"),
+            "last_build_date": ctx.get("build_time"),
+            "pub_date": ctx.get("build_time"),
+        }
+        feed_meta_articles = {
+            "title": getattr(config, 'FEED_TITLE_ARTICLES', "Latest Education Articles"),
+            "link": site_link,
+            "description": getattr(config, 'FEED_TITLE_ARTICLES', "Latest Education Articles"),
+            "last_build_date": ctx.get("build_time"),
+            "pub_date": ctx.get("build_time"),
+        }
+        feed_meta_headlines = {
+            "title": getattr(config, 'FEED_TITLE_HEADLINES', "Latest Education Headlines"),
+            "link": site_link,
+            "description": getattr(config, 'FEED_TITLE_HEADLINES', "Latest Education Headlines"),
+            "last_build_date": ctx.get("build_time"),
+            "pub_date": ctx.get("build_time"),
+        }
+
+        # Articles-only feed
+        articles_limit = getattr(config, 'ARTICLES_DEFAULT_LIMIT', 20)
+        articles_items = (ctx.get("articles") or [])[:articles_limit]
+        # Ensure each item has a hashed guid for de-duplication
+        import hashlib
+
+        def make_guid_for_article(a):
+            # Prefer link, else title+published+content
+            key = a.get("link") or (str(a.get("title") or "") + "|" + str(a.get("published") or "") + "|" + str(a.get("content") or ""))
+            return hashlib.sha1(key.encode("utf-8")).hexdigest()
+
+        for a in articles_items:
+            if not a.get("guid"):
+                a["guid"] = make_guid_for_article(a)
+
+        articles_ctx = {**feed_meta_articles, "articles": articles_items}
+        (out_dir / "articles.rss").write_text(tpl_articles.render(articles_ctx), encoding="utf-8")
+        logger.info("wrote %s", out_dir / "articles.rss")
+
+        # Headlines-only feed: map headlines into article-shaped dicts
+        headlines_limit = getattr(config, 'HEADLINES_DEFAULT_LIMIT', 20)
+        headlines_raw = ctx.get("news_headlines") or []
+        # Convert headline rows to the expected keys used by the RSS template
+        def headline_to_item(h):
+            return {
+                "title": h.get("title") or "Untitled",
+                "link": h.get("link") or "",
+                "content": h.get("text") or "",
+                "abstract": None,
+                "published": h.get("published") or None,
+            }
+
+        headlines_items = [headline_to_item(h) for h in headlines_raw][:headlines_limit]
+        def make_guid_for_headline(h):
+            key = h.get("link") or (str(h.get("title") or "") + "|" + str(h.get("published") or "") + "|" + str(h.get("content") or ""))
+            return hashlib.sha1(key.encode("utf-8")).hexdigest()
+
+        for h in headlines_items:
+            if not h.get("guid"):
+                h["guid"] = make_guid_for_headline(h)
+
+        headlines_ctx = {**feed_meta_headlines, "articles": headlines_items}
+        (out_dir / "headlines.rss").write_text(tpl_headlines.render(headlines_ctx), encoding="utf-8")
+        logger.info("wrote %s", out_dir / "headlines.rss")
+
+        # Combined feed: merge articles and headlines, parse/normalize published
+        # datetimes for stable ordering and take up to combined_limit items.
+        combined_limit = 40
+        merged = []
+
+        import re
+
+        def parse_datetime_value(val):
+            """Return a timezone-aware datetime for sorting. On failure return a very old datetime."""
+            if not val:
+                return datetime(1970, 1, 1, tzinfo=timezone.utc)
+            if isinstance(val, datetime):
+                dt = val
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                return dt
+            s = str(val)
+            # Try email-style date parsing
+            try:
+                dt = parsedate_to_datetime(s)
+                if dt is not None and dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                return dt
+            except Exception:
+                pass
+            # Try ISO-like parsing
+            try:
+                dt = datetime.fromisoformat(s.replace('Z', '+00:00'))
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                return dt
+            except Exception:
+                pass
+            for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+                try:
+                    dt = datetime.strptime(s, fmt)
+                    dt = dt.replace(tzinfo=timezone.utc)
+                    return dt
+                except Exception:
+                    continue
+            m = re.search(r"(\d{4}-\d{2}-\d{2})", s)
+            if m:
+                try:
+                    dt = datetime.strptime(m.group(1), "%Y-%m-%d")
+                    dt = dt.replace(tzinfo=timezone.utc)
+                    return dt
+                except Exception:
+                    pass
+            return datetime(1970, 1, 1, tzinfo=timezone.utc)
+
+        # Normalize articles and headlines into items with a sortable 'published_dt'
+        def norm_article(a):
+            raw_published = a.get("raw", {}).get("published") if a.get("raw") else a.get("published")
+            pd = parse_datetime_value(raw_published)
+            return {
+                "title": a.get("title"),
+                "link": a.get("link"),
+                "content": a.get("content") or a.get("abstract") or "",
+                "abstract": a.get("abstract"),
+                "published": a.get("published"),
+                "published_dt": pd,
+            }
+
+        def norm_headline(h):
+            raw_published = h.get("raw", {}).get("published") if h.get("raw") else h.get("published")
+            pd = parse_datetime_value(raw_published)
+            return {
+                "title": h.get("title"),
+                "link": h.get("link"),
+                "content": h.get("text") or "",
+                "abstract": None,
+                "published": h.get("published"),
+                "published_dt": pd,
+            }
+
+        for a in (ctx.get("articles") or []):
+            merged.append(norm_article(a))
+        for h in (ctx.get("news_headlines") or []):
+            merged.append(norm_headline(h))
+
+        # Sort by parsed published datetime descending
+        try:
+            merged.sort(key=lambda x: x.get("published_dt") or datetime(1970, 1, 1, tzinfo=timezone.utc), reverse=True)
+        except Exception:
+            pass
+
+        combined_items = merged[:combined_limit]
+        # Add GUIDs to combined items if missing
+        for it in combined_items:
+            if not it.get("guid"):
+                key = it.get("link") or (str(it.get("title") or "") + "|" + str(it.get("published") or "") + "|" + str(it.get("content") or ""))
+                it["guid"] = hashlib.sha1(str(key).encode("utf-8")).hexdigest()
+
+        combined_ctx = {**feed_meta_combined, "articles": combined_items}
+        (out_dir / "index.rss").write_text(tpl_index.render(combined_ctx), encoding="utf-8")
+        logger.info("wrote %s", out_dir / "index.rss")
+    except Exception:
+        logger.exception("Failed to render additional RSS feeds")
     copy_static(out_dir)
     # export selected DB tables to parquet files under build/db/
     try:
