@@ -36,13 +36,4 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.style.display = 'none';
         }
     });
-
-    // Toggle views based on ?view=articles or ?view=tocs (default 'articles')
-    // Ensure the articles view is shown by default (TOC view removed)
-    (function(){
-        const articlesEl = document.getElementById('view-articles');
-        const menuArticles = document.getElementById('menu-articles');
-        if (articlesEl) articlesEl.style.display = '';
-        if (menuArticles) menuArticles.classList.add('active');
-    })();
 });
