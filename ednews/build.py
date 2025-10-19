@@ -346,6 +346,16 @@ def build(out_dir: Path = BUILD_DIR):
         ctx["grouped_articles"] = {}
 
     out_dir.mkdir(parents=True, exist_ok=True)
+    # Expose feed links/titles to templates so index.html can render feed links
+    try:
+        ctx["feed_links"] = {
+            "combined": {"title": getattr(config, 'FEED_TITLE_COMBINED', 'Ed News'), "href": "index.rss"},
+            "headlines": {"title": getattr(config, 'FEED_TITLE_HEADLINES', 'Ed Headlines'), "href": "headlines.rss"},
+            "articles": {"title": getattr(config, 'FEED_TITLE_ARTICLES', 'Ed Articles'), "href": "articles.rss"},
+        }
+    except Exception:
+        ctx["feed_links"] = {}
+
     # Render standard templates (index.html, index.rss, etc.)
     render_templates(ctx, out_dir)
 

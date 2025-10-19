@@ -133,6 +133,19 @@
             </div>
         </div>
     </main>
+    <div class="feed-links" style="text-align:center; margin:1.5em 0;">
+        {% if feed_links %}
+            <p>
+            {% for key, f in feed_links.items() %}
+                <a href="/{{ f.href }}" class="rss-link" style="margin:0 0.5em; text-decoration:none;">
+                    <!-- Inline RSS icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+                    <span style="margin-left:.25em;">{{ f.title }}</span>
+                </a>
+            {% endfor %}
+            </p>
+        {% endif %}
+    </div>
     <footer>
         <p>&copy; 2023-{{ year or 2025 }} {{ title }} | Based on a template <a href="https://werd.io" rel="me">by Ben Werdmuller</a> | <a href="https://drone.ebardelli.com/ebardelli/ed-news">Updated {{ build_time }}</a></p>
     </footer>
