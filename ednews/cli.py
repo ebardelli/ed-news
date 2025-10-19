@@ -51,12 +51,98 @@ def cmd_fetch(args):
         with ThreadPoolExecutor(max_workers=8) as ex:
             futures = {}
             for item in feeds_list:
+                # Support tuples of shape (key, title, url, publication_doi, issn, processor)
                 if len(item) >= 4:
-                    key, title, url, publication_doi = item[:4]
+                    key = item[0]
+                    title = item[1] if len(item) > 1 else None
+                    url = item[2] if len(item) > 2 else None
+                    publication_doi = item[3] if len(item) > 3 else None
+                    issn = item[4] if len(item) > 4 else None
+                    processor = item[5] if len(item) > 5 else None
                 else:
                     continue
-                fut = ex.submit(feeds.fetch_feed, session, key, title, url, publication_doi)
-                futures[fut] = (key, title, url, publication_doi)
+
+                if processor:
+                    # Processor may be a string or a list of processor names.
+                    # Normalize to a list of names.
+                    proc_names = []
+                    if isinstance(processor, (list, tuple)):
+                        proc_names = list(processor)
+                    else:
+                        proc_names = [processor]
+
+                    # Submit a wrapper that invokes each named processor and merges results
+                    def _proc_multi(session, key, title, url, publication_doi, issn, proc_names):
+                        try:
+                            import importlib
+                            import ednews.processors as proc_mod
+
+                            merged = []
+                            seen = set()
+                            for name in proc_names:
+                                if not name:
+                                    continue
+                                fn_name = f"{name}_feed_processor"
+                                proc_fn = getattr(proc_mod, fn_name, None)
+                                if not proc_fn:
+                                    # Try dynamic import as fallback
+                                    try:
+                                        mod = importlib.import_module(name)
+                                        proc_fn = getattr(mod, fn_name, None)
+                                    except Exception:
+                                        proc_fn = None
+                                if not proc_fn:
+                                    logger.warning("processor %s not found for feed %s", name, key)
+                                    continue
+                                try:
+                                    # Determine if this processor is an enricher (accepts entries)
+                                    import inspect
+
+                                    sig = inspect.signature(proc_fn)
+                                    params = list(sig.parameters.keys())
+                                    if params and params[0] in ("entries", "items", "rows"):
+                                        # enricher-style: call with current entries; if we don't have entries yet, call fetch first
+                                        if merged:
+                                            entries = proc_fn(merged, session=session, publication_id=publication_doi, issn=issn)
+                                        else:
+                                            # nothing to enrich; skip
+                                            entries = []
+                                    else:
+                                        # fetcher-style: call with session and url
+                                        entries = proc_fn(session, url, publication_id=publication_doi, issn=issn)
+                                except TypeError:
+                                    # Fallbacks for varied signatures
+                                    try:
+                                        entries = proc_fn(session, url)
+                                    except Exception:
+                                        try:
+                                            entries = proc_fn(merged, session)
+                                        except Exception:
+                                            entries = []
+                                except Exception as e:
+                                    logger.exception("processor %s failed for feed %s: %s", name, key, e)
+                                    entries = []
+
+                                for e in entries or []:
+                                    # Deduplicate by link or guid when merging
+                                    link = (e.get('link') or '').strip()
+                                    guid = (e.get('guid') or '').strip()
+                                    key_id = link or guid or (e.get('title') or '')
+                                    if key_id in seen:
+                                        continue
+                                    seen.add(key_id)
+                                    merged.append(e)
+
+                            return {"key": key, "title": title, "url": url, "publication_id": publication_doi, "error": None, "entries": merged}
+                        except Exception as e:
+                            return {"key": key, "title": title, "url": url, "publication_id": publication_doi, "error": str(e), "entries": []}
+
+                    fut = ex.submit(_proc_multi, session, key, title, url, publication_doi, issn, proc_names)
+                    futures[fut] = (key, title, url, publication_doi)
+                else:
+                    fut = ex.submit(feeds.fetch_feed, session, key, title, url, publication_doi, issn)
+                    futures[fut] = (key, title, url, publication_doi)
+
             for fut in as_completed(futures):
                 meta = futures[fut]
                 try:

@@ -1,108 +1,110 @@
 # Copilot Instructions for ed-news
 
 ## Overview
-This repository is a static site generator and feed builder written in Python. It processes metadata and feeds to produce an `index.html` and an RSS feed. The project is organized into a package (`ednews`) and top-level scripts for building and publishing the site.
+ed-news is a compact static site generator and feed builder written in Python. It builds an `index.html` and RSS feeds from configured article feeds and locally-configured news sites. The public API surface is primarily the `ednews` package and the `main.py` CLI entrypoint used in development and CI.
 
 ## Key Components
 
-### Top-Level Scripts
-- `main.py`: CLI entry point with subcommands for common workflows. Available commands include:
-	- `fetch` — fetch configured feeds and save entries to the database
-	- `build` — render the static site into a directory (same core logic as `build.py`)
-	- `embed` — generate local embeddings and insert into the DB
-	- `enrich-crossref` — query Crossref to enrich articles missing Crossref XML metadata
-	- `issn-lookup` — fetch recent works for journals by ISSN and insert into the DB 
+### Top-Level CLI
+- `main.py`: CLI entrypoint which delegates to `ednews.cli`. Subcommands include:
+  - `fetch` — fetch configured article feeds and news headlines and persist them to the DB (defaults to both articles and headlines if no flags provided)
+  - `build` — render the static site into an output directory
+  - `embed` — generate local embeddings and insert them into the DB
+  - `enrich-crossref` — query Crossref to enrich articles missing Crossref metadata
+  - `issn-lookup` — fetch recent works for journals by ISSN and insert into the DB
+  - `headlines` — fetch configured news sites and either persist headlines to the DB or write JSON
+  - `db-init` — create tables and views (run once)
+  - `manage-db` — maintenance subcommands (migrate, vacuum, cleanup-empty-articles, sync-publications, run-all)
+  - `serve` — serve the generated `build` directory locally
 
 ### `ednews` Package
-- `build.py`: Core build logic, including template rendering and embedding article similarity.
-- `feeds.py`: Handles feed loading, fetching, and normalization.
-- `db.py`: Database helpers for SQLite, including schema initialization.
-- `config.py`: Centralized configuration (e.g., paths, constants).
-- `embeddings.py`: Utilities for vector/embedding calculations.
+- `build.py`: Core build and template rendering logic.
+- `feeds.py`: Feed loading, fetching, normalization, and save helpers.
+- `db/`: Database helpers and maintenance code (`manage_db.py`, `init_db`, enrichment helpers).
+- `config.py`: Centralized configuration (paths, constants) used across the package.
+- `embeddings.py`: Embeddings creation and vector storage helpers.
+- `news.py` and `processors/`: News-site scraping and site-specific processors (e.g., Press Democrat, FCMat).
 
 ### Templates and Static Assets
-- `templates/`: Jinja2 templates for `index.html` and RSS.
-- `static/`: CSS and JS files included in the build.
+- `templates/`: Jinja2 templates used to render the site and RSS feeds.
+- `static/`: CSS and JS files copied into the generated `build/` output.
 
 ### Tests
-- Located in `tests/`. Includes unit tests for modules like `build`, `feeds`, and `db`.
+- Unit and integration tests live in `tests/`. They cover feeds, Crossref parsing, DB behavior, embedding generation, and CLI handlers.
 
 ## Developer Workflows
 
-### Building the Site
-Run the build script to generate the static site:
-```bash
-uv run python build.py
-```
+### Running the CLI
+Use the `main.py` wrapper. Examples (use `uv run` if you prefer `uv` for environment isolation):
 
-### Fetching Feeds
-Use the `fetch` subcommand to download and process feeds:
 ```bash
+# Fetch everything (articles + headlines)
 uv run python main.py fetch
-```
 
-Other `main.py` examples (also documented in the project `README.md`):
-```bash
-# Render the static site
+# Only fetch article feeds
+uv run python main.py fetch --articles
+
+# Only fetch headlines
+uv run python main.py fetch --headlines
+
+# Build site
 uv run python main.py build --out-dir build
 
-# Generate embeddings and store them in the DB
-uv run python main.py embed --model <model-name> --batch-size 64
+# Generate embeddings
+uv run python main.py embed --batch-size 64
 
-# Enrich missing Crossref metadata
+# Enrich articles from Crossref
 uv run python main.py enrich-crossref --batch-size 20 --delay 0.1
 
-# Lookup recent works by ISSN
-uv run python main.py issn-lookup --per-journal 30 --timeout 10 --delay 0.05
+# ISSN lookup
+uv run python main.py issn-lookup --per-journal 30
+
+# DB initialization
+uv run python main.py db-init
+
+# Database maintenance
+uv run python main.py manage-db cleanup-empty-articles --older-than-days 90
+
+# Serve built site
+uv run python main.py serve --directory build
 ```
 
-Tip: the `main.py` CLI supports a global `-v/--verbose` flag to enable debug logging for commands. Example:
-
-```bash
-# Run fetch with verbose output
-uv run python main.py -v fetch
-```
+Tip: `-v/--verbose` enables debug logging for CLI commands.
 
 ### Running Tests
-Tests are located in the `tests/` directory. Run them with:
+
+Run tests with pytest:
+
 ```bash
 uv run pytest
 ```
 
-## Project-Specific Conventions
-- **Database**: SQLite is used for storing feed and article data. Schema is initialized in `ednews/db.py`.
-- **Embeddings**: Article similarity is calculated using `sqlite-vec` and stored in the database.
-- **Feeds**: Feeds are defined in `planet.json` or `planet.ini`. JSON is preferred.
-- **Logging**: Modules use `logging` with namespaced loggers (e.g., `ednews.build`).
+Set `RUN_CROSSREF_INTEGRATION=1` in the environment to enable Crossref integration tests when needed.
 
-### Docstrings and format
+## Project Conventions
+- Database: SQLite is used for persistence. The schema and views are created by `ednews.db.init_db` and exposed via the `db-init` CLI command.
+- Feeds: Article feeds and headline sources are defined in top-level JSON files (`planet.json` / `news.json` / `research.json`) or in code under `ednews/processors/` for site-specific scraping.
+- Embeddings: Local embedding generation uses `ednews.embeddings` and stores vectors in the DB.
+- Logging: Modules use standard `logging` with module-level loggers (for example `ednews.cli`).
 
-- Use Google-style docstrings for all new or updated functions and modules.
-- Include a one-line summary at the top of the docstring, followed by a
-	short description when helpful.
-- For functions, include an "Args:" section describing parameters, a
-	"Returns:" section for the return value, and a "Raises:" section if the
-	function raises notable exceptions. Keep descriptions concise.
-- For module-level docstrings, provide a brief module purpose and any
-	cross-module responsibilities or side-effects (for example, which DB
-	tables the module manages).
-- Prefer concrete types and examples for complex return shapes (e.g., list
-	of dicts with specific keys) to aid code readers and tests.
+### Docstrings
+- Prefer Google-style docstrings for new/changed functions and modules.
 
 ## External Dependencies
-- `sqlite-vec`: Used for vector similarity calculations.
-- `jinja2`: For template rendering.
-- `feedparser`: For parsing RSS/Atom feeds.
-- `requests`: For HTTP requests.
+- `sqlite-vec` (optional) for vector similarity.
+- `jinja2` for templates.
+- `feedparser` for parsing RSS/Atom feeds.
+- `requests` for HTTP interactions.
 
-## Examples
-- Adding a new feed: Update `planet.json` with feed details.
-- Debugging a build issue: Check logs in `ednews/build.py`.
+## Notes for Copilot usage
+- Tests are a reliable guide to the public behavior of this package — prefer changes that keep tests green.
+- The `ednews.cli` module is the main surface for CLI behavior; update tests when adding/renaming subcommands.
+- The DB helpers moved into `ednews.db` during a recent refactor; prefer the new import paths (`ednews.db.manage_db`).
 
-## Key Files
-- `main.py`: CLI entry point.
-- `ednews/build.py`: Core build logic.
-- `ednews/feeds.py`: Feed handling.
-- `ednews/db.py`: Database helpers.
-- `templates/index.html.jinja2`: HTML template.
-- `templates/rss.xml.jinja2`: RSS template.
+## Key files
+- `main.py` — CLI entrypoint delegating to `ednews.cli`
+- `ednews/cli.py` — CLI implementation and handlers
+- `ednews/build.py` — static site rendering logic
+- `ednews/feeds.py` — feed fetching and saving
+- `ednews/db/manage_db.py` — DB maintenance utilities
+- `ednews/embeddings.py` — embeddings utilities

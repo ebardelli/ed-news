@@ -119,3 +119,71 @@ def enrich_sciencedirect(conn: sqlite3.Connection, limit: int | None = None, app
     if apply:
         conn.commit()
     return updated
+
+
+def sciencedirect_feed_processor(session, feed_url: str, publication_id: str | None = None, issn: str | None = None):
+    """Fetch a ScienceDirect RSS/Atom feed and augment entries with DOI when possible.
+
+    This behaves like a feed fetcher: it returns a list of entry dicts similar
+    to what `feeds.fetch_feed` returns in its `entries` list so callers can
+    pass the result to `ednews.feeds.save_entries` unchanged.
+
+    The processor attempts a CrossRef title->DOI lookup for items whose link
+    contains 'sciencedirect.com' and which do not already include a DOI.
+    If a DOI is found, the returned entry will include a top-level 'doi' key
+    so the downstream `save_entries` flow can attach and upsert articles.
+    """
+    import feedparser
+    from .. import crossref
+
+    try:
+        resp = session.get(feed_url, timeout=20, headers={"User-Agent": "ed-news-fetcher/1.0"})
+        resp.raise_for_status()
+        parsed = feedparser.parse(resp.content)
+    except Exception as e:
+        logger.warning("sciencedirect_processor: failed to fetch %s: %s", feed_url, e)
+        return []
+
+    out = []
+    for e in parsed.entries:
+        guid = e.get("id") or e.get("guid") or e.get("link") or e.get("title")
+        title = e.get("title", "")
+        link = e.get("link", "")
+        published = e.get("published") or e.get("updated") or ""
+        summary = e.get("summary", "")
+
+        entry = {
+            "guid": guid,
+            "title": title,
+            "link": link,
+            "published": published,
+            "summary": summary,
+            "_entry": e,
+            "_feed_publication_id": publication_id,
+            "_feed_issn": issn,
+        }
+
+        # If no DOI is present, and this looks like a ScienceDirect link,
+        # try a Crossref title lookup (prefer the provided publication id).
+        try:
+            # extract existing doi-like fields from the feedparser entry
+            existing_doi = None
+            for k in ("doi", "dc:identifier"):
+                v = e.get(k) if isinstance(e, dict) else None
+                if v:
+                    existing_doi = v
+                    break
+            if not existing_doi and ("sciencedirect.com" in (link or "") or "sciencedirect.com" in (e.get('link') or "")):
+                if title and len(title) > 10:
+                    try:
+                        found = crossref.query_crossref_doi_by_title(title, preferred_publication_id=publication_id)
+                        if found:
+                            entry["doi"] = found
+                            logger.info("sciencedirect_processor: found DOI %s for title %s", found, title)
+                    except Exception:
+                        logger.debug("sciencedirect_processor: CrossRef title lookup failed for %s", title)
+        except Exception:
+            logger.debug("sciencedirect_processor: DOI extraction/lookup failed for entry %s", title)
+
+        out.append(entry)
+    return out

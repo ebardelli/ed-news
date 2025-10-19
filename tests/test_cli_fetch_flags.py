@@ -25,12 +25,35 @@ def _setup_monkeypatches(monkeypatch, called):
         called.append(f"fetch_feed:{key}")
         return {"key": key, "title": title, "entries": [{"id": 1}], "error": None}
 
+    # Accept flexible args to match new fetch/processor signatures
+    def fake_fetch_feed_flex(*args, **kwargs):
+        # args[1] is key when called as (session, key, title, url, ...)
+        key = args[1] if len(args) > 1 else kwargs.get('key', 'unknown')
+        called.append(f"fetch_feed:{key}")
+        return {"key": key, "title": kwargs.get('title') or (args[2] if len(args) > 2 else None), "entries": [{"id": 1}], "error": None}
+
     def fake_save_entries(conn, key, title, entries):
         called.append(f"save_entries:{key}")
         return len(entries)
 
-    monkeypatch.setattr(ed_main.feeds, "fetch_feed", fake_fetch_feed)
+    monkeypatch.setattr(ed_main.feeds, "fetch_feed", fake_fetch_feed_flex)
     monkeypatch.setattr(ed_main.feeds, "save_entries", fake_save_entries)
+
+    # Ensure load_feeds returns a simple feeds list without processors for these tests
+    monkeypatch.setattr(ed_main.feeds, "load_feeds", lambda: [("f1", "Feed Title", "http://example.com/feed", "10.0")])
+
+    # Patch the sciencedirect processor if invoked by CLI (new behaviour)
+    try:
+        import ednews.processors as proc_mod
+
+        def fake_sciencedirect_processor(session, feed_url, publication_id=None, issn=None):
+            # return a list of entries like fetch_feed would
+            called.append(f"sciencedirect_proc:{feed_url}")
+            return [{"guid": "g-p", "title": "P", "link": "http://example/", "published": "", "summary": ""}]
+
+        monkeypatch.setattr(proc_mod, "sciencedirect_feed_processor", fake_sciencedirect_processor, raising=False)
+    except Exception:
+        pass
 
     # Mock headlines fetcher
     def fake_fetch_all(session=None, cfg_path=None, conn=None):

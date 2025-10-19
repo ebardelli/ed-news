@@ -58,11 +58,13 @@ def load_feeds() -> List[tuple]:
         feeds = data.get("feeds", {})
         results = []
         for key, info in feeds.items():
-            url = info.get("feed")
-            if url:
-                pub_id = info.get("publication_id")
-                issn = info.get("issn")
-                results.append((key, info.get("title"), url, pub_id, issn))
+                url = info.get("feed")
+                if url:
+                    pub_id = info.get("publication_id")
+                    issn = info.get("issn")
+                    processor = info.get("processor") if isinstance(info, dict) else None
+                    # Return a tuple: (key, title, url, publication_id, issn, processor)
+                    results.append((key, info.get("title"), url, pub_id, issn, processor))
         return results
     # fallback: caller can import ednews.build.read_planet for ini
     return []
