@@ -8,7 +8,21 @@ name: update ed-news website
 #   arch: arm64
 
 steps:
-    - name: restore cache
+    - name: restore venv cache
+      image: meltwater/drone-cache:dev
+      pull: true
+      settings:
+        backend: "filesystem"
+        restore: true
+        cache_key: "volume"
+        archive_format: "gzip"
+        mount:
+          - 'venv'
+      volumes:
+      - name: venv
+        path: /tmp/venv
+
+    - name: restore db cache
       image: meltwater/drone-cache:dev
       pull: true
       settings:
@@ -25,7 +39,7 @@ steps:
     - name: fetch feeds
       image: ghcr.io/astral-sh/uv:debian
       commands:
-        - echo "Creating cache directory if it doesn't exist..."
+        - echo "Creating db cache directory if it doesn't exist..."
         - mkdir -p cache
         - echo "Checking if ednews.db exists in cache..."
         - '[ -f cache/ednews.db ] || (echo "ednews.db not found, creating an empty file..." && touch cache/ednews.db)'
@@ -36,12 +50,10 @@ steps:
         - uv run python main.py fetch
         - uv run python main.py issn-lookup
         - uv run python main.py enrich-crossref --batch 100
-        - uv run python main.py embed --articles
-        - uv run python main.py headlines
-        - uv run python main.py embed --headlines
+        - uv run python main.py embed
         - uv run python main.py build
 
-    - name: rebuild cache
+    - name: rebuild db cache
       image: meltwater/drone-cache:dev
       pull: true
       settings:
@@ -54,6 +66,20 @@ steps:
       volumes:
       - name: cache
         path: /tmp/cache
+
+    - name: rebuild venv cache
+      image: meltwater/drone-cache:dev
+      pull: true
+      settings:
+        backend: "filesystem"
+        rebuild: true
+        cache_key: "volume"
+        archive_format: "gzip"
+        mount:
+          - 'venv'
+      volumes:
+      - name: venv
+        path: /tmp/venv
 
     - name: update server
       image: drillster/drone-rsync
@@ -76,6 +102,9 @@ volumes:
     - name: cache
       host:
         path: /data/drone/cache
+    - name: venv
+      host:
+        path: /data/drone/.venv
     - name: www_dir
       host:
         path: /data/www/ed-news

@@ -16,10 +16,19 @@ logger = logging.getLogger("ednews.main")
 
 
 def cmd_fetch(args):
-    feeds_list = feeds.load_feeds()
+    # Determine which sources to fetch. If neither flag is provided, fetch both.
+    want_articles = getattr(args, "articles", False)
+    want_headlines = getattr(args, "headlines", False)
+
+    if not want_articles and not want_headlines:
+        want_articles = True
+        want_headlines = True
+
+    feeds_list = feeds.load_feeds() if want_articles else []
     if not feeds_list:
-        logger.error("No feeds found; aborting fetch")
-        return
+        if want_articles:
+            logger.error("No feeds found; aborting fetch")
+            return
     conn = sqlite3.connect(str(config.DB_PATH))
     # ensure DB initialized
     from ednews.db import init_db
@@ -39,32 +48,48 @@ def cmd_fetch(args):
         logger.debug("failed to import sync_publications_from_feeds")
 
     session = requests.Session()
-    with ThreadPoolExecutor(max_workers=8) as ex:
-        futures = {}
-        for item in feeds_list:
-            if len(item) >= 4:
-                key, title, url, publication_doi = item[:4]
-            else:
-                continue
-            fut = ex.submit(feeds.fetch_feed, session, key, title, url, publication_doi)
-            futures[fut] = (key, title, url, publication_doi)
-        for fut in as_completed(futures):
-            meta = futures[fut]
-            try:
-                res = fut.result()
-            except Exception as exc:
-                logger.error("Error fetching %s: %s", meta[2], exc)
-                continue
-            if res.get("error"):
-                logger.warning("Failed: %s -> %s", meta[2], res["error"])
-                continue
-            try:
-                from ednews.feeds import save_entries
+    # Run article feed fetching if requested
+    if want_articles:
+        with ThreadPoolExecutor(max_workers=8) as ex:
+            futures = {}
+            for item in feeds_list:
+                if len(item) >= 4:
+                    key, title, url, publication_doi = item[:4]
+                else:
+                    continue
+                fut = ex.submit(feeds.fetch_feed, session, key, title, url, publication_doi)
+                futures[fut] = (key, title, url, publication_doi)
+            for fut in as_completed(futures):
+                meta = futures[fut]
+                try:
+                    res = fut.result()
+                except Exception as exc:
+                    logger.error("Error fetching %s: %s", meta[2], exc)
+                    continue
+                if res.get("error"):
+                    logger.warning("Failed: %s -> %s", meta[2], res["error"])
+                    continue
+                try:
+                    from ednews.feeds import save_entries
 
-                cnt = save_entries(conn, res["key"], res["title"], res["entries"])
-                logger.info("%s: fetched %d entries, inserted %d", res["key"], len(res["entries"]), cnt)
-            except Exception as e:
-                logger.exception("Failed to save entries for %s: %s", res.get("key"), e)
+                    cnt = save_entries(conn, res["key"], res["title"], res["entries"])
+                    logger.info("%s: fetched %d entries, inserted %d", res["key"], len(res["entries"]), cnt)
+                except Exception as e:
+                    logger.exception("Failed to save entries for %s: %s", res.get("key"), e)
+    else:
+        # articles not requested; skip article fetching block
+        pass
+
+    # Run headlines fetch if requested
+    if want_headlines:
+        try:
+            from ednews.news import fetch_all
+
+            # use the same session and DB connection to persist headlines
+            results = fetch_all(session=session, conn=conn)
+            logger.info("Fetched headlines for %d sites", len(results))
+        except Exception:
+            logger.exception("Failed to fetch headlines")
 
     conn.close()
 
@@ -186,6 +211,8 @@ def main():
     sub = parser.add_subparsers(dest="cmd")
 
     p_fetch = sub.add_parser("fetch", help="Fetch feeds and save items")
+    p_fetch.add_argument("--articles", action="store_true", help="Also fetch article feeds (default: both articles and headlines if no flags are set)")
+    p_fetch.add_argument("--headlines", action="store_true", help="Also fetch news headlines (default: both articles and headlines if no flags are set)")
     p_fetch.set_defaults(func=cmd_fetch)
 
     p_build = sub.add_parser("build", help="Render static site into build/")

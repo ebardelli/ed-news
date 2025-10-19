@@ -90,6 +90,22 @@ Tip: most `main.py` commands accept a global `-v/--verbose` flag to enable debug
 uv run python main.py -v fetch
 ```
 
+Examples for the new fetch flags:
+
+```bash
+# Fetch both article feeds and news headlines (default)
+uv run python main.py fetch
+
+# Fetch only article feeds
+uv run python main.py fetch --articles
+
+# Fetch only news headlines
+uv run python main.py fetch --headlines
+
+# Explicitly fetch both
+uv run python main.py fetch --articles --headlines
+```
+
 There is also `ednews.build` which contains the core build logic and is exercised by tests. `main.py` provides a convenient CLI wrapper that calls into the package code.
 
 The generated output will be placed in `build/` and includes `index.html`, `index.rss`, and a `static/` folder with assets.
