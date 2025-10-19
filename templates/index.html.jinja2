@@ -24,7 +24,7 @@
     <main>
         <section>
             <div class="content">
-            {# Latest News Headlines section (from news_items) #}
+            {# Latest News Headlines section (from headlines) #}
             <div id="view-headlines" class="view-section" style="display:none;">
                 {% if news_headlines %}
                     {% for h in news_headlines %}
@@ -36,6 +36,23 @@
                                 {% endif %}
                             </p>
                             <p class="excerpt">{{ h.text or '' }}</p>
+                            {# Related headlines (populated by build.py) #}
+                            {% if h.similar_headlines %}
+                                <div class="similar-articles">
+                                    <h4>Related headlines</h4>
+                                    <ul>
+                                        {% for s in h.similar_headlines %}
+                                            <li>
+                                                {% if s.link %}
+                                                    <a href="{{ s.link }}">{{ s.title or 'Untitled' }}</a>
+                                                {% else %}
+                                                    {{ s.title or 'Untitled' }}
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 {% else %}

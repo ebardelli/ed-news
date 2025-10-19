@@ -34,6 +34,11 @@ CROSSREF_STATUS_FORCELIST = [429, 500, 502, 503, 504]
 # articles for that date are included.
 ARTICLES_DEFAULT_LIMIT = 20
 
+# Default number of headlienes to include on the site build. When more than this
+# number of headlines share the same DATE(published) as the Nth headline, all
+# headlines for that date are included.
+HEADLINES_DEFAULT_LIMIT = 20
+
 # Maximum number of extra articles to include when expanding the selection to
 # include all articles that share the Nth article's DATE(published). This
 # prevents pathological cases where a single date contains hundreds or

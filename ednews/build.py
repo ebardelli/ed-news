@@ -263,11 +263,76 @@ def build(out_dir: Path = BUILD_DIR):
     else:
         ctx["articles"] = []
 
-    # Load recent news headlines from the news_items table if present
+    # Load recent news headlines from the headlines table if present
     try:
-        ctx["news_headlines"] = read_news_headlines(DB_FILE, limit=getattr(config, 'NEWS_HEADLINES_LIMIT', 8))
+        # Use the configured headlines default limit; fall back to 20 when not set.
+        ctx["news_headlines"] = read_news_headlines(DB_FILE, limit=getattr(config, 'HEADLINES_DEFAULT_LIMIT', 20))
     except Exception:
         ctx["news_headlines"] = []
+
+    # Compute related headlines using stored embeddings (headlines_vec).
+    try:
+        from . import embeddings as _emb
+        # Ensure the headlines_vec virtual table exists (no-op if not supported)
+        try:
+            conn_tmp = sqlite3.connect(str(DB_FILE))
+            _emb.create_headlines_vec(conn_tmp)
+        finally:
+            try:
+                conn_tmp.close()
+            except Exception:
+                pass
+
+        if ctx.get("news_headlines"):
+            try:
+                conn_sim = sqlite3.connect(str(DB_FILE))
+                for nh in ctx["news_headlines"]:
+                    nid = nh.get("id")
+                    if not nid:
+                        nh["similar_headlines"] = []
+                        continue
+                    try:
+                        sims = _emb.find_similar_headlines_by_rowid(conn_sim, nid, top_n=5)
+                        nh["similar_headlines"] = sims or []
+                    except Exception:
+                        logger.exception("Error computing similar headlines for id=%s", nid)
+                        nh["similar_headlines"] = []
+            finally:
+                try:
+                    conn_sim.close()
+                except Exception:
+                    pass
+    except Exception:
+        # If embeddings backend not available, leave similar_headlines empty
+        try:
+            for nh in ctx.get("news_headlines") or []:
+                nh["similar_headlines"] = []
+        except Exception:
+            pass
+
+    # Log headline embedding/stats: total headlines, how many have similar suggestions,
+    # and how many embeddings exist in the headlines_vec table (if available).
+    try:
+        total_headlines = len(ctx.get("news_headlines") or [])
+        with_emb_suggestions = sum(1 for nh in (ctx.get("news_headlines") or []) if nh.get("similar_headlines"))
+        emb_count = None
+        try:
+            conn_stat = sqlite3.connect(str(DB_FILE))
+            cur_stat = conn_stat.cursor()
+            cur_stat.execute("SELECT COUNT(rowid) FROM headlines_vec")
+            row = cur_stat.fetchone()
+            emb_count = row[0] if row and row[0] is not None else 0
+        except Exception:
+            emb_count = None
+        finally:
+            try:
+                if conn_stat:
+                    conn_stat.close()
+            except Exception:
+                pass
+        logger.info("headlines: total=%d with_suggestions=%d embeddings=%s", total_headlines, with_emb_suggestions, str(emb_count))
+    except Exception:
+        logger.exception("Failed to compute headline build stats")
 
     if "articles" in ctx:
         grouped_articles = {}
@@ -599,19 +664,27 @@ def read_articles(db_path: Path, limit: int = config.ARTICLES_DEFAULT_LIMIT, day
     return out
 
 
-def read_news_headlines(db_path: Path, limit: int = 8):
-    """Read the most recent news headlines from the `news_items` table.
+def read_news_headlines(db_path: Path, limit: int = None):
+    """Read the most recent news headlines from the `headlines` table.
 
     Returns a list of dicts with keys: title, link, text, published (short string).
     """
     if not db_path.exists():
         return []
+    if limit is None:
+        try:
+            from . import config as _cfg
+
+            limit = getattr(_cfg, 'HEADLINES_DEFAULT_LIMIT', 8)
+        except Exception:
+            limit = 8
     conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
     try:
-        # fetch a reasonable number of recent rows; we'll sort in Python by parsed datetime
-        cur.execute("SELECT title, link, text, published, first_seen FROM news_items")
+        # fetch a reasonable number of recent rows; include `id` so callers can
+        # reference the headlines rowid when looking up headline embeddings.
+        cur.execute("SELECT id, title, link, text, published, first_seen FROM headlines")
         rows = [dict(r) for r in cur.fetchall()]
     except Exception:
         rows = []
@@ -675,8 +748,27 @@ def read_news_headlines(db_path: Path, limit: int = 8):
     # sort by datetime (None values go last)
     enriched.sort(key=lambda x: (x[0] is None, x[0]), reverse=True)
 
-    # take top N
-    selected = [r for _, r in enriched[:limit]]
+    # If we have no rows, return empty
+    if not enriched:
+        return []
+
+    # Determine the Nth date and include all headlines on or after that date
+    if len(enriched) >= limit:
+        nth_dt = enriched[limit - 1][0]
+        try:
+            nth_date = nth_dt.date().isoformat()
+        except Exception:
+            nth_date = None
+    else:
+        nth_date = None
+
+    if nth_date:
+        # include all rows whose DATE(published) is >= nth_date (preserving order)
+        selected_rows = [r for dt, r in enriched if (dt is not None and dt.date().isoformat() >= nth_date)]
+    else:
+        selected_rows = [r for _, r in enriched[:limit]]
+
+    selected = selected_rows
 
     def format_short_date(value):
         if not value:
@@ -714,6 +806,7 @@ def read_news_headlines(db_path: Path, limit: int = 8):
     out = []
     for r in selected:
         out.append({
+            "id": r.get("id"),
             "title": r.get("title"),
             "link": r.get("link"),
             "text": r.get("text"),
@@ -734,7 +827,8 @@ def export_db_parquet(out_dir: Path, tables: list | None = None):
             exports the default set: articles, items, publications, articles_vec.
     """
     if tables is None:
-        tables = ["articles", "items", "publications"]
+        # include a headlines parquet export which sources from the news_items table
+        tables = ["articles", "items", "publications", "headlines"]
 
     if not DB_FILE.exists():
         logger.debug("DB file %s does not exist; skipping parquet export", DB_FILE)
@@ -758,15 +852,17 @@ def export_db_parquet(out_dir: Path, tables: list | None = None):
         for table in tables:
             dest = db_out / f"{table}.parquet"
             try:
+                # Map logical 'headlines' dest to the headlines table in SQLite
+                src_table = 'headlines' if table == 'headlines' else table
                 # Use sqlite_scan to read a table directly from the SQLite file
                 sql = (
-                    "COPY (SELECT * FROM sqlite_scan('" + str(DB_FILE) + "', '" + table + "')) "
+                    "COPY (SELECT * FROM sqlite_scan('" + str(DB_FILE) + "', '" + src_table + "')) "
                     "TO '" + str(dest) + "' (FORMAT PARQUET)"
                 )
                 con.execute(sql)
-                logger.info("exported table %s -> %s", table, dest)
+                logger.info("exported table %s (src=%s) -> %s", table, src_table, dest)
             except Exception as e:
-                logger.warning("failed to export table %s: %s", table, e)
+                logger.warning("failed to export table %s (src=%s): %s", table, src_table, e)
     except Exception as e:
         logger.warning("duckdb export failed: %s", e)
     finally:

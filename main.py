@@ -77,7 +77,29 @@ def cmd_build(args):
 def cmd_embed(args):
     conn = sqlite3.connect(str(config.DB_PATH))
     embeddings.create_database(conn)
-    embeddings.generate_and_insert_embeddings_local(conn, model=args.model, batch_size=args.batch_size)
+    # Determine which embedding sets to generate.
+    want_articles = getattr(args, 'articles', False)
+    want_headlines = getattr(args, 'headlines', False)
+
+    # If neither flag is provided, default to generating both articles and headlines.
+    if not want_articles and not want_headlines:
+        want_articles = True
+        want_headlines = True
+
+    # Generate article embeddings if requested
+    if want_articles:
+        try:
+            embeddings.generate_and_insert_embeddings_local(conn, model=args.model, batch_size=args.batch_size)
+        except Exception:
+            logger.exception("Failed to generate article embeddings")
+
+    # Generate headline embeddings if requested
+    if want_headlines:
+        try:
+            embeddings.create_headlines_vec(conn)
+            embeddings.generate_and_insert_headline_embeddings(conn, model=args.model, batch_size=args.batch_size)
+        except Exception:
+            logger.exception("Failed to generate headline embeddings")
     conn.close()
 
 
@@ -124,7 +146,7 @@ def cmd_issn_lookup(args):
         conn.close()
 
 
-def cmd_news(args):
+def cmd_headlines(args):
     """Fetch configured news sites and print headlines as JSON.
 
     This is intentionally simple: it prints a JSON object mapping site
@@ -173,6 +195,8 @@ def main():
     p_embed = sub.add_parser("embed", help="Generate local embeddings and store in DB")
     p_embed.add_argument("--model", help="Embedding model", default=None)
     p_embed.add_argument("--batch-size", type=int, default=64)
+    p_embed.add_argument("--headlines", action="store_true", help="Also generate embeddings for news headlines")
+    p_embed.add_argument("--articles", action="store_true", help="Generate embeddings for articles (default: both articles and headlines if no flags are set)")
     p_embed.set_defaults(func=cmd_embed)
 
     p_enrich = sub.add_parser("enrich-crossref", help="Enrich articles missing Crossref XML")
@@ -186,10 +210,10 @@ def main():
     p_issn.add_argument("--delay", type=float, default=0.05, help="Delay between individual requests (seconds)")
     p_issn.set_defaults(func=cmd_issn_lookup)
 
-    p_news = sub.add_parser("news", help="Fetch latest headlines from news.json sites")
-    p_news.add_argument("--out", help="Write output JSON to this file")
-    p_news.add_argument("--no-persist", action="store_true", help="Do not persist fetched headlines to the configured DB (default: persist)")
-    p_news.set_defaults(func=cmd_news)
+    p_headlines = sub.add_parser("headlines", help="Fetch latest headlines from news.json sites")
+    p_headlines.add_argument("--out", help="Write output JSON to this file")
+    p_headlines.add_argument("--no-persist", action="store_true", help="Do not persist fetched headlines to the configured DB (default: persist)")
+    p_headlines.set_defaults(func=cmd_headlines)
 
     args = parser.parse_args()
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")

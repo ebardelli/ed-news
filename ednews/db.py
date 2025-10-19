@@ -90,7 +90,7 @@ def init_db(conn: sqlite3.Connection):
     # Table for saving scraped or fetched news headlines from news.json sites.
     cur.execute(
         """
-        CREATE TABLE IF NOT EXISTS news_items (
+        CREATE TABLE IF NOT EXISTS headlines (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             source TEXT,
             title TEXT,
@@ -104,7 +104,7 @@ def init_db(conn: sqlite3.Connection):
     )
     cur.execute(
         """
-        CREATE INDEX IF NOT EXISTS idx_news_items_source_first_seen ON news_items (source, first_seen)
+        CREATE INDEX IF NOT EXISTS idx_headlines_source_first_seen ON headlines (source, first_seen)
         """
     )
 
@@ -467,7 +467,7 @@ def sync_publications_from_feeds(conn, feeds_list) -> int:
 
 
 def upsert_news_item(conn: sqlite3.Connection, source: str, title: str | None, text: str | None, link: str | None, published: str | None = None, first_seen: str | None = None) -> int | bool:
-    """Insert or update a news_items row.
+    """Insert or update a headlines row.
 
     Uses UNIQUE(link, title) to avoid duplicates. Returns the inserted/updated
     row id on success, False on failure.
@@ -529,16 +529,16 @@ def upsert_news_item(conn: sqlite3.Connection, source: str, title: str | None, t
     try:
         cur.execute(
             """
-            INSERT INTO news_items (source, title, text, link, first_seen, published)
+            INSERT INTO headlines (source, title, text, link, first_seen, published)
             VALUES (?, ?, ?, ?, ?, ?)
             ON CONFLICT(link, title) DO UPDATE SET
-                text = COALESCE(excluded.text, news_items.text),
-                published = COALESCE(excluded.published, news_items.published)
+                text = COALESCE(excluded.text, headlines.text),
+                published = COALESCE(excluded.published, headlines.published)
             """,
             (source, title, text, link, first_seen, published),
         )
         conn.commit()
-        cur.execute("SELECT id FROM news_items WHERE link = ? AND title = ? LIMIT 1", (link, title))
+        cur.execute("SELECT id FROM headlines WHERE link = ? AND title = ? LIMIT 1", (link, title))
         row = cur.fetchone()
         return row[0] if row and row[0] else None
     except Exception:
@@ -546,8 +546,8 @@ def upsert_news_item(conn: sqlite3.Connection, source: str, title: str | None, t
         return False
 
 
-def save_news_items(conn: sqlite3.Connection, source: str, items: list[dict]) -> int:
-    """Save multiple news items from a site into the database.
+def save_headlines(conn: sqlite3.Connection, source: str, items: list[dict]) -> int:
+    """Save multiple headline items from a site into the database.
 
     Returns the number of successfully upserted items.
     """
@@ -564,9 +564,14 @@ def save_news_items(conn: sqlite3.Connection, source: str, items: list[dict]) ->
             if res:
                 count += 1
         except Exception:
-            logger.exception("Failed to save news item for source=%s item=%s", source, it)
-    logger.info("Saved %d/%d news items for source=%s", count, len(items), source)
+            logger.exception("Failed to save headline for source=%s item=%s", source, it)
+    logger.info("Saved %d/%d headlines for source=%s", count, len(items), source)
     return count
+
+
+# Backwards-compatible name: save_news_items -> save_headlines
+def save_news_items(conn: sqlite3.Connection, source: str, items: list[dict]) -> int:
+    return save_headlines(conn, source, items)
 
 
 def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int = 30, timeout: int = 10, delay: float = 0.05):

@@ -27,7 +27,7 @@ def test_upsert_and_save_news_item(tmp_path):
 
     # ensure rows present
     cur = conn.cursor()
-    cur.execute("SELECT COUNT(1) FROM news_items")
+    cur.execute("SELECT COUNT(1) FROM headlines")
     n = cur.fetchone()[0]
     assert n >= 3
     conn.close()

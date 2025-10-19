@@ -36,7 +36,9 @@ steps:
         - uv run python main.py fetch
         - uv run python main.py issn-lookup
         - uv run python main.py enrich-crossref --batch 100
-        - uv run python main.py embed
+        - uv run python main.py embed --articles
+        - uv run python main.py headlines
+        - uv run python main.py embed --headlines
         - uv run python main.py build
 
     - name: rebuild cache

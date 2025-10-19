@@ -7,7 +7,7 @@ from ednews import db as eddb
 
 def get_published_from_db(conn, title):
     cur = conn.cursor()
-    cur.execute("SELECT published FROM news_items WHERE title = ? LIMIT 1", (title,))
+    cur.execute("SELECT published FROM headlines WHERE title = ? LIMIT 1", (title,))
     row = cur.fetchone()
     return row[0] if row and row[0] else None
 
