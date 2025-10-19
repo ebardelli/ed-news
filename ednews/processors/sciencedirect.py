@@ -7,10 +7,10 @@ attempt enrichment by resolving DOIs and fetching Crossref metadata.
 import logging
 from typing import List
 import sqlite3
-from . import crossref
-from . import db as eddb
+from .. import crossref
+from .. import db as eddb
 
-logger = logging.getLogger("ednews.sciencedirect")
+logger = logging.getLogger("ednews.processors.sciencedirect")
 
 
 def find_sciencedirect_items_missing_metadata(conn: sqlite3.Connection, limit: int | None = None) -> List[dict]:
@@ -68,9 +68,8 @@ def enrich_sciencedirect(conn: sqlite3.Connection, limit: int | None = None, app
 
         if doi:
             norm = None
-            # reuse db.normalize? keep simple and call crossref.normalize in caller if needed
             try:
-                from .feeds import normalize_doi
+                from ..feeds import normalize_doi
 
                 norm = normalize_doi(doi)
             except Exception:
@@ -108,7 +107,7 @@ def enrich_sciencedirect(conn: sqlite3.Connection, limit: int | None = None, app
             continue
 
         try:
-            from .db import ensure_article_row
+            from ..db import ensure_article_row
 
             aid = ensure_article_row(conn, norm, title=title, authors=authors, abstract=abstract, feed_id=None, publication_id=None, issn=None)
             if aid:

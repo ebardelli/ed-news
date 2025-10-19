@@ -16,7 +16,6 @@ from typing import Dict, List
 
 import feedparser
 import requests
-from bs4 import BeautifulSoup
 
 CONFIG_PATH = Path("news.json")
 
@@ -35,57 +34,15 @@ def load_config(path: Path | str | None = None) -> Dict:
         return json.load(fh)
 
 
-def fcmat_processor(html: str, base_url: str | None = None) -> List[Dict]:
-    """Parse FCMAT headlines page HTML and extract headline items.
-
-    The fixture in `tests/fixtures/fcmat.html` contains a section
-    with id "fcmatnewsupdates" and repeated `.col-lg-4` columns each
-    containing an <h4><a> title and a .date-published paragraph.
-
-    Returns a list of dicts: title, link, summary, published.
-    """
-    soup = BeautifulSoup(html, "html.parser")
-    out: List[Dict] = []
-
-    container = soup.select_one("section#fcmatnewsupdates")
-    if not container:
-        # fallback: search whole document for the column blocks
-        blocks = soup.select(".col-lg-4")
-    else:
-        blocks = container.select(".col-lg-4")
-
-    for b in blocks:
-        a = b.select_one("h4 a")
-        if not a:
-            continue
-        title = a.get_text(strip=True)
-        link = a.get("href") or ""
-        # Normalize relative links if base_url provided
-        if base_url and link and link.startswith("/"):
-            link = base_url.rstrip("/") + link
-
-        date_p = b.select_one("p.date-published")
-        published = date_p.get_text(separator=" ", strip=True) if date_p else ""
-
-        # The summary is usually the first <p> after the date paragraph
-        summary = ""
-        if date_p:
-            # find the next sibling paragraph inside the block
-            next_p = date_p.find_next_sibling("p")
-            if next_p:
-                summary = next_p.get_text(strip=True)
-        else:
-            # fallback: first non-date paragraph
-            p = b.select_one("p:not(.date-published)")
-            if p:
-                summary = p.get_text(strip=True)
-
-        out.append({"title": title, "link": link, "summary": summary, "published": published})
-
-    return out
+from ednews.processors.fcmat import fcmat_processor
+from ednews.processors.pressdemocrat import pd_education_feed_processor
 
 
 PROCESSORS = {"fcmat": fcmat_processor}
+
+
+# feed-specific processors (take session, feed_url)
+FEED_PROCESSORS = {"pd-education": pd_education_feed_processor}
 
 
 def fetch_site(session: requests.Session, site_cfg: Dict) -> List[Dict]:
@@ -101,6 +58,12 @@ def fetch_site(session: requests.Session, site_cfg: Dict) -> List[Dict]:
     link = site_cfg.get("link")
 
     if feed_url:
+        # If a feed-specific processor exists (e.g. to filter AP items),
+        # prefer it. Otherwise fall back to the simple feedparser path.
+        proc = FEED_PROCESSORS.get(processor_name) if processor_name else None
+        if proc:
+            return proc(session, feed_url)
+
         parsed = feedparser.parse(feed_url)
         out: List[Dict] = []
         for e in parsed.entries:

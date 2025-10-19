@@ -10,7 +10,7 @@ __all__ = [
     "db",
     "feeds",
     "crossref",
-    "sciencedirect",
+    "processors",
     "build",
     "embeddings",
 ]

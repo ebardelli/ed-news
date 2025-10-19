@@ -6,6 +6,11 @@
       "link": "https://www.fcmat.org/news-headlines",
       "feed": "",
       "processor": "fcmat"
+    },
+    "pd-education" : {
+        "title": "Press Democrat Education News",
+        "feed": "https://www.pressdemocrat.com/news/education/feed/",
+        "processor": "pd-education"
     }
   }
 }
