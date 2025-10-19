@@ -35,7 +35,6 @@ steps:
         - '[ -d cache/.venv ] || (echo ".venv not found in cache, creating virtual environment..." && touch cache/.venv)'
         - echo "Creating symbolic link for .venv into cache..."
         - ln -sf cache/.venv .venv
-        - uv venv --python 3.13
         - uv sync
         - uv run python main.py fetch
         - uv run python main.py issn-lookup
