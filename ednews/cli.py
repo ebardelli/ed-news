@@ -32,10 +32,6 @@ def cmd_fetch(args):
             logger.error("No feeds found; aborting fetch")
             return
     conn = sqlite3.connect(str(config.DB_PATH))
-    # ensure DB initialized (moved to manage_db)
-    from ednews.db.manage_db import init_db
-
-    init_db(conn)
 
     # Ensure publications table is populated/upserted from planet.json feeds
     try:
@@ -133,12 +129,12 @@ def cmd_embed(args):
 def cmd_enrich_crossref(args):
     """Enrich articles missing Crossref XML by querying Crossref for metadata."""
     conn = sqlite3.connect(str(config.DB_PATH))
-    # ensure DB initialized
-    from ednews.db.manage_db import init_db
+    # NOTE: database initialization (schema + views) is now managed via the
+    # top-level `db-init` command. This command assumes the DB exists.
     from ednews.db import enrich_articles_from_crossref
     from ednews.crossref import fetch_crossref_metadata
 
-    init_db(conn)
+    # db-init should be run explicitly; do not initialize here.
     # Use the existing fetcher function as a callable that takes a DOI and returns a dict
     def fetcher(doi):
         return fetch_crossref_metadata(doi)
@@ -155,6 +151,24 @@ def cmd_enrich_crossref(args):
     conn.close()
 
 
+def cmd_db_init(args):
+    """Create DB schema and views. Intended to be run once when setting up the DB."""
+    conn = sqlite3.connect(str(config.DB_PATH))
+    try:
+        from ednews.db import init_db
+
+        init_db(conn)
+        print("Database initialized (tables and views created)")
+    except Exception:
+        logger.exception("db-init failed")
+        raise
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+
 def cmd_issn_lookup(args):
     """Fetch latest works for journals that have an ISSN in the feeds list."""
     feeds_list = feeds.load_feeds()
@@ -162,9 +176,7 @@ def cmd_issn_lookup(args):
         logger.error("No feeds found; aborting ISSN lookup")
         return
     conn = sqlite3.connect(str(config.DB_PATH))
-    from ednews.db.manage_db import init_db, fetch_latest_journal_works
-
-    init_db(conn)
+    from ednews.db.manage_db import fetch_latest_journal_works
     try:
         inserted = fetch_latest_journal_works(conn, feeds_list, per_journal=args.per_journal, timeout=args.timeout, delay=args.delay)
         logger.info("Inserted %d articles from ISSN lookups", inserted)
@@ -188,10 +200,6 @@ def cmd_headlines(args):
     try:
         if not getattr(args, "no_persist", False):
             conn = sqlite3.connect(str(config.DB_PATH))
-            # ensure DB initialized
-            from ednews.db import init_db
-
-            init_db(conn)
         results = fetch_all(session=session, conn=conn)
         if args.out:
             with open(args.out, "w", encoding="utf-8") as fh:
@@ -475,6 +483,10 @@ def run():
     p_headlines.add_argument("--out", help="Write output JSON to this file")
     p_headlines.add_argument("--no-persist", action="store_true", help="Do not persist fetched headlines to the configured DB (default: persist)")
     p_headlines.set_defaults(func=cmd_headlines)
+
+    # One-time DB initialization command. Creates tables and the combined view.
+    p_dbinit = sub.add_parser("db-init", help="Create DB schema and views (run once)")
+    p_dbinit.set_defaults(func=cmd_db_init)
 
     # DB maintenance commands
     p_manage = sub.add_parser("manage-db", help="Database maintenance commands")

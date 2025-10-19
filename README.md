@@ -110,6 +110,20 @@ There is also `ednews.build` which contains the core build logic and is exercise
 
 The generated output will be placed in `build/` and includes `index.html`, `index.rss`, and a `static/` folder with assets.
 
+## Database initialization
+
+This project requires an SQLite database with the project's schema and the
+`combined_articles` view. Initialize the DB once with the `db-init` CLI
+command:
+
+```bash
+# Create the DB and schema (run once)
+python main.py db-init
+```
+
+The command is idempotent — it uses `CREATE TABLE IF NOT EXISTS` and
+`CREATE VIEW IF NOT EXISTS`, so running it multiple times is safe.
+
 ## Tests
 
 Run the test suite with pytest:
