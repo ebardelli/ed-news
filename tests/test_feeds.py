@@ -6,7 +6,7 @@ def test_load_feeds_no_planet(tmp_path, monkeypatch):
     # Ensure load_feeds returns empty when no planet file exists
     monkeypatch.setattr(feeds, 'config', feeds.config)
     # Temporarily point to a non-existent path via config
-    monkeypatch.setattr(feeds.config, 'PLANET_JSON', tmp_path / 'missing.json')
+    monkeypatch.setattr(feeds.config, 'RESEARCH_JSON', tmp_path / 'missing.json')
     res = feeds.load_feeds()
     assert res == []
 

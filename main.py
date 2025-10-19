@@ -124,6 +124,40 @@ def cmd_issn_lookup(args):
         conn.close()
 
 
+def cmd_news(args):
+    """Fetch configured news sites and print headlines as JSON.
+
+    This is intentionally simple: it prints a JSON object mapping site
+    keys to arrays of headlines. Use --out to write to file.
+    """
+    from ednews.news import fetch_all
+    import json
+
+    session = requests.Session()
+    conn = None
+    try:
+        if not getattr(args, "no_persist", False):
+            conn = sqlite3.connect(str(config.DB_PATH))
+            # ensure DB initialized
+            from ednews.db import init_db
+
+            init_db(conn)
+        results = fetch_all(session=session, conn=conn)
+        if args.out:
+            with open(args.out, "w", encoding="utf-8") as fh:
+                json.dump(results, fh, ensure_ascii=False, indent=2)
+            logger.info("Wrote news JSON to %s", args.out)
+        else:
+            # Do not emit JSON to stdout; persistence to DB is the default behaviour.
+            logger.info("Fetched news%s", (" and persisted to DB" if conn else ""))
+    finally:
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
+
 def main():
     parser = argparse.ArgumentParser(prog="ednews")
     parser.add_argument("-v", "--verbose", action="store_true")
@@ -151,6 +185,11 @@ def main():
     p_issn.add_argument("--timeout", type=float, default=10.0, help="Request timeout in seconds")
     p_issn.add_argument("--delay", type=float, default=0.05, help="Delay between individual requests (seconds)")
     p_issn.set_defaults(func=cmd_issn_lookup)
+
+    p_news = sub.add_parser("news", help="Fetch latest headlines from news.json sites")
+    p_news.add_argument("--out", help="Write output JSON to this file")
+    p_news.add_argument("--no-persist", action="store_true", help="Do not persist fetched headlines to the configured DB (default: persist)")
+    p_news.set_defaults(func=cmd_news)
 
     args = parser.parse_args()
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")

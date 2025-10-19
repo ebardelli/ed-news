@@ -8,6 +8,8 @@ initialize schema, and perform common upsert and query operations on the
 import sqlite3
 from datetime import datetime, timezone
 import logging
+from email.utils import parsedate_to_datetime
+from . import config
 
 logger = logging.getLogger("ednews.db")
 
@@ -82,6 +84,27 @@ def init_db(conn: sqlite3.Connection):
             issn TEXT NOT NULL,
             PRIMARY KEY (publication_id, issn)
         )
+        """
+    )
+
+    # Table for saving scraped or fetched news headlines from news.json sites.
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS news_items (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            source TEXT,
+            title TEXT,
+            text TEXT,
+            link TEXT,
+            first_seen TEXT,
+            published TEXT,
+            UNIQUE(link, title)
+        )
+        """
+    )
+    cur.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_news_items_source_first_seen ON news_items (source, first_seen)
         """
     )
 
@@ -440,6 +463,109 @@ def sync_publications_from_feeds(conn, feeds_list) -> int:
             logger.exception("Failed to sync publication for feed item: %s", item)
             continue
     logger.info("Synchronized %d publications from feeds", count)
+    return count
+
+
+def upsert_news_item(conn: sqlite3.Connection, source: str, title: str | None, text: str | None, link: str | None, published: str | None = None, first_seen: str | None = None) -> int | bool:
+    """Insert or update a news_items row.
+
+    Uses UNIQUE(link, title) to avoid duplicates. Returns the inserted/updated
+    row id on success, False on failure.
+    """
+    if not (title or link):
+        return False
+    cur = conn.cursor()
+    now = datetime.now(timezone.utc).isoformat()
+    # Normalize first_seen: prefer provided, else use now. Store as ISO date/time string.
+    if first_seen:
+        try:
+            try:
+                # try parsing common ISO formats
+                fs_dt = datetime.fromisoformat(first_seen.replace('Z', '+00:00'))
+            except Exception:
+                fs_dt = parsedate_to_datetime(first_seen)
+            first_seen = fs_dt.isoformat()
+        except Exception:
+            first_seen = now
+    else:
+        first_seen = now
+
+    # Normalize published: if provided, try to parse and store ISO date (YYYY-MM-DD or full iso); else use default
+    if published:
+        try:
+            s = str(published).strip()
+            pub_dt = None
+            # Try ISO first
+            try:
+                pub_dt = datetime.fromisoformat(s.replace('Z', '+00:00'))
+            except Exception:
+                pub_dt = None
+            # Try RFC/email-style parsing next
+            if pub_dt is None:
+                try:
+                    pub_dt = parsedate_to_datetime(s)
+                except Exception:
+                    pub_dt = None
+            # Try several common human-readable formats (e.g. 'Sep 04, 2025')
+            if pub_dt is None:
+                for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d", "%b %d, %Y", "%B %d, %Y", "%d %b %Y"):
+                    try:
+                        pub_dt = datetime.strptime(s, fmt)
+                        # make timezone-aware as UTC for consistency
+                        pub_dt = pub_dt.replace(tzinfo=timezone.utc)
+                        break
+                    except Exception:
+                        continue
+            # If parsed, store ISO; otherwise keep original string
+            if pub_dt is not None:
+                published = pub_dt.isoformat()
+            else:
+                published = published
+        except Exception:
+            # leave as-is if parsing fails
+            published = published
+    else:
+        published = config.DEFAULT_MISSING_DATE
+    try:
+        cur.execute(
+            """
+            INSERT INTO news_items (source, title, text, link, first_seen, published)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(link, title) DO UPDATE SET
+                text = COALESCE(excluded.text, news_items.text),
+                published = COALESCE(excluded.published, news_items.published)
+            """,
+            (source, title, text, link, first_seen, published),
+        )
+        conn.commit()
+        cur.execute("SELECT id FROM news_items WHERE link = ? AND title = ? LIMIT 1", (link, title))
+        row = cur.fetchone()
+        return row[0] if row and row[0] else None
+    except Exception:
+        logger.exception("Failed to upsert news_item source=%s title=%s link=%s", source, title, link)
+        return False
+
+
+def save_news_items(conn: sqlite3.Connection, source: str, items: list[dict]) -> int:
+    """Save multiple news items from a site into the database.
+
+    Returns the number of successfully upserted items.
+    """
+    if not items:
+        return 0
+    count = 0
+    for it in items:
+        try:
+            title = it.get("title")
+            link = it.get("link")
+            text = it.get("summary") or it.get("text") or None
+            published = it.get("published")
+            res = upsert_news_item(conn, source, title, text, link, published=published)
+            if res:
+                count += 1
+        except Exception:
+            logger.exception("Failed to save news item for source=%s item=%s", source, it)
+    logger.info("Saved %d/%d news items for source=%s", count, len(items), source)
     return count
 
 

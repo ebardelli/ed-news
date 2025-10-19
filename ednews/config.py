@@ -7,8 +7,8 @@ string for HTTP requests, and the default embedding model name.
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PLANET_JSON = ROOT / "planet.json"
-PLANET_INI = ROOT / "planet.ini"
+RESEARCH_JSON = ROOT / "research.json"
+# Primary JSON config file for the project
 DB_PATH = ROOT / "ednews.db"
 
 # Embedding config
@@ -33,3 +33,14 @@ CROSSREF_STATUS_FORCELIST = [429, 500, 502, 503, 504]
 # number of articles share the same DATE(published) as the Nth article, all
 # articles for that date are included.
 ARTICLES_DEFAULT_LIMIT = 20
+
+# Maximum number of extra articles to include when expanding the selection to
+# include all articles that share the Nth article's DATE(published). This
+# prevents pathological cases where a single date contains hundreds or
+# thousands of articles and the build would attempt to include them all.
+# The effective maximum returned articles will be: limit + ARTICLES_MAX_SAME_DATE_EXTRA
+ARTICLES_MAX_SAME_DATE_EXTRA = 20
+
+# Default date to use when an item has no published/first_seen value.
+# Stored as an ISO date string (YYYY-MM-DD).
+DEFAULT_MISSING_DATE = "2020-01-01"

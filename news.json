@@ -1,0 +1,11 @@
+{
+  "title": "Recent News in Education",
+  "feeds": {
+    "fcmat": {
+      "title": "FCMAT Headlines",
+      "link": "https://www.fcmat.org/news-headlines",
+      "feed": "",
+      "processor": "fcmat"
+    }
+  }
+}

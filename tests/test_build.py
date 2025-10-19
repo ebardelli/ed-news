@@ -87,6 +87,32 @@ def test_build_smoke(tmp_path, monkeypatch):
     assert (out / "static" / "a.txt").exists()
 
 
+def test_build_with_json_planet(tmp_path, monkeypatch):
+    # Create a simple research.json and ensure build reads it
+    planet = tmp_path / "research.json"
+    planet.write_text('{"title": "X Site", "feeds": {"f1": {"title": "F1", "link": "", "feed": "http://example.com"}}}', encoding="utf-8")
+
+    templates_dir = tmp_path / "templates"
+    templates_dir.mkdir()
+    (templates_dir / "index.html.jinja2").write_text("Site: {{ title }}", encoding="utf-8")
+
+    static_dir = tmp_path / "static"
+    static_dir.mkdir()
+    (static_dir / "a.txt").write_text("x", encoding="utf-8")
+
+    monkeypatch.setattr(build, "TEMPLATES_DIR", templates_dir)
+    monkeypatch.setattr(build, "STATIC_DIR", static_dir)
+    monkeypatch.setattr(build, "PLANET_FILE", planet)
+    monkeypatch.setattr(build, "DB_FILE", Path(tmp_path / "no_db.sqlite"))
+
+    out = tmp_path / "site"
+    build.build(out_dir=out)
+
+    assert (out / "index.html").exists()
+    content = (out / "index.html").read_text(encoding="utf-8")
+    assert "X Site" in content
+
+
 def test_read_articles_empty_view(tmp_path):
     db = tmp_path / "ednews.db"
     conn = sqlite3.connect(str(db))

@@ -10,9 +10,10 @@ import shutil
 from pathlib import Path
 from configparser import ConfigParser
 from jinja2 import Environment, FileSystemLoader
+import json
 import sqlite3
 import sqlite_vec
-from datetime import datetime
+from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 import logging
 from . import config
@@ -23,7 +24,8 @@ MODEL_NAME = config.DEFAULT_MODEL
 BUILD_DIR = Path("build")
 TEMPLATES_DIR = Path("templates")
 STATIC_DIR = Path("static")
-PLANET_FILE = config.PLANET_INI
+# Use the JSON research file
+PLANET_FILE = config.RESEARCH_JSON
 DB_FILE = config.DB_PATH
 
 logger = logging.getLogger("ednews.build")
@@ -180,7 +182,29 @@ def build(out_dir: Path = BUILD_DIR):
         out_dir (pathlib.Path): Destination directory for the built static site.
     """
     logger.info("building static site into %s", out_dir)
-    ctx = read_planet(PLANET_FILE) if PLANET_FILE.exists() else {"title": "Latest Research Articles in Education", "feeds": []}
+    # Load site metadata from JSON or INI planet files.
+    if PLANET_FILE.exists():
+        if PLANET_FILE.suffix == ".json":
+            try:
+                data = json.loads(PLANET_FILE.read_text(encoding="utf-8"))
+            except Exception:
+                logger.exception("failed to parse JSON planet file: %s", PLANET_FILE)
+                ctx = {"title": "Latest Research Articles in Education", "feeds": []}
+            else:
+                title = data.get("title", "Latest Research Articles in Education")
+                feeds = []
+                for key, info in (data.get("feeds", {}) or {}).items():
+                    feeds.append({
+                        "id": key,
+                        "title": info.get("title", key),
+                        "link": info.get("link", ""),
+                        "feed": info.get("feed", ""),
+                    })
+                ctx = {"title": title, "feeds": feeds}
+        else:
+            ctx = read_planet(PLANET_FILE)
+    else:
+        ctx = {"title": "Latest Research Articles in Education", "feeds": []}
     try:
         try:
             from zoneinfo import ZoneInfo
@@ -239,6 +263,12 @@ def build(out_dir: Path = BUILD_DIR):
     else:
         ctx["articles"] = []
 
+    # Load recent news headlines from the news_items table if present
+    try:
+        ctx["news_headlines"] = read_news_headlines(DB_FILE, limit=getattr(config, 'NEWS_HEADLINES_LIMIT', 8))
+    except Exception:
+        ctx["news_headlines"] = []
+
     if "articles" in ctx:
         grouped_articles = {}
         for article in ctx["articles"]:
@@ -261,7 +291,7 @@ def build(out_dir: Path = BUILD_DIR):
     logger.info("done")
 
 
-def read_articles(db_path: Path, limit: int = 30, days: int | None = None, publications: int | None = None):
+def read_articles(db_path: Path, limit: int = config.ARTICLES_DEFAULT_LIMIT, days: int | None = None, publications: int | None = None):
     """Read recent articles from the ``combined_articles`` view in the DB.
 
     The function supports several retrieval modes:
@@ -365,11 +395,47 @@ def read_articles(db_path: Path, limit: int = 30, days: int | None = None, publi
             row = cur.fetchone()
             if row and row[0]:
                 nth_date = row[0]
+                # First fetch the top-N articles ordered by published DESC
                 cur.execute(
-                    "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE DATE(published) >= ? ORDER BY published DESC",
+                    "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE published IS NOT NULL ORDER BY published DESC LIMIT ?",
+                    (limit,),
+                )
+                top_rows = [dict(r) for r in cur.fetchall()]
+
+                # Then fetch all articles that share the same DATE(published) as the Nth article
+                cur.execute(
+                    "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE DATE(published) = ? ORDER BY published DESC",
                     (nth_date,),
                 )
-                rows = [dict(r) for r in cur.fetchall()]
+                same_date_rows = [dict(r) for r in cur.fetchall()]
+
+                # Merge top_rows and same_date_rows while preserving order and avoiding duplicates
+                seen = set()
+                merged = []
+                for r in top_rows:
+                    key = (r.get('doi'), r.get('link'))
+                    if key not in seen:
+                        seen.add(key)
+                        merged.append(r)
+                for r in same_date_rows:
+                    key = (r.get('doi'), r.get('link'))
+                    if key not in seen:
+                        seen.add(key)
+                        merged.append(r)
+
+                # Enforce a hard cap to avoid pathological expansions when many
+                # articles share the same DATE(published). The configured cap is
+                # limit + config.ARTICLES_MAX_SAME_DATE_EXTRA.
+                max_allowed = limit + getattr(config, 'ARTICLES_MAX_SAME_DATE_EXTRA', 200)
+                if len(merged) > max_allowed:
+                    logger.warning(
+                        "merged articles (%d) exceed max_allowed (%d); truncating to max_allowed",
+                        len(merged),
+                        max_allowed,
+                    )
+                    merged = merged[:max_allowed]
+
+                rows = merged
             else:
                 cur.execute(
                     "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles ORDER BY published DESC LIMIT ?",
@@ -457,6 +523,10 @@ def read_articles(db_path: Path, limit: int = 30, days: int | None = None, publi
             except Exception:
                 date_key = None
 
+        # Default any missing/parse-failed dates to 2020-01-01 so undated articles
+        # are treated as old and appear after newer items when selecting recent ones.
+        if date_key is None:
+            date_key = "2020-01-01"
         parsed_rows.append((date_key, r))
 
     if days is None:
@@ -525,6 +595,129 @@ def read_articles(db_path: Path, limit: int = 30, days: int | None = None, publi
             'content': r.get('content'),
             'published': published_short,
             'raw': r,
+        })
+    return out
+
+
+def read_news_headlines(db_path: Path, limit: int = 8):
+    """Read the most recent news headlines from the `news_items` table.
+
+    Returns a list of dicts with keys: title, link, text, published (short string).
+    """
+    if not db_path.exists():
+        return []
+    conn = sqlite3.connect(str(db_path))
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    try:
+        # fetch a reasonable number of recent rows; we'll sort in Python by parsed datetime
+        cur.execute("SELECT title, link, text, published, first_seen FROM news_items")
+        rows = [dict(r) for r in cur.fetchall()]
+    except Exception:
+        rows = []
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+    def parse_dt(val):
+        if not val:
+            return None
+        s = str(val).strip()
+        # Try ISO first
+        try:
+            dt = datetime.fromisoformat(s.replace('Z', '+00:00'))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt
+        except Exception:
+            pass
+        # Try email utils parsing
+            try:
+                dt = parsedate_to_datetime(s)
+                if dt is not None and dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                return dt
+            except Exception:
+                pass
+        # Try common ISO-ish formats
+        for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+                try:
+                    dt = datetime.strptime(s, fmt)
+                    dt = dt.replace(tzinfo=timezone.utc)
+                    return dt
+                except Exception:
+                    continue
+        # Try to extract a YYYY-MM-DD substring
+        import re
+
+        m = re.search(r"(\d{4}-\d{2}-\d{2})", s)
+        if m:
+            try:
+                dt = datetime.strptime(m.group(1), "%Y-%m-%d")
+                dt = dt.replace(tzinfo=timezone.utc)
+                return dt
+            except Exception:
+                pass
+
+    # attach a sortable date key to each row; default missing dates to 2020-01-01
+    enriched = []
+    for r in rows:
+        pub = r.get("published")
+        first = r.get("first_seen")
+        dt = parse_dt(pub) or parse_dt(first)
+        if dt is None:
+            # default to an old date when no published/first_seen available
+            dt = datetime(2020, 1, 1, tzinfo=timezone.utc)
+        enriched.append((dt, r))
+
+    # sort by datetime (None values go last)
+    enriched.sort(key=lambda x: (x[0] is None, x[0]), reverse=True)
+
+    # take top N
+    selected = [r for _, r in enriched[:limit]]
+
+    def format_short_date(value):
+        if not value:
+            return None
+        if isinstance(value, datetime):
+            return value.strftime("%a, %d %b %Y")
+        s = str(value)
+        try:
+            dt = parsedate_to_datetime(s)
+            return dt.strftime("%a, %d %b %Y")
+        except Exception:
+            pass
+        try:
+            dt = datetime.fromisoformat(s)
+            return dt.strftime("%a, %d %b %Y")
+        except Exception:
+            pass
+        for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+            try:
+                dt = datetime.strptime(s, fmt)
+                return dt.strftime("%a, %d %b %Y")
+            except Exception:
+                continue
+        import re
+
+        m = re.search(r"(\d{4}-\d{2}-\d{2})", s)
+        if m:
+            try:
+                dt = datetime.strptime(m.group(1), "%Y-%m-%d")
+                return dt.strftime("%a, %d %b %Y")
+            except Exception:
+                pass
+        return s
+
+    out = []
+    for r in selected:
+        out.append({
+            "title": r.get("title"),
+            "link": r.get("link"),
+            "text": r.get("text"),
+            "published": format_short_date(r.get("published") or r.get("first_seen")),
         })
     return out
 

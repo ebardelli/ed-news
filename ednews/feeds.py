@@ -26,7 +26,8 @@ def load_feeds() -> List[tuple]:
 
     Returns a list of tuples describing each feed: (key, title, url, publication_id, issn).
     """
-    p = config.PLANET_JSON if config.PLANET_JSON.exists() else config.PLANET_INI
+    # Use the project's JSON file `research.json`.
+    p = config.RESEARCH_JSON
     if not p.exists():
         logger.debug("planet file not found: %s", p)
         return []
