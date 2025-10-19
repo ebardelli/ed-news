@@ -389,62 +389,46 @@ def cmd_manage_db_run_all(args):
     finally:
         conn.close()
 
-    # sync publications
-    print("Syncing publications from feeds...")
-    feeds_list = feeds.load_feeds()
-    if not feeds_list:
-        print("No feeds found; skipping sync-publications")
-    else:
-        if getattr(args, 'dry_run', False):
-            print("dry-run: would sync publications from feeds (skipped)")
-        else:
-            conn = sqlite3.connect(str(config.DB_PATH))
-            try:
-                count = manage_db.sync_publications_from_feeds(conn, feeds_list)
-                print(f"synced {count} publications")
-            finally:
-                conn.close()
 
-    # cleanup
-    print("Cleaning up empty articles...")
-    if getattr(args, 'dry_run', False):
-        # compute count without deleting
-        conn = sqlite3.connect(str(config.DB_PATH))
-        try:
-            cur = conn.cursor()
-            params = []
-            where_clauses = ["(COALESCE(title, '') = '' AND COALESCE(abstract, '') = '')"]
-            if getattr(args, 'older_than_days', None) is not None:
-                from datetime import datetime, timezone, timedelta
-                cutoff = (datetime.now(timezone.utc) - timedelta(days=int(args.older_than_days))).isoformat()
-                where_clauses.append("(COALESCE(fetched_at, '') != '' AND COALESCE(fetched_at, '') < ? OR COALESCE(published, '') != '' AND COALESCE(published, '') < ?)")
-                params.extend([cutoff, cutoff])
-            where_sql = " AND ".join(where_clauses)
-            cur.execute(f"SELECT COUNT(1) FROM articles WHERE {where_sql}", tuple(params))
-            row = cur.fetchone()
-            count = row[0] if row and row[0] else 0
-            print(f"dry-run: would delete {count} empty articles")
-        finally:
-            conn.close()
-    else:
-        conn = sqlite3.connect(str(config.DB_PATH))
-        try:
-            deleted = manage_db.cleanup_empty_articles(conn, older_than_days=getattr(args, 'older_than_days', None))
-            print(f"deleted {deleted} empty articles")
-        finally:
-            conn.close()
+def cmd_serve(args):
+    """Serve the static `build` directory over HTTP.
 
-    # vacuum
-    print("Running VACUUM...")
-    if getattr(args, 'dry_run', False):
-        print("dry-run: would vacuum DB")
-    else:
-        conn = sqlite3.connect(str(config.DB_PATH))
+    Uses Python's built-in http.server. This command is useful for local
+    development and previewing the generated site.
+    """
+    import http.server
+    import socketserver
+    from pathlib import Path
+
+    directory = Path(args.directory) if getattr(args, "directory", None) else Path("build")
+    if not directory.exists():
+        logger.error("Build directory does not exist: %s", str(directory))
+        return
+
+    host = args.host if getattr(args, "host", None) else "127.0.0.1"
+    port = int(args.port) if getattr(args, "port", None) else 8000
+
+    handler_class = http.server.SimpleHTTPRequestHandler
+
+    # Python >=3.7 accepts the `directory` kwarg to SimpleHTTPRequestHandler
+    try:
+        handler = lambda *p, directory=str(directory), **kw: handler_class(*p, directory=directory, **kw)
+    except TypeError:
+        # Fallback for older Python versions: chdir into the directory
+        import os
+
+        os.chdir(str(directory))
+        handler = handler_class
+
+    with socketserver.TCPServer((host, port), handler) as httpd:
+        sa = httpd.socket.getsockname()
+        logger.info("Serving %s on http://%s:%d", str(directory), sa[0], sa[1])
         try:
-            ok = manage_db.vacuum_db(conn)
-            print("vacuum: ok" if ok else "vacuum: failed")
-        finally:
-            conn.close()
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            logger.info("Shutting down server")
+            httpd.shutdown()
+    
 
 
 def run():
@@ -513,6 +497,12 @@ def run():
     p_runall.add_argument("--older-than-days", type=int, default=None, help="Pass-through to cleanup step")
     p_runall.add_argument("--dry-run", action="store_true", help="Do not perform destructive actions; only report")
     p_runall.set_defaults(func=lambda args: cmd_manage_db_run_all(args))
+
+    p_serve = sub.add_parser("serve", help="Serve the built static site from the build directory")
+    p_serve.add_argument("--host", help="Host to bind to (default: 127.0.0.1)")
+    p_serve.add_argument("--port", type=int, help="Port to listen on (default: 8000)")
+    p_serve.add_argument("--directory", help="Directory to serve (default: build)")
+    p_serve.set_defaults(func=cmd_serve)
 
     args = parser.parse_args()
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")

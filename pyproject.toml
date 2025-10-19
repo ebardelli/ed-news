@@ -19,5 +19,15 @@ dependencies = [
 ]
 
 [project.scripts]
-# Installable console script: runs the argparse-based CLI in ednews.cli
 ednews = "ednews.cli:run"
+
+[tool.uv]
+package = true
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+# Explicitly restrict package discovery to the actual Python package(s)
+packages = { find = { include = ["ednews"] } }

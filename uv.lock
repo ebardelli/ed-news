@@ -130,7 +130,7 @@ wheels = [
 [[package]]
 name = "ed-news"
 version = "2025.10.19"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "beautifulsoup4" },
     { name = "duckdb" },

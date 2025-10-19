@@ -37,5 +37,6 @@ cmd_manage_db_vacuum = cli.cmd_manage_db_vacuum
 cmd_manage_db_migrate = cli.cmd_manage_db_migrate
 cmd_manage_db_sync_publications = cli.cmd_manage_db_sync_publications
 cmd_manage_db_run_all = cli.cmd_manage_db_run_all
+cmd_serve = cli.cmd_serve
 # Module-level placeholder for a DB connection (tests monkeypatch this)
 conn = None

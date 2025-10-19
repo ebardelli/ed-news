@@ -1,14 +1,14 @@
 fetch:
-    uv run python main.py fetch
-    uv run python main.py issn-lookup
-    uv run python main.py enrich-crossref --batch 100
-    uv run python main.py embed
+    uv run ed-news fetch
+    uv run ed-news issn-lookup
+    uv run ed-news enrich-crossref --batch 100
+    uv run ed-news embed
 
 build:
-    uv run python main.py build
+    uv run ed-news build
 
 serve:
-    uv run python -m http.server -d build
+    uv run ed-news serve
 
 db:
-    uv run python main.py manage-db run-all
+    uv run ed-news manage-db run-all

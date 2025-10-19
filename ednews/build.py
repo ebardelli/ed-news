@@ -21,9 +21,14 @@ import duckdb
 
 MODEL_NAME = config.DEFAULT_MODEL
 
+# Build output directory
 BUILD_DIR = Path("build")
-TEMPLATES_DIR = Path("templates")
-STATIC_DIR = Path("static")
+# Package-relative template/static dirs: when packaged the templates and static
+# assets live inside the `ednews` package. Use Path(__file__).parent to locate
+# them; fallback to top-level paths for backward compatibility in dev checkouts.
+PKG_DIR = Path(__file__).parent
+TEMPLATES_DIR = (PKG_DIR / "templates") if (PKG_DIR / "templates").exists() else Path("templates")
+STATIC_DIR = (PKG_DIR / "static") if (PKG_DIR / "static").exists() else Path("static")
 # Use the JSON research file
 PLANET_FILE = config.RESEARCH_JSON
 DB_FILE = config.DB_PATH

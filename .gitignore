@@ -1,6 +1,7 @@
 .venv/
 __pycache__/
 .pytest_cache/
+ed_news.egg-info/
 
 build/
 

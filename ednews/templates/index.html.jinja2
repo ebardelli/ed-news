@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+    <title>{{ title }}</title>
+</head>
+<body>
+    {# No redirect: support ?view=headlines or ?view=articles (default=headlines) #}
+    <header>
+        <h1>{{ title }}</h1>
+    </header>
+    <nav class="top-menu">
+        <hr class="menu-line">
+        <div class="menu-center">
+            <a href="?view=headlines" class="menu-item" id="menu-headlines">Latest Headlines</a>
+            <a href="?view=articles" class="menu-item" id="menu-articles">Research Articles</a>
+        </div>
+        <hr class="menu-line">
+    </nav>
+    <main>
+        <section>
+            <div class="content">
+            {# Latest News Headlines section (from headlines) #}
+            <div id="view-headlines" class="view-section" style="display:none;">
+                {% if news_headlines %}
+                    {% for h in news_headlines %}
+                        <div class="item">
+                            <h3>{% if h.link %}<a href="{{ h.link }}">{{ h.title or 'Untitled' }}</a>{% else %}{{ h.title or 'Untitled' }}{% endif %}</h3>
+                            <p class="meta">
+                                {% if h.published %}
+                                    <span class="date">{{ h.published }}</span>
+                                {% endif %}
+                            </p>
+                            <p class="excerpt">{{ h.text or '' }}</p>
+                            {# Related headlines (populated by build.py) #}
+                            {% if h.similar_headlines %}
+                                <div class="similar-articles">
+                                    <h4>Related headlines</h4>
+                                    <ul>
+                                        {% for s in h.similar_headlines %}
+                                            <li>
+                                                {% if s.link %}
+                                                    <a href="{{ s.link }}">{{ s.title or 'Untitled' }}</a>
+                                                {% else %}
+                                                    {{ s.title or 'Untitled' }}
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No headlines found.</p>
+                {% endif %}
+            </div>
+            {# Latest Articles (flat list) - shown when view=articles #}
+            <div id="view-articles" class="view-section" style="display:none;">
+                {% if articles %}
+                    {% for a in articles[:20] %}
+                        <div class="item">
+                            <h3>{% if a.link %}<a href="{{ a.link }}">{{ a.title or 'Untitled' }}</a>{% else %}{{ a.title or 'Untitled' }}{% endif %}</h3>
+                            <p class="meta">
+                                {% set authors = a.authors if a.authors else (a.raw.get('authors') if a.raw and a.raw.get('authors') else (a.raw.get('author') if a.raw and a.raw.get('author') else None)) %}
+                                {% if authors %}
+                                    <span class="authors">
+                                        {% if authors is sequence and not authors is string %}
+                                            {{ authors | join(', ') }}
+                                        {% else %}
+                                            {{ authors }}
+                                        {% endif %}
+                                    </span>
+                                    <span class="sep"> | </span>
+                                {% endif %}
+                                <span class="pub">{{ a.feed_title or (a.raw.get('feed_title') if a.raw else '') }}</span>
+                                {% if a.published %}
+                                    <span class="sep"> | </span>
+                                    <span class="date">{{ a.published }}</span>
+                                {% endif %}
+                            </p>
+                            <p class="excerpt">
+                                {% if a.content %}
+                                    {{ a.content }}
+                                {% elif a.raw and a.raw.get('abstract') %}
+                                    {{ a.raw.get('abstract') }}
+                                {% elif a.raw and a.raw.get('summary') %}
+                                    {{ a.raw.get('summary') }}
+                                {% else %}
+                                    No abstract available.
+                                {% endif %}
+                            </p>
+
+                            {% if a.similar_articles %}
+                                <div class="similar-articles">
+                                    <h4>Related articles</h4>
+                                    <ul>
+                                        {% for s in a.similar_articles %}
+                                            <li>
+                                                {% if s.doi %}
+                                                    <a href="https://doi.org/{{ s.doi }}">{{ s.title or s.doi }}</a>
+                                                {% else %}
+                                                    {{ s.title or 'Untitled' }}
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No articles found.</p>
+                {% endif %}
+            </div>
+
+            {# Previously there was a grouped TOC view here. TOC view removed - only articles view remains. #}
+            </div>
+        </section>
+
+        <!-- Modal -->
+        <div id="abstract-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="modal-abstract">No abstract available</p>
+            </div>
+        </div>
+    </main>
+    <div class="feed-links" style="text-align:center; margin:1.5em 0;">
+        {% if feed_links %}
+            <p>
+            {% for key, f in feed_links.items() %}
+                <a href="/{{ f.href }}" class="rss-link" style="margin:0 0.5em; text-decoration:none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+                    <span style="margin-left:.25em;">{{ f.title }}</span>
+                </a>
+            {% endfor %}
+            </p>
+        {% endif %}
+    </div>
+    <footer>
+        <p>&copy; 2023-{{ year or 2025 }} {{ title }} | Based on a template <a href="https://werd.io" rel="me">by Ben Werdmuller</a> | <a href="https://drone.ebardelli.com/ebardelli/ed-news">Updated {{ build_time }}</a></p>
+    </footer>
+    <script src="static/main.js"></script>
+    <script>
+        function getQueryParam(name) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(name);
+        }
+        function showView(view) {
+            document.querySelectorAll('.view-section').forEach(function(el){ el.style.display = 'none'; });
+            const el = document.getElementById('view-' + view);
+            if (el) el.style.display = '';
+            document.getElementById('menu-articles').classList.toggle('active', view === 'articles');
+            const mh = document.getElementById('menu-headlines');
+            if (mh) mh.classList.toggle('active', view === 'headlines');
+        }
+        (function(){
+            const view = getQueryParam('view') || 'headlines';
+            showView(view);
+            document.getElementById('menu-articles').addEventListener('click', function(e){ e.preventDefault(); showView('articles'); history.replaceState({},'', '?view=articles'); });
+            const mh = document.getElementById('menu-headlines');
+            if (mh) mh.addEventListener('click', function(e){ e.preventDefault(); showView('headlines'); history.replaceState({},'', '?view=headlines'); });
+        })();
+    </script>
+</body>
+</html>
