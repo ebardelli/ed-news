@@ -32,7 +32,7 @@ steps:
         - echo "Creating symbolic link for ednews.db..."
         - ln -sf cache/ednews.db ednews.db
         - echo "Checking if .venv exists in cache..."
-        - '[ -d cache/.venv ] || (echo ".venv not found in cache, creating virtual environment..." && touch cache/.venv)'
+        - '[ -d cache/.venv ] || (echo ".venv not found in cache, creating virtual environment..." && mkdir -p cache/.venv)'
         - echo "Creating symbolic link for .venv into cache..."
         - ln -sf cache/.venv .venv
         - uv sync
