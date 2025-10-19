@@ -31,6 +31,21 @@ DB_FILE = config.DB_PATH
 logger = logging.getLogger("ednews.build")
 
 
+def item_has_content(item: dict) -> bool:
+    """Return True if the given feed/article-like item has any usable content.
+
+    We treat an item as having content if at least one of title, link or
+    content/abstract is present and non-empty after stripping.
+    """
+    if not item or not isinstance(item, dict):
+        return False
+    title = (item.get("title") or "").strip()
+    link = (item.get("link") or "").strip()
+    # content may be stored under several keys depending on origin
+    content = (item.get("content") or item.get("abstract") or "").strip()
+    return bool(title or link or content)
+
+
 def get_similar_articles_by_doi(conn, doi, top_n=5, model=MODEL_NAME, store_if_missing: bool = True):
     """Return a list of similar articles for the given DOI using stored embeddings.
 
@@ -403,7 +418,8 @@ def build(out_dir: Path = BUILD_DIR):
 
         # Articles-only feed
         articles_limit = getattr(config, 'ARTICLES_DEFAULT_LIMIT', 20)
-        articles_items = (ctx.get("articles") or [])[:articles_limit]
+        # Filter out entirely empty/meaningless items before rendering
+        articles_items = [a for a in (ctx.get("articles") or []) if item_has_content(a)][:articles_limit]
         # Ensure each item has a hashed guid for de-duplication
         import hashlib
 
@@ -432,8 +448,9 @@ def build(out_dir: Path = BUILD_DIR):
                 "abstract": None,
                 "published": h.get("published") or None,
             }
-
-        headlines_items = [headline_to_item(h) for h in headlines_raw][:headlines_limit]
+        headlines_items = [headline_to_item(h) for h in headlines_raw]
+        # Filter headlines for meaningful content and apply limit afterwards
+        headlines_items = [h for h in headlines_items if item_has_content(h)][:headlines_limit]
         def make_guid_for_headline(h):
             key = h.get("link") or (str(h.get("title") or "") + "|" + str(h.get("published") or "") + "|" + str(h.get("content") or ""))
             return hashlib.sha1(key.encode("utf-8")).hexdigest()
@@ -522,9 +539,13 @@ def build(out_dir: Path = BUILD_DIR):
             }
 
         for a in (ctx.get("articles") or []):
-            merged.append(norm_article(a))
+            na = norm_article(a)
+            if item_has_content(na):
+                merged.append(na)
         for h in (ctx.get("news_headlines") or []):
-            merged.append(norm_headline(h))
+            nh = norm_headline(h)
+            if item_has_content(nh):
+                merged.append(nh)
 
         # Sort by parsed published datetime descending
         try:

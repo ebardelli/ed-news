@@ -145,3 +145,9 @@ Contributions welcome. Run tests before submitting PRs and follow the existing c
     not arbitrarily truncated.
 
     The default is configurable in code at `ednews.config.ARTICLES_DEFAULT_LIMIT`.
+
+- Filtering: feed items that are entirely empty (no title, no link, and no content/summary)
+    are now filtered out at build time and before persisting into the database. This prevents
+    empty/placeholder entries from appearing in generated RSS feeds or being stored in the
+    `items` table. The behavior is implemented in `ednews.build.item_has_content` and
+    `ednews.feeds.entry_has_content` and is covered by unit tests under `tests/`.

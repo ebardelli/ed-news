@@ -21,6 +21,26 @@ from . import db as eddb
 logger = logging.getLogger("ednews.feeds")
 
 
+def entry_has_content(entry: dict) -> bool:
+    """Return True if a feedparser entry/dict has usable content.
+
+    Consider title, link, summary/content as evidence of meaningful content.
+    """
+    if not entry or not isinstance(entry, dict):
+        return False
+    title = (entry.get("title") or "")
+    link = (entry.get("link") or "")
+    summary = (entry.get("summary") or "")
+    # Some feeds put the body in `content` blocks
+    content_blocks = []
+    for c in entry.get("content", []) or []:
+        content_blocks.append(c.get("value") or "")
+    content = " ".join(content_blocks)
+    # Also check abstract extractor as a fallback
+    abstract = extract_abstract_from_entry(entry) or ""
+    return bool(str(title).strip() or str(link).strip() or str(summary).strip() or str(content).strip() or str(abstract).strip())
+
+
 def load_feeds() -> List[tuple]:
     """Load feeds from `planet.json` or fallback to `planet.ini`.
 
@@ -314,6 +334,14 @@ def save_entries(conn, feed_id, feed_title, entries):
     inserted = 0
     logger.debug("saving %d entries for feed %s (%s)", len(entries), feed_id, feed_title)
     for e in entries:
+        # Skip entirely empty entries (no title, link, or content)
+        try:
+            if not entry_has_content(e):
+                logger.debug("skipping empty entry for feed %s: %r", feed_id, e)
+                continue
+        except Exception:
+            # On unexpected shapes, be conservative and attempt to process
+            pass
         try:
             doi = None
             link_val = (e.get("link") or "").strip()
