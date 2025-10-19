@@ -139,7 +139,6 @@ Contributions welcome. Run tests before submitting PRs and follow the existing c
 
 ## Changes
 
-- The site build now requests the most recent articles using a default limit (20 by default).
     When more than the configured number of articles share the same published DATE as the Nth
     most recent article, all articles for that date are included so a day's publications are
     not arbitrarily truncated.
@@ -151,3 +150,30 @@ Contributions welcome. Run tests before submitting PRs and follow the existing c
     empty/placeholder entries from appearing in generated RSS feeds or being stored in the
     `items` table. The behavior is implemented in `ednews.build.item_has_content` and
     `ednews.feeds.entry_has_content` and is covered by unit tests under `tests/`.
+
+## Developer notes: DB refactor (import path change)
+
+The database management helpers were reorganized into a `db` subpackage to
+group related functionality. The management helpers that used to be
+available as `ednews.manage_db` are now located at `ednews.db.manage_db`.
+
+What changed:
+- Old import: `from ednews import manage_db` or `import ednews.manage_db`
+- New import: `from ednews.db import manage_db` or `import ednews.db.manage_db`
+
+Tests and the package have been updated to use the new path. If you have
+external code that imports `ednews.manage_db`, update it to the new path.
+
+Quick codemod suggestion (run from repo root) to update external imports on macOS / BSD `sed`:
+
+```bash
+# Replace `from ednews import manage_db` with `from ednews.db import manage_db`
+grep -Rl "from ednews import manage_db" | xargs -r sed -i '' "s|from ednews import manage_db|from ednews.db import manage_db|g"
+
+# Replace `import ednews.manage_db` with `import ednews.db.manage_db`
+grep -Rl "import ednews.manage_db" | xargs -r sed -i '' "s|import ednews.manage_db|import ednews.db.manage_db|g"
+```
+
+If you prefer a transition shim (keeps `from ednews import manage_db` working
+but emits a DeprecationWarning), tell me and I will add a small `ednews/manage_db.py`
+shim that imports from `ednews.db.manage_db` and warns users.

@@ -2,6 +2,9 @@
 
 Expose high-level functions for CLI usage.
 """
+from . import config
+from . import db as db
+
 __all__ = [
     "config",
     "db",

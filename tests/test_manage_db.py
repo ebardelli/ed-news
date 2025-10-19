@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import pytest
 from datetime import datetime, timezone, timedelta
 
-from ednews import manage_db
+from ednews.db import manage_db
 
 
 def test_vacuum_db_runs_successfully(tmp_path):

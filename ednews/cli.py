@@ -33,13 +33,13 @@ def cmd_fetch(args):
             return
     conn = sqlite3.connect(str(config.DB_PATH))
     # ensure DB initialized (moved to manage_db)
-    from ednews.manage_db import init_db
+    from ednews.db.manage_db import init_db
 
     init_db(conn)
 
     # Ensure publications table is populated/upserted from planet.json feeds
     try:
-        from ednews.manage_db import sync_publications_from_feeds
+        from ednews.db.manage_db import sync_publications_from_feeds
 
         try:
             synced = sync_publications_from_feeds(conn, feeds_list)
@@ -134,7 +134,7 @@ def cmd_enrich_crossref(args):
     """Enrich articles missing Crossref XML by querying Crossref for metadata."""
     conn = sqlite3.connect(str(config.DB_PATH))
     # ensure DB initialized
-    from ednews.manage_db import init_db
+    from ednews.db.manage_db import init_db
     from ednews.db import enrich_articles_from_crossref
     from ednews.crossref import fetch_crossref_metadata
 
@@ -162,7 +162,7 @@ def cmd_issn_lookup(args):
         logger.error("No feeds found; aborting ISSN lookup")
         return
     conn = sqlite3.connect(str(config.DB_PATH))
-    from ednews.manage_db import init_db, fetch_latest_journal_works
+    from ednews.db.manage_db import init_db, fetch_latest_journal_works
 
     init_db(conn)
     try:
@@ -210,7 +210,7 @@ def cmd_headlines(args):
 
 def cmd_manage_db_cleanup(args):
     """CLI handler for cleaning up empty articles."""
-    from ednews import manage_db
+    from ednews.db import manage_db
     conn = sqlite3.connect(str(config.DB_PATH))
     started = None
     run_id = None
@@ -262,7 +262,7 @@ def cmd_manage_db_cleanup(args):
 
 
 def cmd_manage_db_vacuum(args):
-    from ednews import manage_db
+    from ednews.db import manage_db
     conn = sqlite3.connect(str(config.DB_PATH))
     started = None
     run_id = None
@@ -296,7 +296,7 @@ def cmd_manage_db_vacuum(args):
 
 
 def cmd_manage_db_migrate(args):
-    from ednews import manage_db
+    from ednews.db import manage_db
     conn = sqlite3.connect(str(config.DB_PATH))
     started = None
     run_id = None
@@ -330,7 +330,8 @@ def cmd_manage_db_migrate(args):
 
 
 def cmd_manage_db_sync_publications(args):
-    from ednews import manage_db, feeds
+    from ednews.db import manage_db
+    from ednews import feeds
     feeds_list = feeds.load_feeds()
     if not feeds_list:
         print("No feeds found; nothing to sync")
@@ -369,7 +370,8 @@ def cmd_manage_db_sync_publications(args):
 
 def cmd_manage_db_run_all(args):
     """Run migrate, sync publications, cleanup, and vacuum in order."""
-    from ednews import manage_db, feeds
+    from ednews.db import manage_db
+    from ednews import feeds
     # migrate
     print("Running migrations...")
     conn = sqlite3.connect(str(config.DB_PATH))

@@ -4,8 +4,8 @@ __pycache__/
 
 build/
 
-ednews.db
-ednews.db-journal
+*.db
+*.db-journal
 cache
 
 scripts/make_cache.py
