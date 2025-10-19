@@ -49,7 +49,7 @@ def test_fetch_all_and_save(tmp_path):
 
     # check DB rows
     cur = conn.cursor()
-        cur.execute("SELECT COUNT(1) FROM headlines")
+    cur.execute("SELECT COUNT(1) FROM headlines")
     n = cur.fetchone()[0]
     assert n >= len(items)
 

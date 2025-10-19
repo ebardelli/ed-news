@@ -129,7 +129,7 @@ wheels = [
 
 [[package]]
 name = "ed-news"
-version = "0.1.0"
+version = "2025.10.19"
 source = { virtual = "." }
 dependencies = [
     { name = "beautifulsoup4" },
