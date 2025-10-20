@@ -12,16 +12,27 @@ def test_load_feeds_no_planet(tmp_path, monkeypatch):
 
 
 def test_fetch_feed_parses_entries(monkeypatch):
-    class DummyResp:
-        content = b""
+    # Use the provided fixture RSS file so feedparser actually parses entries
+    from pathlib import Path
+    fixture = Path(__file__).resolve().parent / "fixtures" / "aera.rss"
+    assert fixture.exists(), "test fixture aera.rss must be present"
+    content = fixture.read_bytes()
 
-    session = type('S', (), {'get': lambda self, url, timeout, headers: DummyResp()})()
+    class FixtureResp:
+        def __init__(self, content):
+            self.content = content
 
-    # feedparser.parse will handle empty content but produce no entries
-    result = feeds.fetch_feed(session, 'k', 'title', 'http://example.com/feed')
+        def raise_for_status(self):
+            return None
+
+    session = type('S', (), {'get': lambda self, url, timeout, headers=None: FixtureResp(content)})()
+
+    result = feeds.fetch_feed(session, 'k', 'AERJ', 'https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=aera&type=etoc&feed=rss')
     assert isinstance(result, dict)
     assert 'entries' in result
     assert isinstance(result['entries'], list)
+    # The fixture should include at least one entry
+    assert len(result['entries']) > 0
 
 
 def test_normalize_doi():

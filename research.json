@@ -5,7 +5,6 @@
       "title": "American Educational Research Journal",
       "link": "https://journals.sagepub.com/home/aer",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=aera&type=etoc&feed=rss",
-      "processor": "crossref",
       "publication_id": "10.3102",
       "issn": "0002-8312"
     },
@@ -13,7 +12,6 @@
       "title": "Educational Researcher",
       "link": "https://journals.sagepub.com/home/edr",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=edra&type=etoc&feed=rss",
-      "processor": "crossref",
       "publication_id": "10.3102",
       "issn": "0013-189X"
     },
@@ -21,7 +19,6 @@
       "title": "AERA Open",
       "link": "aera open",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=eroa&type=etoc&feed=rss",
-      "processor": "crossref",
       "publication_id": "10.1177",
       "issn": "2332-8584"
     },
@@ -29,7 +26,6 @@
       "title": "Journal of Educational and Behavioral Statistics",
       "link": "https://journals.sagepub.com/home/jeb",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=jebb&type=etoc&feed=rss",
-      "processor": "crossref",
       "publication_id": "10.3102",
       "issn": "1076-9986"
     },
@@ -37,7 +33,6 @@
       "title": "Educational Evaluation and Policy Analysis",
       "link": "https://journals.sagepub.com/home/epa",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=epaa&type=etoc&feed=rss",
-      "processor": "crossref",
       "publication_id": "10.3102",
       "issn": "0162-3737"
     },
@@ -45,7 +40,6 @@
       "title": "Educational Policy Analysis Archives",
       "link": "https://epaa.asu.edu/ojs/",
       "feed": "https://epaa.asu.edu/ojs/index.php/epaa/oai",
-      "processor": "crossref",
       "publication_id": "10.14507/epaa",
       "issn": "1068-2341"
     },
@@ -53,7 +47,6 @@
       "title": "Review of Educational Research",
       "link": "https://journals.sagepub.com/home/rer",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=rera&type=etoc&feed=rss",
-      "processor": "crossref",
       "publication_id": "10.3102",
       "issn": "0034-6543"
     },
@@ -61,7 +54,6 @@
       "title": "Review of Research in Education",
       "link": "https://journals.sagepub.com/home/rre",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=rrea&type=etoc&feed=rss",
-      "processor": "crossref",
       "publication_id": "10.3102",
       "issn": "0091-732X"
     },
@@ -69,7 +61,6 @@
       "title": "The Journal of Educational Research",
       "link": "https://www.tandfonline.com/toc/vjer20/current",
       "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=vjer20",
-      "processor": "crossref",
       "publication_id": "10.1080/00220671",
       "issn": "0022-0671"
     },
@@ -91,7 +82,6 @@
       "title": "Race Ethnicity and Education",
       "link": "https://www.tandfonline.com/toc/cree20/current",
       "feed": "https://www.tandfonline.com/feed/rss/cree20",
-      "processor": "crossref",
       "publication_id": "10.1080/13613324",
       "issn": "1361-3324"
     },
@@ -99,7 +89,6 @@
       "title": "Peabody Journal of Education",
       "link": "https://www.tandfonline.com/toc/hpje20/current",
       "feed": "https://www.tandfonline.com/feed/rss/hpje20",
-      "processor": "crossref",
       "publication_id": "10.1080/0161956X",
       "issn": "0161-956X"
     },
@@ -107,7 +96,6 @@
       "title": "Journal of Research on Educational Effectiveness",
       "link": "https://www.tandfonline.com/toc/uree20/current",
       "feed": "https://www.tandfonline.com/feed/rss/uree20",
-      "processor": "crossref",
       "publication_id": "10.1080/19345747",
       "issn": "1934-5747"
     },
@@ -115,14 +103,12 @@
       "title": "Journal for Research in Mathematics Education",
       "link": "https://www.nctm.org/publications/journal-for-research-in-mathematics-education/",
       "feed": "https://pubs.nctm.org/journalissuetocrss/journals/jrme/jrme-overview.xml",
-      "processor": "crossref",
       "issn": "0021-8251"
     },
     "zmd": {
       "title": "ZDM - Mathematics Education",
       "link": "https://link.springer.com/journal/11858",
       "feed": "https://link.springer.com/search.rss?facet-journal-id=11858&facet-content-type=Article&sortOrder=newestFirst",
-      "processor": "crossref",
       "publication_id": "10.1007",
       "issn": "1863-9690"
     },
@@ -138,7 +124,6 @@
       "title": "Educational Studies in Mathematics",
       "link": "https://link.springer.com/journal/10649",
       "feed": "https://link.springer.com/search.rss?facet-journal-id=10649&facet-content-type=Article&sortOrder=newestFirst",
-      "processor": "crossref",
       "publication_id": "10.1007",
       "issn": "0013-1954"
     },
@@ -146,7 +131,6 @@
       "title": "Cognition and Instruction",
       "link": "https://www.tandfonline.com/loi/hcgi20",
       "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=hcgi20",
-      "processor": "crossref",
       "publication_id": "10.1080/07370008",
       "issn": "0737-0008"
     },
@@ -154,7 +138,6 @@
       "title": "Journal of Mathematics Teacher Education",
       "link": "https://link.springer.com/journal/10857",
       "feed": "https://link.springer.com/search.rss?facet-journal-id=10857&facet-content-type=Article&sortOrder=newestFirst",
-      "processor": "crossref",
       "publication_id": "10.1007",
       "issn": "1386-4416"
     },
@@ -162,7 +145,6 @@
       "title": "Mathematics Education Research Journal",
       "link": "https://link.springer.com/journal/13394",
       "feed": "https://link.springer.com/search.rss?facet-journal-id=13394&facet-content-type=Article&sortOrder=newestFirst",
-      "processor": "crossref",
       "publication_id": "10.1007",
       "issn": "1033-2170"
     },
@@ -170,7 +152,6 @@
       "title": "Investigations in Mathematics Learning",
       "link": "https://www.tandfonline.com/loi/uiml20",
       "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=uiml20",
-      "processor": "crossref",
       "publication_id": "10.1080/19477503",
       "issn": "1947-7503"
     },
@@ -178,7 +159,6 @@
       "title": "Mathematics Teacher",
       "link": "https://www.tandfonline.com/loi/hmtl20",
       "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=hmtl20",
-      "processor": "crossref",
       "publication_id": "10.1080/10986065",
       "issn": "1098-6065"
     },
@@ -186,14 +166,12 @@
       "title": "International Journal for Mathematics Teaching and Learning",
       "link": "https://www.cimt.org.uk/ijmtl/index.php/IJMTL",
       "feed": "https://cimt.org.uk/ijmtl/index.php/IJMTL/gateway/plugin/WebFeedGatewayPlugin/atom",
-      "processor": "crossref",
       "issn": "1473-0111"
     },
     "ijrume": {
       "title": "International Journal of Research in Undergraduate Mathematics Education",
       "link": "https://www.springer.com/education+%26+language/mathematics+education/journal/40753",
       "feed": "https://link.springer.com/search.rss?facet-journal-id=40753&facet-content-type=Article&sortOrder=newestFirst",
-      "processor": "crossref",
       "publication_id": "10.1007",
       "issn": "2198-9745"
     },
@@ -201,7 +179,6 @@
       "title": "Research in Mathematics Education",
       "link": "https://www.tandfonline.com/loi/rrme20",
       "feed": "https://www.tandfonline.com/feed/rss/rrme20",
-      "processor": "crossref",
       "publication_id": "10.1080/14794802",
       "issn": "1479-4802"
     },
@@ -209,7 +186,6 @@
       "title": "Canadian Journal of Science, Mathematics and Technology Education",
       "link": "https://www.springer.com/journal/42330",
       "feed": "https://link.springer.com/search.rss?facet-journal-id=42330&facet-content-type=Article&sortOrder=newestFirst",
-      "processor": "crossref",
       "publication_id": "10.1007",
       "issn": "1492-6156"
     },
@@ -225,7 +201,6 @@
       "title": "Journal of Teacher Education",
       "link": "Journal of Teacher Education",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=jtea&type=etoc&feed=rss",
-      "processor": "crossref",
       "publication_id": "10.1177",
       "issn": "0022-4871"
     },
@@ -233,7 +208,6 @@
       "title": "Action in Teacher Education",
       "link": "https://www.tandfonline.com/loi/uate20",
       "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=uate20",
-      "processor": "crossref",
       "publication_id": "10.1080/01626620",
       "issn": "0162-6620"
     },
@@ -241,7 +215,6 @@
       "title": "Phi Delta Kappan",
       "link": "https://journals.sagepub.com/home/pdk",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=pdka&type=etoc&feed=rss",
-      "processor": "crossref",
       "publication_id": "10.1177",
       "issn": "0031-7217"
     },
@@ -255,7 +228,6 @@
       "title": "European Journal of Teacher Education",
       "link": "https://www.tandfonline.com/toc/cete20/current",
       "feed": "https://www.tandfonline.com/feed/rss/cete20",
-      "processor": "crossref",
       "publication_id": "10.1080/02619768",
       "issn": "0261-9768"
     },
@@ -263,7 +235,6 @@
       "title": "Teaching Education",
       "link": "https://www.tandfonline.com/toc/cted20/current",
       "feed": "https://www.tandfonline.com/feed/rss/cted20",
-      "processor": "crossref",
       "publication_id": "10.1080/10476210",
       "issn": "1047-6210"
     },
@@ -277,7 +248,6 @@
       "title": "Educational Action Research",
       "link": "https://www.tandfonline.com/toc/reac20/current",
       "feed": "https://tandfonline.com/action/showFeed?type=etoc&feed=rss&jc=reac20",
-      "processor": "crossref",
       "publication_id": "10.1080/09650792",
       "issn": "0965-0792"
     },
@@ -285,7 +255,6 @@
       "title": "Action Research",
       "link": "https://journals.sagepub.com/home/arj",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=arja&type=etoc&feed=rss",
-      "processor": "crossref",
       "publication_id": "10.1177",
       "issn": "1476-7503"
     },
@@ -293,21 +262,18 @@
       "title": "NBER Working Papers - Econ of Ed",
       "link": "https://www.nber.org",
       "feed": "https://nber.org/rss/newed.xml",
-      "processor": "crossref",
       "publication_id": "10.3386"
     },
     "edfp": {
       "title": "Education Finance and Policy",
       "link": "https://www.mitpressjournals.org/loi/edfp",
       "feed": "https://direct.mit.edu/rss/site_1000039/1000022.xml",
-      "processor": "crossref",
       "issn": "1557-3060"
     },
     "epxa": {
       "title": "Educational Policy",
       "link": "https://journals.sagepub.com/home/epx",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=epxa&type=etoc&feed=rss",
-      "processor": "crossref",
       "publication_id": "10.1177",
       "issn": "0895-9048"
     },
@@ -315,7 +281,6 @@
       "title": "Evaluation Review",
       "link": "https://journals.sagepub.com/loi/erxb",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=erxb&type=etoc&feed=rss",
-      "processor": "crossref",
       "publication_id": "10.1177",
       "issn": "0193-841X"
     },
@@ -323,7 +288,6 @@
       "title": "The Stata Journal",
       "link": "https://journals.sagepub.com/loi/stja?ai=2b4&mi=ehikzz&af=R",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=stja&type=etoc&feed=rss",
-      "processor": "crossref",
       "publication_id": "10.1177",
       "issn": "1536-867X"
     }

@@ -205,12 +205,20 @@ def sync_publications_from_feeds(conn, feeds_list) -> int:
     return count
 
 
-def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int = 30, timeout: int = 10, delay: float = 0.05):
+def fetch_latest_journal_works(
+    conn: sqlite3.Connection,
+    feeds,
+    per_journal: int = 30,
+    timeout: int = 10,
+    delay: float = 0.05,
+    sort_by: str = "created",
+    date_filter_type: str | None = None,
+    from_date: str | None = None,
+    until_date: str | None = None,
+):
     """Fetch recent works for journals (by ISSN) and insert as articles.
 
-    This function is intended as a maintenance/lookup operation and uses
-    Crossref's API to fetch recent works for journals that have an ISSN in
-    the provided feeds list.
+    Supports cursor-based pagination and optional Crossref date filters.
     """
     import requests
 
@@ -231,20 +239,25 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
         default_retries = 3
         backoff = 0.3
         status_forcelist = [429, 500, 502, 503, 504]
+
     attempts = max(1, int(default_retries) + 1)
     inserted = 0
     skipped = 0
     logger.info("Fetching latest journal works for %s feeds", len(feeds) if hasattr(feeds, '__len__') else 'unknown')
+
     for item in feeds:
-        if len(item) == 5:
-            key, title, url, publication_id, issn = item
-        elif len(item) == 4:
-            key, title, url, publication_id = item
-            issn = None
-        else:
+        # Accept feed tuple shapes of varying length (4, 5, 6...) so that
+        # additional fields like `processor` do not cause us to skip the row.
+        # Expected positions: 0=key, 1=title, 2=url, 3=publication_id, 4=issn
+        key = item[0] if len(item) > 0 else None
+        title = item[1] if len(item) > 1 else None
+        url = item[2] if len(item) > 2 else None
+        publication_id = item[3] if len(item) > 3 else None
+        issn = item[4] if len(item) > 4 else None
+        # Skip feeds that don't have an ISSN
+        if not issn:
             continue
-        if not (issn):
-            continue
+
         try:
             ua = None
             try:
@@ -253,38 +266,72 @@ def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int
                 ua = None
             headers = {"User-Agent": ua or "ed-news-fetcher/1.0", "Accept": "application/json"}
             mailto = os.environ.get("CROSSREF_MAILTO", "your_email@example.com")
-            url = f"https://api.crossref.org/journals/{issn}/works"
-            params = {"sort": "created", "order": "desc", "filter": "type:journal-article", "rows": min(per_journal, 100), "mailto": mailto}
-            used_timeout = (connect_timeout, timeout if timeout and timeout > 0 else read_timeout)
-            resp = None
-            last_exc = None
-            for attempt in range(1, attempts + 1):
-                try:
-                    resp = session.get(url, params=params, headers=headers, timeout=used_timeout)
-                    if resp.status_code in status_forcelist:
-                        last_exc = requests.HTTPError(f"status={resp.status_code}")
-                        raise last_exc
-                    resp.raise_for_status()
-                    break
-                except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError) as e:
-                    last_exc = e
-                    logger.warning("Request attempt %d/%d failed for ISSN=%s: %s", attempt, attempts, issn, e)
-                except requests.HTTPError as e:
-                    last_exc = e
-                    code = getattr(e.response, 'status_code', None) if hasattr(e, 'response') else None
-                    if code in status_forcelist:
-                        logger.warning("HTTP %s on attempt %d/%d for ISSN=%s: will retry", code, attempt, attempts, issn)
-                    else:
-                        raise
-                if attempt < attempts:
-                    sleep_for = backoff * (2 ** (attempt - 1))
-                    sleep_for = sleep_for + (0.1 * backoff)
-                    time.sleep(sleep_for)
+            base_url = f"https://api.crossref.org/journals/{issn}/works"
 
-            if resp is None:
-                raise last_exc if last_exc is not None else Exception("Failed to retrieve Crossref data")
-            data = resp.json()
-            items = data.get("message", {}).get("items", []) or []
+            # Build a base filter string: always request journal-article types
+            filter_parts = ["type:journal-article"]
+            if date_filter_type and from_date:
+                filter_parts.append(f"from-{date_filter_type}-date:{from_date}")
+            if date_filter_type and until_date:
+                filter_parts.append(f"until-{date_filter_type}-date:{until_date}")
+            base_filter = ",".join(filter_parts)
+
+            # Cursor-based pagination: request up to 1000 rows per page and
+            # follow next-cursor until we've collected `per_journal` items.
+            remaining = int(per_journal)
+            cursor = "*"
+            collected_items: list[dict] = []
+            used_timeout = (connect_timeout, timeout if timeout and timeout > 0 else read_timeout)
+
+            while remaining > 0:
+                params = {
+                    "sort": sort_by,
+                    "order": "desc",
+                    "filter": base_filter,
+                    "rows": min(1000, remaining),
+                    "mailto": mailto,
+                    "cursor": cursor,
+                }
+
+                resp = None
+                last_exc = None
+                for attempt in range(1, attempts + 1):
+                    try:
+                        resp = session.get(base_url, params=params, headers=headers, timeout=used_timeout)
+                        if resp.status_code in status_forcelist:
+                            last_exc = requests.HTTPError(f"status={resp.status_code}")
+                            raise last_exc
+                        resp.raise_for_status()
+                        break
+                    except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError) as e:
+                        last_exc = e
+                        logger.warning("Request attempt %d/%d failed for ISSN=%s: %s", attempt, attempts, issn, e)
+                    except requests.HTTPError as e:
+                        last_exc = e
+                        code = getattr(e.response, 'status_code', None) if hasattr(e, 'response') else None
+                        if code in status_forcelist:
+                            logger.warning("HTTP %s on attempt %d/%d for ISSN=%s: will retry", code, attempt, attempts, issn)
+                        else:
+                            raise
+                    if attempt < attempts:
+                        sleep_for = backoff * (2 ** (attempt - 1))
+                        sleep_for = sleep_for + (0.1 * backoff)
+                        time.sleep(sleep_for)
+
+                if resp is None:
+                    raise last_exc if last_exc is not None else Exception("Failed to retrieve Crossref data")
+
+                data = resp.json()
+                page_items = data.get("message", {}).get("items", []) or []
+                collected_items.extend(page_items)
+                remaining = per_journal - len(collected_items)
+                next_cursor = data.get("message", {}).get("next-cursor")
+                if not next_cursor or not page_items:
+                    break
+                cursor = next_cursor
+
+            items = collected_items
+
             for it in items[:per_journal]:
                 doi = (it.get("DOI") or "").strip()
                 if not doi:

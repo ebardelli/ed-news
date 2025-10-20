@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns="http://purl.org/rss/1.0/"
+         xmlns:cc="http://web.resource.org/cc/"
+         xmlns:content="http://purl.org/rss/1.0/modules/content/"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:prism="http://prismstandard.org/namespaces/basic/2.0/">
+   <channel rdf:about="https://journals.sagepub.com/loi/aera?ai=2b4&amp;mi=ehikzz&amp;af=R">
+      <title>American Educational Research Association: American Educational Research Journal: Table of Contents</title>
+      <description>Table of Contents for American Educational Research Journal. List of articles from both the latest and ahead of print issues.</description>
+      <link>https://journals.sagepub.com/loi/aera?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+      <dc:title>American Educational Research Association: American Educational Research Journal: Table of Contents</dc:title>
+      <dc:publisher>American Educational Research Association</dc:publisher>
+      <dc:language>en-US</dc:language>
+      <prism:publicationName>American Educational Research Journal</prism:publicationName>
+      <items>
+         <rdf:Seq>
+            <rdf:li rdf:resource="https://journals.sagepub.com/doi/abs/10.3102/00028312251355992?ai=2b4&amp;mi=ehikzz&amp;af=R"/>
+            <rdf:li rdf:resource="https://journals.sagepub.com/doi/abs/10.3102/00028312251360905?ai=2b4&amp;mi=ehikzz&amp;af=R"/>
+            <rdf:li rdf:resource="https://journals.sagepub.com/doi/abs/10.3102/00028312251347666?ai=2b4&amp;mi=ehikzz&amp;af=R"/>
+            <rdf:li rdf:resource="https://journals.sagepub.com/doi/abs/10.3102/00028312251355989?ai=2b4&amp;mi=ehikzz&amp;af=R"/>
+            <rdf:li rdf:resource="https://journals.sagepub.com/doi/abs/10.3102/00028312251355990?ai=2b4&amp;mi=ehikzz&amp;af=R"/>
+            <rdf:li rdf:resource="https://journals.sagepub.com/doi/abs/10.3102/00028312251348247?ai=2b4&amp;mi=ehikzz&amp;af=R"/>
+            <rdf:li rdf:resource="https://journals.sagepub.com/doi/abs/10.3102/00028312251367683?ai=2b4&amp;mi=ehikzz&amp;af=R"/>
+            <rdf:li rdf:resource="https://journals.sagepub.com/doi/abs/10.3102/00028312251361169?ai=2b4&amp;mi=ehikzz&amp;af=R"/>
+            <rdf:li rdf:resource="https://journals.sagepub.com/doi/abs/10.3102/00028312251367670?ai=2b4&amp;mi=ehikzz&amp;af=R"/>
+            <rdf:li rdf:resource="https://journals.sagepub.com/doi/abs/10.3102/00028312251360910?ai=2b4&amp;mi=ehikzz&amp;af=R"/>
+            <rdf:li rdf:resource="https://journals.sagepub.com/doi/abs/10.3102/00028312251360923?ai=2b4&amp;mi=ehikzz&amp;af=R"/>
+            <rdf:li rdf:resource="https://journals.sagepub.com/doi/abs/10.3102/00028312251367669?ai=2b4&amp;mi=ehikzz&amp;af=R"/>
+         </rdf:Seq>
+      </items>
+   </channel>
+   <image rdf:about="http://www.atypon.com/images/atypon_logo_small.gif">
+      <title>American Educational Research Journal</title>
+      <url>http://www.atypon.com/images/atypon_logo_small.gif</url>
+      <link>https://journals.sagepub.com/loi/aera?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+   </image>
+   <item rdf:about="https://journals.sagepub.com/doi/abs/10.3102/00028312251355992?ai=2b4&amp;mi=ehikzz&amp;af=R">
+      <title>Structuring Choice Policy, School Segregation and the Two-Staged School Choice Process</title>
+      <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251355992?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+      <content:encoded>American Educational Research Journal, &lt;a href="https://journals.sagepub.com/toc/aera/62/5"&gt;Volume 62, Issue 5&lt;/a&gt;, Page 946-981, October 2025. &lt;br/&gt;School choice is both an important tool for school desegregation policy and an enabler of racial segregation. In this paper, we used a two-stage model of complex decision making to illustrate the relationship between school choice policy structure and ...</content:encoded>
+      <description>American Educational Research Journal, Volume 62, Issue 5, Page 946-981, October 2025. &lt;br/&gt;School choice is both an important tool for school desegregation policy and an enabler of racial segregation. In this paper, we used a two-stage model of complex decision making to illustrate the relationship between school choice policy structure and ...</description>
+      <dc:title>Structuring Choice Policy, School Segregation and the Two-Staged School Choice Process</dc:title>
+      <dc:identifier>doi:10.3102/00028312251355992</dc:identifier>
+      <dc:source>American Educational Research Journal</dc:source>
+      <dc:date>2025-08-21T08:40:13Z</dc:date>
+      <dc:creator>Deven Carlson, Thurston Domina, James Carter, Rachel M. Perera, Vitaly Radsky, Andrew McEachin</dc:creator>
+      <prism:publicationName>American Educational Research Journal</prism:publicationName>
+      <prism:volume>62</prism:volume>
+      <prism:number>5</prism:number>
+      <prism:startingPage>946</prism:startingPage>
+      <prism:endingPage>981</prism:endingPage>
+      <prism:coverDate>2025-10-01T07:00:00Z</prism:coverDate>
+      <prism:coverDisplayDate>2025-10-01T07:00:00Z</prism:coverDisplayDate>
+      <prism:doi>10.3102/00028312251355992</prism:doi>
+      <prism:url>https://journals.sagepub.com/doi/abs/10.3102/00028312251355992?ai=2b4&amp;mi=ehikzz&amp;af=R</prism:url>
+      <prism:copyright/>
+   </item>
+   <item rdf:about="https://journals.sagepub.com/doi/abs/10.3102/00028312251360905?ai=2b4&amp;mi=ehikzz&amp;af=R">
+      <title>“They’re Outside of the Process”: How Admissions Officers Maintain Inequality When Evaluating Course Rigor Through Holistic Admissions</title>
+      <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251360905?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+      <content:encoded>American Educational Research Journal, &lt;a href="https://journals.sagepub.com/toc/aera/62/5"&gt;Volume 62, Issue 5&lt;/a&gt;, Page 1019-1055, October 2025. &lt;br/&gt;Admissions officers practicing holistic admissions judge students’ course taking based on what was available to them, yet how representatives learn about students’ high school context and subsequently evaluate students’ course rigor within it remains ...</content:encoded>
+      <description>American Educational Research Journal, Volume 62, Issue 5, Page 1019-1055, October 2025. &lt;br/&gt;Admissions officers practicing holistic admissions judge students’ course taking based on what was available to them, yet how representatives learn about students’ high school context and subsequently evaluate students’ course rigor within it remains ...</description>
+      <dc:title>“They’re Outside of the Process”: How Admissions Officers Maintain Inequality When Evaluating Course Rigor Through Holistic Admissions</dc:title>
+      <dc:identifier>doi:10.3102/00028312251360905</dc:identifier>
+      <dc:source>American Educational Research Journal</dc:source>
+      <dc:date>2025-08-25T06:30:31Z</dc:date>
+      <dc:creator>Awilda Rodríguez, Katherine Lebioda, Davinia Rodríguez-Wilhelm, Cassandra Arroyo, Joshua Skiles, Braini McKenzie, Reuben C. Kapp, Nicole J. Wilson</dc:creator>
+      <prism:publicationName>American Educational Research Journal</prism:publicationName>
+      <prism:volume>62</prism:volume>
+      <prism:number>5</prism:number>
+      <prism:startingPage>1019</prism:startingPage>
+      <prism:endingPage>1055</prism:endingPage>
+      <prism:coverDate>2025-10-01T07:00:00Z</prism:coverDate>
+      <prism:coverDisplayDate>2025-10-01T07:00:00Z</prism:coverDisplayDate>
+      <prism:doi>10.3102/00028312251360905</prism:doi>
+      <prism:url>https://journals.sagepub.com/doi/abs/10.3102/00028312251360905?ai=2b4&amp;mi=ehikzz&amp;af=R</prism:url>
+      <prism:copyright/>
+   </item>
+   <item rdf:about="https://journals.sagepub.com/doi/abs/10.3102/00028312251347666?ai=2b4&amp;mi=ehikzz&amp;af=R">
+      <title>Does the impact of pupil absences on achievement depend on their timing?</title>
+      <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251347666?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+      <content:encoded>American Educational Research Journal, &lt;a href="https://journals.sagepub.com/toc/aera/62/5"&gt;Volume 62, Issue 5&lt;/a&gt;, Page 872-908, October 2025. &lt;br/&gt;Using linked data from the Millennium Cohort Study and National Pupil Database (N = 8,139), this study examined how the timing of school absences (years 1 to 11 between 2006 and 2017) affects achievement at the end of compulsory schooling in England. ...</content:encoded>
+      <description>American Educational Research Journal, Volume 62, Issue 5, Page 872-908, October 2025. &lt;br/&gt;Using linked data from the Millennium Cohort Study and National Pupil Database (N = 8,139), this study examined how the timing of school absences (years 1 to 11 between 2006 and 2017) affects achievement at the end of compulsory schooling in England. ...</description>
+      <dc:title>Does the impact of pupil absences on achievement depend on their timing?</dc:title>
+      <dc:identifier>doi:10.3102/00028312251347666</dc:identifier>
+      <dc:source>American Educational Research Journal</dc:source>
+      <dc:date>2025-07-03T12:54:25Z</dc:date>
+      <dc:creator>Jascha Dräger, Markus Klein, Edward M. Sosu</dc:creator>
+      <prism:publicationName>American Educational Research Journal</prism:publicationName>
+      <prism:volume>62</prism:volume>
+      <prism:number>5</prism:number>
+      <prism:startingPage>872</prism:startingPage>
+      <prism:endingPage>908</prism:endingPage>
+      <prism:coverDate>2025-10-01T07:00:00Z</prism:coverDate>
+      <prism:coverDisplayDate>2025-10-01T07:00:00Z</prism:coverDisplayDate>
+      <prism:doi>10.3102/00028312251347666</prism:doi>
+      <prism:url>https://journals.sagepub.com/doi/abs/10.3102/00028312251347666?ai=2b4&amp;mi=ehikzz&amp;af=R</prism:url>
+      <prism:copyright/>
+   </item>
+   <item rdf:about="https://journals.sagepub.com/doi/abs/10.3102/00028312251355989?ai=2b4&amp;mi=ehikzz&amp;af=R">
+      <title>Effects of Heterogeneous Versus Homogeneous Grouping of English Learners’ Language and Literacy Development: Evidence from a Randomized Controlled Trial</title>
+      <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251355989?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+      <content:encoded>American Educational Research Journal, &lt;a href="https://journals.sagepub.com/toc/aera/62/5"&gt;Volume 62, Issue 5&lt;/a&gt;, Page 909-945, October 2025. &lt;br/&gt;In this preregistered within-teacher randomized controlled trial (n = 84), we tested the effects of grouping English learners (ELs) in homogeneous groups (all ELs) versus heterogeneous groups (ELs and non-ELs) on language, reading comprehension, and ...</content:encoded>
+      <description>American Educational Research Journal, Volume 62, Issue 5, Page 909-945, October 2025. &lt;br/&gt;In this preregistered within-teacher randomized controlled trial (n = 84), we tested the effects of grouping English learners (ELs) in homogeneous groups (all ELs) versus heterogeneous groups (ELs and non-ELs) on language, reading comprehension, and ...</description>
+      <dc:title>Effects of Heterogeneous Versus Homogeneous Grouping of English Learners’ Language and Literacy Development: Evidence from a Randomized Controlled Trial</dc:title>
+      <dc:identifier>doi:10.3102/00028312251355989</dc:identifier>
+      <dc:source>American Educational Research Journal</dc:source>
+      <dc:date>2025-08-21T10:45:01Z</dc:date>
+      <dc:creator>Michael J. Kieffer, C. Patrick Proctor, Andrew W. Weaver, Sasha Karbachinskiy, Qihan Chen, Qun Yu, Gabriella Solano, Aaron Coleman, Shaelyn M. Cavanaugh, Xiaoying Wu, Elise Cappella, Rebecca D. Silverman</dc:creator>
+      <prism:publicationName>American Educational Research Journal</prism:publicationName>
+      <prism:volume>62</prism:volume>
+      <prism:number>5</prism:number>
+      <prism:startingPage>909</prism:startingPage>
+      <prism:endingPage>945</prism:endingPage>
+      <prism:coverDate>2025-10-01T07:00:00Z</prism:coverDate>
+      <prism:coverDisplayDate>2025-10-01T07:00:00Z</prism:coverDisplayDate>
+      <prism:doi>10.3102/00028312251355989</prism:doi>
+      <prism:url>https://journals.sagepub.com/doi/abs/10.3102/00028312251355989?ai=2b4&amp;mi=ehikzz&amp;af=R</prism:url>
+      <prism:copyright/>
+   </item>
+   <item rdf:about="https://journals.sagepub.com/doi/abs/10.3102/00028312251355990?ai=2b4&amp;mi=ehikzz&amp;af=R">
+      <title>Summer School as a Learning Loss Recovery Strategy After COVID-19: Evidence from Summer 2022</title>
+      <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251355990?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+      <content:encoded>American Educational Research Journal, &lt;a href="https://journals.sagepub.com/toc/aera/62/5"&gt;Volume 62, Issue 5&lt;/a&gt;, Page 982-1018, October 2025. &lt;br/&gt;To make up for pandemic-related learning losses, many U.S. public school districts have increased enrollment in their summer school programs. We assessed summer school as a strategy for COVID-19 learning recovery by tracking the academic progress of ...</content:encoded>
+      <description>American Educational Research Journal, Volume 62, Issue 5, Page 982-1018, October 2025. &lt;br/&gt;To make up for pandemic-related learning losses, many U.S. public school districts have increased enrollment in their summer school programs. We assessed summer school as a strategy for COVID-19 learning recovery by tracking the academic progress of ...</description>
+      <dc:title>Summer School as a Learning Loss Recovery Strategy After COVID-19: Evidence from Summer 2022</dc:title>
+      <dc:identifier>doi:10.3102/00028312251355990</dc:identifier>
+      <dc:source>American Educational Research Journal</dc:source>
+      <dc:date>2025-08-16T06:50:11Z</dc:date>
+      <dc:creator>Ian Callen, Maria V. Carbonari, Michael DeArmond, Daniel Dewey, Elise Dizon-Ross, Dan Goldhaber, Jazmin Isaacs, Thomas J. Kane, Megan Kuhfeld, Anna McDonald, Andrew McEachin, Emily Morton, Atsuko Muroga, Douglas O. Staiger</dc:creator>
+      <prism:publicationName>American Educational Research Journal</prism:publicationName>
+      <prism:volume>62</prism:volume>
+      <prism:number>5</prism:number>
+      <prism:startingPage>982</prism:startingPage>
+      <prism:endingPage>1018</prism:endingPage>
+      <prism:coverDate>2025-10-01T07:00:00Z</prism:coverDate>
+      <prism:coverDisplayDate>2025-10-01T07:00:00Z</prism:coverDisplayDate>
+      <prism:doi>10.3102/00028312251355990</prism:doi>
+      <prism:url>https://journals.sagepub.com/doi/abs/10.3102/00028312251355990?ai=2b4&amp;mi=ehikzz&amp;af=R</prism:url>
+      <prism:copyright/>
+   </item>
+   <item rdf:about="https://journals.sagepub.com/doi/abs/10.3102/00028312251348247?ai=2b4&amp;mi=ehikzz&amp;af=R">
+      <title>The Politics of Pandemic School Operations for Reopening and Beyond: Evidence from Virginia</title>
+      <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251348247?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+      <content:encoded>American Educational Research Journal, &lt;a href="https://journals.sagepub.com/toc/aera/62/5"&gt;Volume 62, Issue 5&lt;/a&gt;, Page 835-871, October 2025. &lt;br/&gt;Post-COVID-19, is education losing its special status as a policy domain more insulated from partisan politics than other policy areas? Indeed, a community's political makeup influenced its schools’ pandemic learning modality, but did it predict other ...</content:encoded>
+      <description>American Educational Research Journal, Volume 62, Issue 5, Page 835-871, October 2025. &lt;br/&gt;Post-COVID-19, is education losing its special status as a policy domain more insulated from partisan politics than other policy areas? Indeed, a community's political makeup influenced its schools’ pandemic learning modality, but did it predict other ...</description>
+      <dc:title>The Politics of Pandemic School Operations for Reopening and Beyond: Evidence from Virginia</dc:title>
+      <dc:identifier>doi:10.3102/00028312251348247</dc:identifier>
+      <dc:source>American Educational Research Journal</dc:source>
+      <dc:date>2025-07-21T07:29:33Z</dc:date>
+      <dc:creator>Beth E. Schueler, Luke C. Miller, Amy ReynoldsUniversity of Virginia</dc:creator>
+      <prism:publicationName>American Educational Research Journal</prism:publicationName>
+      <prism:volume>62</prism:volume>
+      <prism:number>5</prism:number>
+      <prism:startingPage>835</prism:startingPage>
+      <prism:endingPage>871</prism:endingPage>
+      <prism:coverDate>2025-10-01T07:00:00Z</prism:coverDate>
+      <prism:coverDisplayDate>2025-10-01T07:00:00Z</prism:coverDisplayDate>
+      <prism:doi>10.3102/00028312251348247</prism:doi>
+      <prism:url>https://journals.sagepub.com/doi/abs/10.3102/00028312251348247?ai=2b4&amp;mi=ehikzz&amp;af=R</prism:url>
+      <prism:copyright/>
+   </item>
+   <item rdf:about="https://journals.sagepub.com/doi/abs/10.3102/00028312251367683?ai=2b4&amp;mi=ehikzz&amp;af=R">
+      <title>“I Draw Mommy Right Here . . . Wearing Mask”: Care, Criticality, and Crip Linguistics Through Early Childhood Literacy</title>
+      <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251367683?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+      <content:encoded>American Educational Research Journal, Ahead of Print. &lt;br/&gt;The intersecting crises of 2020 had profound impacts on disabled young children. Existing literature has centered on the challenges disabled children faced and the interventions they needed. Few studies have offered counternarratives that showcase their ...</content:encoded>
+      <description>American Educational Research Journal, Ahead of Print. &lt;br/&gt;The intersecting crises of 2020 had profound impacts on disabled young children. Existing literature has centered on the challenges disabled children faced and the interventions they needed. Few studies have offered counternarratives that showcase their ...</description>
+      <dc:title>“I Draw Mommy Right Here . . . Wearing Mask”: Care, Criticality, and Crip Linguistics Through Early Childhood Literacy</dc:title>
+      <dc:identifier>doi:10.3102/00028312251367683</dc:identifier>
+      <dc:source>American Educational Research Journal</dc:source>
+      <dc:date>2025-09-16T10:02:02Z</dc:date>
+      <dc:creator>Maggie Beneke, Emily Machado, Jordan Taitingfong</dc:creator>
+      <prism:publicationName>American Educational Research Journal</prism:publicationName>
+      <prism:doi>10.3102/00028312251367683</prism:doi>
+      <prism:url>https://journals.sagepub.com/doi/abs/10.3102/00028312251367683?ai=2b4&amp;mi=ehikzz&amp;af=R</prism:url>
+      <prism:copyright/>
+   </item>
+   <item rdf:about="https://journals.sagepub.com/doi/abs/10.3102/00028312251361169?ai=2b4&amp;mi=ehikzz&amp;af=R">
+      <title>“Le Voy a Adelantar el Camino”: Mothers Paving the Way Through Linguistic Motherwork in Bilingual Kindergarten Classrooms</title>
+      <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251361169?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+      <content:encoded>American Educational Research Journal, Ahead of Print. &lt;br/&gt;Grounded in the frameworks of motherwork, linguistic motherwork, and Family Language Policy, this critical ethnographic study examined how a group of mothers supported their children’s linguistic and educational development amid shifting school conditions ...</content:encoded>
+      <description>American Educational Research Journal, Ahead of Print. &lt;br/&gt;Grounded in the frameworks of motherwork, linguistic motherwork, and Family Language Policy, this critical ethnographic study examined how a group of mothers supported their children’s linguistic and educational development amid shifting school conditions ...</description>
+      <dc:title>“Le Voy a Adelantar el Camino”: Mothers Paving the Way Through Linguistic Motherwork in Bilingual Kindergarten Classrooms</dc:title>
+      <dc:identifier>doi:10.3102/00028312251361169</dc:identifier>
+      <dc:source>American Educational Research Journal</dc:source>
+      <dc:date>2025-09-27T07:40:21Z</dc:date>
+      <dc:creator>Yalda M. Kaveh, Seda Ozbek-Damar, Sara Rodríguez-Martínez, Valencia Clement, Cory Buckband, Ashley R. Coughlin</dc:creator>
+      <prism:publicationName>American Educational Research Journal</prism:publicationName>
+      <prism:doi>10.3102/00028312251361169</prism:doi>
+      <prism:url>https://journals.sagepub.com/doi/abs/10.3102/00028312251361169?ai=2b4&amp;mi=ehikzz&amp;af=R</prism:url>
+      <prism:copyright/>
+   </item>
+   <item rdf:about="https://journals.sagepub.com/doi/abs/10.3102/00028312251367670?ai=2b4&amp;mi=ehikzz&amp;af=R">
+      <title>Organizational Culture and Ethnic-Racial Socialization in a Racially Diverse Afterschool Urban Debate League
+</title>
+      <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251367670?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+      <content:encoded>American Educational Research Journal, Ahead of Print. &lt;br/&gt;This study examined ethnic-racial socialization in a racially/ethnically diverse afterschool debate league. Using ethnographic observations and interviews, I found that the organizational culture of debate teams within the league promoted trust of cross-...</content:encoded>
+      <description>American Educational Research Journal, Ahead of Print. &lt;br/&gt;This study examined ethnic-racial socialization in a racially/ethnically diverse afterschool debate league. Using ethnographic observations and interviews, I found that the organizational culture of debate teams within the league promoted trust of cross-...</description>
+      <dc:title>Organizational Culture and Ethnic-Racial Socialization in a Racially Diverse Afterschool Urban Debate League
+</dc:title>
+      <dc:identifier>doi:10.3102/00028312251367670</dc:identifier>
+      <dc:source>American Educational Research Journal</dc:source>
+      <dc:date>2025-09-07T01:02:48Z</dc:date>
+      <dc:creator>Sebastian Castrechini</dc:creator>
+      <prism:publicationName>American Educational Research Journal</prism:publicationName>
+      <prism:doi>10.3102/00028312251367670</prism:doi>
+      <prism:url>https://journals.sagepub.com/doi/abs/10.3102/00028312251367670?ai=2b4&amp;mi=ehikzz&amp;af=R</prism:url>
+      <prism:copyright/>
+   </item>
+   <item rdf:about="https://journals.sagepub.com/doi/abs/10.3102/00028312251360910?ai=2b4&amp;mi=ehikzz&amp;af=R">
+      <title>Can States Sustain and Replicate School District Improvement? Evidence from Massachusetts on Multilevel Governance</title>
+      <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251360910?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+      <content:encoded>American Educational Research Journal, Ahead of Print. &lt;br/&gt;Limited scholarship has examined school districtwide turnaround reforms beyond the first few years of implementation or efforts to replicate successes in new contexts. We studied Massachusetts, home to a state takeover of the Lawrence school district that ...</content:encoded>
+      <description>American Educational Research Journal, Ahead of Print. &lt;br/&gt;Limited scholarship has examined school districtwide turnaround reforms beyond the first few years of implementation or efforts to replicate successes in new contexts. We studied Massachusetts, home to a state takeover of the Lawrence school district that ...</description>
+      <dc:title>Can States Sustain and Replicate School District Improvement? Evidence from Massachusetts on Multilevel Governance</dc:title>
+      <dc:identifier>doi:10.3102/00028312251360910</dc:identifier>
+      <dc:source>American Educational Research Journal</dc:source>
+      <dc:date>2025-09-11T12:29:43Z</dc:date>
+      <dc:creator>Beth E. Schueler, Liz Nigro, John WangUniversity of Virginia</dc:creator>
+      <prism:publicationName>American Educational Research Journal</prism:publicationName>
+      <prism:doi>10.3102/00028312251360910</prism:doi>
+      <prism:url>https://journals.sagepub.com/doi/abs/10.3102/00028312251360910?ai=2b4&amp;mi=ehikzz&amp;af=R</prism:url>
+      <prism:copyright/>
+   </item>
+   <item rdf:about="https://journals.sagepub.com/doi/abs/10.3102/00028312251360923?ai=2b4&amp;mi=ehikzz&amp;af=R">
+      <title>Policy-Assigned Teacher Observations, Their Implementation, and Student Discipline Outcomes: Main, Mediated, and Moderated Relationships</title>
+      <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251360923?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+      <content:encoded>American Educational Research Journal, Ahead of Print. &lt;br/&gt;This study is the first to estimate main, mediated, and moderated relationships between policy-assigned observations and various student discipline outcomes (SDOs). We also examined the relationships between SDOs and observations conducted. The data ...</content:encoded>
+      <description>American Educational Research Journal, Ahead of Print. &lt;br/&gt;This study is the first to estimate main, mediated, and moderated relationships between policy-assigned observations and various student discipline outcomes (SDOs). We also examined the relationships between SDOs and observations conducted. The data ...</description>
+      <dc:title>Policy-Assigned Teacher Observations, Their Implementation, and Student Discipline Outcomes: Main, Mediated, and Moderated Relationships</dc:title>
+      <dc:identifier>doi:10.3102/00028312251360923</dc:identifier>
+      <dc:source>American Educational Research Journal</dc:source>
+      <dc:date>2025-09-28T09:46:21Z</dc:date>
+      <dc:creator>Seth B. Hunter, Adam Kho, Katherine M Bowser</dc:creator>
+      <prism:publicationName>American Educational Research Journal</prism:publicationName>
+      <prism:doi>10.3102/00028312251360923</prism:doi>
+      <prism:url>https://journals.sagepub.com/doi/abs/10.3102/00028312251360923?ai=2b4&amp;mi=ehikzz&amp;af=R</prism:url>
+      <prism:copyright/>
+   </item>
+   <item rdf:about="https://journals.sagepub.com/doi/abs/10.3102/00028312251367669?ai=2b4&amp;mi=ehikzz&amp;af=R">
+      <title>Introducing a High School Exit Exam in Science: Consequences in Massachusetts</title>
+      <link>https://journals.sagepub.com/doi/abs/10.3102/00028312251367669?ai=2b4&amp;mi=ehikzz&amp;af=R</link>
+      <content:encoded>American Educational Research Journal, Ahead of Print. &lt;br/&gt;Preparing students for science, technology, and engineering careers is an urgent state policy challenge. We examined the design and roll-out of a science testing requirement for high school graduation in Massachusetts. While science test performance ...</content:encoded>
+      <description>American Educational Research Journal, Ahead of Print. &lt;br/&gt;Preparing students for science, technology, and engineering careers is an urgent state policy challenge. We examined the design and roll-out of a science testing requirement for high school graduation in Massachusetts. While science test performance ...</description>
+      <dc:title>Introducing a High School Exit Exam in Science: Consequences in Massachusetts</dc:title>
+      <dc:identifier>doi:10.3102/00028312251367669</dc:identifier>
+      <dc:source>American Educational Research Journal</dc:source>
+      <dc:date>2025-09-28T01:12:56Z</dc:date>
+      <dc:creator>Ann Mantil, John P. Papay, Preeya P. Mbekeani, Richard J. Murnane</dc:creator>
+      <prism:publicationName>American Educational Research Journal</prism:publicationName>
+      <prism:doi>10.3102/00028312251367669</prism:doi>
+      <prism:url>https://journals.sagepub.com/doi/abs/10.3102/00028312251367669?ai=2b4&amp;mi=ehikzz&amp;af=R</prism:url>
+      <prism:copyright/>
+   </item>
+</rdf:RDF>

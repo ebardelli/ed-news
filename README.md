@@ -56,6 +56,15 @@ uv run python main.py serve --directory build
 - The project uses SQLite. Schema and maintenance helpers are in `ednews/db/`.
 - The `manage_db` helpers were moved into `ednews.db.manage_db`; update external imports if you relied on `ednews.manage_db`.
 
+## CrossRef ISSN Lookup
+
+```sh
+uv run ednews issn-lookup \
+  --date-filter-type created \
+  --from-date '2024-01-01T00' \
+  --per-journal 100
+```
+
 ## Testing
 
 Run the test suite with pytest:

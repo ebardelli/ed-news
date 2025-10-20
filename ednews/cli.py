@@ -32,6 +32,18 @@ def cmd_fetch(args):
             logger.error("No feeds found; aborting fetch")
             return
     conn = sqlite3.connect(str(config.DB_PATH))
+    # Ensure DB schema exists so we can insert items/publications/headlines.
+    # Historically `fetch` would create tables if missing; keep that convenient
+    # behavior so users can run `fetch` without an explicit `db-init` step.
+    try:
+        from ednews.db import init_db
+
+        try:
+            init_db(conn)
+        except Exception:
+            logger.debug("failed to initialize DB schema before fetch")
+    except Exception:
+        logger.debug("ednews.db.init_db not importable; skipping init_db call")
 
     # Ensure publications table is populated/upserted from planet.json feeds
     try:
@@ -264,7 +276,17 @@ def cmd_issn_lookup(args):
     conn = sqlite3.connect(str(config.DB_PATH))
     from ednews.db.manage_db import fetch_latest_journal_works
     try:
-        inserted = fetch_latest_journal_works(conn, feeds_list, per_journal=args.per_journal, timeout=args.timeout, delay=args.delay)
+        inserted = fetch_latest_journal_works(
+            conn,
+            feeds_list,
+            per_journal=args.per_journal,
+            timeout=args.timeout,
+            delay=args.delay,
+            sort_by=args.sort_by if hasattr(args, 'sort_by') else 'created',
+            date_filter_type=getattr(args, 'date_filter_type', None),
+            from_date=getattr(args, 'from_date', None),
+            until_date=getattr(args, 'until_date', None),
+        )
         logger.info("Inserted %d articles from ISSN lookups", inserted)
     except Exception:
         logger.exception("ISSN lookup failed")
@@ -544,9 +566,13 @@ def run():
     p_enrich.set_defaults(func=cmd_enrich_crossref)
 
     p_issn = sub.add_parser("issn-lookup", help="Fetch latest works for journals by ISSN and insert into DB")
-    p_issn.add_argument("--per-journal", type=int, default=30, help="Number of works to fetch per journal (max 100)")
+    p_issn.add_argument("--per-journal", type=int, default=30, help="Number of works to fetch per journal (uses cursor pagination; no hard max)")
     p_issn.add_argument("--timeout", type=float, default=10.0, help="Request timeout in seconds")
     p_issn.add_argument("--delay", type=float, default=0.05, help="Delay between individual requests (seconds)")
+    p_issn.add_argument("--sort-by", type=str, default="created", help="Field to sort by when requesting works (e.g. created, deposited)")
+    p_issn.add_argument("--date-filter-type", type=str, choices=["created", "updated", "indexed"], default=None, help="Use Crossref date filters (from-*/until-*)")
+    p_issn.add_argument("--from-date", type=str, default=None, help="Start date/time for date filter (ISO fragment like 2025-10-20T14)")
+    p_issn.add_argument("--until-date", type=str, default=None, help="End date/time for date filter (ISO fragment)")
     p_issn.set_defaults(func=cmd_issn_lookup)
 
     p_headlines = sub.add_parser("headlines", help="Fetch latest headlines from news.json sites")
