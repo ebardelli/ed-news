@@ -56,8 +56,10 @@ uv run python main.py embed --batch-size 64
 # Enrich articles from Crossref
 uv run python main.py enrich-crossref --batch-size 20 --delay 0.1
 
-# ISSN lookup
-uv run python main.py issn-lookup --per-journal 30
+ # ISSN lookup
+ # --from-date/--until-date accept: YYYY, YYYY-MM, YYYY-MM-DD, or datetimes like YYYY-MM-DDTHH:MM
+ # Datetimes without timezone are interpreted as UTC.
+ uv run python main.py issn-lookup --per-journal 30
 
 # DB initialization
 uv run python main.py db-init

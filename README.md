@@ -65,6 +65,16 @@ uv run ednews issn-lookup \
   --per-journal 100
 ```
 
+Date formats accepted for `--from-date` and `--until-date`:
+
+- Year only: `2025`
+- Year and month: `2025-04`
+- Full date: `2025-04-01`
+- Datetime (no timezone): `2025-04-01T12:30` (interpreted as UTC and converted to `2025-04-01T12:30:00+00:00`)
+- Datetime with timezone/Z: `2025-04-01T12:30:00Z` or `2025-04-01T12:30:00+02:00`
+
+Partial date fragments (year, year-month, year-month-day) are preserved as-is and passed to Crossref. Datetimes without a timezone are treated as UTC.
+
 ## Testing
 
 Run the test suite with pytest:

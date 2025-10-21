@@ -12,9 +12,42 @@ from ednews import feeds, build as build_mod, embeddings
 from ednews import config
 import sqlite3
 import requests
+import re
+from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 logger = logging.getLogger("ednews.cli")
+
+
+def normalize_cli_date(s: str | None) -> str | None:
+    """Normalize CLI date inputs for issn-lookup and similar commands.
+
+    - Preserve date fragments like 'YYYY', 'YYYY-MM', 'YYYY-MM-DD'.
+    - If given a datetime-like string without timezone (contains 'T' and
+      no timezone suffix), parse it and treat it as UTC, returning an
+      ISO-formatted string with timezone (+00:00).
+    - Otherwise return the input string trimmed.
+    """
+    if not s:
+        return None
+    try:
+        s2 = str(s).strip()
+        # Preserve year/month/day-only fragments unchanged
+        if re.match(r"^\d{4}(?:-\d{2}(?:-\d{2})?)?$", s2):
+            return s2
+        # If a full datetime-like string without timezone is provided,
+        # attempt to parse and append UTC timezone.
+        if "T" in s2 and not re.search(r"Z|[+-]\d{2}:?\d{2}$", s2):
+            try:
+                dt = datetime.fromisoformat(s2)
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                return dt.isoformat()
+            except Exception:
+                return s2
+        return s2
+    except Exception:
+        return s
 
 
 def cmd_fetch(args):
@@ -275,6 +308,7 @@ def cmd_issn_lookup(args):
         return
     conn = sqlite3.connect(str(config.DB_PATH))
     from ednews.db.manage_db import fetch_latest_journal_works
+    # Normalize user-provided date fragments (module-level helper)
     try:
         inserted = fetch_latest_journal_works(
             conn,
@@ -284,8 +318,8 @@ def cmd_issn_lookup(args):
             delay=args.delay,
             sort_by=args.sort_by if hasattr(args, 'sort_by') else 'created',
             date_filter_type=getattr(args, 'date_filter_type', None),
-            from_date=getattr(args, 'from_date', None),
-            until_date=getattr(args, 'until_date', None),
+            from_date=normalize_cli_date(getattr(args, 'from_date', None)),
+            until_date=normalize_cli_date(getattr(args, 'until_date', None)),
         )
         logger.info("Inserted %d articles from ISSN lookups", inserted)
     except Exception:
@@ -541,6 +575,21 @@ def cmd_serve(args):
 
 def run():
     parser = argparse.ArgumentParser(prog="ednews")
+    # Default --from-date to the first day of the month six months prior to today.
+    # For example, 2025-10-20 -> 2025-04-01.
+    try:
+        from datetime import date
+
+        _today = date.today()
+        _month = _today.month - 6
+        _year = _today.year
+        if _month <= 0:
+            _month += 12
+            _year -= 1
+        _default_from_date = f"{_year:04d}-{_month:02d}-01"
+    except Exception:
+        # Fallback to None if anything goes wrong computing the default
+        _default_from_date = None
     parser.add_argument("-v", "--verbose", action="store_true")
     sub = parser.add_subparsers(dest="cmd")
 
@@ -571,8 +620,25 @@ def run():
     p_issn.add_argument("--delay", type=float, default=0.05, help="Delay between individual requests (seconds)")
     p_issn.add_argument("--sort-by", type=str, default="created", help="Field to sort by when requesting works (e.g. created, deposited)")
     p_issn.add_argument("--date-filter-type", type=str, choices=["created", "updated", "indexed"], default=None, help="Use Crossref date filters (from-*/until-*)")
-    p_issn.add_argument("--from-date", type=str, default=None, help="Start date/time for date filter (ISO fragment like 2025-10-20T14)")
-    p_issn.add_argument("--until-date", type=str, default=None, help="End date/time for date filter (ISO fragment)")
+    p_issn.add_argument(
+        "--from-date",
+        type=str,
+        default=_default_from_date,
+        help=(
+            "Start date/time for date filter. Accepts: YYYY, YYYY-MM, YYYY-MM-DD, "
+            "or datetimes like YYYY-MM-DDTHH:MM (interpreted as UTC if no timezone). "
+            "Defaults to first day of month six months ago."
+        ),
+    )
+    p_issn.add_argument(
+        "--until-date",
+        type=str,
+        default=None,
+        help=(
+            "End date/time for date filter. Accepts the same formats as --from-date; "
+            "datetimes without timezone are treated as UTC."
+        ),
+    )
     p_issn.set_defaults(func=cmd_issn_lookup)
 
     p_headlines = sub.add_parser("headlines", help="Fetch latest headlines from news.json sites")
