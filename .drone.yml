@@ -33,8 +33,7 @@ steps:
         - ln -sf cache/ednews.db ednews.db
         - uv sync
         - uv run python main.py fetch
-  - "# --from-date/--until-date accept: YYYY, YYYY-MM, YYYY-MM-DD, or datetimes like YYYY-MM-DDTHH:MM (datetimes without timezone are interpreted as UTC)"
-  - uv run python main.py issn-lookup --date-filter-type created --from-date '2025-01-01T00' --per-journal 100
+        - uv run python main.py issn-lookup --date-filter-type created --from-date '2025-01-01' --per-journal 100
         - uv run python main.py enrich-crossref --batch 100
         - uv run python main.py embed
         - uv run python main.py build
