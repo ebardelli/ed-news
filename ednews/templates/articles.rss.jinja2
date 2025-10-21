@@ -11,7 +11,7 @@
       <title>{{ item.title or 'Untitled' }}</title>
       <link>{{ item.link or '' }}</link>
   <guid isPermaLink="false">{{ item.guid }}</guid>
-  <description>{% if item.abstract %}{{ item.abstract }}{% if item.content %}\n\n{{ item.content }}{% endif %}{% else %}{{ item.content or '' }}{% endif %}</description>
+  <description><![CDATA[{{ item.rss_description | default('') }}]]></description>
       <pubDate>{{ item.published or '' }}</pubDate>
     </item>
     {% endfor %}

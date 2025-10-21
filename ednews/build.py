@@ -51,6 +51,40 @@ def item_has_content(item: dict) -> bool:
     return bool(title or link or content)
 
 
+def _make_rss_description(item: dict) -> str:
+    """Return a compact HTML description string for RSS from an item dict.
+
+    The function prefers abstract over content, includes an optional
+    source line, and renders similar items as a bulleted HTML list.
+    This is a module-level helper to ensure it's available anywhere in the
+    build process.
+    """
+    parts = []
+    src = item.get('source')
+    if src:
+        parts.append(f"<strong>Source:</strong> {src}")
+
+    main = (item.get('abstract') or item.get('content') or '')
+    main = str(main).strip()
+    if main:
+        parts.append(main)
+
+    sims = item.get('similar_headlines') or []
+    sims_li = []
+    for s in sims:
+        label = (s.get('title') or s.get('text') or '').strip()
+        if not label:
+            continue
+        if s.get('link'):
+            sims_li.append(f"<li><a href=\"{s.get('link')}\">{label}</a></li>")
+        else:
+            sims_li.append(f"<li>{label}</li>")
+    if sims_li:
+        parts.append("<strong>Related:</strong>\n<ul>" + "\n".join(sims_li) + "</ul>")
+
+    return "\n\n".join(parts).strip()
+
+
 def get_similar_articles_by_doi(conn, doi, top_n=5, model=MODEL_NAME, store_if_missing: bool = True):
     """Return a list of similar articles for the given DOI using stored embeddings.
 
@@ -397,6 +431,8 @@ def build(out_dir: Path = BUILD_DIR):
         # Use index template for combined feed
         tpl_index = env.get_template("index.rss.jinja2")
 
+        # Use the module-level _make_rss_description helper to prepare descriptions
+
         # Prepare metadata for feeds: use configured titles/links if present
         site_link = getattr(config, 'FEED_SITE_LINK', "https://ebardelli.com/ed-news/")
         feed_meta_combined = {
@@ -424,7 +460,35 @@ def build(out_dir: Path = BUILD_DIR):
         # Articles-only feed
         articles_limit = getattr(config, 'ARTICLES_DEFAULT_LIMIT', 20)
         # Filter out entirely empty/meaningless items before rendering
-        articles_items = [a for a in (ctx.get("articles") or []) if item_has_content(a)][:articles_limit]
+        # Ensure article items include optional `source` and `similar_headlines` keys
+        articles_items = []
+        for a in (ctx.get("articles") or []):
+            if not item_has_content(a):
+                continue
+            it = dict(a)
+            # Prefer an explicit source field if present, else use feed title
+            src = it.get('source') or it.get('feed_title') or (it.get('raw', {}) or {}).get('source')
+            if src:
+                it['source'] = src
+            # Convert similar_articles (from article embeddings) to a generic similar_headlines shape
+            sims = it.get('similar_articles') or []
+            sim_items = []
+            for s in sims:
+                # s may contain doi, title, abstract, distance
+                sim_items.append({
+                    'title': s.get('title'),
+                    'text': s.get('abstract'),
+                    'link': (('https://doi.org/' + s.get('doi')) if s.get('doi') else None),
+                    'distance': s.get('distance'),
+                })
+            it['similar_headlines'] = sim_items
+            # Prepare rss_description in Python so templates can render it directly
+            try:
+                it['rss_description'] = _make_rss_description(it)
+            except Exception:
+                it['rss_description'] = ''
+            articles_items.append(it)
+        articles_items = articles_items[:articles_limit]
         # Ensure each item has a hashed guid for de-duplication
         import hashlib
 
@@ -446,13 +510,20 @@ def build(out_dir: Path = BUILD_DIR):
         headlines_raw = ctx.get("news_headlines") or []
         # Convert headline rows to the expected keys used by the RSS template
         def headline_to_item(h):
-            return {
+            item = {
                 "title": h.get("title") or "Untitled",
                 "link": h.get("link") or "",
                 "content": h.get("text") or "",
                 "abstract": None,
                 "published": h.get("published") or None,
+                "source": h.get("source") or None,
+                "similar_headlines": h.get("similar_headlines") or [],
             }
+            try:
+                item['rss_description'] = _make_rss_description(item)
+            except Exception:
+                item['rss_description'] = ''
+            return item
         headlines_items = [headline_to_item(h) for h in headlines_raw]
         # Filter headlines for meaningful content and apply limit afterwards
         headlines_items = [h for h in headlines_items if item_has_content(h)][:headlines_limit]
@@ -519,29 +590,71 @@ def build(out_dir: Path = BUILD_DIR):
             return datetime(1970, 1, 1, tzinfo=timezone.utc)
 
         # Normalize articles and headlines into items with a sortable 'published_dt'
+        def make_rss_description(item: dict) -> str:
+            """Return a compact HTML description string for RSS from an item dict.
+
+            The function prefers abstract over content, includes an optional
+            source line, and renders similar items as a bulleted HTML list.
+            """
+            parts = []
+            src = item.get('source')
+            if src:
+                parts.append(f"<strong>Source:</strong> {src}")
+
+            main = (item.get('abstract') or item.get('content') or '')
+            main = str(main).strip()
+            if main:
+                parts.append(main)
+
+            sims = item.get('similar_headlines') or []
+            sims_li = []
+            for s in sims:
+                label = (s.get('title') or s.get('text') or '').strip()
+                if not label:
+                    continue
+                if s.get('link'):
+                    sims_li.append(f"<li><a href=\"{s.get('link')}\">{label}</a></li>")
+                else:
+                    sims_li.append(f"<li>{label}</li>")
+            if sims_li:
+                parts.append("<strong>Related:</strong>\n<ul>" + "\n".join(sims_li) + "</ul>")
+
+            return "\n\n".join(parts).strip()
+
+
         def norm_article(a):
             raw_published = a.get("raw", {}).get("published") if a.get("raw") else a.get("published")
             pd = parse_datetime_value(raw_published)
-            return {
+            # Build a normalized item shape including source and similar_headlines
+            item = {
                 "title": a.get("title"),
                 "link": a.get("link"),
                 "content": a.get("content") or a.get("abstract") or "",
                 "abstract": a.get("abstract"),
                 "published": a.get("published"),
                 "published_dt": pd,
+                "source": a.get('source') or a.get('feed_title') or (a.get('raw') or {}).get('source'),
+                # ensure similar_headlines is present and in the expected shape
+                "similar_headlines": a.get('similar_headlines') or a.get('similar_articles') or [],
             }
+            item['rss_description'] = make_rss_description(item)
+            return item
 
         def norm_headline(h):
             raw_published = h.get("raw", {}).get("published") if h.get("raw") else h.get("published")
             pd = parse_datetime_value(raw_published)
-            return {
+            item = {
                 "title": h.get("title"),
                 "link": h.get("link"),
                 "content": h.get("text") or "",
                 "abstract": None,
                 "published": h.get("published"),
                 "published_dt": pd,
+                "source": h.get('source') or None,
+                "similar_headlines": h.get('similar_headlines') or [],
             }
+            item['rss_description'] = make_rss_description(item)
+            return item
 
         for a in (ctx.get("articles") or []):
             na = norm_article(a)
