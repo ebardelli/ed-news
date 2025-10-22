@@ -91,7 +91,21 @@ def enrich_sciencedirect(conn: sqlite3.Connection, limit: int | None = None, app
             logger.info("Could not determine DOI for %s; skipping", link)
             continue
 
-        cr = crossref.fetch_crossref_metadata(norm)
+        # If the DOI already exists in the articles table, skip the Crossref
+        # network lookup to avoid unnecessary API requests.
+        cr = None
+        try:
+            if eddb.article_exists(conn, norm):
+                logger.info("Skipping CrossRef lookup for DOI %s because it already exists in DB; loading stored metadata", norm)
+                cr = eddb.get_article_metadata(conn, norm) or None
+            else:
+                cr = crossref.fetch_crossref_metadata(norm, conn=conn)
+        except Exception:
+            # Fall back to attempting the fetch if the existence check or metadata load fails
+            try:
+                cr = crossref.fetch_crossref_metadata(norm)
+            except Exception:
+                cr = None
         if not cr:
             logger.info("CrossRef returned no metadata for DOI %s", norm)
             continue
@@ -175,6 +189,34 @@ def sciencedirect_feed_processor(session, feed_url: str, publication_id: str | N
                     break
             if not existing_doi and ("sciencedirect.com" in (link or "") or "sciencedirect.com" in (e.get('link') or "")):
                 if title and len(title) > 10:
+                    # Try to find a DOI for this title in the local DB first to avoid
+                    # performing a Crossref title lookup when the article is already known.
+                    try:
+                        from ednews import config as _cfg
+                        import sqlite3
+                        from ..db import get_article_by_title
+
+                        try:
+                            conn = sqlite3.connect(str(_cfg.DB_PATH))
+                            try:
+                                art = get_article_by_title(conn, title)
+                                if art and art.get('doi'):
+                                    entry['doi'] = art.get('doi')
+                                    logger.info("sciencedirect_processor: found DOI %s for title %s from local DB", art.get('doi'), title)
+                                    out.append(entry)
+                                    continue
+                            finally:
+                                try:
+                                    conn.close()
+                                except Exception:
+                                    pass
+                        except Exception:
+                            # DB lookup failed; fall back to Crossref title lookup
+                            pass
+                    except Exception:
+                        # If imports fail, fall back to Crossref lookup
+                        pass
+
                     try:
                         found = crossref.query_crossref_doi_by_title(title, preferred_publication_id=publication_id)
                         if found:

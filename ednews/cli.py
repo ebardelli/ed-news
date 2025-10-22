@@ -268,7 +268,7 @@ def cmd_enrich_crossref(args):
     # db-init should be run explicitly; do not initialize here.
     # Use the existing fetcher function as a callable that takes a DOI and returns a dict
     def fetcher(doi):
-        return fetch_crossref_metadata(doi)
+        return fetch_crossref_metadata(doi, conn=conn)
 
     updated_ids = enrich_articles_from_crossref(conn, fetcher, batch_size=args.batch_size, delay=args.delay, return_ids=True)
     logger.info("Enriched %d articles from Crossref", len(updated_ids) if hasattr(updated_ids, '__len__') else updated_ids)

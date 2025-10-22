@@ -446,12 +446,18 @@ def save_entries(conn, feed_id, feed_title, entries):
                 except Exception:
                     feed_issn = None
 
-                # Try to fetch Crossref metadata for this DOI and prefer its fields
+                # Try to fetch Crossref metadata for this DOI and prefer its fields.
+                # If the DOI already exists in the articles table, skip the network
+                # request to Crossref to avoid unnecessary lookups.
                 cr = None
                 try:
-                    cr = crossref.fetch_crossref_metadata(doi)
+                    if eddb.article_exists(conn, doi):
+                        logger.info("Skipping CrossRef lookup for DOI %s because it already exists in DB; loading stored metadata", doi)
+                        cr = eddb.get_article_metadata(conn, doi) or None
+                    else:
+                        cr = crossref.fetch_crossref_metadata(doi, conn=conn)
                 except Exception:
-                    logger.debug("Crossref lookup failed for DOI=%s", doi)
+                    logger.debug("Crossref lookup or existence check failed for DOI=%s", doi)
 
                 authors_final = None
                 abstract_final = None

@@ -348,7 +348,7 @@ def fetch_latest_journal_works(
 
                     try:
                         from ednews.crossref import fetch_crossref_metadata
-                        cr = fetch_crossref_metadata(norm)
+                        cr = fetch_crossref_metadata(norm, conn=conn)
                     except Exception:
                         cr = None
 

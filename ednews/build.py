@@ -59,15 +59,18 @@ def _make_rss_description(item: dict) -> str:
     This is a module-level helper to ensure it's available anywhere in the
     build process.
     """
+    # Build HTML blocks for the RSS description so parts render with clear
+    # separation in RSS readers (HTML is placed inside the CDATA section).
     parts = []
     src = item.get('source')
     if src:
-        parts.append(f"<strong>Source:</strong> {src}")
+        parts.append(f"<p><strong>Source:</strong> {src}</p>")
 
     main = (item.get('abstract') or item.get('content') or '')
     main = str(main).strip()
     if main:
-        parts.append(main)
+        # Wrap the main text in a paragraph to ensure spacing/rendering
+        parts.append(f"<p>{main}</p>")
 
     sims = item.get('similar_headlines') or []
     sims_li = []
@@ -80,9 +83,12 @@ def _make_rss_description(item: dict) -> str:
         else:
             sims_li.append(f"<li>{label}</li>")
     if sims_li:
-        parts.append("<strong>Related:</strong>\n<ul>" + "\n".join(sims_li) + "</ul>")
+        # Put the 'Related' heading in its own paragraph and then the list
+        parts.append("<p><strong>Related:</strong></p>\n<ul>" + "\n".join(sims_li) + "</ul>")
 
-    return "\n\n".join(parts).strip()
+    # Join blocks with a single newline; each block contains its own HTML
+    # and will render as separate paragraphs in RSS clients.
+    return "\n".join(parts).strip()
 
 
 def get_similar_articles_by_doi(conn, doi, top_n=5, model=MODEL_NAME, store_if_missing: bool = True):

@@ -79,7 +79,7 @@ def query_crossref_doi_by_title(title: str, preferred_publication_id: str | None
     return _query_crossref_doi_by_title_uncached(title, preferred_publication_id, timeout)
 
 
-def fetch_crossref_metadata(doi: str, timeout: int = 10) -> dict | None:
+def fetch_crossref_metadata(doi: str, timeout: int = 10, conn: object | None = None) -> dict | None:
     """Fetch Crossref metadata for a DOI, preferring JSON and falling back to XML.
 
     The function will attempt to fetch JSON from the Crossref REST API. If
@@ -101,6 +101,45 @@ def fetch_crossref_metadata(doi: str, timeout: int = 10) -> dict | None:
     """
     if not doi:
         return None
+    # If this DOI already exists in the local articles DB, skip the
+    # Crossref network lookup to avoid unnecessary API requests. Import
+    # and open the DB connection lazily to avoid circular imports.
+    try:
+        # If a conn is provided, use it; otherwise try to open the configured DB
+        # path lazily. Use ednews.db helpers when available.
+        from ednews.db import article_exists
+        if conn is None:
+            try:
+                from ednews import config as _cfg
+                import sqlite3
+                conn_local = sqlite3.connect(str(_cfg.DB_PATH))
+                try:
+                    if article_exists(conn_local, doi):
+                        logger.info("Skipping CrossRef lookup for DOI %s because it already exists in DB", doi)
+                        try:
+                            conn_local.close()
+                        except Exception:
+                            pass
+                        return None
+                finally:
+                    try:
+                        conn_local.close()
+                    except Exception:
+                        pass
+            except Exception:
+                # Fall back to network lookup if DB access is not possible
+                pass
+        else:
+            try:
+                if article_exists(conn, doi):
+                    logger.info("Skipping CrossRef lookup for DOI %s because it already exists in DB", doi)
+                    return None
+            except Exception:
+                # If the provided conn can't be used for existence check, fall through
+                pass
+    except Exception:
+        # If ednews.db isn't importable, proceed with the network lookup
+        pass
     # Try to fetch JSON from the Crossref REST API first and prefer the
     # message.created -> date-parts field for determining a publication date.
     # If JSON isn't available or parsing fails, fall back to the unixref XML

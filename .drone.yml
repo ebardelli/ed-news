@@ -8,29 +8,21 @@ name: update ed-news website
 #   arch: arm64
 
 steps:
-    - name: restore db cache
-      image: meltwater/drone-cache:dev
-      pull: true
-      settings:
-        backend: "filesystem"
-        restore: true
-        cache_key: "volume"
-        archive_format: "gzip"
-        mount:
-          - 'cache'
-      volumes:
-      - name: cache
-        path: /tmp/cache
+    - name: restore S3 cache
+      image: peakcom/s5cmd:v2.3.0
+      commands:
+        - /s5cmd --endpoint-url=$AWS_ENDPOINT cp s3://ed-news-cache/ednews.db ednews.db 
+      environment:
+        AWS_ACCESS_KEY_ID:
+          from_secret: garage_access_key
+        AWS_SECRET_ACCESS_KEY:
+          from_secret: garage_secret_key
+        AWS_ENDPOINT: https://s3.ebardelli.com
+        AWS_DEFAULT_REGION: garage
 
     - name: fetch feeds
       image: ghcr.io/astral-sh/uv:debian
       commands:
-        - echo "Creating db cache directory if it doesn't exist..."
-        - mkdir -p cache
-        - echo "Checking if ednews.db exists in cache..."
-        - '[ -f cache/ednews.db ] || (echo "ednews.db not found, creating an empty file..." && touch cache/ednews.db)'
-        - echo "Creating symbolic link for ednews.db..."
-        - ln -sf cache/ednews.db ednews.db
         - uv sync
         - uv run python main.py fetch
         - uv run python main.py issn-lookup --date-filter-type created --from-date '2025-01-01' --per-journal 100
@@ -38,27 +30,18 @@ steps:
         - uv run python main.py embed
         - uv run python main.py build
 
-    - name: rebuild db cache
-      image: meltwater/drone-cache:dev
-      pull: true
-      settings:
-        backend: "filesystem"
-        rebuild: true
-        cache_key: "volume"
-        archive_format: "gzip"
-        mount:
-          - 'cache'
-      volumes:
-      - name: cache
-        path: /tmp/cache
-
-    - name: update server
-      image: drillster/drone-rsync
-      volumes:
-        - name: www_dir
-          path: /www
+    - name: S3 sync to garage
+      image: peakcom/s5cmd:v2.3.0
       commands:
-        - rsync -rltvzc --delete --omit-dir-times --no-o --no-g build/ /www/
+        - /s5cmd --endpoint-url=$AWS_ENDPOINT cp ednews.db s3://ed-news-cache/
+        - /s5cmd --endpoint-url=$AWS_ENDPOINT sync --delete build/ s3://ed-news/
+      environment:
+        AWS_ACCESS_KEY_ID:
+          from_secret: garage_access_key
+        AWS_SECRET_ACCESS_KEY:
+          from_secret: garage_secret_key
+        AWS_ENDPOINT: https://s3.ebardelli.com
+        AWS_DEFAULT_REGION: garage
 
     - name: invalidate-cloudflare-cache
       image: jetrails/drone-cloudflare-caching
@@ -73,7 +56,4 @@ volumes:
     - name: cache
       host:
         path: /data/drone/cache
-    - name: www_dir
-      host:
-        path: /data/www/ed-news
 ...

@@ -219,6 +219,71 @@ def article_exists(conn: sqlite3.Connection, doi: str) -> bool:
         return False
 
 
+def get_article_metadata(conn: sqlite3.Connection, doi: str) -> dict | None:
+    """Return stored article metadata for a DOI as a dict.
+
+    Returns a dict with keys 'authors', 'abstract', 'raw', 'published' when
+    available, or None if the DOI isn't found.
+    """
+    if not doi:
+        return None
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT authors, abstract, crossref_xml, published FROM articles WHERE doi = ? LIMIT 1", (doi,))
+        row = cur.fetchone()
+        if not row:
+            return None
+        authors, abstract, crossref_xml, published = row
+        out = {}
+        if authors:
+            out['authors'] = authors
+        if abstract:
+            out['abstract'] = abstract
+        if crossref_xml:
+            out['raw'] = crossref_xml
+        if published:
+            out['published'] = published
+        return out
+    except Exception:
+        logger.exception("Failed to fetch article metadata for doi=%s", doi)
+        return None
+
+
+def get_article_by_title(conn: sqlite3.Connection, title: str) -> dict | None:
+    """Return article row fields for an article whose title matches exactly (case-insensitive).
+
+    Returns a dict with keys 'doi', 'title', 'authors', 'abstract', 'raw', 'published' when
+    available, or None if no matching article is found.
+    """
+    if not title:
+        return None
+    try:
+        cur = conn.cursor()
+        # Use case-insensitive comparison on trimmed title
+        cur.execute("SELECT doi, title, authors, abstract, crossref_xml, published FROM articles WHERE lower(trim(title)) = lower(trim(?)) LIMIT 1", (title,))
+        row = cur.fetchone()
+        if not row:
+            return None
+        doi, atitle, authors, abstract, crossref_xml, published = row
+        out = {}
+        if doi:
+            out['doi'] = doi
+        if atitle:
+            out['title'] = atitle
+        if authors:
+            out['authors'] = authors
+        if abstract:
+            out['abstract'] = abstract
+        if crossref_xml:
+            out['raw'] = crossref_xml
+        if published:
+            out['published'] = published
+        return out
+    except Exception:
+        logger.exception("Failed to fetch article by title=%s", title)
+        return None
+
+
 def enrich_articles_from_crossref(conn, fetcher, batch_size: int = 20, delay: float = 0.1, return_ids: bool = False):
     """Enrich articles missing crossref_xml using the provided fetcher.
 
