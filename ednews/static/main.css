@@ -17,6 +17,10 @@ h1 {
     margin-top: 2em;
 }
 
+header {
+    text-align: center;
+}
+
 h3 {
     font-weight: 400;
     margin-bottom: 0;
