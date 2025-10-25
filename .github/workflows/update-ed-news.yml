@@ -8,23 +8,25 @@ on:
 jobs:
   update-site:
     runs-on: ubuntu-latest
-    env:
-      AWS_ENDPOINT: ${{ secrets.GARAGE_ENDPOINT }}
-      AWS_DEFAULT_REGION: ${{ secrets.GARAGE_DEFAULT_REGION }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Restore S3 cache (download ednews.db)
-        uses: docker://peakcom/s5cmd:v2.3.0
+      - name: Set-up s5cmd
+        uses: peak/action-setup-s5cmd@main
         with:
-          args: --endpoint-url=$AWS_ENDPOINT cp s3://ed-news-cache/ednews.db ednews.db
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.GARAGE_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.GARAGE_SECRET_KEY }}
+          version: v2.0.0
 
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@v7
+
+      - name: Restore S3 cache
+        run: s5cmd --endpoint-url $AWS_ENDPOINT cp s3://ed-news-cache/ednews.db ednews.db
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.GARAGE_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.GARAGE_SECRET_KEY }}
+          AWS_ENDPOINT: ${{ secrets.GARAGE_ENDPOINT }}
+          AWS_DEFAULT_REGION: ${{ secrets.GARAGE_DEFAULT_REGION }}
 
       - name: Fetch and build website
         run: |
@@ -37,20 +39,20 @@ jobs:
             - uv run python main.py build
 
       - name: Upload ednews.db to S3 cache
-        uses: docker://peakcom/s5cmd:v2.3.0
-        with:
-          args: --endpoint-url=$AWS_ENDPOINT cp ednews.db s3://ed-news-cache/
+        run: s5cmd --endpoint-url $AWS_ENDPOINT cp ednews.db s3://ed-news-cache/
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.GARAGE_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.GARAGE_SECRET_KEY }}
+          AWS_ENDPOINT: ${{ secrets.GARAGE_ENDPOINT }}
+          AWS_DEFAULT_REGION: ${{ secrets.GARAGE_DEFAULT_REGION }}
 
       - name: Sync build/ to S3
-        uses: docker://peakcom/s5cmd:v2.3.0
-        with:
-          args: --endpoint-url=$AWS_ENDPOINT sync --delete build/ s3://ed-news/
+        run: s5cmd --endpoint-url $AWS_ENDPOINT sync --delete build/ s3://ed-news/
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.GARAGE_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.GARAGE_SECRET_KEY }}
+          AWS_ENDPOINT: ${{ secrets.GARAGE_ENDPOINT }}
+          AWS_DEFAULT_REGION: ${{ secrets.GARAGE_DEFAULT_REGION }}
 
       - name: Purge Cloudflare cache
         uses: jakejarvis/cloudflare-purge-action@v0.3.0
