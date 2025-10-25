@@ -55,3 +55,9 @@ FEED_SITE_LINK = "https://ebardelli.com/ed-news/"
 FEED_TITLE_COMBINED = "Latest Education News"
 FEED_TITLE_ARTICLES = "Latest Education Articles"
 FEED_TITLE_HEADLINES = "Latest Education Headlines"
+
+# Titles to exclude from processing/saving. Comparison is done on the
+# trimmed, lowercased title string. Add additional blacklist titles here.
+TITLE_FILTERS = [
+	"editorial board",
+]

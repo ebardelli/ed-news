@@ -49,3 +49,34 @@ def test_manage_db_subcommand_invokes_cleanup(monkeypatch):
     assert 'cleanup' in called
     # ensure dry-run flag made it through
     assert getattr(called['cleanup'], 'dry_run', False) is True
+
+
+def test_manage_db_subcommand_invokes_cleanup_filtered_title_dryrun(monkeypatch):
+    called = {}
+
+    def fake_cleanup_ft(args):
+        called['cleanup_ft'] = args
+
+    tui = importlib.import_module('ednews.cli')
+    monkeypatch.setattr(tui, 'cmd_manage_db_cleanup_filtered_title', fake_cleanup_ft)
+
+    run_with_argv(['ednews', 'manage-db', 'cleanup-filtered-title', '--filter', 'Editorial Board', '--dry-run'], monkeypatch, tui_module=tui)
+    assert 'cleanup_ft' in called
+    assert getattr(called['cleanup_ft'], 'dry_run', False) is True
+    # ensure filter made it through
+    assert getattr(called['cleanup_ft'], 'filter', None) == ['Editorial Board']
+
+
+def test_manage_db_subcommand_invokes_cleanup_filtered_title_filters_flag(monkeypatch):
+    called = {}
+
+    def fake_cleanup_ft(args):
+        called['cleanup_ft'] = args
+
+    tui = importlib.import_module('ednews.cli')
+    monkeypatch.setattr(tui, 'cmd_manage_db_cleanup_filtered_title', fake_cleanup_ft)
+
+    run_with_argv(['ednews', 'manage-db', 'cleanup-filtered-title', '--filters', 'Editorial Board,Front matter'], monkeypatch, tui_module=tui)
+    assert 'cleanup_ft' in called
+    # ensure filters string made it through
+    assert getattr(called['cleanup_ft'], 'filters', None) == 'Editorial Board,Front matter'

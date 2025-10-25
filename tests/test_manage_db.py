@@ -124,3 +124,44 @@ def test_cleanup_empty_articles_respects_age():
     assert '10.0/old' not in rows
     assert '10.0/new' in rows
     conn.close()
+
+
+def test_cleanup_filtered_titles_deletes_matching_rows():
+    conn = sqlite3.connect(":memory:")
+    manage_db.init_db(conn)
+    cur = conn.cursor()
+    now = datetime.now(timezone.utc).isoformat()
+    # Insert articles with various titles
+    cur.execute('INSERT INTO articles (doi, title, abstract, fetched_at) VALUES (?, ?, ?, ?)', ('10.0/keep', 'A Good Title', 'abs', now))
+    cur.execute('INSERT INTO articles (doi, title, abstract, fetched_at) VALUES (?, ?, ?, ?)', ('10.0/delete', 'Editorial Board', 'note', now))
+    cur.execute('INSERT INTO articles (doi, title, abstract, fetched_at) VALUES (?, ?, ?, ?)', ('10.0/delete2', '  Editorial Board  ', None, now))
+    conn.commit()
+
+    # Ensure default config filter includes 'editorial board'
+    deleted = manage_db.cleanup_filtered_titles(conn, filters=None, dry_run=False)
+    assert deleted == 2
+
+    cur.execute('SELECT doi, title FROM articles')
+    rows = {r[0]: r[1] for r in cur.fetchall()}
+    assert '10.0/keep' in rows
+    assert '10.0/delete' not in rows
+    assert '10.0/delete2' not in rows
+    conn.close()
+
+
+def test_cleanup_filtered_titles_dry_run_counts_only():
+    conn = sqlite3.connect(":memory:")
+    manage_db.init_db(conn)
+    cur = conn.cursor()
+    now = datetime.now(timezone.utc).isoformat()
+    cur.execute('INSERT INTO articles (doi, title, abstract, fetched_at) VALUES (?, ?, ?, ?)', ('10.0/keep', 'A Good Title', 'abs', now))
+    cur.execute('INSERT INTO articles (doi, title, abstract, fetched_at) VALUES (?, ?, ?, ?)', ('10.0/delete', 'Editorial Board', 'note', now))
+    conn.commit()
+
+    count = manage_db.cleanup_filtered_titles(conn, filters=None, dry_run=True)
+    # dry-run should report 1 but not delete
+    assert count == 1
+    cur.execute('SELECT doi FROM articles')
+    rows = {r[0] for r in cur.fetchall()}
+    assert '10.0/delete' in rows
+    conn.close()

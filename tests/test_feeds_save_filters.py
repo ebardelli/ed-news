@@ -9,6 +9,7 @@ def test_save_entries_filters_empty():
     entries = [
         {"guid": "g1", "title": "", "link": "", "published": None, "summary": ""},
         {"guid": "g2", "title": None, "link": None, "published": None, "summary": None},
+        {"guid": "g_ed", "title": "Editorial Board", "link": "http://example.com/ed", "published": "2025-10-19", "summary": ""},
         {"guid": "g3", "title": "Real Title", "link": "http://example.com/a", "published": "2025-10-19", "summary": ""},
     ]
 

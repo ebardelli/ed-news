@@ -370,6 +370,7 @@ def cmd_manage_db_cleanup(args):
         started = datetime.now(timezone.utc).isoformat()
         run_id = manage_db.log_maintenance_run(conn, "cleanup-empty-articles", "started", started, None, None, {"args": vars(args)})
         # If dry-run, compute count via a SELECT without deleting
+        # If dry-run, compute counts via SELECT without deleting
         if getattr(args, 'dry_run', False):
             cur = conn.cursor()
             params = []
@@ -382,15 +383,24 @@ def cmd_manage_db_cleanup(args):
             where_sql = " AND ".join(where_clauses)
             cur.execute(f"SELECT COUNT(1) FROM articles WHERE {where_sql}", tuple(params))
             row = cur.fetchone()
-            count = row[0] if row and row[0] else 0
-            print(f"dry-run: would delete {count} rows")
+            count_empty = row[0] if row and row[0] else 0
+
+            # Count filtered-title matches via the new helper (dry-run)
+            try:
+                count_filtered = manage_db.cleanup_filtered_titles(conn, filters=None, dry_run=True)
+            except Exception:
+                count_filtered = 0
+
+            print(f"dry-run: would delete {count_empty} empty rows and {count_filtered} filtered-title rows")
             status = "dry-run"
-            details = {"would_delete": count}
+            details = {"would_delete_empty": count_empty, "would_delete_filtered": count_filtered}
         else:
-            deleted = manage_db.cleanup_empty_articles(conn, older_than_days=getattr(args, 'older_than_days', None))
-            print(f"deleted {deleted} rows")
+            deleted_empty = manage_db.cleanup_empty_articles(conn, older_than_days=getattr(args, 'older_than_days', None))
+            deleted_filtered = manage_db.cleanup_filtered_titles(conn, filters=None, dry_run=False)
+            total_deleted = (deleted_empty or 0) + (deleted_filtered or 0)
+            print(f"deleted {total_deleted} rows ({deleted_empty} empty, {deleted_filtered} filtered-title)")
             status = "ok"
-            details = {"deleted": deleted}
+            details = {"deleted_empty": deleted_empty, "deleted_filtered": deleted_filtered, "total_deleted": total_deleted}
     except Exception as e:
         status = "failed"
         details = {"error": str(e)}
@@ -406,6 +416,60 @@ def cmd_manage_db_cleanup(args):
                 duration = (_dt.fromisoformat(finished) - _dt.fromisoformat(started)).total_seconds()
             if run_id and conn:
                 manage_db.log_maintenance_run(conn, "cleanup-empty-articles", status, started, finished, duration, details)
+        except Exception:
+            pass
+        conn.close()
+
+
+def cmd_manage_db_cleanup_filtered_title(args):
+    """CLI handler to remove articles whose titles match configured filters.
+
+    Supports `--filter` (repeatable) or `--filters` (comma-separated) to
+    provide an explicit set of titles; if omitted the function will use
+    `config.TITLE_FILTERS`.
+    """
+    from ednews.db import manage_db
+    conn = sqlite3.connect(str(config.DB_PATH))
+    started = None
+    run_id = None
+    try:
+        from datetime import datetime, timezone
+
+        started = datetime.now(timezone.utc).isoformat()
+        run_id = manage_db.log_maintenance_run(conn, "cleanup-filtered-title", "started", started, None, None, {"args": vars(args)})
+
+        # Build filters list from CLI args if present
+        filters = None
+        if getattr(args, 'filter', None):
+            filters = list(args.filter)
+        elif getattr(args, 'filters', None):
+            filters = [f.strip() for f in str(args.filters).split(',') if f.strip()]
+
+        if getattr(args, 'dry_run', False):
+            count = manage_db.cleanup_filtered_titles(conn, filters=filters, dry_run=True)
+            print(f"dry-run: would delete {count} rows")
+            status = "dry-run"
+            details = {"would_delete_filtered": count}
+        else:
+            deleted = manage_db.cleanup_filtered_titles(conn, filters=filters, dry_run=False)
+            print(f"deleted {deleted} rows")
+            status = "ok"
+            details = {"deleted_filtered": deleted}
+    except Exception as e:
+        status = "failed"
+        details = {"error": str(e)}
+        raise
+    finally:
+        try:
+            from datetime import datetime, timezone
+
+            finished = datetime.now(timezone.utc).isoformat()
+            duration = None
+            if started:
+                from datetime import datetime as _dt
+                duration = (_dt.fromisoformat(finished) - _dt.fromisoformat(started)).total_seconds()
+            if run_id and conn:
+                manage_db.log_maintenance_run(conn, "cleanup-filtered-title", status, started, finished, duration, details)
         except Exception:
             pass
         conn.close()
@@ -522,6 +586,7 @@ def cmd_manage_db_run_all(args):
     """Run migrate, sync publications, cleanup, and vacuum in order."""
     from ednews.db import manage_db
     from ednews import feeds
+
     # migrate
     print("Running migrations...")
     conn = sqlite3.connect(str(config.DB_PATH))
@@ -530,6 +595,66 @@ def cmd_manage_db_run_all(args):
         print("migrate: ok" if mig_ok else "migrate: failed")
     finally:
         conn.close()
+
+    # sync publications
+    print("Syncing publications from feeds...")
+    try:
+        conn = sqlite3.connect(str(config.DB_PATH))
+        try:
+            feeds_list = feeds.load_feeds()
+            if feeds_list:
+                synced = manage_db.sync_publications_from_feeds(conn, feeds_list)
+                print(f"synced {synced} publications")
+            else:
+                print("no feeds found; skipping sync-publications")
+        finally:
+            conn.close()
+    except Exception:
+        logger.exception("sync-publications failed")
+
+    # cleanup empty articles and filtered-title cleanup
+    print("Running cleanup steps...")
+    try:
+        conn = sqlite3.connect(str(config.DB_PATH))
+        try:
+            # empty articles cleanup
+            if getattr(args, 'dry_run', False):
+                # compute counts only
+                cur = conn.cursor()
+                params = []
+                where_clauses = ["(COALESCE(title, '') = '' AND COALESCE(abstract, '') = '')"]
+                if getattr(args, 'older_than_days', None) is not None:
+                    from datetime import datetime, timezone, timedelta
+                    cutoff = (datetime.now(timezone.utc) - timedelta(days=int(args.older_than_days))).isoformat()
+                    where_clauses.append("(COALESCE(fetched_at, '') != '' AND COALESCE(fetched_at, '') < ? OR COALESCE(published, '') != '' AND COALESCE(published, '') < ?)")
+                    params.extend([cutoff, cutoff])
+                where_sql = " AND ".join(where_clauses)
+                cur.execute(f"SELECT COUNT(1) FROM articles WHERE {where_sql}", tuple(params))
+                row = cur.fetchone()
+                count_empty = row[0] if row and row[0] else 0
+                count_filtered = manage_db.cleanup_filtered_titles(conn, filters=None, dry_run=True)
+                print(f"dry-run: would delete {count_empty} empty rows and {count_filtered} filtered-title rows")
+            else:
+                deleted_empty = manage_db.cleanup_empty_articles(conn, older_than_days=getattr(args, 'older_than_days', None))
+                deleted_filtered = manage_db.cleanup_filtered_titles(conn, filters=None, dry_run=False)
+                total_deleted = (deleted_empty or 0) + (deleted_filtered or 0)
+                print(f"deleted {total_deleted} rows ({deleted_empty} empty, {deleted_filtered} filtered-title)")
+        finally:
+            conn.close()
+    except Exception:
+        logger.exception("cleanup steps failed")
+
+    # vacuum
+    print("Running VACUUM...")
+    try:
+        conn = sqlite3.connect(str(config.DB_PATH))
+        try:
+            ok = manage_db.vacuum_db(conn)
+            print("vacuum: ok" if ok else "vacuum: failed")
+        finally:
+            conn.close()
+    except Exception:
+        logger.exception("vacuum failed in run-all")
 
 
 def cmd_serve(args):
@@ -661,6 +786,12 @@ def run():
     p_cleanup.add_argument("--older-than-days", type=int, default=None, help="Only delete articles older than this many days (based on fetched_at or published)")
     p_cleanup.add_argument("--dry-run", action="store_true", help="Do not delete; only report how many rows would be deleted")
     p_cleanup.set_defaults(func=lambda args: cmd_manage_db_cleanup(args))
+
+    p_cleanup_ft = manage_sub.add_parser("cleanup-filtered-title", help="Remove articles whose titles match configured filters")
+    p_cleanup_ft.add_argument("--filter", action="append", help="A single title to filter (repeatable)")
+    p_cleanup_ft.add_argument("--filters", type=str, default=None, help="Comma-separated list of titles to filter")
+    p_cleanup_ft.add_argument("--dry-run", action="store_true", help="Do not delete; only report how many rows would be deleted")
+    p_cleanup_ft.set_defaults(func=lambda args: __import__('ednews.cli', fromlist=['cmd_manage_db_cleanup_filtered_title']).cmd_manage_db_cleanup_filtered_title(args))
 
     p_vacuum = manage_sub.add_parser("vacuum", help="Run VACUUM on the configured DB")
     p_vacuum.set_defaults(func=lambda args: cmd_manage_db_vacuum(args))

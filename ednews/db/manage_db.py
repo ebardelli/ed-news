@@ -163,7 +163,9 @@ def log_maintenance_run(conn: sqlite3.Connection, command: str, status: str, sta
     try:
         cur = conn.cursor()
         import json
-        details_json = json.dumps(details) if details is not None else None
+        # Be permissive when serializing details: convert non-serializable
+        # objects to strings rather than raising (for example argparse.func).
+        details_json = json.dumps(details, default=str) if details is not None else None
         cur.execute(
             "INSERT INTO maintenance_runs (command, status, started, finished, duration, details) VALUES (?, ?, ?, ?, ?, ?)",
             (command, status, started, finished, duration, details_json),
@@ -424,6 +426,59 @@ def cleanup_empty_articles(conn: sqlite3.Connection, older_than_days: int | None
         return deleted or 0
     except Exception:
         logger.exception("cleanup_empty_articles failed")
+        return 0
+
+
+def cleanup_filtered_titles(conn: sqlite3.Connection, filters: list | None = None, dry_run: bool = False) -> int:
+    """Delete or count articles whose title matches any configured filter.
+
+    `filters` is a list of strings; comparison is done on trimmed, lowercased
+    titles. If `filters` is None, the function will attempt to read
+    `config.TITLE_FILTERS`.
+
+    If `dry_run` is True, the function returns the number of rows that
+    would be deleted without performing the DELETE.
+
+    Returns the number of rows deleted (or that would be deleted).
+    """
+    try:
+        try:
+            if filters is None:
+                filters = getattr(config, 'TITLE_FILTERS', [])
+        except Exception:
+            filters = filters or []
+
+        if not filters:
+            logger.debug("cleanup_filtered_titles: no filters configured; nothing to do")
+            return 0
+
+        # Normalize filters to trimmed, lowercased strings
+        norm_filters = [str(f).strip().lower() for f in filters if f]
+        if not norm_filters:
+            return 0
+
+        cur = conn.cursor()
+        # Build WHERE clause with one equality per filter using LOWER(TRIM(COALESCE(title, '')))
+        clauses = []
+        params = []
+        for _ in norm_filters:
+            clauses.append("LOWER(TRIM(COALESCE(title, ''))) = ?")
+        where_sql = " OR ".join(clauses)
+
+        if dry_run:
+            cur.execute(f"SELECT COUNT(1) FROM articles WHERE {where_sql}", tuple(norm_filters))
+            row = cur.fetchone()
+            count = row[0] if row and row[0] else 0
+            logger.info("cleanup_filtered_titles dry-run would delete %s rows", count)
+            return count
+
+        cur.execute(f"DELETE FROM articles WHERE {where_sql}", tuple(norm_filters))
+        deleted = cur.rowcount if hasattr(cur, 'rowcount') else None
+        conn.commit()
+        logger.info("cleanup_filtered_titles deleted %s rows", deleted)
+        return deleted or 0
+    except Exception:
+        logger.exception("cleanup_filtered_titles failed")
         return 0
 
 

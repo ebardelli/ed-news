@@ -344,6 +344,21 @@ def save_entries(conn, feed_id, feed_title, entries):
         except Exception:
             # On unexpected shapes, be conservative and attempt to process
             pass
+        # Filter: exclude entries with titles that are editorial board notes
+        try:
+            title_val = (e.get("title") or "")
+            if isinstance(title_val, str):
+                tnorm = title_val.strip().lower()
+                # consult configured title filters (if present)
+                try:
+                    filters = config.TITLE_FILTERS
+                except Exception:
+                    filters = []
+                if any(tnorm == f.strip().lower() for f in (filters or [])):
+                    logger.info("skipping filtered title '%s' for feed %s: %r", title_val, feed_id, e)
+                    continue
+        except Exception:
+            pass
         try:
             doi = None
             link_val = (e.get("link") or "").strip()
