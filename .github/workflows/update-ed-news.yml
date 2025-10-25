@@ -15,7 +15,7 @@ jobs:
       - name: Set-up s5cmd
         uses: peak/action-setup-s5cmd@main
         with:
-          version: v2.0.0
+          version: v2.3.0
 
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@v7
