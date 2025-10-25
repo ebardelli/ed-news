@@ -53,7 +53,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.GARAGE_SECRET_KEY }}
 
       - name: Purge Cloudflare cache
-        uses: jakejarvis/cloudflare-purge-action@v2
+        uses: jakejarvis/cloudflare-purge-action@v0.3.0
         with:
           api_token: ${{ secrets.CLOUDFLARE_TOKEN }}
           zone: ${{ secrets.CLOUDFLARE_ZONE_IDENTIFIER }}
