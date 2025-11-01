@@ -18,6 +18,7 @@ from email.utils import parsedate_to_datetime
 import logging
 from . import config
 import duckdb
+import re
 
 MODEL_NAME = config.DEFAULT_MODEL
 
@@ -89,6 +90,22 @@ def _make_rss_description(item: dict) -> str:
     # Join blocks with a single newline; each block contains its own HTML
     # and will render as separate paragraphs in RSS clients.
     return "\n".join(parts).strip()
+
+
+def _strip_img_tags(html: str) -> str:
+    """Return the input HTML with any <img ...> tags removed.
+
+    This is a small, conservative sanitizer used at build time to ensure
+    embedded images from upstream feeds aren't rendered into the static
+    site. It intentionally only strips <img> tags.
+    """
+    if not html:
+        return html or ""
+    try:
+        # Remove img tags (case-insensitive). Keep other markup intact.
+        return re.sub(r"<img\b[^>]*>", "", str(html), flags=re.IGNORECASE)
+    except Exception:
+        return str(html)
 
 
 def get_similar_articles_by_doi(conn, doi, top_n=5, model=MODEL_NAME, store_if_missing: bool = True):
@@ -999,7 +1016,7 @@ def read_articles(db_path: Path, limit: int = config.ARTICLES_DEFAULT_LIMIT, day
             'doi': r.get('doi'),
             'link': r.get('link'),
             'feed_title': r.get('feed_title'),
-            'content': r.get('content'),
+            'content': _strip_img_tags(r.get('content')),
             'published': published_short,
             'raw': r,
         })
@@ -1151,7 +1168,7 @@ def read_news_headlines(db_path: Path, limit: int = None):
             "id": r.get("id"),
             "title": r.get("title"),
             "link": r.get("link"),
-            "text": r.get("text"),
+            "text": _strip_img_tags(r.get("text")),
             "published": format_short_date(r.get("published") or r.get("first_seen")),
         })
     return out
