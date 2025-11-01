@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      PYTHON_GIL: 0
       UV_CACHE_DIR: /tmp/.uv-cache
 
     steps:
