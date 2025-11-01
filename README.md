@@ -91,9 +91,20 @@ Some tests exercise Crossref integration — set `RUN_CROSSREF_INTEGRATION=1` to
 - Embeddings support for articles and headlines; see `ednews.embeddings` and the `embed` CLI subcommand.
 - Additional site processors live under `ednews/processors/` (e.g., Press Democrat, FCMat).
 
+## Documentation
+
+Comprehensive documentation is available in the `docs/` directory:
+
+- **[Architecture](docs/ARCHITECTURE.md)** - System design and component overview
+- **[Database Schema](docs/DATABASE.md)** - SQLite schema, tables, and queries
+- **[API Reference](docs/API.md)** - Python API documentation
+- **[Configuration](docs/CONFIGURATION.md)** - Feed configuration guide
+- **[Development](docs/DEVELOPMENT.md)** - Contributing and development guide
+- **[Processors](docs/PROCESSORS.md)** - Pre/post processor architecture
+
 ## Contributing
 
-Contributions welcome. Run tests locally and include fixtures/mocks for external services to keep CI fast.
+Contributions welcome! Please see the [Development Guide](docs/DEVELOPMENT.md) for setup instructions and coding conventions. Run tests locally and include fixtures/mocks for external services to keep CI fast.
 
 ## License
 
