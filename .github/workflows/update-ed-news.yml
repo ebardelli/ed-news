@@ -3,7 +3,9 @@ name: update ed-news website
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: '0 */6 * * *'
+    # Run hourly from 06:00–18:00 Pacific Time.
+    # - PST (UTC-8): 14:00–02:00 UTC -> cron '0 14-23,0-2 * * *'
+    - cron: '0 14-23,0-2 * * *'
   push:
     branches: [ main ]
 
