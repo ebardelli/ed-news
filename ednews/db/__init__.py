@@ -38,30 +38,61 @@ def get_connection(path: str | None = None):
 
 
 # Backwards-compatible shims: initialization/maintenance helpers were moved
-# to `ednews.db.manage_db`. Keep thin wrappers here so callers importing
-# `ednews.db.init_db` continue to work.
+# into smaller modules under `ednews.db` (schema, maintenance, migrations).
+# Provide package-level wrappers and also synthesize a `ednews.db.manage_db`
+# module in sys.modules so older `import ednews.db.manage_db` code continues to work.
 try:
-    from .manage_db import init_db as _manage_init_db, create_combined_view as _manage_create_combined_view, sync_publications_from_feeds as _manage_sync_publications_from_feeds, fetch_latest_journal_works as _manage_fetch_latest_journal_works
+    from .schema import init_db as _init_db, create_combined_view as _create_combined_view
+    from .maintenance import sync_publications_from_feeds as _sync_publications_from_feeds, fetch_latest_journal_works as _fetch_latest_journal_works, vacuum_db as _vacuum_db, log_maintenance_run as _log_maintenance_run, cleanup_empty_articles as _cleanup_empty_articles, cleanup_filtered_titles as _cleanup_filtered_titles
+    from .migrations import migrate_db as _migrate_db, migrate_add_items_url_hash as _migrate_add_items_url_hash
 
     def init_db(conn: sqlite3.Connection):
-        """Initialize DB schema (wrapper delegating to ednews.db.manage_db.init_db)."""
-        return _manage_init_db(conn)
+        """Initialize DB schema (uses `ednews.db.schema.init_db`)."""
+        return _init_db(conn)
 
     def create_combined_view(conn: sqlite3.Connection):
-        """Create combined_articles view (wrapper for manage_db)."""
-        return _manage_create_combined_view(conn)
+        """Create combined_articles view (uses `ednews.db.schema.create_combined_view`)."""
+        return _create_combined_view(conn)
 
     def sync_publications_from_feeds(conn, feeds_list) -> int:
-        """Wrapper delegating to ednews.db.manage_db.sync_publications_from_feeds."""
-        return _manage_sync_publications_from_feeds(conn, feeds_list)
+        """Synchronize publications (uses `ednews.db.maintenance.sync_publications_from_feeds`)."""
+        return _sync_publications_from_feeds(conn, feeds_list)
 
     def fetch_latest_journal_works(conn: sqlite3.Connection, feeds, per_journal: int = 30, timeout: int = 10, delay: float = 0.05):
-        return _manage_fetch_latest_journal_works(conn, feeds, per_journal=per_journal, timeout=timeout, delay=delay)
+        return _fetch_latest_journal_works(conn, feeds, per_journal=per_journal, timeout=timeout, delay=delay)
+
+    # Also expose migration and maintenance helpers at package level
+    migrate_db = _migrate_db
+    migrate_add_items_url_hash = _migrate_add_items_url_hash
+    vacuum_db = _vacuum_db
+    log_maintenance_run = _log_maintenance_run
+    cleanup_empty_articles = _cleanup_empty_articles
+    cleanup_filtered_titles = _cleanup_filtered_titles
+
+    # Create a synthetic submodule `ednews.db.manage_db` so code that does
+    # `import ednews.db.manage_db` or `from ednews.db import manage_db` keeps working.
+    try:
+        import sys
+        import types
+
+        mod_name = __name__ + ".manage_db"
+        if mod_name not in sys.modules:
+            manage_mod = types.ModuleType(mod_name)
+            manage_mod.init_db = _init_db
+            manage_mod.create_combined_view = _create_combined_view
+            manage_mod.sync_publications_from_feeds = _sync_publications_from_feeds
+            manage_mod.fetch_latest_journal_works = _fetch_latest_journal_works
+            manage_mod.migrate_db = _migrate_db
+            manage_mod.migrate_add_items_url_hash = _migrate_add_items_url_hash
+            manage_mod.vacuum_db = _vacuum_db
+            manage_mod.log_maintenance_run = _log_maintenance_run
+            manage_mod.cleanup_empty_articles = _cleanup_empty_articles
+            manage_mod.cleanup_filtered_titles = _cleanup_filtered_titles
+            sys.modules[mod_name] = manage_mod
+    except Exception:
+        logger.exception("Failed to synthesize ednews.db.manage_db module for backwards compatibility")
 except Exception:
-    # If manage_db isn't importable for any reason, leave wrappers undefined
-    # — callers will get the original ImportError which is acceptable during
-    # test/CI if the package is misconfigured.
-    logger.debug("ednews.db.manage_db is not available; init/mgmt wrappers not installed")
+    logger.debug("ednews.db.manage modules not importable; init/mgmt wrappers not installed")
 
 
 # Database initialization and maintenance functions have been moved to

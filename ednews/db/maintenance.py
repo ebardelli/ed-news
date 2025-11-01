@@ -1,170 +1,18 @@
-"""Database initialization and maintenance helpers for ed-news.
-
-This module contains functions for creating and migrating the SQLite
-schema, creating supporting views, and other maintenance tasks such as
-vacuuming the database or synchronizing publications from a feeds list.
-
-Moved into the `ednews.db` package to group DB related helpers.
+"""Maintenance helpers: cleanup, vacuum, and publication sync.
 """
 from datetime import datetime, timezone, timedelta
 import logging
-from email.utils import parsedate_to_datetime
 import sqlite3
 import time
 import os
 
-logger = logging.getLogger("ednews.manage_db")
-
-try:
-    from .. import config
-except Exception:
-    import config
-
-
-def init_db(conn: sqlite3.Connection):
-    """Initialize the database schema and create required tables/views.
-
-    Creates the `items`, `articles`, `publications`, and `headlines`
-    tables if they do not exist and attempts to create the
-    `combined_articles` view used elsewhere in the project.
-    """
-    logger.info("Initializing database schema")
-    # Some tests pass a DummyConn that only implements close(); be tolerant
-    # and skip initialization if the object doesn't provide a cursor().
-    if not hasattr(conn, "cursor"):
-        logger.debug("init_db: connection object has no cursor(); skipping init")
-        return None
-    cur = conn.cursor()
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS items (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            doi TEXT,
-            feed_id TEXT,
-            guid TEXT,
-            title TEXT,
-            link TEXT,
-            published TEXT,
-            summary TEXT,
-            fetched_at TEXT,
-            UNIQUE(guid, link, title, published)
-        )
-        """,
-    )
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS articles (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            doi TEXT,
-            title TEXT,
-            authors TEXT,
-            abstract TEXT,
-            crossref_xml TEXT,
-            feed_id TEXT,
-            publication_id TEXT,
-            issn TEXT,
-            published TEXT,
-            fetched_at TEXT,
-            UNIQUE(doi)
-        )
-        """,
-    )
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS publications (
-            feed_id TEXT,
-            publication_id TEXT NOT NULL,
-            feed_title TEXT,
-            issn TEXT NOT NULL,
-            PRIMARY KEY (publication_id, issn)
-        )
-        """,
-    )
-
-    # Table for saving scraped or fetched news headlines from news.json sites.
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS headlines (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            source TEXT,
-            title TEXT,
-            text TEXT,
-            link TEXT,
-            first_seen TEXT,
-            published TEXT,
-            UNIQUE(link, title)
-        )
-        """,
-    )
-    cur.execute(
-        """
-        CREATE INDEX IF NOT EXISTS idx_headlines_source_first_seen ON headlines (source, first_seen)
-        """,
-    )
-
-    # Table for auditing/recording maintenance runs
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS maintenance_runs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            command TEXT NOT NULL,
-            status TEXT,
-            started TEXT,
-            finished TEXT,
-            duration REAL,
-            details TEXT
-        )
-        """,
-    )
-
-    try:
-        # ensure the combined_articles view exists immediately after initializing schema
-        create_combined_view(conn)
-    except Exception:
-        logger.exception("Failed to create combined_articles view during init_db")
-    conn.commit()
-    logger.debug("initialized database")
-
-
-def create_combined_view(conn: sqlite3.Connection):
-    """Create the combined_articles view used by higher-level code.
-
-    The view exposes a normalized set of fields for rendering the site
-    and for selecting recent articles.
-    """
-    logger.info("Creating combined_articles view")
-    cur = conn.cursor()
-    cur.execute(
-        """
-        CREATE VIEW IF NOT EXISTS combined_articles AS
-        SELECT
-            articles.doi AS doi,
-            COALESCE(articles.title, '') AS title,
-            ('https://doi.org/' || articles.doi) AS link,
-            COALESCE(publications.feed_title, feeds.feed_title, '') AS feed_title,
-            COALESCE(articles.abstract, '') AS content,
-            COALESCE(articles.published, articles.fetched_at) AS published,
-            COALESCE(articles.authors, '') AS authors
-        FROM articles
-            LEFT JOIN publications on publications.feed_id = articles.feed_id
-            LEFT JOIN publications as feeds on feeds.feed_id = articles.feed_id
-        WHERE articles.doi IS NOT NULL
-        """,
-    )
-    conn.commit()
-    logger.debug("combined_articles view created")
+logger = logging.getLogger("ednews.manage_db.maintenance")
 
 
 def log_maintenance_run(conn: sqlite3.Connection, command: str, status: str, started: str | None = None, finished: str | None = None, duration: float | None = None, details: dict | None = None) -> int:
-    """Insert an entry into maintenance_runs and return the new row id.
-
-    `details` will be JSON-serialized. Tolerant to errors: logs and returns 0 on failure.
-    """
     try:
         cur = conn.cursor()
         import json
-        # Be permissive when serializing details: convert non-serializable
-        # objects to strings rather than raising (for example argparse.func).
         details_json = json.dumps(details, default=str) if details is not None else None
         cur.execute(
             "INSERT INTO maintenance_runs (command, status, started, finished, duration, details) VALUES (?, ?, ?, ?, ?, ?)",
@@ -178,13 +26,6 @@ def log_maintenance_run(conn: sqlite3.Connection, command: str, status: str, sta
 
 
 def sync_publications_from_feeds(conn, feeds_list) -> int:
-    """Synchronize the publications table from a feeds list.
-
-    feeds_list is expected to be the output of `ednews.feeds.load_feeds()` where
-    each item is a tuple like (key, title, url, publication_id, issn).
-
-    Returns the number of feeds successfully upserted.
-    """
     if not feeds_list:
         return 0
     count = 0
@@ -192,7 +33,6 @@ def sync_publications_from_feeds(conn, feeds_list) -> int:
 
     for item in feeds_list:
         try:
-            # item shape: (key, title, url, publication_id, issn)
             key = item[0] if len(item) > 0 else None
             title = item[1] if len(item) > 1 else None
             pub_id = item[3] if len(item) > 3 else None
@@ -218,15 +58,10 @@ def fetch_latest_journal_works(
     from_date: str | None = None,
     until_date: str | None = None,
 ):
-    """Fetch recent works for journals (by ISSN) and insert as articles.
-
-    Supports cursor-based pagination and optional Crossref date filters.
-    """
     import requests
 
     cur = conn.cursor()
     session = requests.Session()
-    # allow callers to pass a timeout; otherwise use config defaults (connect, read)
     try:
         from ednews import config as _config
         connect_timeout = getattr(_config, 'CROSSREF_CONNECT_TIMEOUT', 5)
@@ -235,7 +70,6 @@ def fetch_latest_journal_works(
         backoff = getattr(_config, 'CROSSREF_BACKOFF', 0.3)
         status_forcelist = getattr(_config, 'CROSSREF_STATUS_FORCELIST', [429, 500, 502, 503, 504])
     except Exception:
-        # fallback values
         connect_timeout = 5
         read_timeout = 30
         default_retries = 3
@@ -248,29 +82,25 @@ def fetch_latest_journal_works(
     logger.info("Fetching latest journal works for %s feeds", len(feeds) if hasattr(feeds, '__len__') else 'unknown')
 
     for item in feeds:
-        # Accept feed tuple shapes of varying length (4, 5, 6...) so that
-        # additional fields like `processor` do not cause us to skip the row.
-        # Expected positions: 0=key, 1=title, 2=url, 3=publication_id, 4=issn
         key = item[0] if len(item) > 0 else None
         title = item[1] if len(item) > 1 else None
         url = item[2] if len(item) > 2 else None
         publication_id = item[3] if len(item) > 3 else None
         issn = item[4] if len(item) > 4 else None
-        # Skip feeds that don't have an ISSN
         if not issn:
             continue
 
         try:
             ua = None
             try:
-                ua = getattr(config, 'USER_AGENT', None)
+                from ednews import config as _cfg
+                ua = getattr(_cfg, 'USER_AGENT', None)
             except Exception:
                 ua = None
             headers = {"User-Agent": ua or "ed-news-fetcher/1.0", "Accept": "application/json"}
             mailto = os.environ.get("CROSSREF_MAILTO", "your_email@example.com")
             base_url = f"https://api.crossref.org/journals/{issn}/works"
 
-            # Build a base filter string: always request journal-article types
             filter_parts = ["type:journal-article"]
             if date_filter_type and from_date:
                 filter_parts.append(f"from-{date_filter_type}-date:{from_date}")
@@ -278,8 +108,6 @@ def fetch_latest_journal_works(
                 filter_parts.append(f"until-{date_filter_type}-date:{until_date}")
             base_filter = ",".join(filter_parts)
 
-            # Cursor-based pagination: request up to 1000 rows per page and
-            # follow next-cursor until we've collected `per_journal` items.
             remaining = int(per_journal)
             cursor = "*"
             collected_items: list[dict] = []
@@ -343,7 +171,6 @@ def fetch_latest_journal_works(
                     continue
                 try:
                     from ednews.db import article_exists, upsert_article, update_article_crossref
-                    # If the DOI already exists, skip to avoid re-processing.
                     if article_exists(conn, norm):
                         skipped += 1
                         continue
@@ -388,7 +215,6 @@ def fetch_latest_journal_works(
 
 
 def vacuum_db(conn: sqlite3.Connection):
-    """Run VACUUM to defragment the SQLite database file."""
     try:
         cur = conn.cursor()
         cur.execute("VACUUM")
@@ -401,24 +227,15 @@ def vacuum_db(conn: sqlite3.Connection):
 
 
 def cleanup_empty_articles(conn: sqlite3.Connection, older_than_days: int | None = None) -> int:
-    """Delete articles that have no title and no abstract.
-
-    If `older_than_days` is provided, only delete articles whose
-    `fetched_at` or `published` timestamp is older than the cutoff.
-
-    Returns the number of rows deleted.
-    """
     try:
         cur = conn.cursor()
         params = []
         where_clauses = ["(COALESCE(title, '') = '' AND COALESCE(abstract, '') = '')"]
         if older_than_days is not None:
-            # compute cutoff ISO timestamp
             cutoff = (datetime.now(timezone.utc) - timedelta(days=int(older_than_days))).isoformat()
             where_clauses.append("(COALESCE(fetched_at, '') != '' AND COALESCE(fetched_at, '') < ? OR COALESCE(published, '') != '' AND COALESCE(published, '') < ?)")
             params.extend([cutoff, cutoff])
         where_sql = " AND ".join(where_clauses)
-        # Use DELETE ... WHERE ... and return rowcount
         cur.execute(f"DELETE FROM articles WHERE {where_sql}", tuple(params))
         deleted = cur.rowcount if hasattr(cur, 'rowcount') else None
         conn.commit()
@@ -430,18 +247,8 @@ def cleanup_empty_articles(conn: sqlite3.Connection, older_than_days: int | None
 
 
 def cleanup_filtered_titles(conn: sqlite3.Connection, filters: list | None = None, dry_run: bool = False) -> int:
-    """Delete or count articles whose title matches any configured filter.
-
-    `filters` is a list of strings; comparison is done on trimmed, lowercased
-    titles. If `filters` is None, the function will attempt to read
-    `config.TITLE_FILTERS`.
-
-    If `dry_run` is True, the function returns the number of rows that
-    would be deleted without performing the DELETE.
-
-    Returns the number of rows deleted (or that would be deleted).
-    """
     try:
+        from ednews import config
         try:
             if filters is None:
                 filters = getattr(config, 'TITLE_FILTERS', [])
@@ -452,13 +259,11 @@ def cleanup_filtered_titles(conn: sqlite3.Connection, filters: list | None = Non
             logger.debug("cleanup_filtered_titles: no filters configured; nothing to do")
             return 0
 
-        # Normalize filters to trimmed, lowercased strings
         norm_filters = [str(f).strip().lower() for f in filters if f]
         if not norm_filters:
             return 0
 
         cur = conn.cursor()
-        # Build WHERE clause with one equality per filter using LOWER(TRIM(COALESCE(title, '')))
         clauses = []
         params = []
         for _ in norm_filters:
@@ -480,13 +285,3 @@ def cleanup_filtered_titles(conn: sqlite3.Connection, filters: list | None = Non
     except Exception:
         logger.exception("cleanup_filtered_titles failed")
         return 0
-
-
-def migrate_db(conn: sqlite3.Connection):
-    """Placeholder for schema migrations.
-
-    Currently a no-op. Add migration steps here as needed. Returns True
-    if migrations applied or no-op succeeded.
-    """
-    logger.info("migrate_db: no migrations to apply")
-    return True

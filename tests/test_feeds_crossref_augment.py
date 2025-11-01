@@ -27,7 +27,7 @@ def test_feed_entry_with_doi_is_augmented(monkeypatch):
     }
 
     # Mock Crossref to return richer metadata
-    def fake_fetch(doi):
+    def fake_fetch(doi, conn=None):
         assert doi == '10.1000/testdoi'
         return {
             'authors': 'Crossref Author',

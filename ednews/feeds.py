@@ -17,6 +17,7 @@ import html
 from datetime import datetime, timezone
 from . import crossref
 from . import db as eddb
+import hashlib
 
 logger = logging.getLogger("ednews.feeds")
 
@@ -362,13 +363,16 @@ def save_entries(conn, feed_id, feed_title, entries):
         try:
             doi = None
             link_val = (e.get("link") or "").strip()
+            # Compute URL hash for dedup across feeds
+            url_hash = None
             if link_val:
                 try:
-                    cur.execute("SELECT id, doi FROM items WHERE link = ? LIMIT 1", (link_val,))
+                    url_hash = hashlib.sha256(link_val.encode('utf-8')).hexdigest()
+                    cur.execute("SELECT id, doi FROM items WHERE url_hash = ? LIMIT 1", (url_hash,))
                     existing = cur.fetchone()
                     if existing:
                         existing_id, existing_doi = existing[0], existing[1]
-                        logger.debug("item with same link already exists (id=%s, link=%s, doi=%s)", existing_id, link_val, existing_doi)
+                        logger.debug("item with same url_hash already exists (id=%s, link=%s, doi=%s)", existing_id, link_val, existing_doi)
                         if not existing_doi:
                             try:
                                 entry_obj = e.get("_entry") or {}
@@ -404,13 +408,13 @@ def save_entries(conn, feed_id, feed_title, entries):
                                 logger.debug("failed to extract/attach DOI for existing item link=%s", link_val)
                         continue
                 except Exception:
-                    logger.debug("link existence check failed for link=%s; continuing with insert", link_val)
+                    logger.debug("url_hash existence check failed for link=%s; continuing with insert", link_val)
 
             cur.execute(
                 """
                 INSERT OR IGNORE INTO items
-                (feed_id, doi, guid, title, link, published, summary, fetched_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                (feed_id, doi, guid, title, link, url_hash, published, summary, fetched_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     feed_id,
@@ -418,6 +422,7 @@ def save_entries(conn, feed_id, feed_title, entries):
                     e.get("guid"),
                     e.get("title"),
                     e.get("link"),
+                    url_hash,
                     e.get("published") or datetime.now(timezone.utc).isoformat(),
                     e.get("summary"),
                     datetime.now(timezone.utc).isoformat(),
