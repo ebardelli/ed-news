@@ -55,12 +55,24 @@ def fetch_site(session: requests.Session, site_cfg: Dict) -> List[Dict]:
     """
     feed_url = site_cfg.get("feed", "")
     processor_name = site_cfg.get("processor")
+    # Normalize processor config which may be a string, list, or dict {"pre": ...}
+    proc_name_normalized = None
+    if isinstance(processor_name, dict):
+        p = processor_name.get('pre') or processor_name.get('post')
+        if isinstance(p, (list, tuple)):
+            proc_name_normalized = p[0] if p else None
+        else:
+            proc_name_normalized = p
+    elif isinstance(processor_name, (list, tuple)):
+        proc_name_normalized = processor_name[0] if processor_name else None
+    else:
+        proc_name_normalized = processor_name
     link = site_cfg.get("link")
 
     if feed_url:
         # If a feed-specific processor exists (e.g. to filter AP items),
         # prefer it. Otherwise fall back to the simple feedparser path.
-        proc = FEED_PROCESSORS.get(processor_name) if processor_name else None
+        proc = FEED_PROCESSORS.get(proc_name_normalized) if proc_name_normalized else None
         if proc:
             return proc(session, feed_url)
 
@@ -75,8 +87,8 @@ def fetch_site(session: requests.Session, site_cfg: Dict) -> List[Dict]:
             })
         return out
 
-    if processor_name:
-        fn = PROCESSORS.get(processor_name)
+    if proc_name_normalized:
+        fn = PROCESSORS.get(proc_name_normalized)
         if not fn:
             raise ValueError(f"Unknown processor: {processor_name}")
         resp = session.get(link, timeout=15)

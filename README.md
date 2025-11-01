@@ -45,7 +45,6 @@ uv run python main.py serve --directory build
 - fetch — fetch article feeds and/or news headlines (flags: `--articles`, `--headlines`)
 - build — render templates into a static `build/` directory (`--out-dir`)
 - embed — generate local embeddings and persist vectors to the DB (`--model`, `--batch-size`)
-- enrich-crossref — query Crossref for missing article metadata
 - issn-lookup — lookup recent works by ISSN and insert into DB
 - headlines — fetch configured news sites and persist or write JSON (`--out`, `--no-persist`)
 - db-init — create schema and views

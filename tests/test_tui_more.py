@@ -80,21 +80,6 @@ def test_headlines_flags(monkeypatch):
     assert called['no_persist'] is True
 
 
-def test_enrich_crossref_flags(monkeypatch):
-    called = {}
-
-    def fake_enrich(args):
-        called['batch_size'] = getattr(args, 'batch_size', None)
-        called['delay'] = getattr(args, 'delay', None)
-
-    tui = importlib.import_module('ednews.cli')
-    monkeypatch.setattr(tui, 'cmd_enrich_crossref', fake_enrich)
-
-    run_args(['ednews', 'enrich-crossref', '--batch-size', '10', '--delay', '0.2'], monkeypatch, tui)
-    assert called['batch_size'] == 10
-    assert abs(called['delay'] - 0.2) < 1e-6
-
-
 def test_manage_db_run_all_dry_run_and_older_than(monkeypatch):
     called = {}
 

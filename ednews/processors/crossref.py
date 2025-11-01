@@ -67,3 +67,106 @@ def crossref_enricher_processor(entries: List[dict], session=None, publication_i
                 entry['doi'] = doi
         out.append(entry)
     return out
+
+
+def crossref_postprocessor_db(conn, feed_key: str, entries, session=None, publication_id: str | None = None, issn: str | None = None):
+    """DB-level postprocessor: for each entry, determine DOI and upsert article rows.
+
+    This function mirrors the behavior of `crossref_enricher_processor` but
+    performs DB writes using `ednews.db` helpers so that articles and items
+    are persisted with Crossref metadata attached.
+    """
+    if not entries:
+        return 0
+    try:
+        from ednews import feeds as feeds_mod
+        from ednews import db as eddb
+        from ednews import crossref as crossref_mod
+    except Exception:
+        return 0
+
+    cur = conn.cursor()
+    updated = 0
+    for e in entries:
+        try:
+            doi = None
+            try:
+                if e.get('doi'):
+                    doi = feeds_mod.normalize_doi(e.get('doi'))
+                else:
+                    src = e.get('_entry') or e
+                    doi = feeds_mod.extract_and_normalize_doi(src) if src else None
+            except Exception:
+                doi = None
+
+            title = e.get('title') or (e.get('_entry') or {}).get('title') if isinstance(e.get('_entry'), dict) else e.get('title')
+
+            if not doi and title and feeds_mod.title_suitable_for_crossref_lookup(title):
+                try:
+                    found = crossref_mod.query_crossref_doi_by_title(title, preferred_publication_id=publication_id)
+                    if found:
+                        doi = found
+                except Exception:
+                    doi = None
+
+            if not doi:
+                continue
+
+            try:
+                doi = feeds_mod.normalize_doi(doi) or doi
+            except Exception:
+                pass
+
+            # Avoid repeated network lookups when article exists
+            cr = None
+            try:
+                if eddb.article_exists(conn, doi):
+                    cr = eddb.get_article_metadata(conn, doi) or None
+                else:
+                    cr = crossref_mod.fetch_crossref_metadata(doi, conn=conn)
+            except Exception:
+                try:
+                    cr = crossref_mod.fetch_crossref_metadata(doi)
+                except Exception:
+                    cr = None
+
+            authors = cr.get('authors') if isinstance(cr, dict) else None
+            abstract = cr.get('abstract') if isinstance(cr, dict) else None
+            raw = cr.get('raw') if isinstance(cr, dict) else None
+            published = cr.get('published') if isinstance(cr, dict) else (e.get('published') or None)
+
+            title_final = title or e.get('title')
+            authors_final = authors or (e.get('authors') if e.get('authors') else None)
+            abstract_final = abstract or (e.get('abstract') if e.get('abstract') else None)
+            published_final = published
+
+            aid = eddb.upsert_article(conn, doi, title=title_final, authors=authors_final, abstract=abstract_final, feed_id=feed_key, publication_id=publication_id, issn=issn, published=published_final)
+            if aid:
+                updated += 1
+                if raw:
+                    try:
+                        eddb.update_article_crossref(conn, doi, authors=authors_final, abstract=abstract_final, raw=raw, published=published_final)
+                    except Exception:
+                        pass
+
+                # Attach DOI to items rows (by link/guid/url_hash)
+                try:
+                    link = (e.get('link') or '').strip()
+                    guid = (e.get('guid') or '').strip()
+                    if link:
+                        cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND link = ?", (doi, feed_key, link))
+                    if guid:
+                        cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND guid = ?", (doi, feed_key, guid))
+                    try:
+                        import hashlib
+                        if link:
+                            url_hash = hashlib.sha256(link.encode('utf-8')).hexdigest()
+                            cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND url_hash = ?", (doi, feed_key, url_hash))
+                    except Exception:
+                        pass
+                    conn.commit()
+                except Exception:
+                    pass
+        except Exception:
+            continue
+    return updated

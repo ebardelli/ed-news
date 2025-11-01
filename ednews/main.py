@@ -29,7 +29,6 @@ from concurrent.futures import ThreadPoolExecutor as ThreadPoolExecutor, as_comp
 cmd_embed = cli.cmd_embed
 cmd_fetch = cli.cmd_fetch
 cmd_build = cli.cmd_build
-cmd_enrich_crossref = cli.cmd_enrich_crossref
 cmd_issn_lookup = cli.cmd_issn_lookup
 cmd_headlines = cli.cmd_headlines
 cmd_manage_db_cleanup = cli.cmd_manage_db_cleanup

@@ -46,3 +46,20 @@ def fcmat_processor(html: str, base_url: str | None = None) -> List[Dict]:
         out.append({"title": title, "link": link, "summary": summary, "published": published})
 
     return out
+
+
+# Backwards-compatible preprocessor alias
+def fcmat_preprocessor(session_or_html, base_url: str | None = None):
+    # Accept either a requests-like session+url signature or the raw-html signature
+    # If session_or_html is a string, treat it as HTML content
+    if isinstance(session_or_html, str):
+        return fcmat_processor(session_or_html, base_url=base_url)
+    # Otherwise we expect (session, url) signature
+    try:
+        session = session_or_html
+        # caller will pass URL in base_url
+        resp = session.get(base_url, timeout=15)
+        resp.raise_for_status()
+        return fcmat_processor(resp.text, base_url=base_url)
+    except Exception:
+        return []

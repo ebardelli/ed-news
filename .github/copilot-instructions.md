@@ -10,7 +10,7 @@ ed-news is a compact static site generator and feed builder written in Python. I
   - `fetch` — fetch configured article feeds and news headlines and persist them to the DB (defaults to both articles and headlines if no flags provided)
   - `build` — render the static site into an output directory
   - `embed` — generate local embeddings and insert them into the DB
-  - `enrich-crossref` — query Crossref to enrich articles missing Crossref metadata
+  - `enrich-crossref` (deprecated CLI) — Crossref enrichment is now implemented as a per-feed postprocessor in `ednews.processors.crossref`.
   - `issn-lookup` — fetch recent works for journals by ISSN and insert into the DB
   - `headlines` — fetch configured news sites and either persist headlines to the DB or write JSON
   - `db-init` — create tables and views (run once)
@@ -52,9 +52,6 @@ uv run python main.py build --out-dir build
 
 # Generate embeddings
 uv run python main.py embed --batch-size 64
-
-# Enrich articles from Crossref
-uv run python main.py enrich-crossref --batch-size 20 --delay 0.1
 
  # ISSN lookup
  # --from-date/--until-date accept: YYYY, YYYY-MM, YYYY-MM-DD, or datetimes like YYYY-MM-DDTHH:MM

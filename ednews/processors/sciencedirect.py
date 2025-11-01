@@ -229,3 +229,125 @@ def sciencedirect_feed_processor(session, feed_url: str, publication_id: str | N
 
         out.append(entry)
     return out
+
+
+# Backwards-compatible preprocessor alias
+def sciencedirect_preprocessor(session, feed_url: str, publication_id: str | None = None, issn: str | None = None):
+    return sciencedirect_feed_processor(session, feed_url, publication_id=publication_id, issn=issn)
+
+
+# DB-level postprocessor alias for enrichment
+def sciencedirect_postprocessor_db(conn, feed_key: str, entries, session=None, publication_id: str | None = None, issn: str | None = None):
+    """DB-level postprocessor that processes the provided entries.
+
+    For each entry, attempt to determine a DOI (from the entry, via feed helpers,
+    or via a Crossref title lookup). When a DOI is found it will fetch Crossref
+    metadata (when needed), upsert an articles row and attach the DOI to the
+    corresponding items row(s) for this feed.
+
+    Returns the number of articles upserted/updated.
+    """
+    updated = 0
+    if not entries:
+        return 0
+
+    try:
+        from .. import crossref as crossref_mod
+        from .. import db as eddb
+        from .. import feeds as feeds_mod
+    except Exception:
+        return 0
+
+    cur = conn.cursor()
+    for e in entries:
+        try:
+            # Determine DOI from entry fields or by title lookup
+            doi = None
+            try:
+                if e.get('doi'):
+                    doi = feeds_mod.normalize_doi(e.get('doi'))
+                else:
+                    src = e.get('_entry') or e
+                    doi = feeds_mod.extract_and_normalize_doi(src) if src else None
+            except Exception:
+                doi = None
+
+            title = e.get('title') or (e.get('_entry') or {}).get('title') if isinstance(e.get('_entry'), dict) else e.get('title')
+
+            if not doi and title and feeds_mod.title_suitable_for_crossref_lookup(title):
+                try:
+                    found = crossref_mod.query_crossref_doi_by_title(title, preferred_publication_id=publication_id)
+                    if found:
+                        doi = found
+                except Exception:
+                    doi = None
+
+            if not doi:
+                continue
+
+            # Normalize DOI
+            try:
+                doi = feeds_mod.normalize_doi(doi) or doi
+            except Exception:
+                pass
+
+            # If article exists, try to reuse stored metadata; otherwise fetch from Crossref
+            cr = None
+            try:
+                if eddb.article_exists(conn, doi):
+                    cr = eddb.get_article_metadata(conn, doi) or None
+                else:
+                    cr = crossref_mod.fetch_crossref_metadata(doi, conn=conn)
+            except Exception:
+                try:
+                    cr = crossref_mod.fetch_crossref_metadata(doi)
+                except Exception:
+                    cr = None
+
+            authors = cr.get('authors') if isinstance(cr, dict) else None
+            abstract = cr.get('abstract') if isinstance(cr, dict) else None
+            raw = cr.get('raw') if isinstance(cr, dict) else None
+            published = cr.get('published') if isinstance(cr, dict) else (e.get('published') or None)
+
+            # Prefer Crossref values when available, otherwise fall back to feed values
+            title_final = title or e.get('title')
+            authors_final = authors or (e.get('authors') if e.get('authors') else None)
+            abstract_final = abstract or (e.get('abstract') if e.get('abstract') else None)
+            published_final = published
+
+            try:
+                aid = eddb.upsert_article(conn, doi, title=title_final, authors=authors_final, abstract=abstract_final, feed_id=feed_key, publication_id=publication_id, issn=issn, published=published_final)
+                if aid:
+                    updated += 1
+                    # store crossref raw if present
+                    if raw:
+                        try:
+                            eddb.update_article_crossref(conn, doi, authors=authors_final, abstract=abstract_final, raw=raw, published=published_final)
+                        except Exception:
+                            pass
+
+                    # Attach DOI to corresponding items rows matching this feed and link/guid
+                    try:
+                        link = (e.get('link') or '').strip()
+                        guid = (e.get('guid') or '').strip()
+                        if link:
+                            cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND link = ?", (doi, feed_key, link))
+                        if guid:
+                            cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND guid = ?", (doi, feed_key, guid))
+                        # Also attempt to update by url_hash if available on the entry
+                        try:
+                            import hashlib
+                            if link:
+                                url_hash = hashlib.sha256(link.encode('utf-8')).hexdigest()
+                                cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND url_hash = ?", (doi, feed_key, url_hash))
+                        except Exception:
+                            pass
+                        conn.commit()
+                    except Exception:
+                        logger.debug("failed to attach doi %s to items for feed %s", doi, feed_key)
+            except Exception:
+                logger.exception("failed to upsert article for doi=%s", doi)
+        except Exception:
+            # continue processing other entries even if one fails
+            continue
+    return updated

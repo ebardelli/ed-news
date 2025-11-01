@@ -116,60 +116,48 @@ def cmd_fetch(args):
                     else:
                         proc_names = [processor]
 
-                    # Submit a wrapper that invokes each named processor and merges results
-                    def _proc_multi(session, key, title, url, publication_doi, issn, proc_names):
+                    # Submit a wrapper that runs preprocessors (pre_names), and return post_names so
+                    # the caller can run postprocessors after save.
+                    def run_processors_for_feed(session, conn, key, title, url, publication_doi, issn, pre_names=None, post_names=None):
                         try:
                             import importlib
                             import ednews.processors as proc_mod
+                            from ednews import feeds as feeds_mod
 
                             merged = []
                             seen = set()
-                            for name in proc_names:
+                            pre_called = False
+                            # 1) Run preprocessors (allow either <name>_preprocessor or legacy <name>_feed_processor)
+                            for name in (pre_names or []):
                                 if not name:
                                     continue
-                                fn_name = f"{name}_feed_processor"
-                                proc_fn = getattr(proc_mod, fn_name, None)
-                                if not proc_fn:
-                                    # Try dynamic import as fallback
+                                # Prefer the live feed_processor (legacy) when present so that
+                                # runtime monkeypatches of that symbol are respected. Fall back
+                                # to the explicit preprocessor alias if no feed_processor exists.
+                                pre_fn = getattr(proc_mod, f"{name}_feed_processor", None) or getattr(proc_mod, f"{name}_preprocessor", None)
+                                if not pre_fn:
+                                    # try dynamic import as fallback
                                     try:
                                         mod = importlib.import_module(name)
-                                        proc_fn = getattr(mod, fn_name, None)
+                                        pre_fn = getattr(mod, f"{name}_preprocessor", None) or getattr(mod, f"{name}_feed_processor", None)
                                     except Exception:
-                                        proc_fn = None
-                                if not proc_fn:
-                                    logger.warning("processor %s not found for feed %s", name, key)
+                                        pre_fn = None
+                                if not pre_fn:
+                                    logger.warning("preprocessor %s not found for feed %s", name, key)
                                     continue
+                                pre_called = True
                                 try:
-                                    # Determine if this processor is an enricher (accepts entries)
-                                    import inspect
-
-                                    sig = inspect.signature(proc_fn)
-                                    params = list(sig.parameters.keys())
-                                    if params and params[0] in ("entries", "items", "rows"):
-                                        # enricher-style: call with current entries; if we don't have entries yet, call fetch first
-                                        if merged:
-                                            entries = proc_fn(merged, session=session, publication_id=publication_doi, issn=issn)
-                                        else:
-                                            # nothing to enrich; skip
-                                            entries = []
-                                    else:
-                                        # fetcher-style: call with session and url
-                                        entries = proc_fn(session, url, publication_id=publication_doi, issn=issn)
+                                    entries = pre_fn(session, url, publication_id=publication_doi, issn=issn)
                                 except TypeError:
-                                    # Fallbacks for varied signatures
                                     try:
-                                        entries = proc_fn(session, url)
+                                        entries = pre_fn(session, url)
                                     except Exception:
-                                        try:
-                                            entries = proc_fn(merged, session)
-                                        except Exception:
-                                            entries = []
+                                        entries = []
                                 except Exception as e:
-                                    logger.exception("processor %s failed for feed %s: %s", name, key, e)
+                                    logger.exception("preprocessor %s failed for feed %s: %s", name, key, e)
                                     entries = []
 
                                 for e in entries or []:
-                                    # Deduplicate by link or guid when merging
                                     link = (e.get('link') or '').strip()
                                     guid = (e.get('guid') or '').strip()
                                     key_id = link or guid or (e.get('title') or '')
@@ -178,11 +166,61 @@ def cmd_fetch(args):
                                     seen.add(key_id)
                                     merged.append(e)
 
-                            return {"key": key, "title": title, "url": url, "publication_id": publication_doi, "error": None, "entries": merged}
+                            # 2) if no preprocessor produced entries, fall back to RSS preprocessor
+                            if not pre_called:
+                                try:
+                                    # prefer an explicit rss_preprocessor if available in processors
+                                    import ednews.processors as proc_mod
+                                    rss_fn = getattr(proc_mod, 'rss_preprocessor', None)
+                                    if rss_fn:
+                                        entries = rss_fn(session, url, publication_id=publication_doi, issn=issn)
+                                    else:
+                                        feed_res = feeds_mod.fetch_feed(session, key, title, url, publication_doi, issn)
+                                        entries = feed_res.get('entries') or []
+                                except Exception:
+                                    # fallback to direct fetch_feed if anything goes wrong
+                                    feed_res = feeds_mod.fetch_feed(session, key, title, url, publication_doi, issn)
+                                    entries = feed_res.get('entries') or []
+                                merged = entries
+
+                            return {"key": key, "title": title, "url": url, "publication_id": publication_doi, "error": None, "entries": merged, "post_processors": (post_names or [])}
                         except Exception as e:
                             return {"key": key, "title": title, "url": url, "publication_id": publication_doi, "error": str(e), "entries": []}
 
-                    fut = ex.submit(_proc_multi, session, key, title, url, publication_doi, issn, proc_names)
+                    # Normalize configured processor into pre and post lists
+                    pre_names = None
+                    post_names = None
+                    if processor:
+                        if isinstance(processor, (list, tuple)):
+                            pre_names = list(processor)
+                            # Backwards compatibility: treat listed processor names as both
+                            # preprocessors and postprocessors unless explicitly separated.
+                            post_names = list(processor)
+                        elif isinstance(processor, dict):
+                            # accept 'pre' and 'post' which may be string or list
+                            p = processor.get('pre')
+                            post = processor.get('post')
+                            if isinstance(p, (list, tuple)):
+                                pre_names = list(p)
+                            elif isinstance(p, str):
+                                pre_names = [p]
+                            else:
+                                pre_names = []
+
+                            if isinstance(post, (list, tuple)):
+                                post_names = list(post)
+                            elif isinstance(post, str):
+                                post_names = [post]
+                            else:
+                                post_names = []
+                        else:
+                            pre_names = [processor]
+                            post_names = [processor]
+                    else:
+                        pre_names = None
+                        post_names = []
+
+                    fut = ex.submit(run_processors_for_feed, session, conn, key, title, url, publication_doi, issn, pre_names, post_names)
                     futures[fut] = (key, title, url, publication_doi)
                 else:
                     fut = ex.submit(feeds.fetch_feed, session, key, title, url, publication_doi, issn)
@@ -203,6 +241,41 @@ def cmd_fetch(args):
 
                     cnt = save_entries(conn, res["key"], res["title"], res["entries"])
                     logger.info("%s: fetched %d entries, inserted %d", res["key"], len(res["entries"]), cnt)
+
+                    # After saving, attempt DB-level postprocessors for each configured processor
+                    try:
+                        import ednews.processors as proc_mod
+                        # Use post_processors carried in the run result when available
+                        proc_names_post = res.get('post_processors') or []
+                        for name in proc_names_post:
+                            if not name:
+                                continue
+                            post_db = getattr(proc_mod, f"{name}_postprocessor_db", None)
+                            if post_db:
+                                try:
+                                    post_db(conn, res.get("key"), res.get("entries"), session=session, publication_id=res.get("publication_id"), issn=res.get("_feed_issn"))
+                                except Exception:
+                                    logger.exception("postprocessor_db %s failed for %s", name, res.get("key"))
+                            else:
+                                post_mem = getattr(proc_mod, f"{name}_postprocessor", None)
+                                if post_mem:
+                                    try:
+                                        import inspect
+
+                                        sig = inspect.signature(post_mem)
+                                        params = list(sig.parameters.keys())
+                                        if params and params[0] in ("entries", "items", "rows"):
+                                            post_mem(res.get("entries"), session=session, publication_id=res.get("publication_id"), issn=res.get("_feed_issn"))
+                                        else:
+                                            try:
+                                                post_mem(conn, res.get("entries"), session=session)
+                                            except Exception:
+                                                post_mem(res.get("entries"))
+                                    except Exception:
+                                        logger.exception("postprocessor %s failed for %s", name, res.get("key"))
+                    except Exception:
+                        # Don't fail the whole job if postprocessor invocation fails
+                        pass
                 except Exception as e:
                     logger.exception("Failed to save entries for %s: %s", res.get("key"), e)
     else:
@@ -257,29 +330,10 @@ def cmd_embed(args):
     conn.close()
 
 
-def cmd_enrich_crossref(args):
-    """Enrich articles missing Crossref XML by querying Crossref for metadata."""
-    conn = sqlite3.connect(str(config.DB_PATH))
-    # NOTE: database initialization (schema + views) is now managed via the
-    # top-level `db-init` command. This command assumes the DB exists.
-    from ednews.db import enrich_articles_from_crossref
-    from ednews.crossref import fetch_crossref_metadata
-
-    # db-init should be run explicitly; do not initialize here.
-    # Use the existing fetcher function as a callable that takes a DOI and returns a dict
-    def fetcher(doi):
-        return fetch_crossref_metadata(doi, conn=conn)
-
-    updated_ids = enrich_articles_from_crossref(conn, fetcher, batch_size=args.batch_size, delay=args.delay, return_ids=True)
-    logger.info("Enriched %d articles from Crossref", len(updated_ids) if hasattr(updated_ids, '__len__') else updated_ids)
-    # Update embeddings only for the affected article ids
-    if updated_ids:
-        try:
-            embeddings.create_database(conn)
-            embeddings.generate_and_insert_embeddings_for_ids(conn, updated_ids, model=args.model if hasattr(args, 'model') else None)
-        except Exception:
-            logger.exception("Failed to regenerate embeddings for updated articles after Crossref enrichment")
-    conn.close()
+# Crossref enrichment is implemented as feed-level postprocessors in
+# `ednews.processors.crossref`. The CLI no longer exposes a top-level
+# `enrich-crossref` subcommand; enrichment should be triggered per-feed
+# by configuring the feed's processors in the feeds list.
 
 
 def cmd_db_init(args):
@@ -734,10 +788,8 @@ def run():
     p_embed.add_argument("--articles", action="store_true", help="Generate embeddings for articles (default: both articles and headlines if no flags are set)")
     p_embed.set_defaults(func=cmd_embed)
 
-    p_enrich = sub.add_parser("enrich-crossref", help="Enrich articles missing Crossref XML")
-    p_enrich.add_argument("--batch-size", type=int, default=20, help="Number of articles to enrich in one run")
-    p_enrich.add_argument("--delay", type=float, default=0.1, help="Delay between individual fetches (seconds)")
-    p_enrich.set_defaults(func=cmd_enrich_crossref)
+    # Note: Crossref enrichment is now provided as a per-feed postprocessor
+    # and is intentionally not exposed as a top-level CLI command.
 
     p_issn = sub.add_parser("issn-lookup", help="Fetch latest works for journals by ISSN and insert into DB")
     p_issn.add_argument("--per-journal", type=int, default=30, help="Number of works to fetch per journal (uses cursor pagination; no hard max)")
