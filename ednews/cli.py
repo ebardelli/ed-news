@@ -751,6 +751,110 @@ def cmd_serve(args):
             httpd.shutdown()
     
 
+def cmd_postprocess(args):
+    """Run a DB-level postprocessor for configured feeds or a specific feed list.
+
+    The processor name should match a module-exported `*_postprocessor_db`
+    callable in `ednews.processors` (for example `crossref_postprocessor_db`).
+    """
+    proc_name = getattr(args, 'processor', None)
+    if not proc_name:
+        logger.error("No processor name provided")
+        return
+
+    # Load feeds list so we can map feed keys to publication_id/issn
+    feeds_list = []
+    try:
+        from ednews import feeds as feeds_mod
+
+        feeds_list = feeds_mod.load_feeds()
+    except Exception:
+        logger.debug("Could not load feeds list; proceeding with provided --feed keys only")
+
+    # Build a lookup for feed metadata
+    feed_map = {}
+    for item in feeds_list:
+        if len(item) >= 3:
+            key = item[0]
+            title = item[1]
+            publication_id = item[3] if len(item) > 3 else None
+            issn = item[4] if len(item) > 4 else None
+            feed_map[key] = {'title': title, 'publication_id': publication_id, 'issn': issn}
+
+    selected_feeds = getattr(args, 'feed', None) or list(feed_map.keys())
+    if not selected_feeds:
+        logger.error("No feeds available to postprocess")
+        return
+
+    conn = sqlite3.connect(str(config.DB_PATH))
+    session = requests.Session()
+    try:
+        import importlib
+        import ednews.processors as proc_mod
+
+        post_fn = getattr(proc_mod, f"{proc_name}_postprocessor_db", None)
+        if not post_fn:
+            logger.error("Processor '%s' does not expose a %s_postprocessor_db callable", proc_name, proc_name)
+            return
+
+        cur = conn.cursor()
+        force = getattr(args, 'force', False)
+        check_fields_arg = getattr(args, 'check_fields', None)
+        check_fields = None
+        if check_fields_arg:
+            check_fields = [c.strip() for c in str(check_fields_arg).split(',') if c.strip()]
+        # Determine missing-field filter if requested
+        only_missing = getattr(args, 'only_missing', False)
+        missing_field = getattr(args, 'missing_field', 'doi')
+        # Allowlist of columns on items table that are safe to check for missingness
+        allowed_missing_fields = {'doi', 'title', 'link', 'guid', 'published'}
+        if only_missing and missing_field not in allowed_missing_fields:
+            logger.error("missing-field '%s' not allowed; choose from %s", missing_field, sorted(list(allowed_missing_fields)))
+            return
+        total_updated = 0
+        for fk in selected_feeds:
+            try:
+                pub_id = feed_map.get(fk, {}).get('publication_id')
+                issn = feed_map.get(fk, {}).get('issn')
+                # Load recent items for this feed (limit to 2000 rows to avoid huge work)
+                if only_missing:
+                    # We treat NULL or empty string as missing
+                    sql = f"SELECT guid, link, title, published, fetched_at, doi FROM items WHERE feed_id = ? AND (COALESCE({missing_field}, '') = '') ORDER BY COALESCE(published, fetched_at) DESC LIMIT 2000"
+                    cur.execute(sql, (fk,))
+                else:
+                    cur.execute("SELECT guid, link, title, published, fetched_at, doi FROM items WHERE feed_id = ? ORDER BY COALESCE(published, fetched_at) DESC LIMIT 2000", (fk,))
+                rows = cur.fetchall()
+                entries = []
+                for r in rows:
+                    # r indices: guid, link, title, published, fetched_at, doi
+                    entries.append({'guid': r[0], 'link': r[1], 'title': r[2], 'published': r[3], '_fetched_at': r[4], 'doi': r[5] if len(r) > 5 else None})
+
+                if not entries:
+                    logger.info("No items found for feed %s; skipping", fk)
+                    continue
+
+                logger.info("Running postprocessor %s for feed %s (items=%d)", proc_name, fk, len(entries))
+                try:
+                    # Prefer a postprocessor that accepts newer kwargs (force/check_fields)
+                    try:
+                        updated = post_fn(conn, fk, entries, session=session, publication_id=pub_id, issn=issn, force=force, check_fields=check_fields)
+                    except TypeError:
+                        # Fallback to older signature without those kwargs
+                        updated = post_fn(conn, fk, entries, session=session, publication_id=pub_id, issn=issn)
+                    if isinstance(updated, int):
+                        total_updated += updated
+                except Exception:
+                    logger.exception("Postprocessor %s failed for feed %s", proc_name, fk)
+            except Exception:
+                logger.exception("Failed to postprocess feed %s", fk)
+
+        logger.info("Postprocessor %s completed; total updated rows: %s", proc_name, total_updated)
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
 
 def run():
     parser = argparse.ArgumentParser(prog="ednews")
@@ -864,6 +968,15 @@ def run():
     p_serve.add_argument("--port", type=int, help="Port to listen on (default: 8000)")
     p_serve.add_argument("--directory", help="Directory to serve (default: build)")
     p_serve.set_defaults(func=cmd_serve)
+
+    p_post = sub.add_parser("postprocess", help="Run a DB-level postprocessor (e.g. crossref) for feeds")
+    p_post.add_argument("--processor", required=True, help="Name of the processor to run (e.g. crossref)")
+    p_post.add_argument("--feed", action="append", help="Feed key to limit processing to (repeatable). If omitted, feeds are auto-detected from feeds list")
+    p_post.add_argument("--only-missing", action="store_true", help="Only include items where the specified field is missing/empty (default: doi)")
+    p_post.add_argument("--missing-field", type=str, default="doi", help="Field to check for missingness when --only-missing is set (default: doi)")
+    p_post.add_argument("--force", action="store_true", help="Force re-fetch even when existing metadata appears present")
+    p_post.add_argument("--check-fields", type=str, default=None, help="Comma-separated list of article fields to require before skipping (e.g. raw,authors,abstract). If omitted, processors choose their defaults.")
+    p_post.set_defaults(func=cmd_postprocess)
 
     args = parser.parse_args()
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")

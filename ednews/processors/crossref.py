@@ -32,10 +32,10 @@ def crossref_enricher_processor(entries: List[dict], session=None, publication_i
         try:
             # prefer explicit fields
             if entry.get('doi'):
-                doi = feeds_mod.normalize_doi(entry.get('doi'))
+                doi = feeds_mod.normalize_doi(entry.get('doi'), preferred_publication_id=publication_id)
             else:
                 src = entry.get('_entry') or entry
-                doi = feeds_mod.extract_and_normalize_doi(src) if src else None
+                doi = feeds_mod.extract_and_normalize_doi(src, preferred_publication_id=publication_id) if src else None
         except Exception:
             doi = None
 
@@ -69,7 +69,7 @@ def crossref_enricher_processor(entries: List[dict], session=None, publication_i
     return out
 
 
-def crossref_postprocessor_db(conn, feed_key: str, entries, session=None, publication_id: str | None = None, issn: str | None = None):
+def crossref_postprocessor_db(conn, feed_key: str, entries, session=None, publication_id: str | None = None, issn: str | None = None, force: bool = False, check_fields: list[str] | None = None):
     """DB-level postprocessor: for each entry, determine DOI and upsert article rows.
 
     This function mirrors the behavior of `crossref_enricher_processor` but
@@ -92,10 +92,10 @@ def crossref_postprocessor_db(conn, feed_key: str, entries, session=None, public
             doi = None
             try:
                 if e.get('doi'):
-                    doi = feeds_mod.normalize_doi(e.get('doi'))
+                    doi = feeds_mod.normalize_doi(e.get('doi'), preferred_publication_id=publication_id)
                 else:
                     src = e.get('_entry') or e
-                    doi = feeds_mod.extract_and_normalize_doi(src) if src else None
+                    doi = feeds_mod.extract_and_normalize_doi(src, preferred_publication_id=publication_id) if src else None
             except Exception:
                 doi = None
 
@@ -117,12 +117,37 @@ def crossref_postprocessor_db(conn, feed_key: str, entries, session=None, public
             except Exception:
                 pass
 
-            # Avoid repeated network lookups when article exists
+            # Avoid repeated network lookups when article exists. If the
+            # article already has Crossref-derived metadata (raw, authors,
+            # and abstract) skip it. If some pieces are missing, perform a
+            # network lookup (do not pass the DB conn to force fetching).
             cr = None
             try:
                 if eddb.article_exists(conn, doi):
-                    cr = eddb.get_article_metadata(conn, doi) or None
+                    existing = eddb.get_article_metadata(conn, doi) or {}
+                    # Determine if we should skip based on check_fields or default set
+                    if check_fields and isinstance(check_fields, (list, tuple)) and len(check_fields) > 0:
+                        all_present = True
+                        for f in check_fields:
+                            if not existing.get(f):
+                                all_present = False
+                                break
+                    else:
+                        # default behavior: require raw, authors, and abstract
+                        all_present = bool(existing.get('raw')) and bool(existing.get('authors')) and bool(existing.get('abstract'))
+
+                    if all_present and not force:
+                        # nothing to do for this DOI
+                        continue
+
+                    # Otherwise, fetch from Crossref (force network fetch)
+                    try:
+                        cr = crossref_mod.fetch_crossref_metadata(doi)
+                    except Exception:
+                        cr = None
                 else:
+                    # No article row exists yet; use fetcher that may avoid
+                    # redundant work by checking DB when supported.
                     cr = crossref_mod.fetch_crossref_metadata(doi, conn=conn)
             except Exception:
                 try:

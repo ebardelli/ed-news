@@ -163,7 +163,7 @@ def title_suitable_for_crossref_lookup(title: str) -> bool:
     return True
 
 
-def normalize_doi(doi: str) -> str | None:
+def normalize_doi(doi: str, preferred_publication_id: str | None = None) -> str | None:
     """Normalize and canonicalize a DOI-like string.
 
     Strips common URI prefixes, trailing punctuation and returns the core DOI
@@ -188,7 +188,7 @@ def normalize_doi(doi: str) -> str | None:
         return core.lower()
     if not re.search(r"10\.\d{4,9}/", doi) and "/" not in doi and title_suitable_for_crossref_lookup(doi):
         try:
-            found = crossref.query_crossref_doi_by_title(doi)
+            found = crossref.query_crossref_doi_by_title(doi, preferred_publication_id=preferred_publication_id)
             if found:
                 m2 = re.search(r"(10\.\d{4,9}/\S+)", found)
                 if m2:
@@ -266,6 +266,18 @@ def extract_doi_from_entry(entry) -> str | None:
         m = re.search(r"(10\.\d{4,9}/[^\s'\"<>]+)", t)
         if m:
             return normalize_doi(m.group(1))
+    return None
+
+
+def extract_and_normalize_doi(entry, preferred_publication_id: str | None = None) -> str | None:
+    """Try to extract a DOI from an entry and normalize it.
+
+    Accepts an optional preferred_publication_id used for title lookups when
+    the entry text looks like a title rather than a DOI.
+    """
+    doi = extract_doi_from_entry(entry)
+    if doi:
+        return normalize_doi(doi, preferred_publication_id=preferred_publication_id)
     return None
 
 
