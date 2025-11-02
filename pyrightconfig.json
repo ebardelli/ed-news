@@ -1,0 +1,10 @@
+{
+  "include": ["."],
+  "executionEnvironments": [
+    {
+      "root": "."
+    }
+  ],
+  "venvPath": "./.venv",
+  "reportMissingTypeStubs": false
+}

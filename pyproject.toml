@@ -33,3 +33,15 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 # Explicitly restrict package discovery to the actual Python package(s)
 packages = { find = { include = ["ednews"] } }
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",  # Ignore all DeprecationWarnings
+    "ignore:.*U.*mode is deprecated:DeprecationWarning", # Ignore specific DeprecationWarning
+    "error::RuntimeWarning", # Convert RuntimeWarnings into errors
+]
