@@ -186,7 +186,29 @@ def cmd_fetch(args: Any) -> None:
                             post_db = getattr(proc_mod, f"{name}_postprocessor_db", None)
                             if post_db:
                                 try:
-                                    post_db(conn, res.get("key"), res.get("entries"), session=session, publication_id=res.get("publication_id"), issn=res.get("_feed_issn"))
+                                    # Instead of passing the raw preprocessor entries, query the
+                                    # `items` table and pass rows in the same shape as
+                                    # `cmd_postprocess` does. This ensures DB-level
+                                    # postprocessors operate on the canonical `items`
+                                    # representation and behave the same when invoked
+                                    # from fetch or via the postprocess CLI.
+                                    cur = conn.cursor()
+                                    cur.execute(
+                                        "SELECT guid, link, title, published, fetched_at, doi FROM items WHERE feed_id = ? ORDER BY COALESCE(published, fetched_at) DESC LIMIT 2000",
+                                        (res.get("key"),),
+                                    )
+                                    rows = cur.fetchall()
+                                    entries_items = []
+                                    for r in rows:
+                                        entries_items.append({
+                                            'guid': r[0],
+                                            'link': r[1],
+                                            'title': r[2],
+                                            'published': r[3],
+                                            '_fetched_at': r[4],
+                                            'doi': r[5] if len(r) > 5 else None,
+                                        })
+                                    post_db(conn, res.get("key"), entries_items, session=session, publication_id=res.get("publication_id"), issn=res.get("_feed_issn"))
                                 except Exception:
                                     logger.exception("postprocessor_db %s failed for %s", name, res.get("key"))
                             else:

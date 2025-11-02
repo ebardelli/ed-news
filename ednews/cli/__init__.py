@@ -27,6 +27,7 @@ from .manage_db import (
 )
 from .serve import cmd_serve
 from .postprocess import cmd_postprocess
+from .common import normalize_cli_date
 
 logger = logging.getLogger("ednews.cli")
 
@@ -164,4 +165,4 @@ def run() -> None:
     args.func(args)
 
 
-__all__ = ["run"]
+__all__ = ["run", "normalize_cli_date"]
