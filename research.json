@@ -300,6 +300,7 @@
       "title": "Education Finance and Policy",
       "link": "https://www.mitpressjournals.org/loi/edfp",
       "feed": "https://direct.mit.edu/rss/site_1000039/1000022.xml",
+      "publication_id": "10.1162/edfp",
       "issn": "1557-3060",
       "processor": {"pre": "rss", "post": "crossref"}
     },
