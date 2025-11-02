@@ -60,4 +60,5 @@ FEED_TITLE_HEADLINES = "Latest Education Headlines"
 # trimmed, lowercased title string. Add additional blacklist titles here.
 TITLE_FILTERS = [
 	"editorial board",
+	"editorial announcement",
 ]

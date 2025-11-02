@@ -8,6 +8,8 @@ def cmd_manage_db_cleanup(args):
     from ..db import manage_db
     conn = get_conn()
     started, run_id = start_maintenance_run(conn, "cleanup-empty-articles", {"args": vars(args)})
+    status = "failed"
+    details = {}
     try:
         if getattr(args, 'dry_run', False):
             cur = conn.cursor()
@@ -51,6 +53,8 @@ def cmd_manage_db_cleanup_filtered_title(args):
     from ..db import manage_db
     conn = get_conn()
     started, run_id = start_maintenance_run(conn, "cleanup-filtered-title", {"args": vars(args)})
+    status = "failed"
+    details = {}
     try:
         filters = None
         if getattr(args, 'filter', None):
@@ -81,6 +85,8 @@ def cmd_manage_db_vacuum(args):
     from ..db import manage_db
     conn = get_conn()
     started, run_id = start_maintenance_run(conn, "vacuum", {})
+    status = "failed"
+    details = {}
     try:
         ok = manage_db.vacuum_db(conn)
         print("vacuum: ok" if ok else "vacuum: failed")
@@ -99,6 +105,8 @@ def cmd_manage_db_migrate(args):
     from ..db import manage_db
     conn = get_conn()
     started, run_id = start_maintenance_run(conn, "migrate", {})
+    status = "failed"
+    details = {}
     try:
         ok = manage_db.migrate_db(conn)
         print("migrate: ok" if ok else "migrate: failed")
@@ -122,6 +130,8 @@ def cmd_manage_db_rematch(args):
 
     conn = get_conn()
     started, run_id = start_maintenance_run(conn, "rematch-dois", {"args": vars(args)})
+    status = "failed"
+    details = {}
     try:
         res = manage_db.rematch_publication_dois(
             conn,
@@ -135,7 +145,9 @@ def cmd_manage_db_rematch(args):
         if getattr(args, 'dry_run', False):
             print(f"dry-run: would clear DOIs for feeds: {', '.join(res.get('feeds', {}).keys())}")
         else:
-            print(f"cleared {res.get('total_cleared', 0)} item DOIs; postprocessor updates: {res.get('postprocessor_results', {})}; removed_orphan_articles={res.get('removed_orphan_articles', 0)}")
+            print(
+                f"cleared {res.get('total_cleared', 0)} item DOIs; postprocessor updates: {res.get('postprocessor_results', {})}; removed_orphan_articles={res.get('removed_orphan_articles', 0)}; articles_created={res.get('articles_created_total', 0)}; articles_updated={res.get('articles_updated_total', 0)}"
+            )
         status = "ok"
         details = res
     except Exception as e:
@@ -156,6 +168,8 @@ def cmd_manage_db_sync_publications(args):
         return
     conn = get_conn()
     started, run_id = start_maintenance_run(conn, "sync-publications", {"feed_count": len(feeds_list)})
+    status = "failed"
+    details = {}
     try:
         count = manage_db.sync_publications_from_feeds(conn, feeds_list)
         print(f"synced {count} publications")

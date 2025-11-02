@@ -303,6 +303,84 @@ def cleanup_filtered_titles(conn: sqlite3.Connection, filters: list | None = Non
         return 0
 
 
+def sync_articles_from_items(conn: sqlite3.Connection, feed_keys: list | None = None, publication_id: str | None = None, dry_run: bool = False) -> dict:
+    """Ensure articles exist for DOIs referenced by items.
+
+    For each feed in feed_keys (or all known feeds/publications if omitted),
+    find distinct DOIs present on items and ensure an article row exists
+    by calling `ensure_article_row`. Returns a summary dict with counts per
+    feed and totals. If `dry_run` is True, no DB writes are performed; the
+    function only returns what it would do.
+    """
+    results = {"feeds": {}, "total_created": 0, "total_existing": 0}
+    cur = conn.cursor()
+
+    keys: list[str] = []
+    if feed_keys:
+        keys = [k for k in feed_keys if k]
+
+    if publication_id and not keys:
+        try:
+            cur.execute("SELECT feed_id FROM publications WHERE publication_id = ?", (publication_id,))
+            rows = cur.fetchall()
+            keys = [r[0] for r in rows if r and r[0]]
+        except Exception:
+            logger.exception("Failed to lookup feeds for publication_id=%s", publication_id)
+
+    if not keys:
+        try:
+            cur.execute("SELECT DISTINCT feed_id FROM publications WHERE COALESCE(feed_id, '') != ''")
+            rows = cur.fetchall()
+            keys = [r[0] for r in rows if r and r[0]]
+        except Exception:
+            keys = []
+
+        if not keys:
+            try:
+                cur.execute("SELECT DISTINCT feed_id FROM items WHERE COALESCE(feed_id, '') != ''")
+                rows = cur.fetchall()
+                keys = [r[0] for r in rows if r and r[0]]
+            except Exception:
+                keys = []
+
+    if not keys:
+        return results
+
+    from . import ensure_article_row
+
+    for fk in keys:
+        created = 0
+        existing = 0
+        try:
+            cur.execute("SELECT DISTINCT doi, title FROM items WHERE feed_id = ? AND COALESCE(doi,'') != ''", (fk,))
+            rows = cur.fetchall()
+            for doi, title in rows:
+                if not doi:
+                    continue
+                try:
+                    # check existing
+                    cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
+                    if cur.fetchone():
+                        existing += 1
+                        continue
+                    if dry_run:
+                        created += 1
+                        continue
+                    aid = ensure_article_row(conn, doi, title=title, feed_id=fk, publication_id=publication_id)
+                    if aid:
+                        created += 1
+                except Exception:
+                    logger.exception("Failed to ensure article for doi=%s feed=%s", doi, fk)
+            results['feeds'][fk] = {'created': created, 'existing': existing}
+            results['total_created'] += created
+            results['total_existing'] += existing
+        except Exception:
+            logger.exception("Failed to sync articles for feed=%s", fk)
+            continue
+
+    return results
+
+
 def rematch_publication_dois(conn: sqlite3.Connection, publication_id: str | None = None, feed_keys: list | None = None, dry_run: bool = False, remove_orphan_articles: bool = False, only_wrong: bool = False, retry_limit: int | None = 3) -> dict:
     """Clear DOI assignments for items belonging to a publication or feed(s) and re-run Crossref postprocessor.
 
@@ -317,6 +395,9 @@ def rematch_publication_dois(conn: sqlite3.Connection, publication_id: str | Non
     """
     cur = conn.cursor()
     results = {"feeds": {}, "total_cleared": 0, "postprocessor_results": {}, "removed_orphan_articles": 0}
+    # Track totals for article row changes made during rematch
+    results['articles_created_total'] = 0
+    results['articles_updated_total'] = 0
     # Resolve target feed keys
     keys: list[str] = []
     if feed_keys:
@@ -556,6 +637,58 @@ def rematch_publication_dois(conn: sqlite3.Connection, publication_id: str | Non
                     logger.exception("Failed to clear articles publication_id for feed %s", fk)
             results['feeds'][fk]['articles_publication_cleared'] = articles_pub_cleared
 
+            # Also clear the DOI value on any article rows for the wrong DOIs
+            # so that the postprocessor can create/update articles with the
+            # correct DOI without conflicting with the old rows. Setting doi
+            # to NULL preserves the article row (and avoids violating the
+            # UNIQUE(doi) constraint) while allowing a new row with the new
+            # DOI to be upserted.
+            articles_doi_cleared = 0
+            if wrong_dois:
+                try:
+                    for od in list(wrong_dois):
+                        if not od:
+                            continue
+                        try:
+                            cur.execute("UPDATE articles SET doi = NULL WHERE doi = ?", (od,))
+                            n = cur.rowcount if hasattr(cur, 'rowcount') else None
+                            articles_doi_cleared += n or 0
+                        except Exception:
+                            logger.exception("Failed to clear doi for article doi=%s", od)
+                    if articles_doi_cleared:
+                        conn.commit()
+                except Exception:
+                    logger.exception("Failed to clear articles doi for feed %s", fk)
+            results['feeds'][fk]['articles_doi_cleared'] = articles_doi_cleared
+
+            # Additionally, clear DOIs on article rows for this feed that are
+            # not referenced by any items for the same feed. This handles the
+            # case where an old/wrong article row remains (wrong DOI) even
+            # though items have the correct DOI — such orphan/wrong article
+            # rows would otherwise persist and cause inconsistencies.
+            feed_orphan_cleared = 0
+            try:
+                # Find article DOIs for rows attached to this feed that are not
+                # present in items for the feed.
+                cur.execute(
+                    "SELECT doi FROM articles WHERE feed_id = ? AND COALESCE(doi, '') != '' AND doi NOT IN (SELECT doi FROM items WHERE feed_id = ? AND COALESCE(doi, '') != '')",
+                    (fk, fk),
+                )
+                orphan_rows = cur.fetchall()
+                orphan_dois = [r[0] for r in orphan_rows if r and r[0]]
+                if orphan_dois:
+                    for od in orphan_dois:
+                        try:
+                            cur.execute("UPDATE articles SET doi = NULL WHERE doi = ?", (od,))
+                            n = cur.rowcount if hasattr(cur, 'rowcount') else None
+                            feed_orphan_cleared += n or 0
+                        except Exception:
+                            logger.exception("Failed to clear orphan article doi=%s for feed=%s", od, fk)
+                    conn.commit()
+            except Exception:
+                logger.exception("Failed to clear orphan article DOIs for feed %s", fk)
+            results['feeds'][fk]['feed_orphan_articles_cleared'] = feed_orphan_cleared
+
             # Re-run crossref postprocessor for this feed if available
             updated = 0
             if post_fn:
@@ -578,6 +711,7 @@ def rematch_publication_dois(conn: sqlite3.Connection, publication_id: str | Non
                     for r in rows:
                         entries.append({'guid': r[0], 'link': r[1], 'title': r[2], 'published': r[3], '_fetched_at': r[4], 'doi': r[5] if len(r) > 5 else None})
 
+                post_map = {}
                 try:
                     # Log diagnostic: how many entries and sample guids
                     try:
@@ -640,6 +774,63 @@ def rematch_publication_dois(conn: sqlite3.Connection, publication_id: str | Non
                                 logger.exception("Failed to update rematch_attempts after postprocessor for feed=%s", fk)
                     except Exception:
                         logger.exception("Failed to re-query items after postprocessor for feed=%s", fk)
+
+                    # Ensure article rows exist and are linked to the DOIs now present
+                    # on items. This makes the rematch deterministic: after the
+                    # postprocessor runs, any item that has a DOI should have an
+                    # article row for that DOI with feed/publication metadata set
+                    # where possible.
+                    try:
+                        from ednews import db as eddb
+                        # Use the post_map we just built (if present)
+                        if post_map:
+                            created = 0
+                            updated = 0
+                            for g, d in list(post_map.items()):
+                                if not d:
+                                    continue
+                                try:
+                                    # fetch matching item metadata to populate article row
+                                    cur.execute("SELECT title, link, published FROM items WHERE feed_id = ? AND guid = ? LIMIT 1", (fk, g))
+                                    itrow = cur.fetchone()
+                                    title_val = itrow[0] if itrow and len(itrow) > 0 else None
+
+                                    # Check if an article already exists for this DOI
+                                    cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (d,))
+                                    existing = cur.fetchone()
+
+                                    # Ensure an articles row exists for this DOI (INSERT OR IGNORE)
+                                    try:
+                                        eddb.ensure_article_row(conn, d, title=title_val, feed_id=fk, publication_id=expected_pub)
+                                    except Exception:
+                                        logger.exception("Failed to ensure article row for doi=%s", d)
+
+                                    # If it did not exist before but exists now, count as created
+                                    try:
+                                        cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (d,))
+                                        aid_row = cur.fetchone()
+                                        if aid_row and not existing:
+                                            created += 1
+                                    except Exception:
+                                        logger.exception("Failed to check created article id for doi=%s", d)
+
+                                    # Ensure feed_id/publication_id are set if missing and count updates
+                                    try:
+                                        cur.execute("UPDATE articles SET feed_id = COALESCE(?, feed_id), publication_id = COALESCE(?, publication_id) WHERE doi = ?", (fk, expected_pub, d))
+                                        n = cur.rowcount if hasattr(cur, 'rowcount') else None
+                                        if n and n > 0:
+                                            updated += n
+                                            conn.commit()
+                                    except Exception:
+                                        logger.exception("Failed to update articles feed/publication for doi=%s", d)
+                                except Exception:
+                                    logger.exception("Failed to sync article for guid=%s feed=%s", g, fk)
+                            results['feeds'][fk]['articles_created'] = created
+                            results['feeds'][fk]['articles_updated'] = updated
+                            results['articles_created_total'] += created
+                            results['articles_updated_total'] += updated
+                    except Exception:
+                        logger.exception("Failed to synchronize articles from items after postprocessor for feed=%s", fk)
                 except Exception:
                     logger.exception("crossref_postprocessor_db failed for feed %s", fk)
             results['postprocessor_results'][fk] = updated or 0

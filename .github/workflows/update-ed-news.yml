@@ -55,8 +55,8 @@ jobs:
         run: |
           uv sync
 
-          uv run python main.py manage-db run-all --older-than-days 7
           uv run ednews manage-db rematch-dois --only-wrong
+          uv run python main.py manage-db run-all --older-than-days 7
 
           uv run python main.py fetch
 
