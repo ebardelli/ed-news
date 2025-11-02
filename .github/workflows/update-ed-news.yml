@@ -54,10 +54,15 @@ jobs:
       - name: Fetch and build website
         run: |
           uv sync
+
           uv run python main.py manage-db run-all --older-than-days 7
+          uv run ednews manage-db rematch-dois --only-wrong
+
           uv run python main.py fetch
+
           uv run python main.py issn-lookup --date-filter-type created --from-date '2025-01-01' --per-journal 100
           uv run ednews postprocess --processor crossref
+          
           uv run python main.py embed
           uv run python main.py build
 

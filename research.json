@@ -115,6 +115,7 @@
       "title": "Journal for Research in Mathematics Education",
       "link": "https://www.nctm.org/publications/journal-for-research-in-mathematics-education/",
       "feed": "https://pubs.nctm.org/journalissuetocrss/journals/jrme/jrme-overview.xml",
+      "publication_id": "10.5951/jresematheduc",
       "issn": "0021-8251",
       "processor": {"pre": "rss", "post": "crossref"}
     },

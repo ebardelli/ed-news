@@ -55,12 +55,68 @@ def _query_crossref_doi_by_title_uncached(title: str, preferred_publication_id: 
         items = data.get("message", {}).get("items", []) if isinstance(data, dict) else []
         if not items:
             return None
+        def _score_title_match(query: str, candidate: str) -> int:
+            """Simple token-overlap score between query and candidate titles.
+
+            Higher is better. Uses lowercase tokens, strips punctuation.
+            """
+            if not query or not candidate:
+                return 0
+            # Normalize: lowercase, replace non-word with space, split
+            qtok = re.sub(r"[^\w]+", " ", query.lower()).split()
+            ctok = re.sub(r"[^\w]+", " ", candidate.lower()).split()
+            if not qtok or not ctok:
+                return 0
+            s = 0
+            cset = set(ctok)
+            for t in qtok:
+                if t in cset:
+                    s += 1
+            return s
+
         if preferred_publication_id:
             pref = preferred_publication_id.rstrip().lower()
-            for it in items:
-                d = (it.get("DOI") or "").lower()
+            # filter items to those whose DOI starts with the preferred prefix
+            def _doi_matches_pref(d: str, pref: str) -> bool:
+                if not d:
+                    return False
+                d = d.lower()
                 if d.startswith(pref):
-                    logger.info("CrossRef title lookup: selected DOI %s matching preferred_publication_id %s for title: %s", d, pref, title)
+                    return True
+                # If pref looks like a short identifier (no dot or no leading '10.'),
+                # also check the DOI suffix (the part after '/') for a prefix match.
+                if '/' in d:
+                    try:
+                        suffix = d.split('/', 1)[1]
+                        if suffix.startswith(pref):
+                            return True
+                    except Exception:
+                        pass
+                # As a last resort, check for '/{pref}' followed by a non-alnum or end
+                try:
+                    if re.search(r'/' + re.escape(pref) + r'(?:[^a-z0-9]|$)', d):
+                        return True
+                except Exception:
+                    pass
+                return False
+
+            pref_items = [it for it in items if _doi_matches_pref((it.get("DOI") or ""), pref)]
+            if pref_items:
+                # choose the pref_item whose title best matches the query title
+                best = None
+                best_score = -1
+                for it in pref_items:
+                    cand_title = it.get("title") or (it.get("short-title") if it.get("short-title") else None) or ""
+                    # Crossref sometimes stores title as a list
+                    if isinstance(cand_title, list):
+                        cand_title = " ".join([str(x) for x in cand_title if x])
+                    score = _score_title_match(title, cand_title)
+                    if score > best_score:
+                        best_score = score
+                        best = it
+                if best is not None:
+                    d = (best.get("DOI") or "").lower()
+                    logger.info("CrossRef title lookup: selected DOI %s matching preferred_publication_id %s for title: %s (score=%s)", d, pref, title, best_score)
                     return d
         doi = items[0].get("DOI")
         if doi:
@@ -79,7 +135,7 @@ def query_crossref_doi_by_title(title: str, preferred_publication_id: str | None
     return _query_crossref_doi_by_title_uncached(title, preferred_publication_id, timeout)
 
 
-def fetch_crossref_metadata(doi: str, timeout: int = 10, conn: object | None = None) -> dict | None:
+def fetch_crossref_metadata(doi: str, timeout: int = 10, conn: object | None = None, force: bool = False) -> dict | None:
     """Fetch Crossref metadata for a DOI, preferring JSON and falling back to XML.
 
     The function will attempt to fetch JSON from the Crossref REST API. If
@@ -103,7 +159,9 @@ def fetch_crossref_metadata(doi: str, timeout: int = 10, conn: object | None = N
         return None
     # If this DOI already exists in the local articles DB, skip the
     # Crossref network lookup to avoid unnecessary API requests. Import
-    # and open the DB connection lazily to avoid circular imports.
+    # and open the DB connection lazily to avoid circular imports. The
+    # `force` flag can be used to bypass this short-circuit when callers
+    # explicitly want to re-fetch metadata (e.g. during rematching).
     try:
         # If a conn is provided, use it; otherwise try to open the configured DB
         # path lazily. Use ednews.db helpers when available.
@@ -114,7 +172,7 @@ def fetch_crossref_metadata(doi: str, timeout: int = 10, conn: object | None = N
                 import sqlite3
                 conn_local = sqlite3.connect(str(_cfg.DB_PATH))
                 try:
-                    if article_exists(conn_local, doi):
+                    if (not force) and article_exists(conn_local, doi):
                         logger.info("Skipping CrossRef lookup for DOI %s because it already exists in DB", doi)
                         try:
                             conn_local.close()
@@ -131,7 +189,7 @@ def fetch_crossref_metadata(doi: str, timeout: int = 10, conn: object | None = N
                 pass
         else:
             try:
-                if article_exists(conn, doi):
+                if (not force) and article_exists(conn, doi):
                     logger.info("Skipping CrossRef lookup for DOI %s because it already exists in DB", doi)
                     return None
             except Exception:

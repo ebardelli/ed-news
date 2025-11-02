@@ -43,7 +43,7 @@ def get_connection(path: str | None = None):
 # module in sys.modules so older `import ednews.db.manage_db` code continues to work.
 try:
     from .schema import init_db as _init_db, create_combined_view as _create_combined_view
-    from .maintenance import sync_publications_from_feeds as _sync_publications_from_feeds, fetch_latest_journal_works as _fetch_latest_journal_works, vacuum_db as _vacuum_db, log_maintenance_run as _log_maintenance_run, cleanup_empty_articles as _cleanup_empty_articles, cleanup_filtered_titles as _cleanup_filtered_titles
+    from .maintenance import sync_publications_from_feeds as _sync_publications_from_feeds, fetch_latest_journal_works as _fetch_latest_journal_works, vacuum_db as _vacuum_db, log_maintenance_run as _log_maintenance_run, cleanup_empty_articles as _cleanup_empty_articles, cleanup_filtered_titles as _cleanup_filtered_titles, rematch_publication_dois as _rematch_publication_dois
     from .migrations import migrate_db as _migrate_db, migrate_add_items_url_hash as _migrate_add_items_url_hash
 
     def init_db(conn: sqlite3.Connection):
@@ -68,6 +68,7 @@ try:
     log_maintenance_run = _log_maintenance_run
     cleanup_empty_articles = _cleanup_empty_articles
     cleanup_filtered_titles = _cleanup_filtered_titles
+    rematch_publication_dois = _rematch_publication_dois
 
     # Create a synthetic submodule `ednews.db.manage_db` so code that does
     # `import ednews.db.manage_db` or `from ednews.db import manage_db` keeps working.
@@ -88,6 +89,7 @@ try:
             manage_mod.log_maintenance_run = _log_maintenance_run
             manage_mod.cleanup_empty_articles = _cleanup_empty_articles
             manage_mod.cleanup_filtered_titles = _cleanup_filtered_titles
+            manage_mod.rematch_publication_dois = _rematch_publication_dois
             sys.modules[mod_name] = manage_mod
     except Exception:
         logger.exception("Failed to synthesize ednews.db.manage_db module for backwards compatibility")
@@ -463,24 +465,29 @@ def sync_publications_from_feeds(conn, feeds_list) -> int:
 
     Returns the number of feeds successfully upserted.
     """
-    if not feeds_list:
-        return 0
-    count = 0
-    for item in feeds_list:
-        try:
-            # item shape: (key, title, url, publication_id, issn)
-            key = item[0] if len(item) > 0 else None
-            title = item[1] if len(item) > 1 else None
-            pub_id = item[3] if len(item) > 3 else None
-            issn = item[4] if len(item) > 4 else None
-            ok = upsert_publication(conn, key, pub_id, title, issn)
-            if ok:
-                count += 1
-        except Exception:
-            logger.exception("Failed to sync publication for feed item: %s", item)
-            continue
-    logger.info("Synchronized %d publications from feeds", count)
-    return count
+    # Delegate to the maintenance implementation to avoid duplicating logic
+    try:
+        from .maintenance import sync_publications_from_feeds as _sync
+        return _sync(conn, feeds_list)
+    except Exception:
+        logger.exception("Falling back to local sync_publications_from_feeds due to import error")
+        if not feeds_list:
+            return 0
+        count = 0
+        for item in feeds_list:
+            try:
+                key = item[0] if len(item) > 0 else None
+                title = item[1] if len(item) > 1 else None
+                pub_id = item[3] if len(item) > 3 else None
+                issn = item[4] if len(item) > 4 else None
+                ok = upsert_publication(conn, key, pub_id, title, issn)
+                if ok:
+                    count += 1
+            except Exception:
+                logger.exception("Failed to sync publication for feed item: %s", item)
+                continue
+        logger.info("Synchronized %d publications from feeds", count)
+        return count
 
 
 def upsert_news_item(conn: sqlite3.Connection, source: str, title: str | None, text: str | None, link: str | None, published: str | None = None, first_seen: str | None = None) -> int | bool:

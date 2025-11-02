@@ -140,15 +140,18 @@ def crossref_postprocessor_db(conn, feed_key: str, entries, session=None, public
                         # nothing to do for this DOI
                         continue
 
-                    # Otherwise, fetch from Crossref (force network fetch)
+                    # Otherwise, fetch from Crossref (force network fetch when requested)
                     try:
-                        cr = crossref_mod.fetch_crossref_metadata(doi)
+                        cr = crossref_mod.fetch_crossref_metadata(doi, conn=conn, force=force)
                     except Exception:
                         cr = None
                 else:
                     # No article row exists yet; use fetcher that may avoid
                     # redundant work by checking DB when supported.
-                    cr = crossref_mod.fetch_crossref_metadata(doi, conn=conn)
+                    try:
+                        cr = crossref_mod.fetch_crossref_metadata(doi, conn=conn, force=force)
+                    except Exception:
+                        cr = None
             except Exception:
                 try:
                     cr = crossref_mod.fetch_crossref_metadata(doi)

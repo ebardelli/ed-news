@@ -597,6 +597,61 @@ def cmd_manage_db_migrate(args):
         conn.close()
 
 
+def cmd_manage_db_rematch(args):
+    """CLI handler to clear item DOIs for a publication or feed keys and re-run Crossref matching."""
+    from ednews.db import manage_db
+    from ednews import feeds
+
+    # Determine targets
+    feed_keys = list(args.feed) if getattr(args, 'feed', None) else None
+    publication_id = getattr(args, 'publication_id', None)
+
+    # If publication_id provided but no feed keys, the helper will resolve feeds
+    conn = sqlite3.connect(str(config.DB_PATH))
+    started = None
+    run_id = None
+    try:
+        from datetime import datetime, timezone
+
+        started = datetime.now(timezone.utc).isoformat()
+        run_id = manage_db.log_maintenance_run(conn, "rematch-dois", "started", started, None, None, {"args": vars(args)})
+
+        res = manage_db.rematch_publication_dois(
+            conn,
+            publication_id=publication_id,
+            feed_keys=feed_keys,
+            dry_run=getattr(args, 'dry_run', False),
+            remove_orphan_articles=getattr(args, 'remove_orphan_articles', False),
+            only_wrong=getattr(args, 'only_wrong', False),
+        )
+
+        # Print concise summary
+        if getattr(args, 'dry_run', False):
+            print(f"dry-run: would clear DOIs for feeds: {', '.join(res.get('feeds', {}).keys())}")
+        else:
+            print(f"cleared {res.get('total_cleared', 0)} item DOIs; postprocessor updates: {res.get('postprocessor_results', {})}; removed_orphan_articles={res.get('removed_orphan_articles', 0)}")
+        status = "ok"
+        details = res
+    except Exception as e:
+        status = "failed"
+        details = {"error": str(e)}
+        raise
+    finally:
+        try:
+            from datetime import datetime, timezone
+
+            finished = datetime.now(timezone.utc).isoformat()
+            duration = None
+            if started:
+                from datetime import datetime as _dt
+                duration = (_dt.fromisoformat(finished) - _dt.fromisoformat(started)).total_seconds()
+            if run_id and conn:
+                manage_db.log_maintenance_run(conn, "rematch-dois", status, started, finished, duration, details)
+        except Exception:
+            pass
+        conn.close()
+
+
 def cmd_manage_db_sync_publications(args):
     from ednews.db import manage_db
     from ednews import feeds
@@ -957,6 +1012,14 @@ def run():
 
     p_sync = manage_sub.add_parser("sync-publications", help="Sync publications table from feeds list")
     p_sync.set_defaults(func=lambda args: cmd_manage_db_sync_publications(args))
+
+    p_rematch = manage_sub.add_parser("rematch-dois", help="Clear DOIs for a publication or feeds and re-run Crossref matching")
+    p_rematch.add_argument("--publication-id", help="Publication ID to target (will resolve feeds from publications table)")
+    p_rematch.add_argument("--feed", action="append", help="Feed key to target (repeatable). If omitted, publication-id will be used to resolve feeds")
+    p_rematch.add_argument("--dry-run", action="store_true", help="Do not modify DB; only report what would be done")
+    p_rematch.add_argument("--remove-orphan-articles", action="store_true", help="Remove articles for the publication that are no longer referenced by any items")
+    p_rematch.add_argument("--only-wrong", action="store_true", help="Only operate on items whose DOI is missing or whose DOI does not match the configured publication_id")
+    p_rematch.set_defaults(func=lambda args: cmd_manage_db_rematch(args))
 
     p_runall = manage_sub.add_parser("run-all", help="Run migrations, sync publications, cleanup, and vacuum in sequence")
     p_runall.add_argument("--older-than-days", type=int, default=None, help="Pass-through to cleanup step")
