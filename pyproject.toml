@@ -3,6 +3,8 @@ name = "ed-news"
 version = "2025.11.01"
 description = "A static site generator and feed builder for news aggregation."
 readme = "README.md"
+license = { file = "LICENSE", text = "MIT" }
+
 requires-python = ">=3.13"
 dependencies = [
     "beautifulsoup4>=4.14.2",
