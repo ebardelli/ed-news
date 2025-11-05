@@ -170,9 +170,12 @@ def edworkingpapers_postprocessor_db(conn, feed_key: str, entries, session=None,
                         for el in soup.select('[class*=author]'):
                             txt = el.get_text(' ', strip=True)
                             if txt:
-                                authors_list.append(txt)
+                                authors_list.append(txt.strip())
                     if authors_list:
-                        authors = ', '.join(authors_list)
+                        # Normalize and remove any empty fragments
+                        cleaned = [a.strip() for a in authors_list if a and a.strip()]
+                        if cleaned:
+                            authors = ', '.join(cleaned)
             except Exception:
                 pass
 
@@ -275,6 +278,32 @@ def edworkingpapers_postprocessor_db(conn, feed_key: str, entries, session=None,
                             published = m2.get('content')
             except Exception:
                 pass
+
+            # Normalize published to date-only (YYYY-MM-DD) when possible.
+            if published:
+                try:
+                    # Try ISO formats first; handle trailing Z (UTC) by replacing with +00:00
+                    from datetime import datetime
+                    s = str(published).strip()
+                    try:
+                        if s.endswith('Z'):
+                            dt = datetime.fromisoformat(s.replace('Z', '+00:00'))
+                        else:
+                            dt = datetime.fromisoformat(s)
+                        published = dt.date().isoformat()
+                    except Exception:
+                        # Fallback to email.utils parsedate_to_datetime for RFC dates
+                        try:
+                            from email.utils import parsedate_to_datetime
+
+                            dt = parsedate_to_datetime(s)
+                            published = dt.date().isoformat()
+                        except Exception:
+                            # As a last resort, leave published as-is (string)
+                            published = s
+                except Exception:
+                    # Keep original if normalization fails
+                    pass
 
             # If DOI wasn't found, as a last resort construct from publication_id and suffix
             if not doi and publication_id and suffix:

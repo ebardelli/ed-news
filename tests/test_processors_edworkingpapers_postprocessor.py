@@ -47,7 +47,8 @@ def test_edworkingpapers_postprocessor_db_fetches_and_upserts_article():
     assert doi == '10.26300/nvmr-5e94'
     assert 'Alejandro J. Ganimian' in authors
     assert 'Andrew D. Ho' in authors
-    assert published == '2025-11-01T12:00:00Z'
+    # The postprocessor normalizes published to a date-only ISO string
+    assert published == '2025-11-01'
     # The full abstract should have been extracted from the article page
     cur.execute("SELECT abstract FROM articles WHERE feed_id = 'edwp'")
     abstr = cur.fetchone()[0]
