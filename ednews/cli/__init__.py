@@ -149,7 +149,7 @@ def run() -> None:
     p_serve.set_defaults(func=cmd_serve)
 
     p_post = sub.add_parser("postprocess", help="Run a DB-level postprocessor (e.g. crossref) for feeds")
-    p_post.add_argument("--processor", required=True, help="Name of the processor to run (e.g. crossref)")
+    p_post.add_argument("--processor", required=False, help="Name of the processor to run (e.g. crossref). If omitted, per-feed configured processors will be used when present; crossref is used as a final fallback.")
     p_post.add_argument("--feed", action="append", help="Feed key to limit processing to (repeatable). If omitted, feeds are auto-detected from feeds list")
     p_post.add_argument("--only-missing", action="store_true", help="Only include items where the specified field is missing/empty (default: doi)")
     p_post.add_argument("--missing-field", type=str, default="doi", help="Field to check for missingness when --only-missing is set (default: doi)")

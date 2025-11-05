@@ -695,9 +695,9 @@ def rematch_publication_dois(conn: sqlite3.Connection, publication_id: str | Non
                 logger.exception("Failed to clear orphan article DOIs for feed %s", fk)
             results['feeds'][fk]['feed_orphan_articles_cleared'] = feed_orphan_cleared
 
-            # Resolve postprocessor for this feed: prefer a feed-configured
-            # postprocessor (e.g., `edworkingpapers_postprocessor_db`) and
-            # fall back to the crossref postprocessor when none found.
+            # Resolve postprocessor for this feed using the centralized helper.
+            # This prefers a feed-configured processor, otherwise falls back to
+            # crossref_postprocessor_db.
             updated = 0
             post_fn_for_feed = None
             try:
@@ -711,43 +711,11 @@ def rematch_publication_dois(conn: sqlite3.Connection, publication_id: str | Non
                     except Exception:
                         continue
 
-                post_names = []
-                if proc_config:
-                    if isinstance(proc_config, (list, tuple)):
-                        post_names = list(proc_config)
-                    elif isinstance(proc_config, dict):
-                        p = proc_config.get('post')
-                        if isinstance(p, (list, tuple)):
-                            post_names = list(p)
-                        elif isinstance(p, str):
-                            post_names = [p]
-                    elif isinstance(proc_config, str):
-                        post_names = [proc_config]
-
-                # Try to find a matching DB-level postprocessor in ednews.processors
-                if proc_mod and post_names:
-                    for name in post_names:
-                        if not name:
-                            continue
-                        fn = getattr(proc_mod, f"{name}_postprocessor_db", None)
-                        if fn:
-                            post_fn_for_feed = fn
-                            break
-                        # Try importing a module by that name as a fallback
-                        try:
-                            import importlib
-
-                            mod = importlib.import_module(name)
-                            fn = getattr(mod, f"{name}_postprocessor_db", None)
-                            if fn:
-                                post_fn_for_feed = fn
-                                break
-                        except Exception:
-                            continue
-
-                # Fallback to crossref_postprocessor_db if still not found
-                if not post_fn_for_feed and proc_mod:
-                    post_fn_for_feed = getattr(proc_mod, 'crossref_postprocessor_db', None)
+                if proc_mod and hasattr(proc_mod, 'resolve_postprocessor'):
+                    post_fn_for_feed = proc_mod.resolve_postprocessor(proc_config, preferred_proc_name=None)
+                else:
+                    # Fallback: try to use crossref from proc_mod if available
+                    post_fn_for_feed = getattr(proc_mod, 'crossref_postprocessor_db', None) if proc_mod else None
             except Exception:
                 post_fn_for_feed = getattr(proc_mod, 'crossref_postprocessor_db', None) if proc_mod else None
 

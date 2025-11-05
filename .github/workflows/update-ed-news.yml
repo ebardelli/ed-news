@@ -61,7 +61,7 @@ jobs:
           uv run python main.py fetch
 
           uv run python main.py issn-lookup --date-filter-type created --from-date '2025-01-01' --per-journal 100
-          uv run ednews postprocess --processor crossref
+          uv run ednews postprocess
           
           uv run python main.py embed
           uv run python main.py build

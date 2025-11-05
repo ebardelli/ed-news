@@ -9,12 +9,9 @@ def cmd_postprocess(args: Any) -> None:
     """Run a DB-level postprocessor for configured feeds or a specific feed list.
 
     Args:
-        args: argparse namespace with .processor (required), optional .feed, .only_missing, .missing_field, .force, .check_fields
+        args: argparse namespace with optional .processor, optional .feed, .only_missing, .missing_field, .force, .check_fields
     """
     proc_name = getattr(args, 'processor', None)
-    if not proc_name:
-        logger.error("No processor name provided")
-        return
 
     feeds_list = []
     try:
@@ -31,7 +28,10 @@ def cmd_postprocess(args: Any) -> None:
             title = item[1]
             publication_id = item[3] if len(item) > 3 else None
             issn = item[4] if len(item) > 4 else None
-            feed_map[key] = {'title': title, 'publication_id': publication_id, 'issn': issn}
+            # Keep the raw processor configuration (index 5) so we can
+            # prefer a feed-specific postprocessor when running the CLI.
+            proc_cfg = item[5] if len(item) > 5 else None
+            feed_map[key] = {'title': title, 'publication_id': publication_id, 'issn': issn, 'processor': proc_cfg}
 
     selected_feeds = getattr(args, 'feed', None) or list(feed_map.keys())
     if not selected_feeds:
@@ -42,12 +42,10 @@ def cmd_postprocess(args: Any) -> None:
     session = get_session()
     try:
         import importlib
-        import ednews.processors as proc_mod
-
-        post_fn = getattr(proc_mod, f"{proc_name}_postprocessor_db", None)
-        if not post_fn:
-            logger.error("Processor '%s' does not expose a %s_postprocessor_db callable", proc_name, proc_name)
-            return
+        try:
+            import ednews.processors as proc_mod
+        except Exception:
+            proc_mod = None
 
         cur = conn.cursor()
         force = getattr(args, 'force', False)
@@ -80,16 +78,33 @@ def cmd_postprocess(args: Any) -> None:
                     logger.info("No items found for feed %s; skipping", fk)
                     continue
 
-                logger.info("Running postprocessor %s for feed %s (items=%d)", proc_name, fk, len(entries))
+                # Resolve postprocessor for this feed via the shared helper
+                post_fn_for_feed = None
+                try:
+                    proc_config = feed_map.get(fk, {}).get('processor')
+                    if proc_mod and hasattr(proc_mod, 'resolve_postprocessor'):
+                        post_fn_for_feed = proc_mod.resolve_postprocessor(proc_config, preferred_proc_name=proc_name)
+                    else:
+                        # Fallback: try the proc_name from CLI
+                        if proc_name and proc_mod:
+                            post_fn_for_feed = getattr(proc_mod, f"{proc_name}_postprocessor_db", None)
+                except Exception:
+                    post_fn_for_feed = None
+
+                if not post_fn_for_feed:
+                    logger.error("No postprocessor available for feed %s (processor configured=%r, fallback processor=%r)", fk, feed_map.get(fk, {}).get('processor'), proc_name)
+                    continue
+
+                logger.info("Running postprocessor %s for feed %s (items=%d)", getattr(post_fn_for_feed, '__name__', proc_name), fk, len(entries))
                 try:
                     try:
-                        updated = post_fn(conn, fk, entries, session=session, publication_id=pub_id, issn=issn, force=force, check_fields=check_fields)
+                        updated = post_fn_for_feed(conn, fk, entries, session=session, publication_id=pub_id, issn=issn, force=force, check_fields=check_fields)
                     except TypeError:
-                        updated = post_fn(conn, fk, entries, session=session, publication_id=pub_id, issn=issn)
+                        updated = post_fn_for_feed(conn, fk, entries, session=session, publication_id=pub_id, issn=issn)
                     if isinstance(updated, int):
                         total_updated += updated
                 except Exception:
-                    logger.exception("Postprocessor %s failed for feed %s", proc_name, fk)
+                    logger.exception("Postprocessor failed for feed %s", fk)
             except Exception:
                 logger.exception("Failed to postprocess feed %s", fk)
 
