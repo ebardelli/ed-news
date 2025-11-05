@@ -51,7 +51,7 @@ ARTICLES_MAX_SAME_DATE_EXTRA = 20
 DEFAULT_MISSING_DATE = "2020-01-01"
 
 # RSS feed metadata defaults
-FEED_SITE_LINK = "https://ebardelli.com/ed-news/"
+FEED_SITE_LINK = "https://ed-news.ebardelli.com/"
 FEED_TITLE_COMBINED = "Latest Education News"
 FEED_TITLE_ARTICLES = "Latest Education Articles"
 FEED_TITLE_HEADLINES = "Latest Education Headlines"
@@ -61,4 +61,5 @@ FEED_TITLE_HEADLINES = "Latest Education Headlines"
 TITLE_FILTERS = [
 	"editorial board",
 	"editorial announcement",
+    "reviewer acknowledgements",
 ]
