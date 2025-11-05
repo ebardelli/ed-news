@@ -70,7 +70,7 @@ def edworkingpapers_feed_processor(session, feed_url: str, publication_id: str |
     return entries
 
 
-def edworkingpapers_postprocessor_db(conn, feed_key: str, entries, session=None, publication_id: str | None = None, issn: str | None = None):
+def edworkingpapers_postprocessor_db(conn, feed_key: str, entries, session=None, publication_id: str | None = None, issn: str | None = None, force: bool = False, check_fields: list | None = None):
     """DB-level postprocessor for EdWorkingPapers.
 
     For each entry, fetch the article page (e.g., https://edworkingpapers.com/ai25-1322),
@@ -88,16 +88,66 @@ def edworkingpapers_postprocessor_db(conn, feed_key: str, entries, session=None,
 
     cur = conn.cursor()
     updated = 0
+    # Preload existing items and article metadata to avoid unnecessary lookups.
+    try:
+        cur.execute("SELECT guid, link, doi FROM items WHERE feed_id = ?", (feed_key,))
+        rows = cur.fetchall()
+        items_by_link = {r[1]: (r[2] if len(r) > 2 else None) for r in rows if r and r[1]}
+        items_by_guid = {r[0]: (r[2] if len(r) > 2 else None) for r in rows if r and r[0]}
+    except Exception:
+        items_by_link = {}
+        items_by_guid = {}
+
+    # Load existing articles metadata for quick checks (only those with a DOI)
+    try:
+        cur.execute("SELECT doi, authors, abstract, published FROM articles WHERE COALESCE(doi, '') != ''")
+        rows = cur.fetchall()
+        articles_meta = {r[0]: {'authors': r[1], 'abstract': r[2], 'published': r[3]} for r in rows if r and r[0]}
+    except Exception:
+        articles_meta = {}
+
+    # In-run cache keyed by suffix/page_url to avoid duplicate fetches for same article
+    inrun_cache: dict = {}
     for e in entries:
         try:
-            # Determine article page URL. Entries produced by the preprocessor have
-            # links like 'https://edworkingpapers.com/edworkingpapers/ai25-1322'.
+            # Determine article page URL and suffix.
             link = (e.get('link') or '').strip()
             if not link:
                 continue
-            # Extract the suffix (ai25-1322)
             suffix = link.rstrip('/').rsplit('/', 1)[-1]
             page_url = f"https://edworkingpapers.com/{suffix}"
+
+            # If we've already processed this suffix in this run, skip repeated work
+            if suffix in inrun_cache and not force:
+                # nothing to do; continue
+                continue
+
+            # Quick-check: if item already has a DOI and the corresponding
+            # article row has required metadata, skip fetching unless force=True.
+            try:
+                existing_doi = None
+                # prefer exact link lookup, then guid
+                existing_doi = items_by_link.get(link) or items_by_guid.get(e.get('guid'))
+                if existing_doi and not force:
+                    meta = articles_meta.get(existing_doi)
+                    if meta:
+                        # If check_fields provided, ensure those fields are set on article
+                        if check_fields:
+                            ok = True
+                            for f in check_fields:
+                                if not meta.get(f):
+                                    ok = False
+                                    break
+                            if ok:
+                                inrun_cache[suffix] = True
+                                continue
+                        else:
+                            # Default behavior: skip if authors or abstract or published present
+                            if meta.get('authors') or meta.get('abstract') or meta.get('published'):
+                                inrun_cache[suffix] = True
+                                continue
+            except Exception:
+                pass
 
             # Fetch the article page
             html = None
