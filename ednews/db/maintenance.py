@@ -442,12 +442,18 @@ def rematch_publication_dois(conn: sqlite3.Connection, publication_id: str | Non
     except Exception:
         session = None
 
-    # Import crossref postprocessor
+    # We'll resolve a postprocessor per-feed below. Keep a reference to
+    # the processors module for fallback lookups.
     try:
         import ednews.processors as proc_mod
-        post_fn = getattr(proc_mod, 'crossref_postprocessor_db', None)
     except Exception:
-        post_fn = None
+        proc_mod = None
+    # Preload feeds list so we can inspect configured processors for each feed
+    try:
+        from ednews import feeds as feeds_mod
+        _feeds_list = feeds_mod.load_feeds() or []
+    except Exception:
+        _feeds_list = []
 
     for fk in keys:
         try:
@@ -689,9 +695,63 @@ def rematch_publication_dois(conn: sqlite3.Connection, publication_id: str | Non
                 logger.exception("Failed to clear orphan article DOIs for feed %s", fk)
             results['feeds'][fk]['feed_orphan_articles_cleared'] = feed_orphan_cleared
 
-            # Re-run crossref postprocessor for this feed if available
+            # Resolve postprocessor for this feed: prefer a feed-configured
+            # postprocessor (e.g., `edworkingpapers_postprocessor_db`) and
+            # fall back to the crossref postprocessor when none found.
             updated = 0
-            if post_fn:
+            post_fn_for_feed = None
+            try:
+                # Determine processor config for this feed key from loaded feeds
+                proc_config = None
+                for item in _feeds_list:
+                    try:
+                        if item and item[0] == fk:
+                            proc_config = item[5] if len(item) > 5 else None
+                            break
+                    except Exception:
+                        continue
+
+                post_names = []
+                if proc_config:
+                    if isinstance(proc_config, (list, tuple)):
+                        post_names = list(proc_config)
+                    elif isinstance(proc_config, dict):
+                        p = proc_config.get('post')
+                        if isinstance(p, (list, tuple)):
+                            post_names = list(p)
+                        elif isinstance(p, str):
+                            post_names = [p]
+                    elif isinstance(proc_config, str):
+                        post_names = [proc_config]
+
+                # Try to find a matching DB-level postprocessor in ednews.processors
+                if proc_mod and post_names:
+                    for name in post_names:
+                        if not name:
+                            continue
+                        fn = getattr(proc_mod, f"{name}_postprocessor_db", None)
+                        if fn:
+                            post_fn_for_feed = fn
+                            break
+                        # Try importing a module by that name as a fallback
+                        try:
+                            import importlib
+
+                            mod = importlib.import_module(name)
+                            fn = getattr(mod, f"{name}_postprocessor_db", None)
+                            if fn:
+                                post_fn_for_feed = fn
+                                break
+                        except Exception:
+                            continue
+
+                # Fallback to crossref_postprocessor_db if still not found
+                if not post_fn_for_feed and proc_mod:
+                    post_fn_for_feed = getattr(proc_mod, 'crossref_postprocessor_db', None)
+            except Exception:
+                post_fn_for_feed = getattr(proc_mod, 'crossref_postprocessor_db', None) if proc_mod else None
+
+            if post_fn_for_feed:
                 # load recent items. If only_wrong is True, limit to only the
                 # guids we identified as wrong so the postprocessor will run
                 # title lookups for them rather than processing the entire feed.
@@ -722,14 +782,14 @@ def rematch_publication_dois(conn: sqlite3.Connection, publication_id: str | Non
 
                     # attempt newer signature first and request force=True so existing DOIs are re-fetched
                     try:
-                        updated = post_fn(conn, fk, entries, session=session, publication_id=expected_pub, issn=None, force=True)
+                        updated = post_fn_for_feed(conn, fk, entries, session=session, publication_id=expected_pub, issn=None, force=True)
                     except TypeError:
                         # older signatures may not accept force kwarg
                         try:
-                            updated = post_fn(conn, fk, entries, session=session, publication_id=expected_pub, issn=None)
+                            updated = post_fn_for_feed(conn, fk, entries, session=session, publication_id=expected_pub, issn=None)
                         except TypeError:
                             # older legacy signature without session/publication_id
-                            updated = post_fn(conn, fk, entries)
+                            updated = post_fn_for_feed(conn, fk, entries)
 
                     logger.info("rematch_publication_dois: postprocessor returned %s updates for feed=%s", updated or 0, fk)
 
