@@ -195,6 +195,11 @@ When a feed's `processor` is set to `rss`, the CLI calls `ednews.processors.rss_
 }
 ```
 
+### EdWorkingPapers notes
+
+- Author names extracted by the `edworkingpapers` postprocessor are normalized: each author string is stripped of leading/trailing whitespace and the final `authors` field is a comma-separated list with no trailing spaces.
+- Published date values extracted by the `edworkingpapers` postprocessor are normalized to a date-only ISO string (YYYY-MM-DD). Time and timezone components (for example `2025-11-01T12:00:00Z`) are converted to `2025-11-01` to simplify downstream display and comparison logic.
+
 ## Creating Custom Processors
 
 ### Example Preprocessor
