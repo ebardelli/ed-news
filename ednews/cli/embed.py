@@ -23,7 +23,29 @@ def cmd_embed(args: Any) -> None:
 
     if want_articles:
         try:
-            embeddings.generate_and_insert_embeddings_local(conn, model=args.model, batch_size=args.batch_size)
+            # support --force and --ids
+            force = getattr(args, 'force', False)
+            ids_arg = getattr(args, 'ids', None)
+            if ids_arg:
+                try:
+                    ids = [int(x.strip()) for x in str(ids_arg).split(',') if x.strip()]
+                except Exception:
+                    ids = []
+                if ids:
+                    embeddings.generate_and_insert_embeddings_for_ids(conn, ids, model=args.model)
+                    # still generate missing ones for others if force is set
+                    if force:
+                        embeddings.generate_and_insert_article_embeddings(conn, model=args.model, batch_size=args.batch_size, force=True)
+                    else:
+                        embeddings.generate_and_insert_article_embeddings(conn, model=args.model, batch_size=args.batch_size, force=False)
+                else:
+                    # no valid ids parsed; fall back to normal behavior
+                    embeddings.generate_and_insert_embeddings_local(conn, model=args.model, batch_size=args.batch_size)
+            else:
+                if force:
+                    embeddings.generate_and_insert_article_embeddings(conn, model=args.model, batch_size=args.batch_size, force=True)
+                else:
+                    embeddings.generate_and_insert_embeddings_local(conn, model=args.model, batch_size=args.batch_size)
         except Exception:
             logger.exception("Failed to generate article embeddings")
 

@@ -101,7 +101,12 @@ def create_headlines_vec(conn: sqlite3.Connection, dim: int = 768):
     _ensure_vec_table(conn, "headlines_vec", dim=dim)
 
 
-def generate_and_insert_article_embeddings(conn: sqlite3.Connection, model: Optional[str] = None, batch_size: int = 64):
+def generate_and_insert_article_embeddings(conn: sqlite3.Connection, model: Optional[str] = None, batch_size: int = 64, force: bool = False):
+    """Generate and insert embeddings for articles.
+
+    If force is False (default), only articles missing embeddings are processed.
+    If force is True, all eligible articles are re-embedded.
+    """
     model = model or MODEL_NAME
     cur = conn.cursor()
     cur.execute("SELECT id, title, abstract FROM articles")
@@ -119,13 +124,18 @@ def generate_and_insert_article_embeddings(conn: sqlite3.Connection, model: Opti
             continue
         items.append((_id, combined))
 
-    # determine missing
+    # determine existing embeddings
     try:
         cur.execute("SELECT rowid FROM articles_vec")
         existing = {r[0] for r in cur.fetchall()}
     except Exception:
         existing = set()
-    to_process = [it for it in items if it[0] not in existing]
+
+    if force:
+        to_process = items
+    else:
+        to_process = [it for it in items if it[0] not in existing]
+
     if not to_process:
         return 0
     return upsert_embeddings(conn, "articles_vec", to_process, model=model, batch_size=batch_size)
@@ -137,7 +147,8 @@ def generate_and_insert_embeddings_local(conn: sqlite3.Connection, model: Option
     Historically the CLI used generate_and_insert_embeddings_local. Keep a
     wrapper that delegates to the current article embedding generator.
     """
-    return generate_and_insert_article_embeddings(conn, model=model, batch_size=batch_size)
+    # Preserve compatibility while allowing callers to opt-in to force.
+    return generate_and_insert_article_embeddings(conn, model=model, batch_size=batch_size, force=False)
 
 
 def create_database(conn: sqlite3.Connection):

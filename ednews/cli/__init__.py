@@ -68,6 +68,8 @@ def run() -> None:
     p_embed.add_argument("--batch-size", type=int, default=64)
     p_embed.add_argument("--headlines", action="store_true", help="Also generate embeddings for news headlines")
     p_embed.add_argument("--articles", action="store_true", help="Generate embeddings for articles (default: both articles and headlines if no flags are set)")
+    p_embed.add_argument("--force", action="store_true", help="Force re-generation of embeddings for existing articles")
+    p_embed.add_argument("--ids", type=str, default=None, help="Comma-separated list of article ids to (re)embed")
     p_embed.set_defaults(func=cmd_embed)
 
     p_issn = sub.add_parser("issn-lookup", help="Fetch latest works for journals by ISSN and insert into DB")
