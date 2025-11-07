@@ -62,4 +62,6 @@ TITLE_FILTERS = [
 	"editorial board",
 	"editorial announcement",
     "reviewer acknowledgements",
+    "reviewer acknowledgments",
+	"acknowledgment"
 ]
