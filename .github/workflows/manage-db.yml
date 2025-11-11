@@ -1,13 +1,7 @@
-name: update ed-news website
+name: manage-db
 
 on:
   workflow_dispatch: {}
-  schedule:
-    # Run hourly from 06:00–18:00 Pacific Time.
-    # - PST (UTC-8): 14:00–02:00 UTC -> cron '0 14-23,0-2 * * *'
-    - cron: '0 14-23,0-2 * * *'
-  push:
-    branches: [ main ]
 
 permissions:
   contents: read
@@ -56,13 +50,8 @@ jobs:
 
       - name: Fetch and build website
         run: |
-          uv run python main.py fetch
-
-          uv run python main.py issn-lookup --date-filter-type created --from-date '2025-01-01' --per-journal 100
-          uv run ednews postprocess
-          
-          uv run python main.py embed
-          uv run python main.py build
+          uv run ednews manage-db rematch-dois --only-wrong
+          uv run python main.py manage-db run-all --older-than-days 7
 
       - name: Upload ednews.db to S3 cache
         run: s5cmd --endpoint-url $AWS_ENDPOINT cp ednews.db s3://ed-news-cache/
