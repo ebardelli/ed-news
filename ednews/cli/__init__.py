@@ -57,6 +57,7 @@ def run() -> None:
     p_fetch = sub.add_parser("fetch", help="Fetch feeds and save items")
     p_fetch.add_argument("--articles", action="store_true", help="Also fetch article feeds (default: both articles and headlines if no flags are set)")
     p_fetch.add_argument("--headlines", action="store_true", help="Also fetch news headlines (default: both articles and headlines if no flags are set)")
+    p_fetch.add_argument("--debug-feed", help="Debug a single feed by key or URL and print step-by-step output to the terminal")
     p_fetch.set_defaults(func=cmd_fetch)
 
     p_build = sub.add_parser("build", help="Render static site into build/")

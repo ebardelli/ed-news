@@ -23,6 +23,8 @@ def cmd_fetch(args: Any) -> None:
         want_headlines = True
 
     feeds_list = feeds.load_feeds() if want_articles else []
+    # Optional: debug a single feed from CLI
+    debug_feed = getattr(args, "debug_feed", None)
     if not feeds_list:
         if want_articles:
             logger.error("No feeds found; aborting fetch")
@@ -50,6 +52,71 @@ def cmd_fetch(args: Any) -> None:
         logger.debug("failed to import sync_publications_from_feeds")
 
     session = get_session()
+    # If debug_feed is provided, run a single-feed debug flow and exit
+    if debug_feed:
+        # Determine if debug_feed matches a feed key or looks like a URL
+        matched = None
+        for f in feeds_list:
+            if len(f) >= 3 and (f[0] == debug_feed or f[2] == debug_feed):
+                matched = f
+                break
+
+        if matched:
+            key = matched[0]
+            title = matched[1]
+            url = matched[2]
+            publication_doi = matched[3] if len(matched) > 3 else None
+            issn = matched[4] if len(matched) > 4 else None
+        else:
+            # treat debug_feed as a URL if it's not a key
+            key = "debug"
+            title = debug_feed
+            url = debug_feed
+            publication_doi = None
+            issn = None
+
+        # Print a concise step-by-step trace to stdout
+        print("=== DEBUG FETCH: starting debug fetch for:")
+        print(f"feed key: {key}")
+        print(f"title: {title}")
+        print(f"url: {url}")
+        print(f"publication_id: {publication_doi}")
+        print(f"issn: {issn}")
+        print("--- fetching HTTP content...")
+        try:
+            res = feeds.fetch_feed(session, key, title, url, publication_doi, issn)
+        except Exception as e:
+            print(f"FETCH ERROR: {e}")
+            return
+
+        if res.get("error"):
+            print(f"FETCH FAILED: {res.get('error')}")
+            return
+
+        entries = res.get("entries") or []
+        print(f"--- parsed {len(entries)} entries (showing up to 5)")
+        for i, e in enumerate(entries[:5]):
+            print(f"[{i+1}] title: {e.get('title')!r}")
+            print(f"     link: {e.get('link')!r}")
+            print(f"     published: {e.get('published')!r}")
+            doi = None
+            try:
+                # attempt to show extracted DOI for the entry
+                from ..feeds import extract_doi_from_entry, normalize_doi
+
+                doi = extract_doi_from_entry(e.get("_entry") or e) or extract_doi_from_entry(e)
+                doi = normalize_doi(doi) if doi else None
+            except Exception:
+                doi = None
+            print(f"     doi: {doi!r}")
+
+        print("--- saving entries to DB (dry-run: False)")
+        try:
+            cnt = feeds.save_entries(get_conn(), res.get("key"), res.get("title"), entries)
+            print(f"--- save_entries inserted {cnt} new items")
+        except Exception as e:
+            print(f"SAVE ERROR: {e}")
+        return
     if want_articles:
         with ThreadPoolExecutor(max_workers=8) as ex:
             futures = {}
