@@ -12,6 +12,7 @@ import re
 import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
+import sqlite3
 
 logger = logging.getLogger("ednews.crossref")
 
@@ -127,15 +128,31 @@ def _query_crossref_doi_by_title_uncached(title: str, preferred_publication_id: 
     return None
 
 
-@lru_cache(maxsize=256)
-def query_crossref_doi_by_title(title: str, preferred_publication_id: str | None = None, timeout: int = 8) -> str | None:
-    # Use a cached wrapper around the networked implementation. Note that
-    # lru_cache will treat the (title, preferred_publication_id, timeout)
-    # tuple as the cache key; timeouts should generally be stable for calls.
+# Create a cached version of the uncached implementation and expose a
+# compatibility wrapper that accepts either positional or keyword args.
+def _query_crossref_doi_by_title_cached_fn(title: str, preferred_publication_id: str | None = None, timeout: int = 8) -> str | None:
+    # Call the (possibly monkeypatched) uncached implementation at runtime.
     return _query_crossref_doi_by_title_uncached(title, preferred_publication_id, timeout)
 
 
-def fetch_crossref_metadata(doi: str, timeout: int = 10, conn: object | None = None, force: bool = False) -> dict | None:
+_query_crossref_doi_by_title_cached = lru_cache(maxsize=256)(_query_crossref_doi_by_title_cached_fn)
+
+
+def query_crossref_doi_by_title(*args, **kwargs) -> str | None:
+    """Compatibility wrapper for Crossref title lookup.
+
+    Accepts the legacy signature either as positional arguments
+        (title, preferred_publication_id=None, timeout=8)
+    or as keywords. Normalizes inputs and calls the cached implementation.
+    """
+    # Map positional args to parameters
+    title = kwargs.get('title') if 'title' in kwargs else (args[0] if len(args) > 0 else None)
+    preferred_publication_id = kwargs.get('preferred_publication_id') if 'preferred_publication_id' in kwargs else (args[1] if len(args) > 1 else None)
+    timeout = kwargs.get('timeout') if 'timeout' in kwargs else (args[2] if len(args) > 2 else 8)
+    return _query_crossref_doi_by_title_cached(title, preferred_publication_id, timeout)
+
+
+def _fetch_crossref_metadata_impl(doi: str, timeout: int = 10, conn: sqlite3.Connection | None = None, force: bool = False) -> dict | None:
     """Fetch Crossref metadata for a DOI, preferring JSON and falling back to XML.
 
     The function will attempt to fetch JSON from the Crossref REST API. If
@@ -393,6 +410,33 @@ def fetch_crossref_metadata(doi: str, timeout: int = 10, conn: object | None = N
         normalized = normalize_crossref_datetime(published)
         out["published"] = normalized if normalized else published
     return out
+
+
+
+def fetch_crossref_metadata(*args, **kwargs) -> dict | None:
+    """Compatibility wrapper for fetching Crossref metadata.
+
+    Accepts either the legacy positional signature:
+        (doi, timeout=10, conn=None, force=False)
+    or keyword arguments. Normalizes the inputs and delegates to the
+    internal implementation.
+    """
+    # Map positional args to parameters
+    doi = kwargs.get('doi') if 'doi' in kwargs else (args[0] if len(args) > 0 else None)
+    timeout = kwargs.get('timeout') if 'timeout' in kwargs else (args[1] if len(args) > 1 else 10)
+    conn = kwargs.get('conn') if 'conn' in kwargs else (args[2] if len(args) > 2 else None)
+    force = kwargs.get('force') if 'force' in kwargs else (args[3] if len(args) > 3 else False)
+
+    # Validate/coerce types for the internal call
+    if not doi:
+        return None
+    doi_s = str(doi)
+    try:
+        timeout_i = int(timeout) if timeout is not None else 10
+    except Exception:
+        timeout_i = 10
+    force_b = bool(force)
+    return _fetch_crossref_metadata_impl(doi_s, timeout=timeout_i, conn=conn, force=force_b)
 
 
 def _extract_published_from_json(message: dict) -> str | None:
