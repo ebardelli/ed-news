@@ -27,24 +27,32 @@ def _ensure_vec_table(conn: sqlite3.Connection, table_name: str, dim: int = 768)
     sqlite_vec.load(conn)
     cur = conn.cursor()
     try:
-        cur.execute(f"CREATE VIRTUAL TABLE IF NOT EXISTS {table_name} USING vec0(embedding float[{dim}])")
+        cur.execute(
+            f"CREATE VIRTUAL TABLE IF NOT EXISTS {table_name} USING vec0(embedding float[{dim}])"
+        )
         conn.commit()
     except sqlite3.OperationalError as e:
         import logging
 
-        logging.getLogger("ednews.embeddings").warning("vec0 virtual table not available: %s", e)
+        logging.getLogger("ednews.embeddings").warning(
+            "vec0 virtual table not available: %s", e
+        )
         return
 
 
 def _batches(lst: Iterable, n: int):
     lst = list(lst)
     for i in range(0, len(lst), n):
-        yield lst[i:i+n]
+        yield lst[i : i + n]
 
 
-def _generate_embeddings(texts: List[str], model: Optional[str] = None) -> List[List[float]]:
+def _generate_embeddings(
+    texts: List[str], model: Optional[str] = None
+) -> List[List[float]]:
     model = model or MODEL_NAME
-    output = embed.text(texts=texts, task_type="search_document", model=model, inference_mode="local")
+    output = embed.text(
+        texts=texts, task_type="search_document", model=model, inference_mode="local"
+    )
     return output.get("embeddings", [])
 
 
@@ -53,7 +61,13 @@ def _serialize(vec: List[float]):
     return sqlite_vec.serialize_float32(arr)
 
 
-def upsert_embeddings(conn: sqlite3.Connection, table_name: str, items: List[Tuple[int, str]], model: Optional[str] = None, batch_size: int = 64) -> int:
+def upsert_embeddings(
+    conn: sqlite3.Connection,
+    table_name: str,
+    items: List[Tuple[int, str]],
+    model: Optional[str] = None,
+    batch_size: int = 64,
+) -> int:
     """Generate embeddings for (id, text) items and upsert into named vec table.
 
     Returns the number of embeddings written.
@@ -72,20 +86,33 @@ def upsert_embeddings(conn: sqlite3.Connection, table_name: str, items: List[Tup
         except Exception as e:
             import logging
 
-            logging.getLogger("ednews.embeddings").error("Error generating embeddings for batch starting with id %s: %s", ids[0] if ids else None, e)
+            logging.getLogger("ednews.embeddings").error(
+                "Error generating embeddings for batch starting with id %s: %s",
+                ids[0] if ids else None,
+                e,
+            )
             continue
 
         for _id, emb in zip(ids, embeddings):
             blob = _serialize(emb)
             try:
-                cur.execute(f"UPDATE {table_name} SET embedding = ? WHERE rowid = ?", (blob, _id))
+                cur.execute(
+                    f"UPDATE {table_name} SET embedding = ? WHERE rowid = ?",
+                    (blob, _id),
+                )
                 if cur.rowcount == 0:
-                    cur.execute(f"INSERT INTO {table_name} (rowid, embedding) VALUES (?, ?)", (_id, blob))
+                    cur.execute(
+                        f"INSERT INTO {table_name} (rowid, embedding) VALUES (?, ?)",
+                        (_id, blob),
+                    )
             except sqlite3.OperationalError:
                 # Some sqlite builds don't allow UPDATE on virtual tables; fallback to delete/insert
                 try:
                     cur.execute(f"DELETE FROM {table_name} WHERE rowid = ?", (_id,))
-                    cur.execute(f"INSERT INTO {table_name} (rowid, embedding) VALUES (?, ?)", (_id, blob))
+                    cur.execute(
+                        f"INSERT INTO {table_name} (rowid, embedding) VALUES (?, ?)",
+                        (_id, blob),
+                    )
                 except Exception:
                     raise
             total += 1
@@ -101,7 +128,12 @@ def create_headlines_vec(conn: sqlite3.Connection, dim: int = 768):
     _ensure_vec_table(conn, "headlines_vec", dim=dim)
 
 
-def generate_and_insert_article_embeddings(conn: sqlite3.Connection, model: Optional[str] = None, batch_size: int = 64, force: bool = False):
+def generate_and_insert_article_embeddings(
+    conn: sqlite3.Connection,
+    model: Optional[str] = None,
+    batch_size: int = 64,
+    force: bool = False,
+):
     """Generate and insert embeddings for articles.
 
     If force is False (default), only articles missing embeddings are processed.
@@ -119,7 +151,9 @@ def generate_and_insert_article_embeddings(conn: sqlite3.Connection, model: Opti
         abstract = abstract or ""
         combined = title.strip()
         if abstract.strip():
-            combined = combined + "\n\n" + abstract.strip() if combined else abstract.strip()
+            combined = (
+                combined + "\n\n" + abstract.strip() if combined else abstract.strip()
+            )
         if not combined:
             continue
         items.append((_id, combined))
@@ -138,17 +172,23 @@ def generate_and_insert_article_embeddings(conn: sqlite3.Connection, model: Opti
 
     if not to_process:
         return 0
-    return upsert_embeddings(conn, "articles_vec", to_process, model=model, batch_size=batch_size)
+    return upsert_embeddings(
+        conn, "articles_vec", to_process, model=model, batch_size=batch_size
+    )
 
 
-def generate_and_insert_embeddings_local(conn: sqlite3.Connection, model: Optional[str] = None, batch_size: int = 64):
+def generate_and_insert_embeddings_local(
+    conn: sqlite3.Connection, model: Optional[str] = None, batch_size: int = 64
+):
     """Compatibility wrapper for the older API name used by main.py.
 
     Historically the CLI used generate_and_insert_embeddings_local. Keep a
     wrapper that delegates to the current article embedding generator.
     """
     # Preserve compatibility while allowing callers to opt-in to force.
-    return generate_and_insert_article_embeddings(conn, model=model, batch_size=batch_size, force=False)
+    return generate_and_insert_article_embeddings(
+        conn, model=model, batch_size=batch_size, force=False
+    )
 
 
 def create_database(conn: sqlite3.Connection):
@@ -156,7 +196,9 @@ def create_database(conn: sqlite3.Connection):
     return create_articles_vec(conn)
 
 
-def generate_and_insert_embeddings_for_ids(conn: sqlite3.Connection, ids: List[int], model: Optional[str] = None) -> int:
+def generate_and_insert_embeddings_for_ids(
+    conn: sqlite3.Connection, ids: List[int], model: Optional[str] = None
+) -> int:
     """Compatibility wrapper: generate embeddings for the provided article ids.
 
     Returns the number of embeddings written.
@@ -165,7 +207,10 @@ def generate_and_insert_embeddings_for_ids(conn: sqlite3.Connection, ids: List[i
         return 0
     cur = conn.cursor()
     placeholders = ",".join("?" for _ in ids)
-    cur.execute(f"SELECT id, title, abstract FROM articles WHERE id IN ({placeholders})", tuple(ids))
+    cur.execute(
+        f"SELECT id, title, abstract FROM articles WHERE id IN ({placeholders})",
+        tuple(ids),
+    )
     rows = cur.fetchall()
     items = []
     for _id, title, abstract in rows:
@@ -173,7 +218,9 @@ def generate_and_insert_embeddings_for_ids(conn: sqlite3.Connection, ids: List[i
         abstract = abstract or ""
         combined = title.strip()
         if abstract.strip():
-            combined = combined + "\n\n" + abstract.strip() if combined else abstract.strip()
+            combined = (
+                combined + "\n\n" + abstract.strip() if combined else abstract.strip()
+            )
         if not combined:
             continue
         items.append((_id, combined))
@@ -182,7 +229,9 @@ def generate_and_insert_embeddings_for_ids(conn: sqlite3.Connection, ids: List[i
     return upsert_embeddings(conn, "articles_vec", items, model=model, batch_size=64)
 
 
-def generate_and_insert_headline_embeddings(conn: sqlite3.Connection, model: Optional[str] = None, batch_size: int = 64) -> int:
+def generate_and_insert_headline_embeddings(
+    conn: sqlite3.Connection, model: Optional[str] = None, batch_size: int = 64
+) -> int:
     """Generate and insert embeddings for news headlines by concatenating title and text.
 
     Embeddings are stored in `headlines_vec` with rowid equal to `headlines.id`.
@@ -212,10 +261,14 @@ def generate_and_insert_headline_embeddings(conn: sqlite3.Connection, model: Opt
     to_process = [it for it in items if it[0] not in existing]
     if not to_process:
         return 0
-    return upsert_embeddings(conn, "headlines_vec", to_process, model=model, batch_size=batch_size)
+    return upsert_embeddings(
+        conn, "headlines_vec", to_process, model=model, batch_size=batch_size
+    )
 
 
-def find_similar_headlines_by_rowid(conn: sqlite3.Connection, rowid: int, top_n: int = 5):
+def find_similar_headlines_by_rowid(
+    conn: sqlite3.Connection, rowid: int, top_n: int = 5
+):
     conn.enable_load_extension(True)
     sqlite_vec.load(conn)
     cur = conn.cursor()
@@ -224,15 +277,23 @@ def find_similar_headlines_by_rowid(conn: sqlite3.Connection, rowid: int, top_n:
     if not res or not res[0]:
         return []
     target_blob = res[0]
-    q = '''
+    q = """
     SELECT N.id, N.title, N.text, N.link, vec_distance_cosine(V.embedding, ?) AS distance
     FROM headlines AS N, headlines_vec AS V
     WHERE N.id = V.rowid AND N.id != ?
     ORDER BY distance ASC
     LIMIT ?
-    '''
+    """
     results = cur.execute(q, (target_blob, rowid, top_n)).fetchall()
     out = []
     for nid, title, text, link, distance in results:
-        out.append({"id": nid, "title": title, "text": text, "link": link, "distance": float(distance) if distance is not None else None})
+        out.append(
+            {
+                "id": nid,
+                "title": title,
+                "text": text,
+                "link": link,
+                "distance": float(distance) if distance is not None else None,
+            }
+        )
     return out

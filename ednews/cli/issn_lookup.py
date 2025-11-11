@@ -18,6 +18,7 @@ def cmd_issn_lookup(args: Any) -> None:
         return
     conn = get_conn()
     from ednews.db.manage_db import fetch_latest_journal_works  # type: ignore[import]
+
     try:
         inserted = fetch_latest_journal_works(
             conn,
@@ -25,10 +26,10 @@ def cmd_issn_lookup(args: Any) -> None:
             per_journal=args.per_journal,
             timeout=args.timeout,
             delay=args.delay,
-            sort_by=args.sort_by if hasattr(args, 'sort_by') else 'created',
-            date_filter_type=getattr(args, 'date_filter_type', None),
-            from_date=normalize_cli_date(getattr(args, 'from_date', None)),
-            until_date=normalize_cli_date(getattr(args, 'until_date', None)),
+            sort_by=args.sort_by if hasattr(args, "sort_by") else "created",
+            date_filter_type=getattr(args, "date_filter_type", None),
+            from_date=normalize_cli_date(getattr(args, "from_date", None)),
+            until_date=normalize_cli_date(getattr(args, "until_date", None)),
         )
         logger.info("Inserted %d articles from ISSN lookups", inserted)
     except Exception:

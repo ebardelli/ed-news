@@ -22,7 +22,9 @@ from ednews import http as http_helper
 from ednews import config as _config
 
 
-def _query_crossref_doi_by_title_uncached(title: str, preferred_publication_id: str | None = None, timeout: int = 8) -> str | None:
+def _query_crossref_doi_by_title_uncached(
+    title: str, preferred_publication_id: str | None = None, timeout: int = 8
+) -> str | None:
     """Lookup a DOI on Crossref by article title (uncached implementation).
 
     This function performs a network request to Crossref's /works endpoint
@@ -46,16 +48,30 @@ def _query_crossref_doi_by_title_uncached(title: str, preferred_publication_id: 
     if not title:
         return None
     try:
-        headers = {"User-Agent": getattr(_config, 'USER_AGENT', 'ed-news-fetcher/1.0'), "Accept": "application/json"}
+        headers = {
+            "User-Agent": getattr(_config, "USER_AGENT", "ed-news-fetcher/1.0"),
+            "Accept": "application/json",
+        }
         params = {"query.title": title, "rows": 20}
         logger.debug("CrossRef title lookup for title: %s", title)
-        connect_to = getattr(_config, 'CROSSREF_CONNECT_TIMEOUT', 5)
-        read_to = timeout or getattr(_config, 'CROSSREF_TIMEOUT', 30)
+        connect_to = getattr(_config, "CROSSREF_CONNECT_TIMEOUT", 5)
+        read_to = timeout or getattr(_config, "CROSSREF_TIMEOUT", 30)
         used_timeout = (connect_to, read_to)
-        data = http_helper.get_json("https://api.crossref.org/works", params=params, headers=headers, timeout=used_timeout, retries=getattr(_config, 'CROSSREF_RETRIES', 3), backoff=getattr(_config, 'CROSSREF_BACKOFF', 0.3), status_forcelist=getattr(_config, 'CROSSREF_STATUS_FORCELIST', None))
-        items = data.get("message", {}).get("items", []) if isinstance(data, dict) else []
+        data = http_helper.get_json(
+            "https://api.crossref.org/works",
+            params=params,
+            headers=headers,
+            timeout=used_timeout,
+            retries=getattr(_config, "CROSSREF_RETRIES", 3),
+            backoff=getattr(_config, "CROSSREF_BACKOFF", 0.3),
+            status_forcelist=getattr(_config, "CROSSREF_STATUS_FORCELIST", None),
+        )
+        items = (
+            data.get("message", {}).get("items", []) if isinstance(data, dict) else []
+        )
         if not items:
             return None
+
         def _score_title_match(query: str, candidate: str) -> int:
             """Simple token-overlap score between query and candidate titles.
 
@@ -77,6 +93,7 @@ def _query_crossref_doi_by_title_uncached(title: str, preferred_publication_id: 
 
         if preferred_publication_id:
             pref = preferred_publication_id.rstrip().lower()
+
             # filter items to those whose DOI starts with the preferred prefix
             def _doi_matches_pref(d: str, pref: str) -> bool:
                 if not d:
@@ -86,28 +103,34 @@ def _query_crossref_doi_by_title_uncached(title: str, preferred_publication_id: 
                     return True
                 # If pref looks like a short identifier (no dot or no leading '10.'),
                 # also check the DOI suffix (the part after '/') for a prefix match.
-                if '/' in d:
+                if "/" in d:
                     try:
-                        suffix = d.split('/', 1)[1]
+                        suffix = d.split("/", 1)[1]
                         if suffix.startswith(pref):
                             return True
                     except Exception:
                         pass
                 # As a last resort, check for '/{pref}' followed by a non-alnum or end
                 try:
-                    if re.search(r'/' + re.escape(pref) + r'(?:[^a-z0-9]|$)', d):
+                    if re.search(r"/" + re.escape(pref) + r"(?:[^a-z0-9]|$)", d):
                         return True
                 except Exception:
                     pass
                 return False
 
-            pref_items = [it for it in items if _doi_matches_pref((it.get("DOI") or ""), pref)]
+            pref_items = [
+                it for it in items if _doi_matches_pref((it.get("DOI") or ""), pref)
+            ]
             if pref_items:
                 # choose the pref_item whose title best matches the query title
                 best = None
                 best_score = -1
                 for it in pref_items:
-                    cand_title = it.get("title") or (it.get("short-title") if it.get("short-title") else None) or ""
+                    cand_title = (
+                        it.get("title")
+                        or (it.get("short-title") if it.get("short-title") else None)
+                        or ""
+                    )
                     # Crossref sometimes stores title as a list
                     if isinstance(cand_title, list):
                         cand_title = " ".join([str(x) for x in cand_title if x])
@@ -117,7 +140,13 @@ def _query_crossref_doi_by_title_uncached(title: str, preferred_publication_id: 
                         best = it
                 if best is not None:
                     d = (best.get("DOI") or "").lower()
-                    logger.info("CrossRef title lookup: selected DOI %s matching preferred_publication_id %s for title: %s (score=%s)", d, pref, title, best_score)
+                    logger.info(
+                        "CrossRef title lookup: selected DOI %s matching preferred_publication_id %s for title: %s (score=%s)",
+                        d,
+                        pref,
+                        title,
+                        best_score,
+                    )
                     return d
         doi = items[0].get("DOI")
         if doi:
@@ -130,12 +159,18 @@ def _query_crossref_doi_by_title_uncached(title: str, preferred_publication_id: 
 
 # Create a cached version of the uncached implementation and expose a
 # compatibility wrapper that accepts either positional or keyword args.
-def _query_crossref_doi_by_title_cached_fn(title: str, preferred_publication_id: str | None = None, timeout: int = 8) -> str | None:
+def _query_crossref_doi_by_title_cached_fn(
+    title: str, preferred_publication_id: str | None = None, timeout: int = 8
+) -> str | None:
     # Call the (possibly monkeypatched) uncached implementation at runtime.
-    return _query_crossref_doi_by_title_uncached(title, preferred_publication_id, timeout)
+    return _query_crossref_doi_by_title_uncached(
+        title, preferred_publication_id, timeout
+    )
 
 
-_query_crossref_doi_by_title_cached = lru_cache(maxsize=256)(_query_crossref_doi_by_title_cached_fn)
+_query_crossref_doi_by_title_cached = lru_cache(maxsize=256)(
+    _query_crossref_doi_by_title_cached_fn
+)
 
 
 def query_crossref_doi_by_title(*args, **kwargs) -> str | None:
@@ -146,13 +181,30 @@ def query_crossref_doi_by_title(*args, **kwargs) -> str | None:
     or as keywords. Normalizes inputs and calls the cached implementation.
     """
     # Map positional args to parameters
-    title = kwargs.get('title') if 'title' in kwargs else (args[0] if len(args) > 0 else None)
-    preferred_publication_id = kwargs.get('preferred_publication_id') if 'preferred_publication_id' in kwargs else (args[1] if len(args) > 1 else None)
-    timeout = kwargs.get('timeout') if 'timeout' in kwargs else (args[2] if len(args) > 2 else 8)
+    title = (
+        kwargs.get("title")
+        if "title" in kwargs
+        else (args[0] if len(args) > 0 else None)
+    )
+    preferred_publication_id = (
+        kwargs.get("preferred_publication_id")
+        if "preferred_publication_id" in kwargs
+        else (args[1] if len(args) > 1 else None)
+    )
+    timeout = (
+        kwargs.get("timeout")
+        if "timeout" in kwargs
+        else (args[2] if len(args) > 2 else 8)
+    )
     return _query_crossref_doi_by_title_cached(title, preferred_publication_id, timeout)
 
 
-def _fetch_crossref_metadata_impl(doi: str, timeout: int = 10, conn: sqlite3.Connection | None = None, force: bool = False) -> dict | None:
+def _fetch_crossref_metadata_impl(
+    doi: str,
+    timeout: int = 10,
+    conn: sqlite3.Connection | None = None,
+    force: bool = False,
+) -> dict | None:
     """Fetch Crossref metadata for a DOI, preferring JSON and falling back to XML.
 
     The function will attempt to fetch JSON from the Crossref REST API. If
@@ -183,14 +235,19 @@ def _fetch_crossref_metadata_impl(doi: str, timeout: int = 10, conn: sqlite3.Con
         # If a conn is provided, use it; otherwise try to open the configured DB
         # path lazily. Use ednews.db helpers when available.
         from ednews.db import article_exists
+
         if conn is None:
             try:
                 from ednews import config as _cfg
                 import sqlite3
+
                 conn_local = sqlite3.connect(str(_cfg.DB_PATH))
                 try:
                     if (not force) and article_exists(conn_local, doi):
-                        logger.info("Skipping CrossRef lookup for DOI %s because it already exists in DB", doi)
+                        logger.info(
+                            "Skipping CrossRef lookup for DOI %s because it already exists in DB",
+                            doi,
+                        )
                         try:
                             conn_local.close()
                         except Exception:
@@ -207,7 +264,10 @@ def _fetch_crossref_metadata_impl(doi: str, timeout: int = 10, conn: sqlite3.Con
         else:
             try:
                 if (not force) and article_exists(conn, doi):
-                    logger.info("Skipping CrossRef lookup for DOI %s because it already exists in DB", doi)
+                    logger.info(
+                        "Skipping CrossRef lookup for DOI %s because it already exists in DB",
+                        doi,
+                    )
                     return None
             except Exception:
                 # If the provided conn can't be used for existence check, fall through
@@ -221,6 +281,7 @@ def _fetch_crossref_metadata_impl(doi: str, timeout: int = 10, conn: sqlite3.Con
     # endpoint (dx.crossref.org) as before.
     # quote DOI path component safely (don't quote slashes inside DOI suffix)
     from urllib.parse import quote
+
     quoted = quote(doi, safe="/:")
     json_url = f"https://api.crossref.org/works/{quoted}"
     json_headers = {"Accept": "application/json", "User-Agent": "ed-news-fetcher/1.0"}
@@ -230,25 +291,46 @@ def _fetch_crossref_metadata_impl(doi: str, timeout: int = 10, conn: sqlite3.Con
     logger.info("CrossRef JSON lookup for DOI %s -> %s", doi, json_url)
     # Use centralized HTTP helper with configured timeouts/retries
     try:
-        connect_to = getattr(_config, 'CROSSREF_CONNECT_TIMEOUT', 5)
-        read_to = timeout or getattr(_config, 'CROSSREF_TIMEOUT', 30)
+        connect_to = getattr(_config, "CROSSREF_CONNECT_TIMEOUT", 5)
+        read_to = timeout or getattr(_config, "CROSSREF_TIMEOUT", 30)
         used_timeout = (connect_to, read_to)
-        json_resp = http_helper.get_json(json_url, headers=json_headers, timeout=used_timeout, retries=getattr(_config, 'CROSSREF_RETRIES', 3), backoff=getattr(_config, 'CROSSREF_BACKOFF', 0.3), status_forcelist=getattr(_config, 'CROSSREF_STATUS_FORCELIST', None), requests_module=requests)
+        json_resp = http_helper.get_json(
+            json_url,
+            headers=json_headers,
+            timeout=used_timeout,
+            retries=getattr(_config, "CROSSREF_RETRIES", 3),
+            backoff=getattr(_config, "CROSSREF_BACKOFF", 0.3),
+            status_forcelist=getattr(_config, "CROSSREF_STATUS_FORCELIST", None),
+            requests_module=requests,
+        )
     except Exception:
         json_resp = None
-    json_message = json_resp.get('message') if isinstance(json_resp, dict) else None
+    json_message = json_resp.get("message") if isinstance(json_resp, dict) else None
 
     if not json_message:
         # fallback to legacy unixref XML
         url = f"http://dx.crossref.org/{doi}"
-        headers = {"Accept": "application/vnd.crossref.unixref+xml", "User-Agent": "ed-news-fetcher/1.0"}
+        headers = {
+            "Accept": "application/vnd.crossref.unixref+xml",
+            "User-Agent": "ed-news-fetcher/1.0",
+        }
         try:
             logger.info("CrossRef lookup for DOI %s -> %s", doi, url)
             try:
-                connect_to = getattr(_config, 'CROSSREF_CONNECT_TIMEOUT', 5)
-                read_to = timeout or getattr(_config, 'CROSSREF_TIMEOUT', 30)
+                connect_to = getattr(_config, "CROSSREF_CONNECT_TIMEOUT", 5)
+                read_to = timeout or getattr(_config, "CROSSREF_TIMEOUT", 30)
                 used_timeout = (connect_to, read_to)
-                raw_text = http_helper.get_text(url, headers=headers, timeout=used_timeout, retries=getattr(_config, 'CROSSREF_RETRIES', 3), backoff=getattr(_config, 'CROSSREF_BACKOFF', 0.3), status_forcelist=getattr(_config, 'CROSSREF_STATUS_FORCELIST', None), requests_module=requests)
+                raw_text = http_helper.get_text(
+                    url,
+                    headers=headers,
+                    timeout=used_timeout,
+                    retries=getattr(_config, "CROSSREF_RETRIES", 3),
+                    backoff=getattr(_config, "CROSSREF_BACKOFF", 0.3),
+                    status_forcelist=getattr(
+                        _config, "CROSSREF_STATUS_FORCELIST", None
+                    ),
+                    requests_module=requests,
+                )
             except Exception:
                 raw_text = None
             if not raw_text:
@@ -269,7 +351,7 @@ def _fetch_crossref_metadata_impl(doi: str, timeout: int = 10, conn: sqlite3.Con
     if json_message:
         # abstract may be present as HTML or plain text in message['abstract']
         try:
-            a = json_message.get('abstract')
+            a = json_message.get("abstract")
             if a and isinstance(a, str) and a.strip():
                 abstract = a.strip()
         except Exception:
@@ -286,30 +368,44 @@ def _fetch_crossref_metadata_impl(doi: str, timeout: int = 10, conn: sqlite3.Con
 
     # Tags whose presence in the ancestor chain indicate we are inside the references
     reference_ancestor_tags = {
-        'reference', 'ref', 'citation', 'citation_list', 'ref-list', 'references'
+        "reference",
+        "ref",
+        "citation",
+        "citation_list",
+        "ref-list",
+        "references",
     }
 
     authors_list = []
     # If JSON present, extract authors from JSON message (ordered)
     if json_message:
         try:
-            ja = json_message.get('author') or []
+            ja = json_message.get("author") or []
             for a in ja:
                 if isinstance(a, dict):
-                    given = a.get('given') or ''
-                    family = a.get('family') or ''
+                    given = a.get("given") or ""
+                    family = a.get("family") or ""
                 else:
-                    given = ''
-                    family = ''
+                    given = ""
+                    family = ""
                 if given or family:
-                    authors_list.append(' '.join([p for p in (given.strip(), family.strip()) if p]))
+                    authors_list.append(
+                        " ".join([p for p in (given.strip(), family.strip()) if p])
+                    )
         except Exception:
             pass
 
     if root is not None:
         for parent in root.iter():
             tag = localname(parent.tag).lower()
-            if tag in ("person_name", "contributor", "name", "author", "creator", "person"):
+            if tag in (
+                "person_name",
+                "contributor",
+                "name",
+                "author",
+                "creator",
+                "person",
+            ):
                 # skip any person_name / author nodes that are inside a reference/citation block
                 cur = parent
                 inside_ref = False
@@ -331,7 +427,10 @@ def _fetch_crossref_metadata_impl(doi: str, timeout: int = 10, conn: sqlite3.Con
                         given = text
                     elif ctag in ("surname", "family_name", "family") and text:
                         surname = text
-                    elif ctag in ("collab", "organization", "org", "institution") and text:
+                    elif (
+                        ctag in ("collab", "organization", "org", "institution")
+                        and text
+                    ):
                         collab = text
                 if surname or given:
                     authors_list.append(" ".join([p for p in (given, surname) if p]))
@@ -364,7 +463,14 @@ def _fetch_crossref_metadata_impl(doi: str, timeout: int = 10, conn: sqlite3.Con
         if not published and root is not None:
             for elem in root.iter():
                 tag = localname(elem.tag).lower()
-                if tag in ("publication_date", "pub_date", "issued", "published", "publicationdate", "created"):
+                if tag in (
+                    "publication_date",
+                    "pub_date",
+                    "issued",
+                    "published",
+                    "publicationdate",
+                    "created",
+                ):
                     y = None
                     m = None
                     d = None
@@ -412,7 +518,6 @@ def _fetch_crossref_metadata_impl(doi: str, timeout: int = 10, conn: sqlite3.Con
     return out
 
 
-
 def fetch_crossref_metadata(*args, **kwargs) -> dict | None:
     """Compatibility wrapper for fetching Crossref metadata.
 
@@ -422,10 +527,20 @@ def fetch_crossref_metadata(*args, **kwargs) -> dict | None:
     internal implementation.
     """
     # Map positional args to parameters
-    doi = kwargs.get('doi') if 'doi' in kwargs else (args[0] if len(args) > 0 else None)
-    timeout = kwargs.get('timeout') if 'timeout' in kwargs else (args[1] if len(args) > 1 else 10)
-    conn = kwargs.get('conn') if 'conn' in kwargs else (args[2] if len(args) > 2 else None)
-    force = kwargs.get('force') if 'force' in kwargs else (args[3] if len(args) > 3 else False)
+    doi = kwargs.get("doi") if "doi" in kwargs else (args[0] if len(args) > 0 else None)
+    timeout = (
+        kwargs.get("timeout")
+        if "timeout" in kwargs
+        else (args[1] if len(args) > 1 else 10)
+    )
+    conn = (
+        kwargs.get("conn") if "conn" in kwargs else (args[2] if len(args) > 2 else None)
+    )
+    force = (
+        kwargs.get("force")
+        if "force" in kwargs
+        else (args[3] if len(args) > 3 else False)
+    )
 
     # Validate/coerce types for the internal call
     if not doi:
@@ -436,7 +551,9 @@ def fetch_crossref_metadata(*args, **kwargs) -> dict | None:
     except Exception:
         timeout_i = 10
     force_b = bool(force)
-    return _fetch_crossref_metadata_impl(doi_s, timeout=timeout_i, conn=conn, force=force_b)
+    return _fetch_crossref_metadata_impl(
+        doi_s, timeout=timeout_i, conn=conn, force=force_b
+    )
 
 
 def _extract_published_from_json(message: dict) -> str | None:
@@ -468,27 +585,27 @@ def _extract_published_from_json(message: dict) -> str | None:
             return None
 
     # Prefer created
-    c = message.get('created')
+    c = message.get("created")
     if isinstance(c, dict):
         # Prefer explicit date-parts (YYYY, YYYY-MM or YYYY-MM-DD) when present
-        dp = c.get('date-parts')
+        dp = c.get("date-parts")
         res = build_from_date_parts(dp)
         if res:
             return res
         # Fall back to a full date-time string if no structured date-parts exist
-        dt = c.get('date-time') or c.get('date_time') or c.get('date')
+        dt = c.get("date-time") or c.get("date_time") or c.get("date")
         if isinstance(dt, str) and dt.strip():
             return dt.strip()
 
-    for key in ('published-print', 'published-online', 'issued', 'published'):
+    for key in ("published-print", "published-online", "issued", "published"):
         mobj = message.get(key)
         if isinstance(mobj, dict):
             # Prefer structured date-parts first, then fallback to any date-time
-            dp = mobj.get('date-parts')
+            dp = mobj.get("date-parts")
             res = build_from_date_parts(dp)
             if res:
                 return res
-            dt = mobj.get('date-time') or mobj.get('date_time') or mobj.get('date')
+            dt = mobj.get("date-time") or mobj.get("date_time") or mobj.get("date")
             if isinstance(dt, str) and dt.strip():
                 return dt.strip()
 
@@ -512,8 +629,8 @@ def normalize_crossref_datetime(dt_str: str) -> str | None:
     if re.match(r"^\d{4}(?:-\d{2}(?:-\d{2})?)?$", s):
         return s
     try:
-        if s.endswith('Z'):
-            s2 = s[:-1] + '+00:00'
+        if s.endswith("Z"):
+            s2 = s[:-1] + "+00:00"
         else:
             s2 = s
         dt = datetime.fromisoformat(s2)

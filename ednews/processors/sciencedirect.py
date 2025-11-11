@@ -13,7 +13,9 @@ from .. import db as eddb
 logger = logging.getLogger("ednews.processors.sciencedirect")
 
 
-def find_sciencedirect_items_missing_metadata(conn: sqlite3.Connection, limit: int | None = None) -> List[dict]:
+def find_sciencedirect_items_missing_metadata(
+    conn: sqlite3.Connection, limit: int | None = None
+) -> List[dict]:
     """Return ScienceDirect items from `items` joining articles where available.
 
     This helper selects rows from `items` whose link contains 'sciencedirect.com'
@@ -32,20 +34,27 @@ def find_sciencedirect_items_missing_metadata(conn: sqlite3.Connection, limit: i
     results = []
     for r in rows:
         item_id, doi, link, title, article_id, authors, abstract, crossref_xml = r
-        results.append({
-            "item_id": item_id,
-            "doi": doi,
-            "link": link,
-            "title": title,
-            "article_id": article_id,
-            "authors": authors,
-            "abstract": abstract,
-            "crossref_xml": crossref_xml,
-        })
+        results.append(
+            {
+                "item_id": item_id,
+                "doi": doi,
+                "link": link,
+                "title": title,
+                "article_id": article_id,
+                "authors": authors,
+                "abstract": abstract,
+                "crossref_xml": crossref_xml,
+            }
+        )
     return results
 
 
-def enrich_sciencedirect(conn: sqlite3.Connection, limit: int | None = None, apply: bool = False, delay: float = 0.05) -> int:
+def enrich_sciencedirect(
+    conn: sqlite3.Connection,
+    limit: int | None = None,
+    apply: bool = False,
+    delay: float = 0.05,
+) -> int:
     """Enrich ScienceDirect items by attempting to resolve DOIs and Crossref metadata.
 
     If `apply` is False this function performs a dry-run and logs actions it
@@ -96,7 +105,10 @@ def enrich_sciencedirect(conn: sqlite3.Connection, limit: int | None = None, app
         cr = None
         try:
             if eddb.article_exists(conn, norm):
-                logger.info("Skipping CrossRef lookup for DOI %s because it already exists in DB; loading stored metadata", norm)
+                logger.info(
+                    "Skipping CrossRef lookup for DOI %s because it already exists in DB; loading stored metadata",
+                    norm,
+                )
                 cr = eddb.get_article_metadata(conn, norm) or None
             else:
                 cr = crossref.fetch_crossref_metadata(norm, conn=conn)
@@ -114,7 +126,13 @@ def enrich_sciencedirect(conn: sqlite3.Connection, limit: int | None = None, app
         abstract = cr.get("abstract")
         raw = cr.get("raw")
 
-        logger.info("CrossRef: doi=%s authors=%s abstract=%s raw_len=%d", norm, bool(authors), bool(abstract), len(raw) if raw else 0)
+        logger.info(
+            "CrossRef: doi=%s authors=%s abstract=%s raw_len=%d",
+            norm,
+            bool(authors),
+            bool(abstract),
+            len(raw) if raw else 0,
+        )
 
         if not apply:
             logger.info("Dry-run: would upsert article with DOI %s", norm)
@@ -123,7 +141,16 @@ def enrich_sciencedirect(conn: sqlite3.Connection, limit: int | None = None, app
         try:
             from ..db import ensure_article_row
 
-            aid = ensure_article_row(conn, norm, title=title, authors=authors, abstract=abstract, feed_id=None, publication_id=None, issn=None)
+            aid = ensure_article_row(
+                conn,
+                norm,
+                title=title,
+                authors=authors,
+                abstract=abstract,
+                feed_id=None,
+                publication_id=None,
+                issn=None,
+            )
             if aid:
                 updated += 1
                 logger.info("Updated article id=%s for DOI %s", aid, norm)
@@ -135,7 +162,9 @@ def enrich_sciencedirect(conn: sqlite3.Connection, limit: int | None = None, app
     return updated
 
 
-def sciencedirect_feed_processor(session, feed_url: str, publication_id: str | None = None, issn: str | None = None):
+def sciencedirect_feed_processor(
+    session, feed_url: str, publication_id: str | None = None, issn: str | None = None
+):
     """Fetch a ScienceDirect RSS/Atom feed and augment entries with DOI when possible.
 
     This behaves like a feed fetcher: it returns a list of entry dicts similar
@@ -151,7 +180,9 @@ def sciencedirect_feed_processor(session, feed_url: str, publication_id: str | N
     from .. import crossref
 
     try:
-        resp = session.get(feed_url, timeout=20, headers={"User-Agent": "ed-news-fetcher/1.0"})
+        resp = session.get(
+            feed_url, timeout=20, headers={"User-Agent": "ed-news-fetcher/1.0"}
+        )
         resp.raise_for_status()
         parsed = feedparser.parse(resp.content)
     except Exception as e:
@@ -187,7 +218,10 @@ def sciencedirect_feed_processor(session, feed_url: str, publication_id: str | N
                 if v:
                     existing_doi = v
                     break
-            if not existing_doi and ("sciencedirect.com" in (link or "") or "sciencedirect.com" in (e.get('link') or "")):
+            if not existing_doi and (
+                "sciencedirect.com" in (link or "")
+                or "sciencedirect.com" in (e.get("link") or "")
+            ):
                 if title and len(title) > 10:
                     # Try to find a DOI for this title in the local DB first to avoid
                     # performing a Crossref title lookup when the article is already known.
@@ -200,9 +234,13 @@ def sciencedirect_feed_processor(session, feed_url: str, publication_id: str | N
                             conn = sqlite3.connect(str(_cfg.DB_PATH))
                             try:
                                 art = get_article_by_title(conn, title)
-                                if art and art.get('doi'):
-                                    entry['doi'] = art.get('doi')
-                                    logger.info("sciencedirect_processor: found DOI %s for title %s from local DB", art.get('doi'), title)
+                                if art and art.get("doi"):
+                                    entry["doi"] = art.get("doi")
+                                    logger.info(
+                                        "sciencedirect_processor: found DOI %s for title %s from local DB",
+                                        art.get("doi"),
+                                        title,
+                                    )
                                     out.append(entry)
                                     continue
                             finally:
@@ -218,26 +256,49 @@ def sciencedirect_feed_processor(session, feed_url: str, publication_id: str | N
                         pass
 
                     try:
-                        found = crossref.query_crossref_doi_by_title(title, preferred_publication_id=publication_id)
+                        found = crossref.query_crossref_doi_by_title(
+                            title, preferred_publication_id=publication_id
+                        )
                         if found:
                             entry["doi"] = found
-                            logger.info("sciencedirect_processor: found DOI %s for title %s", found, title)
+                            logger.info(
+                                "sciencedirect_processor: found DOI %s for title %s",
+                                found,
+                                title,
+                            )
                     except Exception:
-                        logger.debug("sciencedirect_processor: CrossRef title lookup failed for %s", title)
+                        logger.debug(
+                            "sciencedirect_processor: CrossRef title lookup failed for %s",
+                            title,
+                        )
         except Exception:
-            logger.debug("sciencedirect_processor: DOI extraction/lookup failed for entry %s", title)
+            logger.debug(
+                "sciencedirect_processor: DOI extraction/lookup failed for entry %s",
+                title,
+            )
 
         out.append(entry)
     return out
 
 
 # Backwards-compatible preprocessor alias
-def sciencedirect_preprocessor(session, feed_url: str, publication_id: str | None = None, issn: str | None = None):
-    return sciencedirect_feed_processor(session, feed_url, publication_id=publication_id, issn=issn)
+def sciencedirect_preprocessor(
+    session, feed_url: str, publication_id: str | None = None, issn: str | None = None
+):
+    return sciencedirect_feed_processor(
+        session, feed_url, publication_id=publication_id, issn=issn
+    )
 
 
 # DB-level postprocessor alias for enrichment
-def sciencedirect_postprocessor_db(conn, feed_key: str, entries, session=None, publication_id: str | None = None, issn: str | None = None):
+def sciencedirect_postprocessor_db(
+    conn,
+    feed_key: str,
+    entries,
+    session=None,
+    publication_id: str | None = None,
+    issn: str | None = None,
+):
     """DB-level postprocessor that processes the provided entries.
 
     For each entry, attempt to determine a DOI (from the entry, via feed helpers,
@@ -264,19 +325,29 @@ def sciencedirect_postprocessor_db(conn, feed_key: str, entries, session=None, p
             # Determine DOI from entry fields or by title lookup
             doi = None
             try:
-                if e.get('doi'):
-                    doi = feeds_mod.normalize_doi(e.get('doi'))
+                if e.get("doi"):
+                    doi = feeds_mod.normalize_doi(e.get("doi"))
                 else:
-                    src = e.get('_entry') or e
+                    src = e.get("_entry") or e
                     doi = feeds_mod.extract_and_normalize_doi(src) if src else None
             except Exception:
                 doi = None
 
-            title = e.get('title') or (e.get('_entry') or {}).get('title') if isinstance(e.get('_entry'), dict) else e.get('title')
+            title = (
+                e.get("title") or (e.get("_entry") or {}).get("title")
+                if isinstance(e.get("_entry"), dict)
+                else e.get("title")
+            )
 
-            if not doi and title and feeds_mod.title_suitable_for_crossref_lookup(title):
+            if (
+                not doi
+                and title
+                and feeds_mod.title_suitable_for_crossref_lookup(title)
+            ):
                 try:
-                    found = crossref_mod.query_crossref_doi_by_title(title, preferred_publication_id=publication_id)
+                    found = crossref_mod.query_crossref_doi_by_title(
+                        title, preferred_publication_id=publication_id
+                    )
                     if found:
                         doi = found
                 except Exception:
@@ -304,47 +375,86 @@ def sciencedirect_postprocessor_db(conn, feed_key: str, entries, session=None, p
                 except Exception:
                     cr = None
 
-            authors = cr.get('authors') if isinstance(cr, dict) else None
-            abstract = cr.get('abstract') if isinstance(cr, dict) else None
-            raw = cr.get('raw') if isinstance(cr, dict) else None
-            published = cr.get('published') if isinstance(cr, dict) else (e.get('published') or None)
+            authors = cr.get("authors") if isinstance(cr, dict) else None
+            abstract = cr.get("abstract") if isinstance(cr, dict) else None
+            raw = cr.get("raw") if isinstance(cr, dict) else None
+            published = (
+                cr.get("published")
+                if isinstance(cr, dict)
+                else (e.get("published") or None)
+            )
 
             # Prefer Crossref values when available, otherwise fall back to feed values
-            title_final = title or e.get('title')
-            authors_final = authors or (e.get('authors') if e.get('authors') else None)
-            abstract_final = abstract or (e.get('abstract') if e.get('abstract') else None)
+            title_final = title or e.get("title")
+            authors_final = authors or (e.get("authors") if e.get("authors") else None)
+            abstract_final = abstract or (
+                e.get("abstract") if e.get("abstract") else None
+            )
             published_final = published
 
             try:
-                aid = eddb.upsert_article(conn, doi, title=title_final, authors=authors_final, abstract=abstract_final, feed_id=feed_key, publication_id=publication_id, issn=issn, published=published_final)
+                aid = eddb.upsert_article(
+                    conn,
+                    doi,
+                    title=title_final,
+                    authors=authors_final,
+                    abstract=abstract_final,
+                    feed_id=feed_key,
+                    publication_id=publication_id,
+                    issn=issn,
+                    published=published_final,
+                )
                 if aid:
                     updated += 1
                     # store crossref raw if present
                     if raw:
                         try:
-                            eddb.update_article_crossref(conn, doi, authors=authors_final, abstract=abstract_final, raw=raw, published=published_final)
+                            eddb.update_article_crossref(
+                                conn,
+                                doi,
+                                authors=authors_final,
+                                abstract=abstract_final,
+                                raw=raw,
+                                published=published_final,
+                            )
                         except Exception:
                             pass
 
                     # Attach DOI to corresponding items rows matching this feed and link/guid
                     try:
-                        link = (e.get('link') or '').strip()
-                        guid = (e.get('guid') or '').strip()
+                        link = (e.get("link") or "").strip()
+                        guid = (e.get("guid") or "").strip()
                         if link:
-                            cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND link = ?", (doi, feed_key, link))
+                            cur.execute(
+                                "UPDATE items SET doi = ? WHERE feed_id = ? AND link = ?",
+                                (doi, feed_key, link),
+                            )
                         if guid:
-                            cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND guid = ?", (doi, feed_key, guid))
+                            cur.execute(
+                                "UPDATE items SET doi = ? WHERE feed_id = ? AND guid = ?",
+                                (doi, feed_key, guid),
+                            )
                         # Also attempt to update by url_hash if available on the entry
                         try:
                             import hashlib
+
                             if link:
-                                url_hash = hashlib.sha256(link.encode('utf-8')).hexdigest()
-                                cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND url_hash = ?", (doi, feed_key, url_hash))
+                                url_hash = hashlib.sha256(
+                                    link.encode("utf-8")
+                                ).hexdigest()
+                                cur.execute(
+                                    "UPDATE items SET doi = ? WHERE feed_id = ? AND url_hash = ?",
+                                    (doi, feed_key, url_hash),
+                                )
                         except Exception:
                             pass
                         conn.commit()
                     except Exception:
-                        logger.debug("failed to attach doi %s to items for feed %s", doi, feed_key)
+                        logger.debug(
+                            "failed to attach doi %s to items for feed %s",
+                            doi,
+                            feed_key,
+                        )
             except Exception:
                 logger.exception("failed to upsert article for doi=%s", doi)
         except Exception:

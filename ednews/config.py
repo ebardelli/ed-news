@@ -59,10 +59,10 @@ FEED_TITLE_HEADLINES = "Latest Education Headlines"
 # Titles to exclude from processing/saving. Comparison is done on the
 # trimmed, lowercased title string. Add additional blacklist titles here.
 TITLE_FILTERS = [
-	"editorial board",
-	"editorial announcement",
-	"reviewer acknowledgements",
-	"reviewer acknowledgments",
-	"acknowledgment",
-	"correction",
+    "editorial board",
+    "editorial announcement",
+    "reviewer acknowledgements",
+    "reviewer acknowledgments",
+    "acknowledgment",
+    "correction",
 ]

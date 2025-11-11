@@ -28,7 +28,9 @@ BUILD_DIR = Path("build")
 # assets live inside the `ednews` package. Use Path(__file__).parent to locate
 # them; fallback to top-level paths for backward compatibility in dev checkouts.
 PKG_DIR = Path(__file__).parent
-TEMPLATES_DIR = (PKG_DIR / "templates") if (PKG_DIR / "templates").exists() else Path("templates")
+TEMPLATES_DIR = (
+    (PKG_DIR / "templates") if (PKG_DIR / "templates").exists() else Path("templates")
+)
 STATIC_DIR = (PKG_DIR / "static") if (PKG_DIR / "static").exists() else Path("static")
 # Use the JSON research file
 PLANET_FILE = config.RESEARCH_JSON
@@ -63,29 +65,31 @@ def _make_rss_description(item: dict) -> str:
     # Build HTML blocks for the RSS description so parts render with clear
     # separation in RSS readers (HTML is placed inside the CDATA section).
     parts = []
-    src = item.get('source')
+    src = item.get("source")
     if src:
         parts.append(f"<p><strong>Source:</strong> {src}</p>")
 
-    main = (item.get('abstract') or item.get('content') or '')
+    main = item.get("abstract") or item.get("content") or ""
     main = str(main).strip()
     if main:
         # Wrap the main text in a paragraph to ensure spacing/rendering
         parts.append(f"<p>{main}</p>")
 
-    sims = item.get('similar_headlines') or []
+    sims = item.get("similar_headlines") or []
     sims_li = []
     for s in sims:
-        label = (s.get('title') or s.get('text') or '').strip()
+        label = (s.get("title") or s.get("text") or "").strip()
         if not label:
             continue
-        if s.get('link'):
+        if s.get("link"):
             sims_li.append(f"<li><a href=\"{s.get('link')}\">{label}</a></li>")
         else:
             sims_li.append(f"<li>{label}</li>")
     if sims_li:
         # Put the 'Related' heading in its own paragraph and then the list
-        parts.append("<p><strong>Related:</strong></p>\n<ul>" + "\n".join(sims_li) + "</ul>")
+        parts.append(
+            "<p><strong>Related:</strong></p>\n<ul>" + "\n".join(sims_li) + "</ul>"
+        )
 
     # Join blocks with a single newline; each block contains its own HTML
     # and will render as separate paragraphs in RSS clients.
@@ -108,7 +112,9 @@ def _strip_img_tags(html: str) -> str:
         return str(html)
 
 
-def get_similar_articles_by_doi(conn, doi, top_n=5, model=MODEL_NAME, store_if_missing: bool = True):
+def get_similar_articles_by_doi(
+    conn, doi, top_n=5, model=MODEL_NAME, store_if_missing: bool = True
+):
     """Return a list of similar articles for the given DOI using stored embeddings.
 
     The function looks up the article by DOI, retrieves its embedding from the
@@ -131,7 +137,9 @@ def get_similar_articles_by_doi(conn, doi, top_n=5, model=MODEL_NAME, store_if_m
 
     cur = conn.cursor()
 
-    cur.execute("SELECT id, title, abstract FROM articles WHERE doi = ? LIMIT 1", (doi,))
+    cur.execute(
+        "SELECT id, title, abstract FROM articles WHERE doi = ? LIMIT 1", (doi,)
+    )
     row = cur.fetchone()
     if not row:
         logger.debug("No article found with DOI: %s", doi)
@@ -142,7 +150,9 @@ def get_similar_articles_by_doi(conn, doi, top_n=5, model=MODEL_NAME, store_if_m
     abstract = abstract or ""
     combined = title.strip()
     if abstract.strip():
-        combined = combined + "\n\n" + abstract.strip() if combined else abstract.strip()
+        combined = (
+            combined + "\n\n" + abstract.strip() if combined else abstract.strip()
+        )
 
     cur.execute("SELECT embedding FROM articles_vec WHERE rowid = ?", (article_id,))
     res = cur.fetchone()
@@ -152,24 +162,26 @@ def get_similar_articles_by_doi(conn, doi, top_n=5, model=MODEL_NAME, store_if_m
         logger.debug("No embedding found for DOI %s (id=%s)", doi, article_id)
         return []
 
-    q = '''
+    q = """
     SELECT A.doi, A.title, A.abstract, vec_distance_cosine(V.embedding, ?) AS distance
     FROM articles AS A, articles_vec AS V
     WHERE A.id = V.rowid AND A.id != ?
     ORDER BY distance ASC
     LIMIT ?
-    '''
+    """
 
     results = cur.execute(q, (target_blob, article_id, top_n)).fetchall()
 
     out_list = []
     for doi_r, title_r, abstract_r, distance in results:
-        out_list.append({
-            "doi": doi_r,
-            "title": title_r,
-            "abstract": abstract_r,
-            "distance": float(distance) if distance is not None else None,
-        })
+        out_list.append(
+            {
+                "doi": doi_r,
+                "title": title_r,
+                "abstract": abstract_r,
+                "distance": float(distance) if distance is not None else None,
+            }
+        )
 
     return out_list
 
@@ -192,7 +204,9 @@ def read_planet(planet_path: Path):
     patched = "[global]\n" + raw
     cfg = ConfigParser()
     cfg.read_string(patched)
-    site_title = cfg.get("global", "title", fallback="Latest Research Articles in Education")
+    site_title = cfg.get(
+        "global", "title", fallback="Latest Research Articles in Education"
+    )
     feeds = []
     for section in cfg.sections():
         if section == "global":
@@ -271,12 +285,14 @@ def build(out_dir: Path = BUILD_DIR):
                 title = data.get("title", "Latest Research Articles in Education")
                 feeds = []
                 for key, info in (data.get("feeds", {}) or {}).items():
-                    feeds.append({
-                        "id": key,
-                        "title": info.get("title", key),
-                        "link": info.get("link", ""),
-                        "feed": info.get("feed", ""),
-                    })
+                    feeds.append(
+                        {
+                            "id": key,
+                            "title": info.get("title", key),
+                            "link": info.get("link", ""),
+                            "feed": info.get("feed", ""),
+                        }
+                    )
                 ctx = {"title": title, "feeds": feeds}
         else:
             ctx = read_planet(PLANET_FILE)
@@ -289,7 +305,9 @@ def build(out_dir: Path = BUILD_DIR):
             tz = ZoneInfo("America/Los_Angeles")
             ctx["build_time"] = datetime.now(tz).strftime("%a, %d %b %Y %H:%M %Z")
         except Exception:
-            ctx["build_time"] = datetime.now().astimezone().strftime("%a, %d %b %Y %H:%M %Z")
+            ctx["build_time"] = (
+                datetime.now().astimezone().strftime("%a, %d %b %Y %H:%M %Z")
+            )
     except Exception:
         ctx["build_time"] = datetime.now().strftime("%a, %d %b %Y %H:%M")
 
@@ -299,7 +317,9 @@ def build(out_dir: Path = BUILD_DIR):
             # If more than `ARTICLES_DEFAULT_LIMIT` articles share the same
             # published DATE as the Nth article, `read_articles` will include them
             # as well so the site doesn't arbitrarily truncate a day's publications.
-            ctx["articles"] = read_articles(DB_FILE, limit=config.ARTICLES_DEFAULT_LIMIT)
+            ctx["articles"] = read_articles(
+                DB_FILE, limit=config.ARTICLES_DEFAULT_LIMIT
+            )
             logger.info("loaded %d articles from %s", len(ctx["articles"]), DB_FILE)
             if get_similar_articles_by_doi and ctx.get("articles"):
                 try:
@@ -309,25 +329,33 @@ def build(out_dir: Path = BUILD_DIR):
                         raw = art.get("raw") or {}
                         doi_source = None
                         if doi:
-                            doi_source = 'top-level'
-                        elif isinstance(raw, dict) and raw.get('doi'):
-                            doi = raw.get('doi')
-                            doi_source = 'raw'
+                            doi_source = "top-level"
+                        elif isinstance(raw, dict) and raw.get("doi"):
+                            doi = raw.get("doi")
+                            doi_source = "raw"
                         else:
                             link = art.get("link")
-                            if isinstance(link, str) and link.startswith("https://doi.org/"):
-                                doi = link[len("https://doi.org/"):] 
-                                doi_source = 'link'
+                            if isinstance(link, str) and link.startswith(
+                                "https://doi.org/"
+                            ):
+                                doi = link[len("https://doi.org/") :]
+                                doi_source = "link"
 
                         if not doi:
                             art["similar_articles"] = []
                             continue
 
                         try:
-                            sims = get_similar_articles_by_doi(conn, doi, top_n=5, store_if_missing=False)
+                            sims = get_similar_articles_by_doi(
+                                conn, doi, top_n=5, store_if_missing=False
+                            )
                             art["similar_articles"] = sims or []
                         except Exception as e:
-                            logger.exception("Error computing similar articles for DOI=%s: %s", doi, e)
+                            logger.exception(
+                                "Error computing similar articles for DOI=%s: %s",
+                                doi,
+                                e,
+                            )
                             art["similar_articles"] = []
                 finally:
                     try:
@@ -343,13 +371,16 @@ def build(out_dir: Path = BUILD_DIR):
     # Load recent news headlines from the headlines table if present
     try:
         # Use the configured headlines default limit; fall back to 20 when not set.
-        ctx["news_headlines"] = read_news_headlines(DB_FILE, limit=getattr(config, 'HEADLINES_DEFAULT_LIMIT', 20))
+        ctx["news_headlines"] = read_news_headlines(
+            DB_FILE, limit=getattr(config, "HEADLINES_DEFAULT_LIMIT", 20)
+        )
     except Exception:
         ctx["news_headlines"] = []
 
     # Compute related headlines using stored embeddings (headlines_vec).
     try:
         from . import embeddings as _emb
+
         # Ensure the headlines_vec virtual table exists (no-op if not supported)
         try:
             conn_tmp = sqlite3.connect(str(DB_FILE))
@@ -369,10 +400,14 @@ def build(out_dir: Path = BUILD_DIR):
                         nh["similar_headlines"] = []
                         continue
                     try:
-                        sims = _emb.find_similar_headlines_by_rowid(conn_sim, nid, top_n=5)
+                        sims = _emb.find_similar_headlines_by_rowid(
+                            conn_sim, nid, top_n=5
+                        )
                         nh["similar_headlines"] = sims or []
                     except Exception:
-                        logger.exception("Error computing similar headlines for id=%s", nid)
+                        logger.exception(
+                            "Error computing similar headlines for id=%s", nid
+                        )
                         nh["similar_headlines"] = []
             finally:
                 try:
@@ -391,7 +426,9 @@ def build(out_dir: Path = BUILD_DIR):
     # and how many embeddings exist in the headlines_vec table (if available).
     try:
         total_headlines = len(ctx.get("news_headlines") or [])
-        with_emb_suggestions = sum(1 for nh in (ctx.get("news_headlines") or []) if nh.get("similar_headlines"))
+        with_emb_suggestions = sum(
+            1 for nh in (ctx.get("news_headlines") or []) if nh.get("similar_headlines")
+        )
         emb_count = None
         try:
             conn_stat = sqlite3.connect(str(DB_FILE))
@@ -407,7 +444,12 @@ def build(out_dir: Path = BUILD_DIR):
                     conn_stat.close()
             except Exception:
                 pass
-        logger.info("headlines: total=%d with_suggestions=%d embeddings=%s", total_headlines, with_emb_suggestions, str(emb_count))
+        logger.info(
+            "headlines: total=%d with_suggestions=%d embeddings=%s",
+            total_headlines,
+            with_emb_suggestions,
+            str(emb_count),
+        )
     except Exception:
         logger.exception("Failed to compute headline build stats")
 
@@ -426,9 +468,18 @@ def build(out_dir: Path = BUILD_DIR):
     # Expose feed links/titles to templates so index.html can render feed links
     try:
         ctx["feed_links"] = {
-            "combined": {"title": getattr(config, 'FEED_TITLE_COMBINED', 'Ed News'), "href": "index.rss"},
-            "headlines": {"title": getattr(config, 'FEED_TITLE_HEADLINES', 'Ed Headlines'), "href": "headlines.rss"},
-            "articles": {"title": getattr(config, 'FEED_TITLE_ARTICLES', 'Ed Articles'), "href": "articles.rss"},
+            "combined": {
+                "title": getattr(config, "FEED_TITLE_COMBINED", "Ed News"),
+                "href": "index.rss",
+            },
+            "headlines": {
+                "title": getattr(config, "FEED_TITLE_HEADLINES", "Ed Headlines"),
+                "href": "headlines.rss",
+            },
+            "articles": {
+                "title": getattr(config, "FEED_TITLE_ARTICLES", "Ed Articles"),
+                "href": "articles.rss",
+            },
         }
     except Exception:
         ctx["feed_links"] = {}
@@ -457,59 +508,79 @@ def build(out_dir: Path = BUILD_DIR):
         # Use the module-level _make_rss_description helper to prepare descriptions
 
         # Prepare metadata for feeds: use configured titles/links if present
-        site_link = getattr(config, 'FEED_SITE_LINK', "https://ebardelli.com/ed-news/")
+        site_link = getattr(config, "FEED_SITE_LINK", "https://ebardelli.com/ed-news/")
         feed_meta_combined = {
-            "title": getattr(config, 'FEED_TITLE_COMBINED', "Latest Education News"),
+            "title": getattr(config, "FEED_TITLE_COMBINED", "Latest Education News"),
             "link": site_link,
-            "description": getattr(config, 'FEED_TITLE_COMBINED', "Latest Education News"),
+            "description": getattr(
+                config, "FEED_TITLE_COMBINED", "Latest Education News"
+            ),
             "last_build_date": ctx.get("build_time"),
             "pub_date": ctx.get("build_time"),
         }
         feed_meta_articles = {
-            "title": getattr(config, 'FEED_TITLE_ARTICLES', "Latest Education Articles"),
+            "title": getattr(
+                config, "FEED_TITLE_ARTICLES", "Latest Education Articles"
+            ),
             "link": site_link,
-            "description": getattr(config, 'FEED_TITLE_ARTICLES', "Latest Education Articles"),
+            "description": getattr(
+                config, "FEED_TITLE_ARTICLES", "Latest Education Articles"
+            ),
             "last_build_date": ctx.get("build_time"),
             "pub_date": ctx.get("build_time"),
         }
         feed_meta_headlines = {
-            "title": getattr(config, 'FEED_TITLE_HEADLINES', "Latest Education Headlines"),
+            "title": getattr(
+                config, "FEED_TITLE_HEADLINES", "Latest Education Headlines"
+            ),
             "link": site_link,
-            "description": getattr(config, 'FEED_TITLE_HEADLINES', "Latest Education Headlines"),
+            "description": getattr(
+                config, "FEED_TITLE_HEADLINES", "Latest Education Headlines"
+            ),
             "last_build_date": ctx.get("build_time"),
             "pub_date": ctx.get("build_time"),
         }
 
         # Articles-only feed
-        articles_limit = getattr(config, 'ARTICLES_DEFAULT_LIMIT', 20)
+        articles_limit = getattr(config, "ARTICLES_DEFAULT_LIMIT", 20)
         # Filter out entirely empty/meaningless items before rendering
         # Ensure article items include optional `source` and `similar_headlines` keys
         articles_items = []
-        for a in (ctx.get("articles") or []):
+        for a in ctx.get("articles") or []:
             if not item_has_content(a):
                 continue
             it = dict(a)
             # Prefer an explicit source field if present, else use feed title
-            src = it.get('source') or it.get('feed_title') or (it.get('raw', {}) or {}).get('source')
+            src = (
+                it.get("source")
+                or it.get("feed_title")
+                or (it.get("raw", {}) or {}).get("source")
+            )
             if src:
-                it['source'] = src
+                it["source"] = src
             # Convert similar_articles (from article embeddings) to a generic similar_headlines shape
-            sims = it.get('similar_articles') or []
+            sims = it.get("similar_articles") or []
             sim_items = []
             for s in sims:
                 # s may contain doi, title, abstract, distance
-                sim_items.append({
-                    'title': s.get('title'),
-                    'text': s.get('abstract'),
-                    'link': (('https://doi.org/' + s.get('doi')) if s.get('doi') else None),
-                    'distance': s.get('distance'),
-                })
-            it['similar_headlines'] = sim_items
+                sim_items.append(
+                    {
+                        "title": s.get("title"),
+                        "text": s.get("abstract"),
+                        "link": (
+                            ("https://doi.org/" + s.get("doi"))
+                            if s.get("doi")
+                            else None
+                        ),
+                        "distance": s.get("distance"),
+                    }
+                )
+            it["similar_headlines"] = sim_items
             # Prepare rss_description in Python so templates can render it directly
             try:
-                it['rss_description'] = _make_rss_description(it)
+                it["rss_description"] = _make_rss_description(it)
             except Exception:
-                it['rss_description'] = ''
+                it["rss_description"] = ""
             articles_items.append(it)
         articles_items = articles_items[:articles_limit]
         # Ensure each item has a hashed guid for de-duplication
@@ -517,7 +588,13 @@ def build(out_dir: Path = BUILD_DIR):
 
         def make_guid_for_article(a):
             # Prefer link, else title+published+content
-            key = a.get("link") or (str(a.get("title") or "") + "|" + str(a.get("published") or "") + "|" + str(a.get("content") or ""))
+            key = a.get("link") or (
+                str(a.get("title") or "")
+                + "|"
+                + str(a.get("published") or "")
+                + "|"
+                + str(a.get("content") or "")
+            )
             return hashlib.sha1(key.encode("utf-8")).hexdigest()
 
         for a in articles_items:
@@ -525,12 +602,15 @@ def build(out_dir: Path = BUILD_DIR):
                 a["guid"] = make_guid_for_article(a)
 
         articles_ctx = {**feed_meta_articles, "articles": articles_items}
-        (out_dir / "articles.rss").write_text(tpl_articles.render(articles_ctx), encoding="utf-8")
+        (out_dir / "articles.rss").write_text(
+            tpl_articles.render(articles_ctx), encoding="utf-8"
+        )
         logger.info("wrote %s", out_dir / "articles.rss")
 
         # Headlines-only feed: map headlines into article-shaped dicts
-        headlines_limit = getattr(config, 'HEADLINES_DEFAULT_LIMIT', 20)
+        headlines_limit = getattr(config, "HEADLINES_DEFAULT_LIMIT", 20)
         headlines_raw = ctx.get("news_headlines") or []
+
         # Convert headline rows to the expected keys used by the RSS template
         def headline_to_item(h):
             item = {
@@ -543,15 +623,25 @@ def build(out_dir: Path = BUILD_DIR):
                 "similar_headlines": h.get("similar_headlines") or [],
             }
             try:
-                item['rss_description'] = _make_rss_description(item)
+                item["rss_description"] = _make_rss_description(item)
             except Exception:
-                item['rss_description'] = ''
+                item["rss_description"] = ""
             return item
+
         headlines_items = [headline_to_item(h) for h in headlines_raw]
         # Filter headlines for meaningful content and apply limit afterwards
-        headlines_items = [h for h in headlines_items if item_has_content(h)][:headlines_limit]
+        headlines_items = [h for h in headlines_items if item_has_content(h)][
+            :headlines_limit
+        ]
+
         def make_guid_for_headline(h):
-            key = h.get("link") or (str(h.get("title") or "") + "|" + str(h.get("published") or "") + "|" + str(h.get("content") or ""))
+            key = h.get("link") or (
+                str(h.get("title") or "")
+                + "|"
+                + str(h.get("published") or "")
+                + "|"
+                + str(h.get("content") or "")
+            )
             return hashlib.sha1(key.encode("utf-8")).hexdigest()
 
         for h in headlines_items:
@@ -559,7 +649,9 @@ def build(out_dir: Path = BUILD_DIR):
                 h["guid"] = make_guid_for_headline(h)
 
         headlines_ctx = {**feed_meta_headlines, "articles": headlines_items}
-        (out_dir / "headlines.rss").write_text(tpl_headlines.render(headlines_ctx), encoding="utf-8")
+        (out_dir / "headlines.rss").write_text(
+            tpl_headlines.render(headlines_ctx), encoding="utf-8"
+        )
         logger.info("wrote %s", out_dir / "headlines.rss")
 
         # Combined feed: merge articles and headlines, parse/normalize published
@@ -589,13 +681,18 @@ def build(out_dir: Path = BUILD_DIR):
                 pass
             # Try ISO-like parsing
             try:
-                dt = datetime.fromisoformat(s.replace('Z', '+00:00'))
+                dt = datetime.fromisoformat(s.replace("Z", "+00:00"))
                 if dt.tzinfo is None:
                     dt = dt.replace(tzinfo=timezone.utc)
                 return dt
             except Exception:
                 pass
-            for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+            for fmt in (
+                "%Y-%m-%dT%H:%M:%S.%f",
+                "%Y-%m-%dT%H:%M:%S",
+                "%Y-%m-%d %H:%M:%S",
+                "%Y-%m-%d",
+            ):
                 try:
                     dt = datetime.strptime(s, fmt)
                     dt = dt.replace(tzinfo=timezone.utc)
@@ -620,33 +717,38 @@ def build(out_dir: Path = BUILD_DIR):
             source line, and renders similar items as a bulleted HTML list.
             """
             parts = []
-            src = item.get('source')
+            src = item.get("source")
             if src:
                 parts.append(f"<strong>Source:</strong> {src}")
 
-            main = (item.get('abstract') or item.get('content') or '')
+            main = item.get("abstract") or item.get("content") or ""
             main = str(main).strip()
             if main:
                 parts.append(main)
 
-            sims = item.get('similar_headlines') or []
+            sims = item.get("similar_headlines") or []
             sims_li = []
             for s in sims:
-                label = (s.get('title') or s.get('text') or '').strip()
+                label = (s.get("title") or s.get("text") or "").strip()
                 if not label:
                     continue
-                if s.get('link'):
+                if s.get("link"):
                     sims_li.append(f"<li><a href=\"{s.get('link')}\">{label}</a></li>")
                 else:
                     sims_li.append(f"<li>{label}</li>")
             if sims_li:
-                parts.append("<strong>Related:</strong>\n<ul>" + "\n".join(sims_li) + "</ul>")
+                parts.append(
+                    "<strong>Related:</strong>\n<ul>" + "\n".join(sims_li) + "</ul>"
+                )
 
             return "\n\n".join(parts).strip()
 
-
         def norm_article(a):
-            raw_published = a.get("raw", {}).get("published") if a.get("raw") else a.get("published")
+            raw_published = (
+                a.get("raw", {}).get("published")
+                if a.get("raw")
+                else a.get("published")
+            )
             pd = parse_datetime_value(raw_published)
             # Build a normalized item shape including source and similar_headlines
             item = {
@@ -656,15 +758,23 @@ def build(out_dir: Path = BUILD_DIR):
                 "abstract": a.get("abstract"),
                 "published": a.get("published"),
                 "published_dt": pd,
-                "source": a.get('source') or a.get('feed_title') or (a.get('raw') or {}).get('source'),
+                "source": a.get("source")
+                or a.get("feed_title")
+                or (a.get("raw") or {}).get("source"),
                 # ensure similar_headlines is present and in the expected shape
-                "similar_headlines": a.get('similar_headlines') or a.get('similar_articles') or [],
+                "similar_headlines": a.get("similar_headlines")
+                or a.get("similar_articles")
+                or [],
             }
-            item['rss_description'] = make_rss_description(item)
+            item["rss_description"] = make_rss_description(item)
             return item
 
         def norm_headline(h):
-            raw_published = h.get("raw", {}).get("published") if h.get("raw") else h.get("published")
+            raw_published = (
+                h.get("raw", {}).get("published")
+                if h.get("raw")
+                else h.get("published")
+            )
             pd = parse_datetime_value(raw_published)
             item = {
                 "title": h.get("title"),
@@ -673,24 +783,28 @@ def build(out_dir: Path = BUILD_DIR):
                 "abstract": None,
                 "published": h.get("published"),
                 "published_dt": pd,
-                "source": h.get('source') or None,
-                "similar_headlines": h.get('similar_headlines') or [],
+                "source": h.get("source") or None,
+                "similar_headlines": h.get("similar_headlines") or [],
             }
-            item['rss_description'] = make_rss_description(item)
+            item["rss_description"] = make_rss_description(item)
             return item
 
-        for a in (ctx.get("articles") or []):
+        for a in ctx.get("articles") or []:
             na = norm_article(a)
             if item_has_content(na):
                 merged.append(na)
-        for h in (ctx.get("news_headlines") or []):
+        for h in ctx.get("news_headlines") or []:
             nh = norm_headline(h)
             if item_has_content(nh):
                 merged.append(nh)
 
         # Sort by parsed published datetime descending
         try:
-            merged.sort(key=lambda x: x.get("published_dt") or datetime(1970, 1, 1, tzinfo=timezone.utc), reverse=True)
+            merged.sort(
+                key=lambda x: x.get("published_dt")
+                or datetime(1970, 1, 1, tzinfo=timezone.utc),
+                reverse=True,
+            )
         except Exception:
             pass
 
@@ -698,11 +812,19 @@ def build(out_dir: Path = BUILD_DIR):
         # Add GUIDs to combined items if missing
         for it in combined_items:
             if not it.get("guid"):
-                key = it.get("link") or (str(it.get("title") or "") + "|" + str(it.get("published") or "") + "|" + str(it.get("content") or ""))
+                key = it.get("link") or (
+                    str(it.get("title") or "")
+                    + "|"
+                    + str(it.get("published") or "")
+                    + "|"
+                    + str(it.get("content") or "")
+                )
                 it["guid"] = hashlib.sha1(str(key).encode("utf-8")).hexdigest()
 
         combined_ctx = {**feed_meta_combined, "articles": combined_items}
-        (out_dir / "index.rss").write_text(tpl_index.render(combined_ctx), encoding="utf-8")
+        (out_dir / "index.rss").write_text(
+            tpl_index.render(combined_ctx), encoding="utf-8"
+        )
         logger.info("wrote %s", out_dir / "index.rss")
     except Exception:
         logger.exception("Failed to render additional RSS feeds")
@@ -715,7 +837,12 @@ def build(out_dir: Path = BUILD_DIR):
     logger.info("done")
 
 
-def read_articles(db_path: Path, limit: int = config.ARTICLES_DEFAULT_LIMIT, days: int | None = None, publications: int | None = None):
+def read_articles(
+    db_path: Path,
+    limit: int = config.ARTICLES_DEFAULT_LIMIT,
+    days: int | None = None,
+    publications: int | None = None,
+):
     """Read recent articles from the ``combined_articles`` view in the DB.
 
     The function supports several retrieval modes:
@@ -754,30 +881,39 @@ def read_articles(db_path: Path, limit: int = config.ARTICLES_DEFAULT_LIMIT, day
     if publications is not None:
         try:
             # Load rows with non-null published and feed_title
-            cur.execute("SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE published IS NOT NULL AND feed_title IS NOT NULL")
+            cur.execute(
+                "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE published IS NOT NULL AND feed_title IS NOT NULL"
+            )
             all_rows = [dict(r) for r in cur.fetchall()]
 
             if all_rows:
                 latest_per_feed = {}
                 for r in all_rows:
-                    ft = r.get('feed_title')
-                    pub = r.get('published') or ''
+                    ft = r.get("feed_title")
+                    pub = r.get("published") or ""
                     if ft not in latest_per_feed or (pub and pub > latest_per_feed[ft]):
                         latest_per_feed[ft] = pub
 
-                sorted_feeds = sorted(latest_per_feed.items(), key=lambda kv: kv[1], reverse=True)
+                sorted_feeds = sorted(
+                    latest_per_feed.items(), key=lambda kv: kv[1], reverse=True
+                )
                 top_feeds = [ft for ft, _ in sorted_feeds[:publications]]
 
-                feeds_latest_date = {ft: (latest_per_feed[ft][:10] if latest_per_feed[ft] else None) for ft in top_feeds}
+                feeds_latest_date = {
+                    ft: (latest_per_feed[ft][:10] if latest_per_feed[ft] else None)
+                    for ft in top_feeds
+                }
 
                 filtered = []
                 for r in all_rows:
-                    ft = r.get('feed_title')
+                    ft = r.get("feed_title")
                     if ft in feeds_latest_date and feeds_latest_date[ft]:
-                        if (r.get('published') or '')[:10] == feeds_latest_date[ft]:
+                        if (r.get("published") or "")[:10] == feeds_latest_date[ft]:
                             filtered.append(r)
 
-                rows = sorted(filtered, key=lambda r: r.get('published') or '', reverse=True)
+                rows = sorted(
+                    filtered, key=lambda r: r.get("published") or "", reverse=True
+                )
         except Exception:
             rows = []
 
@@ -837,12 +973,12 @@ def read_articles(db_path: Path, limit: int = config.ARTICLES_DEFAULT_LIMIT, day
                 seen = set()
                 merged = []
                 for r in top_rows:
-                    key = (r.get('doi'), r.get('link'))
+                    key = (r.get("doi"), r.get("link"))
                     if key not in seen:
                         seen.add(key)
                         merged.append(r)
                 for r in same_date_rows:
-                    key = (r.get('doi'), r.get('link'))
+                    key = (r.get("doi"), r.get("link"))
                     if key not in seen:
                         seen.add(key)
                         merged.append(r)
@@ -850,7 +986,9 @@ def read_articles(db_path: Path, limit: int = config.ARTICLES_DEFAULT_LIMIT, day
                 # Enforce a hard cap to avoid pathological expansions when many
                 # articles share the same DATE(published). The configured cap is
                 # limit + config.ARTICLES_MAX_SAME_DATE_EXTRA.
-                max_allowed = limit + getattr(config, 'ARTICLES_MAX_SAME_DATE_EXTRA', 200)
+                max_allowed = limit + getattr(
+                    config, "ARTICLES_MAX_SAME_DATE_EXTRA", 200
+                )
                 if len(merged) > max_allowed:
                     logger.warning(
                         "merged articles (%d) exceed max_allowed (%d); truncating to max_allowed",
@@ -889,7 +1027,12 @@ def read_articles(db_path: Path, limit: int = config.ARTICLES_DEFAULT_LIMIT, day
             return dt.strftime("%a, %d %b %Y")
         except Exception:
             pass
-        for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+        for fmt in (
+            "%Y-%m-%dT%H:%M:%S.%f",
+            "%Y-%m-%dT%H:%M:%S",
+            "%Y-%m-%d %H:%M:%S",
+            "%Y-%m-%d",
+        ):
             try:
                 dt = datetime.strptime(s, fmt)
                 return dt.strftime("%a, %d %b %Y")
@@ -909,7 +1052,7 @@ def read_articles(db_path: Path, limit: int = config.ARTICLES_DEFAULT_LIMIT, day
     out = []
     parsed_rows = []
     for r in rows:
-        pub_raw = r.get('published')
+        pub_raw = r.get("published")
         date_key = None
         if pub_raw is None:
             date_key = None
@@ -927,7 +1070,12 @@ def read_articles(db_path: Path, limit: int = config.ARTICLES_DEFAULT_LIMIT, day
                             dt = datetime.fromisoformat(s)
                             date_key = dt.date().isoformat()
                         except Exception:
-                            for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+                            for fmt in (
+                                "%Y-%m-%dT%H:%M:%S.%f",
+                                "%Y-%m-%dT%H:%M:%S",
+                                "%Y-%m-%d %H:%M:%S",
+                                "%Y-%m-%d",
+                            ):
                                 try:
                                     dt = datetime.strptime(s, fmt)
                                     date_key = dt.date().isoformat()
@@ -965,7 +1113,9 @@ def read_articles(db_path: Path, limit: int = config.ARTICLES_DEFAULT_LIMIT, day
                 try:
                     # Python-driven approach for robustness across SQLite versions.
                     # 1) Load all rows where published and feed_title are not null.
-                    cur.execute("SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE published IS NOT NULL AND feed_title IS NOT NULL")
+                    cur.execute(
+                        "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE published IS NOT NULL AND feed_title IS NOT NULL"
+                    )
                     all_rows = [dict(r) for r in cur.fetchall()]
 
                     if not all_rows:
@@ -974,28 +1124,45 @@ def read_articles(db_path: Path, limit: int = config.ARTICLES_DEFAULT_LIMIT, day
                         # 2) Compute latest published (string compare of timestamp) per feed_title
                         latest_per_feed = {}
                         for r in all_rows:
-                            ft = r.get('feed_title')
-                            pub = r.get('published') or ''
+                            ft = r.get("feed_title")
+                            pub = r.get("published") or ""
                             # use raw string compare on ISO-like timestamps; ensure longer is greater
-                            if ft not in latest_per_feed or (pub and pub > latest_per_feed[ft]):
+                            if ft not in latest_per_feed or (
+                                pub and pub > latest_per_feed[ft]
+                            ):
                                 latest_per_feed[ft] = pub
 
                         # 3) Sort feeds by latest published desc and take top-N
-                        sorted_feeds = sorted(latest_per_feed.items(), key=lambda kv: kv[1], reverse=True)
+                        sorted_feeds = sorted(
+                            latest_per_feed.items(), key=lambda kv: kv[1], reverse=True
+                        )
                         top_feeds = [ft for ft, _ in sorted_feeds[:publications]]
 
                         # 4) For each top feed, compute YYYY-MM-DD latest date and filter rows
-                        feeds_latest_date = {ft: (latest_per_feed[ft][:10] if latest_per_feed[ft] else None) for ft in top_feeds}
+                        feeds_latest_date = {
+                            ft: (
+                                latest_per_feed[ft][:10]
+                                if latest_per_feed[ft]
+                                else None
+                            )
+                            for ft in top_feeds
+                        }
 
                         filtered = []
                         for r in all_rows:
-                            ft = r.get('feed_title')
+                            ft = r.get("feed_title")
                             if ft in feeds_latest_date and feeds_latest_date[ft]:
-                                if (r.get('published') or '')[:10] == feeds_latest_date[ft]:
+                                if (r.get("published") or "")[:10] == feeds_latest_date[
+                                    ft
+                                ]:
                                     filtered.append(r)
 
                         # order by published desc
-                        rows = sorted(filtered, key=lambda r: r.get('published') or '', reverse=True)
+                        rows = sorted(
+                            filtered,
+                            key=lambda r: r.get("published") or "",
+                            reverse=True,
+                        )
                 except Exception:
                     rows = []
             elif days is not None:
@@ -1009,17 +1176,19 @@ def read_articles(db_path: Path, limit: int = config.ARTICLES_DEFAULT_LIMIT, day
 
     out = []
     for date_key, r in selected:
-        pub_raw = r.get('published')
+        pub_raw = r.get("published")
         published_short = format_short_date(pub_raw)
-        out.append({
-            'title': r.get('title'),
-            'doi': r.get('doi'),
-            'link': r.get('link'),
-            'feed_title': r.get('feed_title'),
-            'content': _strip_img_tags(r.get('content')),
-            'published': published_short,
-            'raw': r,
-        })
+        out.append(
+            {
+                "title": r.get("title"),
+                "doi": r.get("doi"),
+                "link": r.get("link"),
+                "feed_title": r.get("feed_title"),
+                "content": _strip_img_tags(r.get("content")),
+                "published": published_short,
+                "raw": r,
+            }
+        )
     return out
 
 
@@ -1034,7 +1203,7 @@ def read_news_headlines(db_path: Path, limit: int = None):
         try:
             from . import config as _cfg
 
-            limit = getattr(_cfg, 'HEADLINES_DEFAULT_LIMIT', 8)
+            limit = getattr(_cfg, "HEADLINES_DEFAULT_LIMIT", 8)
         except Exception:
             limit = 8
     conn = sqlite3.connect(str(db_path))
@@ -1043,7 +1212,9 @@ def read_news_headlines(db_path: Path, limit: int = None):
     try:
         # fetch a reasonable number of recent rows; include `id` so callers can
         # reference the headlines rowid when looking up headline embeddings.
-        cur.execute("SELECT id, title, link, text, published, first_seen FROM headlines")
+        cur.execute(
+            "SELECT id, title, link, text, published, first_seen FROM headlines"
+        )
         rows = [dict(r) for r in cur.fetchall()]
     except Exception:
         rows = []
@@ -1059,13 +1230,13 @@ def read_news_headlines(db_path: Path, limit: int = None):
         s = str(val).strip()
         # Try ISO first
         try:
-            dt = datetime.fromisoformat(s.replace('Z', '+00:00'))
+            dt = datetime.fromisoformat(s.replace("Z", "+00:00"))
             if dt.tzinfo is None:
                 dt = dt.replace(tzinfo=timezone.utc)
             return dt
         except Exception:
             pass
-        # Try email utils parsing
+            # Try email utils parsing
             try:
                 dt = parsedate_to_datetime(s)
                 if dt is not None and dt.tzinfo is None:
@@ -1074,13 +1245,18 @@ def read_news_headlines(db_path: Path, limit: int = None):
             except Exception:
                 pass
         # Try common ISO-ish formats
-        for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
-                try:
-                    dt = datetime.strptime(s, fmt)
-                    dt = dt.replace(tzinfo=timezone.utc)
-                    return dt
-                except Exception:
-                    continue
+        for fmt in (
+            "%Y-%m-%dT%H:%M:%S.%f",
+            "%Y-%m-%dT%H:%M:%S",
+            "%Y-%m-%d %H:%M:%S",
+            "%Y-%m-%d",
+        ):
+            try:
+                dt = datetime.strptime(s, fmt)
+                dt = dt.replace(tzinfo=timezone.utc)
+                return dt
+            except Exception:
+                continue
         # Try to extract a YYYY-MM-DD substring
         import re
 
@@ -1123,7 +1299,11 @@ def read_news_headlines(db_path: Path, limit: int = None):
 
     if nth_date:
         # include all rows whose DATE(published) is >= nth_date (preserving order)
-        selected_rows = [r for dt, r in enriched if (dt is not None and dt.date().isoformat() >= nth_date)]
+        selected_rows = [
+            r
+            for dt, r in enriched
+            if (dt is not None and dt.date().isoformat() >= nth_date)
+        ]
     else:
         selected_rows = [r for _, r in enriched[:limit]]
 
@@ -1145,7 +1325,12 @@ def read_news_headlines(db_path: Path, limit: int = None):
             return dt.strftime("%a, %d %b %Y")
         except Exception:
             pass
-        for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+        for fmt in (
+            "%Y-%m-%dT%H:%M:%S.%f",
+            "%Y-%m-%dT%H:%M:%S",
+            "%Y-%m-%d %H:%M:%S",
+            "%Y-%m-%d",
+        ):
             try:
                 dt = datetime.strptime(s, fmt)
                 return dt.strftime("%a, %d %b %Y")
@@ -1164,13 +1349,17 @@ def read_news_headlines(db_path: Path, limit: int = None):
 
     out = []
     for r in selected:
-        out.append({
-            "id": r.get("id"),
-            "title": r.get("title"),
-            "link": r.get("link"),
-            "text": _strip_img_tags(r.get("text")),
-            "published": format_short_date(r.get("published") or r.get("first_seen")),
-        })
+        out.append(
+            {
+                "id": r.get("id"),
+                "title": r.get("title"),
+                "link": r.get("link"),
+                "text": _strip_img_tags(r.get("text")),
+                "published": format_short_date(
+                    r.get("published") or r.get("first_seen")
+                ),
+            }
+        )
     return out
 
 
@@ -1212,16 +1401,22 @@ def export_db_parquet(out_dir: Path, tables: list | None = None):
             dest = db_out / f"{table}.parquet"
             try:
                 # Map logical 'headlines' dest to the headlines table in SQLite
-                src_table = 'headlines' if table == 'headlines' else table
+                src_table = "headlines" if table == "headlines" else table
                 # Use sqlite_scan to read a table directly from the SQLite file
                 sql = (
-                    "COPY (SELECT * FROM sqlite_scan('" + str(DB_FILE) + "', '" + src_table + "')) "
+                    "COPY (SELECT * FROM sqlite_scan('"
+                    + str(DB_FILE)
+                    + "', '"
+                    + src_table
+                    + "')) "
                     "TO '" + str(dest) + "' (FORMAT PARQUET)"
                 )
                 con.execute(sql)
                 logger.info("exported table %s (src=%s) -> %s", table, src_table, dest)
             except Exception as e:
-                logger.warning("failed to export table %s (src=%s): %s", table, src_table, e)
+                logger.warning(
+                    "failed to export table %s (src=%s): %s", table, src_table, e
+                )
     except Exception as e:
         logger.warning("duckdb export failed: %s", e)
     finally:

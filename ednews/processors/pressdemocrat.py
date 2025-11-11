@@ -46,17 +46,21 @@ def pd_education_feed_processor(session: requests.Session, feed_url: str) -> Lis
     for e in parsed.entries:
         if not _entry_has_local_news_category(e):
             continue
-        out.append({
-            "title": e.get("title", ""),
-            "link": e.get("link", ""),
-            "summary": e.get("summary", ""),
-            "published": e.get("published", e.get("updated", "")),
-        })
+        out.append(
+            {
+                "title": e.get("title", ""),
+                "link": e.get("link", ""),
+                "summary": e.get("summary", ""),
+                "published": e.get("published", e.get("updated", "")),
+            }
+        )
     return out
 
 
 # Backwards-compatible preprocessor alias
-def pd_education_preprocessor(session, feed_url: str, publication_id: str | None = None, issn: str | None = None):
+def pd_education_preprocessor(
+    session, feed_url: str, publication_id: str | None = None, issn: str | None = None
+):
     # reuse existing implementation
     try:
         return pd_education_feed_processor(session, feed_url)

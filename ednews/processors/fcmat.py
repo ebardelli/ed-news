@@ -43,7 +43,9 @@ def fcmat_processor(html: str, base_url: str | None = None) -> List[Dict]:
             if p:
                 summary = p.get_text(strip=True)
 
-        out.append({"title": title, "link": link, "summary": summary, "published": published})
+        out.append(
+            {"title": title, "link": link, "summary": summary, "published": published}
+        )
 
     return out
 

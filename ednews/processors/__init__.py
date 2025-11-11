@@ -5,6 +5,7 @@ and exposes a stable set of symbols used by the rest of the application.
 Keep this module small and single-purpose to avoid accidental
 redefinitions that can hide processor implementations.
 """
+
 from .fcmat import fcmat_processor
 from .pressdemocrat import pd_education_feed_processor
 from .sciencedirect import (
@@ -23,7 +24,9 @@ from .rss import rss_preprocessor
 from typing import Any, Callable
 
 
-def resolve_postprocessor(proc_config: Any, preferred_proc_name: str | None = None) -> Callable | None:
+def resolve_postprocessor(
+    proc_config: Any, preferred_proc_name: str | None = None
+) -> Callable | None:
     """Resolve a DB-level postprocessor callable.
 
     Resolution order:
@@ -43,7 +46,7 @@ def resolve_postprocessor(proc_config: Any, preferred_proc_name: str | None = No
         if isinstance(proc_config, (list, tuple)):
             post_names = list(proc_config)
         elif isinstance(proc_config, dict):
-            p = proc_config.get('post')
+            p = proc_config.get("post")
             if isinstance(p, (list, tuple)):
                 post_names = list(p)
             elif isinstance(p, str):
@@ -55,7 +58,9 @@ def resolve_postprocessor(proc_config: Any, preferred_proc_name: str | None = No
     for name in post_names:
         if not name:
             continue
-        fn = getattr(globals().get('__name__') and globals(), f"{name}_postprocessor_db", None)
+        fn = getattr(
+            globals().get("__name__") and globals(), f"{name}_postprocessor_db", None
+        )
         # The above getattr usage will not find module-level symbols; instead
         # consult this module's globals directly
         if fn is None:
@@ -85,10 +90,11 @@ def resolve_postprocessor(proc_config: Any, preferred_proc_name: str | None = No
             pass
 
     # Final fallback: crossref_postprocessor_db if present
-    fn = globals().get('crossref_postprocessor_db')
+    fn = globals().get("crossref_postprocessor_db")
     if fn:
         return fn
     return None
+
 
 # Backwards-compatible alias: some feed entries/configs reference a
 # `crossref` processor by name expecting a `*_feed_processor` callable.
@@ -127,4 +133,4 @@ __all__ = [
 ]
 
 # Export resolver helper
-__all__.append('resolve_postprocessor')
+__all__.append("resolve_postprocessor")

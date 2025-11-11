@@ -16,7 +16,9 @@ def cmd_serve(args: Any) -> None:
 
     logger = logging.getLogger("ednews.cli.serve")
 
-    directory = Path(args.directory) if getattr(args, "directory", None) else Path("build")
+    directory = (
+        Path(args.directory) if getattr(args, "directory", None) else Path("build")
+    )
     if not directory.exists():
         logger.error("Build directory does not exist: %s", str(directory))
         return
@@ -27,7 +29,9 @@ def cmd_serve(args: Any) -> None:
     handler_class = http.server.SimpleHTTPRequestHandler
 
     try:
-        handler = lambda *p, directory=str(directory), **kw: handler_class(*p, directory=directory, **kw)
+        handler = lambda *p, directory=str(directory), **kw: handler_class(
+            *p, directory=directory, **kw
+        )
     except TypeError:
         import os
 
@@ -42,4 +46,3 @@ def cmd_serve(args: Any) -> None:
         except KeyboardInterrupt:
             logger.info("Shutting down server")
             httpd.shutdown()
-

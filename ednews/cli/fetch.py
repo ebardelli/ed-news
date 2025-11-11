@@ -104,7 +104,9 @@ def cmd_fetch(args: Any) -> None:
                 # attempt to show extracted DOI for the entry
                 from ..feeds import extract_doi_from_entry, normalize_doi
 
-                doi = extract_doi_from_entry(e.get("_entry") or e) or extract_doi_from_entry(e)
+                doi = extract_doi_from_entry(
+                    e.get("_entry") or e
+                ) or extract_doi_from_entry(e)
                 doi = normalize_doi(doi) if doi else None
             except Exception:
                 doi = None
@@ -112,7 +114,9 @@ def cmd_fetch(args: Any) -> None:
 
         print("--- saving entries to DB (dry-run: False)")
         try:
-            cnt = feeds.save_entries(get_conn(), res.get("key"), res.get("title"), entries)
+            cnt = feeds.save_entries(
+                get_conn(), res.get("key"), res.get("title"), entries
+            )
             print(f"--- save_entries inserted {cnt} new items")
         except Exception as e:
             print(f"SAVE ERROR: {e}")
@@ -132,7 +136,18 @@ def cmd_fetch(args: Any) -> None:
                     continue
 
                 if processor:
-                    def run_processors_for_feed(session, conn, key, title, url, publication_doi, issn, pre_names=None, post_names=None):
+
+                    def run_processors_for_feed(
+                        session,
+                        conn,
+                        key,
+                        title,
+                        url,
+                        publication_doi,
+                        issn,
+                        pre_names=None,
+                        post_names=None,
+                    ):
                         try:
                             import importlib
                             import ednews.processors as proc_mod
@@ -141,35 +156,55 @@ def cmd_fetch(args: Any) -> None:
                             merged = []
                             seen = set()
                             pre_called = False
-                            for name in (pre_names or []):
+                            for name in pre_names or []:
                                 if not name:
                                     continue
-                                pre_fn = getattr(proc_mod, f"{name}_feed_processor", None) or getattr(proc_mod, f"{name}_preprocessor", None)
+                                pre_fn = getattr(
+                                    proc_mod, f"{name}_feed_processor", None
+                                ) or getattr(proc_mod, f"{name}_preprocessor", None)
                                 if not pre_fn:
                                     try:
                                         mod = importlib.import_module(name)
-                                        pre_fn = getattr(mod, f"{name}_preprocessor", None) or getattr(mod, f"{name}_feed_processor", None)
+                                        pre_fn = getattr(
+                                            mod, f"{name}_preprocessor", None
+                                        ) or getattr(
+                                            mod, f"{name}_feed_processor", None
+                                        )
                                     except Exception:
                                         pre_fn = None
                                 if not pre_fn:
-                                    logger.warning("preprocessor %s not found for feed %s", name, key)
+                                    logger.warning(
+                                        "preprocessor %s not found for feed %s",
+                                        name,
+                                        key,
+                                    )
                                     continue
                                 pre_called = True
                                 try:
-                                    entries = pre_fn(session, url, publication_id=publication_doi, issn=issn)
+                                    entries = pre_fn(
+                                        session,
+                                        url,
+                                        publication_id=publication_doi,
+                                        issn=issn,
+                                    )
                                 except TypeError:
                                     try:
                                         entries = pre_fn(session, url)
                                     except Exception:
                                         entries = []
                                 except Exception as e:
-                                    logger.exception("preprocessor %s failed for feed %s: %s", name, key, e)
+                                    logger.exception(
+                                        "preprocessor %s failed for feed %s: %s",
+                                        name,
+                                        key,
+                                        e,
+                                    )
                                     entries = []
 
                                 for e in entries or []:
-                                    link = (e.get('link') or '').strip()
-                                    guid = (e.get('guid') or '').strip()
-                                    key_id = link or guid or (e.get('title') or '')
+                                    link = (e.get("link") or "").strip()
+                                    guid = (e.get("guid") or "").strip()
+                                    key_id = link or guid or (e.get("title") or "")
                                     if key_id in seen:
                                         continue
                                     seen.add(key_id)
@@ -178,20 +213,50 @@ def cmd_fetch(args: Any) -> None:
                             if not pre_called:
                                 try:
                                     import ednews.processors as proc_mod
-                                    rss_fn = getattr(proc_mod, 'rss_preprocessor', None)
+
+                                    rss_fn = getattr(proc_mod, "rss_preprocessor", None)
                                     if rss_fn:
-                                        entries = rss_fn(session, url, publication_id=publication_doi, issn=issn)
+                                        entries = rss_fn(
+                                            session,
+                                            url,
+                                            publication_id=publication_doi,
+                                            issn=issn,
+                                        )
                                     else:
-                                        feed_res = feeds_mod.fetch_feed(session, key, title, url, publication_doi, issn)
-                                        entries = feed_res.get('entries') or []
+                                        feed_res = feeds_mod.fetch_feed(
+                                            session,
+                                            key,
+                                            title,
+                                            url,
+                                            publication_doi,
+                                            issn,
+                                        )
+                                        entries = feed_res.get("entries") or []
                                 except Exception:
-                                    feed_res = feeds_mod.fetch_feed(session, key, title, url, publication_doi, issn)
-                                    entries = feed_res.get('entries') or []
+                                    feed_res = feeds_mod.fetch_feed(
+                                        session, key, title, url, publication_doi, issn
+                                    )
+                                    entries = feed_res.get("entries") or []
                                 merged = entries
 
-                            return {"key": key, "title": title, "url": url, "publication_id": publication_doi, "error": None, "entries": merged, "post_processors": (post_names or [])}
+                            return {
+                                "key": key,
+                                "title": title,
+                                "url": url,
+                                "publication_id": publication_doi,
+                                "error": None,
+                                "entries": merged,
+                                "post_processors": (post_names or []),
+                            }
                         except Exception as e:
-                            return {"key": key, "title": title, "url": url, "publication_id": publication_doi, "error": str(e), "entries": []}
+                            return {
+                                "key": key,
+                                "title": title,
+                                "url": url,
+                                "publication_id": publication_doi,
+                                "error": str(e),
+                                "entries": [],
+                            }
 
                     pre_names = None
                     post_names = None
@@ -200,8 +265,8 @@ def cmd_fetch(args: Any) -> None:
                             pre_names = list(processor)
                             post_names = list(processor)
                         elif isinstance(processor, dict):
-                            p = processor.get('pre')
-                            post = processor.get('post')
+                            p = processor.get("pre")
+                            post = processor.get("post")
                             if isinstance(p, (list, tuple)):
                                 pre_names = list(p)
                             elif isinstance(p, str):
@@ -222,10 +287,29 @@ def cmd_fetch(args: Any) -> None:
                         pre_names = None
                         post_names = []
 
-                    fut = ex.submit(run_processors_for_feed, session, conn, key, title, url, publication_doi, issn, pre_names, post_names)
+                    fut = ex.submit(
+                        run_processors_for_feed,
+                        session,
+                        conn,
+                        key,
+                        title,
+                        url,
+                        publication_doi,
+                        issn,
+                        pre_names,
+                        post_names,
+                    )
                     futures[fut] = (key, title, url, publication_doi)
                 else:
-                    fut = ex.submit(feeds.fetch_feed, session, key, title, url, publication_doi, issn)
+                    fut = ex.submit(
+                        feeds.fetch_feed,
+                        session,
+                        key,
+                        title,
+                        url,
+                        publication_doi,
+                        issn,
+                    )
                     futures[fut] = (key, title, url, publication_doi)
 
             for fut in as_completed(futures):
@@ -242,15 +326,23 @@ def cmd_fetch(args: Any) -> None:
                     from ..feeds import save_entries
 
                     cnt = save_entries(conn, res["key"], res["title"], res["entries"])
-                    logger.info("%s: fetched %d entries, inserted %d", res["key"], len(res["entries"]), cnt)
+                    logger.info(
+                        "%s: fetched %d entries, inserted %d",
+                        res["key"],
+                        len(res["entries"]),
+                        cnt,
+                    )
 
                     try:
                         import ednews.processors as proc_mod
-                        proc_names_post = res.get('post_processors') or []
+
+                        proc_names_post = res.get("post_processors") or []
                         for name in proc_names_post:
                             if not name:
                                 continue
-                            post_db = getattr(proc_mod, f"{name}_postprocessor_db", None)
+                            post_db = getattr(
+                                proc_mod, f"{name}_postprocessor_db", None
+                            )
                             if post_db:
                                 try:
                                     # Instead of passing the raw preprocessor entries, query the
@@ -267,38 +359,74 @@ def cmd_fetch(args: Any) -> None:
                                     rows = cur.fetchall()
                                     entries_items = []
                                     for r in rows:
-                                        entries_items.append({
-                                            'guid': r[0],
-                                            'link': r[1],
-                                            'title': r[2],
-                                            'published': r[3],
-                                            '_fetched_at': r[4],
-                                            'doi': r[5] if len(r) > 5 else None,
-                                        })
-                                    post_db(conn, res.get("key"), entries_items, session=session, publication_id=res.get("publication_id"), issn=res.get("_feed_issn"))
+                                        entries_items.append(
+                                            {
+                                                "guid": r[0],
+                                                "link": r[1],
+                                                "title": r[2],
+                                                "published": r[3],
+                                                "_fetched_at": r[4],
+                                                "doi": r[5] if len(r) > 5 else None,
+                                            }
+                                        )
+                                    post_db(
+                                        conn,
+                                        res.get("key"),
+                                        entries_items,
+                                        session=session,
+                                        publication_id=res.get("publication_id"),
+                                        issn=res.get("_feed_issn"),
+                                    )
                                 except Exception:
-                                    logger.exception("postprocessor_db %s failed for %s", name, res.get("key"))
+                                    logger.exception(
+                                        "postprocessor_db %s failed for %s",
+                                        name,
+                                        res.get("key"),
+                                    )
                             else:
-                                post_mem = getattr(proc_mod, f"{name}_postprocessor", None)
+                                post_mem = getattr(
+                                    proc_mod, f"{name}_postprocessor", None
+                                )
                                 if post_mem:
                                     try:
                                         import inspect
 
                                         sig = inspect.signature(post_mem)
                                         params = list(sig.parameters.keys())
-                                        if params and params[0] in ("entries", "items", "rows"):
-                                            post_mem(res.get("entries"), session=session, publication_id=res.get("publication_id"), issn=res.get("_feed_issn"))
+                                        if params and params[0] in (
+                                            "entries",
+                                            "items",
+                                            "rows",
+                                        ):
+                                            post_mem(
+                                                res.get("entries"),
+                                                session=session,
+                                                publication_id=res.get(
+                                                    "publication_id"
+                                                ),
+                                                issn=res.get("_feed_issn"),
+                                            )
                                         else:
                                             try:
-                                                post_mem(conn, res.get("entries"), session=session)
+                                                post_mem(
+                                                    conn,
+                                                    res.get("entries"),
+                                                    session=session,
+                                                )
                                             except Exception:
                                                 post_mem(res.get("entries"))
                                     except Exception:
-                                        logger.exception("postprocessor %s failed for %s", name, res.get("key"))
+                                        logger.exception(
+                                            "postprocessor %s failed for %s",
+                                            name,
+                                            res.get("key"),
+                                        )
                     except Exception:
                         pass
                 except Exception as e:
-                    logger.exception("Failed to save entries for %s: %s", res.get("key"), e)
+                    logger.exception(
+                        "Failed to save entries for %s: %s", res.get("key"), e
+                    )
     else:
         pass
 

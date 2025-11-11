@@ -6,69 +6,108 @@ logger = logging.getLogger("ednews.cli.manage_db")
 
 def cmd_manage_db_cleanup(args):
     from ..db import manage_db
+
     conn = get_conn()
-    started, run_id = start_maintenance_run(conn, "cleanup-empty-articles", {"args": vars(args)})
+    started, run_id = start_maintenance_run(
+        conn, "cleanup-empty-articles", {"args": vars(args)}
+    )
     status = "failed"
     details = {}
     try:
-        if getattr(args, 'dry_run', False):
+        if getattr(args, "dry_run", False):
             cur = conn.cursor()
             params = []
-            where_clauses = ["(COALESCE(title, '') = '' AND COALESCE(abstract, '') = '')"]
-            if getattr(args, 'older_than_days', None) is not None:
+            where_clauses = [
+                "(COALESCE(title, '') = '' AND COALESCE(abstract, '') = '')"
+            ]
+            if getattr(args, "older_than_days", None) is not None:
                 from datetime import datetime, timezone, timedelta
-                cutoff = (datetime.now(timezone.utc) - timedelta(days=int(args.older_than_days))).isoformat()
-                where_clauses.append("(COALESCE(fetched_at, '') != '' AND COALESCE(fetched_at, '') < ? OR COALESCE(published, '') != '' AND COALESCE(published, '') < ?)")
+
+                cutoff = (
+                    datetime.now(timezone.utc)
+                    - timedelta(days=int(args.older_than_days))
+                ).isoformat()
+                where_clauses.append(
+                    "(COALESCE(fetched_at, '') != '' AND COALESCE(fetched_at, '') < ? OR COALESCE(published, '') != '' AND COALESCE(published, '') < ?)"
+                )
                 params.extend([cutoff, cutoff])
             where_sql = " AND ".join(where_clauses)
-            cur.execute(f"SELECT COUNT(1) FROM articles WHERE {where_sql}", tuple(params))
+            cur.execute(
+                f"SELECT COUNT(1) FROM articles WHERE {where_sql}", tuple(params)
+            )
             row = cur.fetchone()
             count_empty = row[0] if row and row[0] else 0
 
             try:
-                count_filtered = manage_db.cleanup_filtered_titles(conn, filters=None, dry_run=True)
+                count_filtered = manage_db.cleanup_filtered_titles(
+                    conn, filters=None, dry_run=True
+                )
             except Exception:
                 count_filtered = 0
 
-            print(f"dry-run: would delete {count_empty} empty rows and {count_filtered} filtered-title rows")
+            print(
+                f"dry-run: would delete {count_empty} empty rows and {count_filtered} filtered-title rows"
+            )
             status = "dry-run"
-            details = {"would_delete_empty": count_empty, "would_delete_filtered": count_filtered}
+            details = {
+                "would_delete_empty": count_empty,
+                "would_delete_filtered": count_filtered,
+            }
         else:
-            deleted_empty = manage_db.cleanup_empty_articles(conn, older_than_days=getattr(args, 'older_than_days', None))
-            deleted_filtered = manage_db.cleanup_filtered_titles(conn, filters=None, dry_run=False)
+            deleted_empty = manage_db.cleanup_empty_articles(
+                conn, older_than_days=getattr(args, "older_than_days", None)
+            )
+            deleted_filtered = manage_db.cleanup_filtered_titles(
+                conn, filters=None, dry_run=False
+            )
             total_deleted = (deleted_empty or 0) + (deleted_filtered or 0)
-            print(f"deleted {total_deleted} rows ({deleted_empty} empty, {deleted_filtered} filtered-title)")
+            print(
+                f"deleted {total_deleted} rows ({deleted_empty} empty, {deleted_filtered} filtered-title)"
+            )
             status = "ok"
-            details = {"deleted_empty": deleted_empty, "deleted_filtered": deleted_filtered, "total_deleted": total_deleted}
+            details = {
+                "deleted_empty": deleted_empty,
+                "deleted_filtered": deleted_filtered,
+                "total_deleted": total_deleted,
+            }
     except Exception as e:
         status = "failed"
         details = {"error": str(e)}
         raise
     finally:
-        finalize_maintenance_run(conn, "cleanup-empty-articles", run_id, started, status, details)
+        finalize_maintenance_run(
+            conn, "cleanup-empty-articles", run_id, started, status, details
+        )
         conn.close()
 
 
 def cmd_manage_db_cleanup_filtered_title(args):
     from ..db import manage_db
+
     conn = get_conn()
-    started, run_id = start_maintenance_run(conn, "cleanup-filtered-title", {"args": vars(args)})
+    started, run_id = start_maintenance_run(
+        conn, "cleanup-filtered-title", {"args": vars(args)}
+    )
     status = "failed"
     details = {}
     try:
         filters = None
-        if getattr(args, 'filter', None):
+        if getattr(args, "filter", None):
             filters = list(args.filter)
-        elif getattr(args, 'filters', None):
-            filters = [f.strip() for f in str(args.filters).split(',') if f.strip()]
+        elif getattr(args, "filters", None):
+            filters = [f.strip() for f in str(args.filters).split(",") if f.strip()]
 
-        if getattr(args, 'dry_run', False):
-            count = manage_db.cleanup_filtered_titles(conn, filters=filters, dry_run=True)
+        if getattr(args, "dry_run", False):
+            count = manage_db.cleanup_filtered_titles(
+                conn, filters=filters, dry_run=True
+            )
             print(f"dry-run: would delete {count} rows")
             status = "dry-run"
             details = {"would_delete_filtered": count}
         else:
-            deleted = manage_db.cleanup_filtered_titles(conn, filters=filters, dry_run=False)
+            deleted = manage_db.cleanup_filtered_titles(
+                conn, filters=filters, dry_run=False
+            )
             print(f"deleted {deleted} rows")
             status = "ok"
             details = {"deleted_filtered": deleted}
@@ -77,12 +116,15 @@ def cmd_manage_db_cleanup_filtered_title(args):
         details = {"error": str(e)}
         raise
     finally:
-        finalize_maintenance_run(conn, "cleanup-filtered-title", run_id, started, status, details)
+        finalize_maintenance_run(
+            conn, "cleanup-filtered-title", run_id, started, status, details
+        )
         conn.close()
 
 
 def cmd_manage_db_vacuum(args):
     from ..db import manage_db
+
     conn = get_conn()
     started, run_id = start_maintenance_run(conn, "vacuum", {})
     status = "failed"
@@ -103,6 +145,7 @@ def cmd_manage_db_vacuum(args):
 
 def cmd_manage_db_migrate(args):
     from ..db import manage_db
+
     conn = get_conn()
     started, run_id = start_maintenance_run(conn, "migrate", {})
     status = "failed"
@@ -125,8 +168,8 @@ def cmd_manage_db_rematch(args):
     from ..db import manage_db
     from ednews import feeds
 
-    feed_keys = list(args.feed) if getattr(args, 'feed', None) else None
-    publication_id = getattr(args, 'publication_id', None)
+    feed_keys = list(args.feed) if getattr(args, "feed", None) else None
+    publication_id = getattr(args, "publication_id", None)
 
     conn = get_conn()
     started, run_id = start_maintenance_run(conn, "rematch-dois", {"args": vars(args)})
@@ -137,13 +180,15 @@ def cmd_manage_db_rematch(args):
             conn,
             publication_id=publication_id,
             feed_keys=feed_keys,
-            dry_run=getattr(args, 'dry_run', False),
-            remove_orphan_articles=getattr(args, 'remove_orphan_articles', False),
-            only_wrong=getattr(args, 'only_wrong', False),
+            dry_run=getattr(args, "dry_run", False),
+            remove_orphan_articles=getattr(args, "remove_orphan_articles", False),
+            only_wrong=getattr(args, "only_wrong", False),
         )
 
-        if getattr(args, 'dry_run', False):
-            print(f"dry-run: would clear DOIs for feeds: {', '.join(res.get('feeds', {}).keys())}")
+        if getattr(args, "dry_run", False):
+            print(
+                f"dry-run: would clear DOIs for feeds: {', '.join(res.get('feeds', {}).keys())}"
+            )
         else:
             print(
                 f"cleared {res.get('total_cleared', 0)} item DOIs; postprocessor updates: {res.get('postprocessor_results', {})}; removed_orphan_articles={res.get('removed_orphan_articles', 0)}; articles_created={res.get('articles_created_total', 0)}; articles_updated={res.get('articles_updated_total', 0)}"
@@ -161,11 +206,14 @@ def cmd_manage_db_rematch(args):
 
 def cmd_manage_db_remove_feed_articles(args):
     from ..db import manage_db
-    feed_keys = list(args.feed) if getattr(args, 'feed', None) else None
-    publication_id = getattr(args, 'publication_id', None)
+
+    feed_keys = list(args.feed) if getattr(args, "feed", None) else None
+    publication_id = getattr(args, "publication_id", None)
 
     conn = get_conn()
-    started, run_id = start_maintenance_run(conn, "remove-feed-articles", {"args": vars(args)})
+    started, run_id = start_maintenance_run(
+        conn, "remove-feed-articles", {"args": vars(args)}
+    )
     status = "failed"
     details = {}
     try:
@@ -190,7 +238,9 @@ def cmd_manage_db_remove_feed_articles(args):
                             discovered.append(fk)
                             continue
                         # Otherwise, ask the DB (via manage_db) in dry-run mode
-                        c = manage_db.remove_feed_articles(conn, feed_keys=[fk], publication_id=None, dry_run=True)
+                        c = manage_db.remove_feed_articles(
+                            conn, feed_keys=[fk], publication_id=None, dry_run=True
+                        )
                         if c and c > 0:
                             discovered.append(fk)
                     except Exception:
@@ -201,16 +251,22 @@ def cmd_manage_db_remove_feed_articles(args):
                 status = "ok"
                 details = {"discovered": []}
             else:
-                print(f"Discovered {len(discovered)} feeds to clean: {', '.join(discovered)}")
+                print(
+                    f"Discovered {len(discovered)} feeds to clean: {', '.join(discovered)}"
+                )
                 feed_keys = discovered
 
-        if getattr(args, 'dry_run', False):
-            count = manage_db.remove_feed_articles(conn, feed_keys=feed_keys, publication_id=publication_id, dry_run=True)
+        if getattr(args, "dry_run", False):
+            count = manage_db.remove_feed_articles(
+                conn, feed_keys=feed_keys, publication_id=publication_id, dry_run=True
+            )
             print(f"dry-run: would delete {count} article rows")
             status = "dry-run"
             details = {"would_delete": count, "feeds": feed_keys}
         else:
-            deleted = manage_db.remove_feed_articles(conn, feed_keys=feed_keys, publication_id=publication_id, dry_run=False)
+            deleted = manage_db.remove_feed_articles(
+                conn, feed_keys=feed_keys, publication_id=publication_id, dry_run=False
+            )
             print(f"deleted {deleted} article rows")
             status = "ok"
             details = {"deleted": deleted, "feeds": feed_keys}
@@ -219,19 +275,24 @@ def cmd_manage_db_remove_feed_articles(args):
         details = {"error": str(e)}
         raise
     finally:
-        finalize_maintenance_run(conn, "remove-feed-articles", run_id, started, status, details)
+        finalize_maintenance_run(
+            conn, "remove-feed-articles", run_id, started, status, details
+        )
         conn.close()
 
 
 def cmd_manage_db_sync_publications(args):
     from ..db import manage_db
     from ednews import feeds
+
     feeds_list = feeds.load_feeds()
     if not feeds_list:
         print("No feeds found; nothing to sync")
         return
     conn = get_conn()
-    started, run_id = start_maintenance_run(conn, "sync-publications", {"feed_count": len(feeds_list)})
+    started, run_id = start_maintenance_run(
+        conn, "sync-publications", {"feed_count": len(feeds_list)}
+    )
     status = "failed"
     details = {}
     try:
@@ -244,7 +305,9 @@ def cmd_manage_db_sync_publications(args):
         details = {"error": str(e)}
         raise
     finally:
-        finalize_maintenance_run(conn, "sync-publications", run_id, started, status, details)
+        finalize_maintenance_run(
+            conn, "sync-publications", run_id, started, status, details
+        )
         conn.close()
 
 
@@ -279,26 +342,46 @@ def cmd_manage_db_run_all(args):
     try:
         conn = get_conn()
         try:
-            if getattr(args, 'dry_run', False):
+            if getattr(args, "dry_run", False):
                 cur = conn.cursor()
                 params = []
-                where_clauses = ["(COALESCE(title, '') = '' AND COALESCE(abstract, '') = '')"]
-                if getattr(args, 'older_than_days', None) is not None:
+                where_clauses = [
+                    "(COALESCE(title, '') = '' AND COALESCE(abstract, '') = '')"
+                ]
+                if getattr(args, "older_than_days", None) is not None:
                     from datetime import datetime, timezone, timedelta
-                    cutoff = (datetime.now(timezone.utc) - timedelta(days=int(args.older_than_days))).isoformat()
-                    where_clauses.append("(COALESCE(fetched_at, '') != '' AND COALESCE(fetched_at, '') < ? OR COALESCE(published, '') != '' AND COALESCE(published, '') < ?)")
+
+                    cutoff = (
+                        datetime.now(timezone.utc)
+                        - timedelta(days=int(args.older_than_days))
+                    ).isoformat()
+                    where_clauses.append(
+                        "(COALESCE(fetched_at, '') != '' AND COALESCE(fetched_at, '') < ? OR COALESCE(published, '') != '' AND COALESCE(published, '') < ?)"
+                    )
                     params.extend([cutoff, cutoff])
                 where_sql = " AND ".join(where_clauses)
-                cur.execute(f"SELECT COUNT(1) FROM articles WHERE {where_sql}", tuple(params))
+                cur.execute(
+                    f"SELECT COUNT(1) FROM articles WHERE {where_sql}", tuple(params)
+                )
                 row = cur.fetchone()
                 count_empty = row[0] if row and row[0] else 0
-                count_filtered = manage_db.cleanup_filtered_titles(conn, filters=None, dry_run=True)
-                print(f"dry-run: would delete {count_empty} empty rows and {count_filtered} filtered-title rows")
+                count_filtered = manage_db.cleanup_filtered_titles(
+                    conn, filters=None, dry_run=True
+                )
+                print(
+                    f"dry-run: would delete {count_empty} empty rows and {count_filtered} filtered-title rows"
+                )
             else:
-                deleted_empty = manage_db.cleanup_empty_articles(conn, older_than_days=getattr(args, 'older_than_days', None))
-                deleted_filtered = manage_db.cleanup_filtered_titles(conn, filters=None, dry_run=False)
+                deleted_empty = manage_db.cleanup_empty_articles(
+                    conn, older_than_days=getattr(args, "older_than_days", None)
+                )
+                deleted_filtered = manage_db.cleanup_filtered_titles(
+                    conn, filters=None, dry_run=False
+                )
                 total_deleted = (deleted_empty or 0) + (deleted_filtered or 0)
-                print(f"deleted {total_deleted} rows ({deleted_empty} empty, {deleted_filtered} filtered-title)")
+                print(
+                    f"deleted {total_deleted} rows ({deleted_empty} empty, {deleted_filtered} filtered-title)"
+                )
         finally:
             conn.close()
     except Exception:

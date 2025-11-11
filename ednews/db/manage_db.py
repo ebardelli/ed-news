@@ -8,6 +8,7 @@ imports like ``from ednews.db import manage_db`` resolve statically.
 This module intentionally avoids heavyweight imports at top-level to keep
 startup cheap; it re-exports names from sibling modules.
 """
+
 from .schema import init_db, create_combined_view
 from .maintenance import (
     sync_publications_from_feeds,
@@ -34,11 +35,14 @@ __all__ = [
     "migrate_add_items_url_hash",
 ]
 from .maintenance import sync_articles_from_items
-__all__.append('sync_articles_from_items')
+
+__all__.append("sync_articles_from_items")
 
 from .maintenance import remove_feed_articles
-__all__.append('remove_feed_articles')
+
+__all__.append("remove_feed_articles")
 
 # Convenience alias: historically callers may expect a `remove_` prefix.
 from .maintenance import cleanup_filtered_titles as remove_filtered_titles
-__all__.append('remove_filtered_titles')
+
+__all__.append("remove_filtered_titles")

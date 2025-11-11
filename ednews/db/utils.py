@@ -2,6 +2,7 @@
 
 These functions are small, pure where possible, and easy to unit-test.
 """
+
 import hashlib
 import logging
 
@@ -46,15 +47,21 @@ def backfill_missing_url_hash(conn) -> tuple[int, list[str]]:
                 updated += 1
             except Exception:
                 # Could be unique constraint - record the hash for resolution
-                logger.debug("backfill: could not set url_hash for id=%s link=%s", rid, link)
+                logger.debug(
+                    "backfill: could not set url_hash for id=%s link=%s", rid, link
+                )
                 collisions.append(h)
         except Exception:
-            logger.exception("backfill_missing_url_hash failed for id=%s link=%s", rid, link)
+            logger.exception(
+                "backfill_missing_url_hash failed for id=%s link=%s", rid, link
+            )
     conn.commit()
     return updated, collisions
 
 
-def resolve_url_hash_collisions(conn, url_hashes: list[str] | None = None) -> tuple[int, list[str]]:
+def resolve_url_hash_collisions(
+    conn, url_hashes: list[str] | None = None
+) -> tuple[int, list[str]]:
     """Resolve duplicate rows that share the same url_hash.
 
     If `url_hashes` is None, detect all url_hash values that occur more than once.
@@ -68,7 +75,9 @@ def resolve_url_hash_collisions(conn, url_hashes: list[str] | None = None) -> tu
     # Detect duplicates if not provided
     if url_hashes is None:
         try:
-            cur.execute("SELECT url_hash FROM items WHERE url_hash IS NOT NULL GROUP BY url_hash HAVING COUNT(*) > 1")
+            cur.execute(
+                "SELECT url_hash FROM items WHERE url_hash IS NOT NULL GROUP BY url_hash HAVING COUNT(*) > 1"
+            )
             url_hashes = [r[0] for r in cur.fetchall() if r and r[0]]
         except Exception:
             logger.exception("Failed to enumerate duplicate url_hash values")
@@ -95,15 +104,22 @@ def resolve_url_hash_collisions(conn, url_hashes: list[str] | None = None) -> tu
                 oid, od_doi, od_link, od_pub, od_fetched = other
                 try:
                     if (not keep_doi) and od_doi:
-                        cur.execute("UPDATE items SET doi = ? WHERE id = ?", (od_doi, keep_id))
+                        cur.execute(
+                            "UPDATE items SET doi = ? WHERE id = ?", (od_doi, keep_id)
+                        )
                         keep_doi = od_doi
-                    if (not keep_pub or keep_pub == '') and (od_pub and od_pub != ''):
-                        cur.execute("UPDATE items SET published = ? WHERE id = ?", (od_pub, keep_id))
+                    if (not keep_pub or keep_pub == "") and (od_pub and od_pub != ""):
+                        cur.execute(
+                            "UPDATE items SET published = ? WHERE id = ?",
+                            (od_pub, keep_id),
+                        )
                         keep_pub = od_pub
                     cur.execute("DELETE FROM items WHERE id = ?", (oid,))
                     resolved += 1
                 except Exception:
-                    logger.exception("Failed to resolve duplicate row id=%s for url_hash=%s", oid, h)
+                    logger.exception(
+                        "Failed to resolve duplicate row id=%s for url_hash=%s", oid, h
+                    )
             conn.commit()
         except Exception:
             logger.exception("Failed to process duplicates for url_hash=%s", h)

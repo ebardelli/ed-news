@@ -4,6 +4,7 @@ This module provides a small compatibility wrapper so `from ednews import main`
 works for tests and callers that expect `ednews.main.main()` to exist.
 """
 
+
 def main():
     """Run the CLI by delegating to `ednews.cli.run`.
 
@@ -23,7 +24,10 @@ from . import embeddings as embeddings  # re-export embeddings module
 from . import cli as cli
 from . import feeds as feeds
 import requests as requests
-from concurrent.futures import ThreadPoolExecutor as ThreadPoolExecutor, as_completed as as_completed
+from concurrent.futures import (
+    ThreadPoolExecutor as ThreadPoolExecutor,
+    as_completed as as_completed,
+)
 
 # Re-export common CLI handlers so tests can call them directly via `ednews.main.cmd_embed` etc.
 cmd_embed = cli.cmd_embed

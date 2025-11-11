@@ -1,14 +1,14 @@
-"""Schema and view creation helpers (extracted from manage_db).
-"""
+"""Schema and view creation helpers (extracted from manage_db)."""
+
 from datetime import datetime, timezone
 import logging
 import sqlite3
 
 logger = logging.getLogger("ednews.manage_db.schema")
 
+
 def init_db(conn: sqlite3.Connection):
-    """Initialize the database schema and create required tables/views.
-    """
+    """Initialize the database schema and create required tables/views."""
     logger.info("Initializing database schema")
     if not hasattr(conn, "cursor"):
         logger.debug("init_db: connection object has no cursor(); skipping init")

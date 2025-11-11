@@ -3,6 +3,7 @@
 Provide small utilities to centralize common operations like creating a
 DB connection, creating a requests session, and normalizing CLI dates.
 """
+
 from __future__ import annotations
 
 import sqlite3
@@ -54,7 +55,9 @@ def normalize_cli_date(s: Optional[str]) -> Optional[str]:
         return s
 
 
-def start_maintenance_run(conn: sqlite3.Connection, name: str, meta: Optional[Dict[str, Any]] = None) -> Tuple[Optional[str], Optional[int]]:
+def start_maintenance_run(
+    conn: sqlite3.Connection, name: str, meta: Optional[Dict[str, Any]] = None
+) -> Tuple[Optional[str], Optional[int]]:
     """Log a maintenance run as started and return (started_iso, run_id).
 
     This is a thin helper that calls `ednews.db.manage_db.log_maintenance_run`
@@ -68,7 +71,9 @@ def start_maintenance_run(conn: sqlite3.Connection, name: str, meta: Optional[Di
         try:
             from ..db import manage_db
 
-            run_id = manage_db.log_maintenance_run(conn, name, "started", started, None, None, meta or {})
+            run_id = manage_db.log_maintenance_run(
+                conn, name, "started", started, None, None, meta or {}
+            )
         except Exception:
             run_id = None
         return started, run_id
@@ -76,7 +81,14 @@ def start_maintenance_run(conn: sqlite3.Connection, name: str, meta: Optional[Di
         return None, None
 
 
-def finalize_maintenance_run(conn: sqlite3.Connection, name: str, run_id: Optional[int], started: Optional[str], status: str, details: Optional[Dict[str, Any]] = None) -> None:
+def finalize_maintenance_run(
+    conn: sqlite3.Connection,
+    name: str,
+    run_id: Optional[int],
+    started: Optional[str],
+    status: str,
+    details: Optional[Dict[str, Any]] = None,
+) -> None:
     """Finalize a maintenance run log entry.
 
     Safe to call even if `start_maintenance_run` returned a None run_id.
@@ -90,14 +102,18 @@ def finalize_maintenance_run(conn: sqlite3.Connection, name: str, run_id: Option
             try:
                 from datetime import datetime as _dt
 
-                duration = (_dt.fromisoformat(finished) - _dt.fromisoformat(started)).total_seconds()
+                duration = (
+                    _dt.fromisoformat(finished) - _dt.fromisoformat(started)
+                ).total_seconds()
             except Exception:
                 duration = None
         if run_id and conn:
             try:
                 from ..db import manage_db
 
-                manage_db.log_maintenance_run(conn, name, status, started, finished, duration, details or {})
+                manage_db.log_maintenance_run(
+                    conn, name, status, started, finished, duration, details or {}
+                )
             except Exception:
                 pass
     except Exception:

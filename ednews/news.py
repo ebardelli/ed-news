@@ -8,6 +8,7 @@ Only lightweight functionality is implemented: fetch, normalize,
 and return a list of headline dicts with keys: title, link,
 summary, and published (string when available).
 """
+
 from __future__ import annotations
 
 import json
@@ -58,7 +59,7 @@ def fetch_site(session: requests.Session, site_cfg: Dict) -> List[Dict]:
     # Normalize processor config which may be a string, list, or dict {"pre": ...}
     proc_name_normalized = None
     if isinstance(processor_name, dict):
-        p = processor_name.get('pre') or processor_name.get('post')
+        p = processor_name.get("pre") or processor_name.get("post")
         if isinstance(p, (list, tuple)):
             proc_name_normalized = p[0] if p else None
         else:
@@ -72,19 +73,23 @@ def fetch_site(session: requests.Session, site_cfg: Dict) -> List[Dict]:
     if feed_url:
         # If a feed-specific processor exists (e.g. to filter AP items),
         # prefer it. Otherwise fall back to the simple feedparser path.
-        proc = FEED_PROCESSORS.get(proc_name_normalized) if proc_name_normalized else None
+        proc = (
+            FEED_PROCESSORS.get(proc_name_normalized) if proc_name_normalized else None
+        )
         if proc:
             return proc(session, feed_url)
 
         parsed = feedparser.parse(feed_url)
         out: List[Dict] = []
         for e in parsed.entries:
-            out.append({
-                "title": e.get("title", ""),
-                "link": e.get("link", ""),
-                "summary": e.get("summary", ""),
-                "published": e.get("published", e.get("updated", "")),
-            })
+            out.append(
+                {
+                    "title": e.get("title", ""),
+                    "link": e.get("link", ""),
+                    "summary": e.get("summary", ""),
+                    "published": e.get("published", e.get("updated", "")),
+                }
+            )
         return out
 
     if proc_name_normalized:
@@ -100,7 +105,11 @@ def fetch_site(session: requests.Session, site_cfg: Dict) -> List[Dict]:
     return []
 
 
-def fetch_all(session: requests.Session | None = None, cfg_path: str | Path | None = None, conn: object | None = None) -> Dict[str, List[Dict]]:
+def fetch_all(
+    session: requests.Session | None = None,
+    cfg_path: str | Path | None = None,
+    conn: object | None = None,
+) -> Dict[str, List[Dict]]:
     """Load configuration and fetch headlines for all configured sites.
 
     Returns a mapping from site key to list of headline dicts.
