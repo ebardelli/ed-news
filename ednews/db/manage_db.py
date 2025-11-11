@@ -35,3 +35,10 @@ __all__ = [
 ]
 from .maintenance import sync_articles_from_items
 __all__.append('sync_articles_from_items')
+
+from .maintenance import remove_feed_articles
+__all__.append('remove_feed_articles')
+
+# Convenience alias: historically callers may expect a `remove_` prefix.
+from .maintenance import cleanup_filtered_titles as remove_filtered_titles
+__all__.append('remove_filtered_titles')

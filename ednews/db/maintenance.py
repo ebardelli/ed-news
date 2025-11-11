@@ -890,3 +890,205 @@ def rematch_publication_dois(conn: sqlite3.Connection, publication_id: str | Non
             continue
 
     return results
+
+
+def remove_feed_articles(conn: sqlite3.Connection, feed_keys: list | None = None, publication_id: str | None = None, dry_run: bool = False) -> int:
+    """Remove article rows belonging to the given feed_ids or publication_id.
+
+    Args:
+        conn: sqlite3 connection
+        feed_keys: list of feed_id strings to target. If omitted and
+            publication_id is also omitted, no rows are removed.
+        publication_id: optional publication_id to target instead of feed_ids.
+        dry_run: if True, do not perform deletes; return the number of rows
+            that would be deleted.
+
+    Returns:
+        Number of rows deleted (or would be deleted in dry-run).
+    """
+    try:
+        cur = conn.cursor()
+
+        # Load configured feeds so we can consult publication_id from config
+        try:
+            from ednews import feeds as feeds_mod
+            _feeds_list = {f[0]: (f[3] if len(f) > 3 else None) for f in feeds_mod.load_feeds()}
+        except Exception:
+            _feeds_list = {}
+
+        # If a publication_id was provided and no explicit feed_keys were
+        # given, support a direct deletion across all articles matching
+        # that publication_id (this is convenient for CLI callers).
+        if publication_id and not feed_keys:
+            if dry_run:
+                try:
+                    cur.execute("SELECT COUNT(1) FROM articles WHERE publication_id = ?", (publication_id,))
+                    row = cur.fetchone()
+                    cnt = row[0] if row and row[0] else 0
+                    logger.info("remove_feed_articles dry-run would delete %d rows with publication_id=%s", cnt, publication_id)
+                    return cnt
+                except Exception:
+                    logger.exception("Failed to count articles for publication_id=%s", publication_id)
+                    return 0
+            try:
+                cur.execute("DELETE FROM articles WHERE publication_id = ?", (publication_id,))
+                n = cur.rowcount if hasattr(cur, 'rowcount') else None
+                if n:
+                    conn.commit()
+                logger.info("remove_feed_articles deleted %s rows with publication_id=%s", n, publication_id)
+                return n or 0
+            except Exception:
+                logger.exception("Failed to delete articles for publication_id=%s", publication_id)
+                return 0
+
+        # Resolve target feed keys similar to rematch_publication_dois
+        keys: list[str] = []
+        if feed_keys:
+            keys = [k for k in feed_keys if k]
+
+        if publication_id and not keys:
+            try:
+                cur.execute("SELECT feed_id FROM publications WHERE publication_id = ?", (publication_id,))
+                rows = cur.fetchall()
+                keys = [r[0] for r in rows if r and r[0]]
+            except Exception:
+                logger.exception("Failed to lookup feeds for publication_id=%s", publication_id)
+
+        if not keys:
+            try:
+                cur.execute("SELECT DISTINCT feed_id FROM publications WHERE COALESCE(feed_id, '') != ''")
+                rows = cur.fetchall()
+                keys = [r[0] for r in rows if r and r[0]]
+            except Exception:
+                keys = []
+
+            if not keys:
+                try:
+                    cur.execute("SELECT DISTINCT feed_id FROM items WHERE COALESCE(feed_id, '') != ''")
+                    rows = cur.fetchall()
+                    keys = [r[0] for r in rows if r and r[0]]
+                except Exception:
+                    keys = []
+
+        if not keys:
+            logger.debug("remove_feed_articles: no feed keys resolved for publication_id=%s feed_keys=%s", publication_id, feed_keys)
+            return 0
+
+        def doi_matches_publication(doi: str, pref: str) -> bool:
+            if not doi or not pref:
+                return False
+            try:
+                ld = doi.lower()
+                pref = pref.strip().lower()
+                if ld.startswith(pref):
+                    return True
+                # Check suffix after '/'
+                if '/' in ld:
+                    try:
+                        suffix = ld.split('/', 1)[1]
+                        if suffix.startswith(pref):
+                            return True
+                    except Exception:
+                        pass
+                # regex fallback '/pref' in suffix
+                try:
+                    import re as _re
+
+                    if _re.search(r'/' + _re.escape(pref) + r'(?:[^a-z0-9]|$)', ld):
+                        return True
+                except Exception:
+                    pass
+            except Exception:
+                pass
+            return False
+
+        total_deleted = 0
+        for fk in keys:
+            try:
+                # Determine expected publication id for this feed (prefer explicit arg)
+                expected_pub = publication_id
+                if not expected_pub:
+                    # If the feed is present in the configured feeds list, use
+                    # that mapping (even if it is explicitly None). An explicit
+                    # presence with no publication_id means the feed is
+                    # intentionally configured without a publication mapping
+                    # and we should treat it as having no mapping rather than
+                    # falling back to the publications table.
+                    if fk in _feeds_list:
+                        expected_pub = _feeds_list[fk]
+                        config_present = True
+                    else:
+                        expected_pub = None
+                        config_present = False
+
+                    if not config_present:
+                        try:
+                            cur.execute("SELECT publication_id FROM publications WHERE feed_id = ?", (fk,))
+                            prow = cur.fetchone()
+                            expected_pub = prow[0] if prow and prow[0] else None
+                        except Exception:
+                            expected_pub = None
+
+                # If we have an expected publication id, delete articles for this feed
+                # where doi is present but does NOT match the expected publication stub
+                if expected_pub:
+                    if dry_run:
+                        cur.execute(
+                            "SELECT COUNT(1) FROM articles WHERE feed_id = ? AND COALESCE(doi,'') != ''",
+                            (fk,),
+                        )
+                        rows = cur.fetchall()
+                        total_with_doi = rows[0][0] if rows and rows[0] else 0
+                        # Count how many match and subtract
+                        cur.execute("SELECT doi FROM articles WHERE feed_id = ? AND COALESCE(doi,'') != ''", (fk,))
+                        rows = cur.fetchall()
+                        to_delete = 0
+                        for r in rows:
+                            d = r[0]
+                            if not doi_matches_publication(d, expected_pub):
+                                to_delete += 1
+                        logger.info("remove_feed_articles dry-run feed=%s would delete %d/%d rows (expected_pub=%s)", fk, to_delete, total_with_doi, expected_pub)
+                        total_deleted += to_delete
+                    else:
+                        # perform delete for non-matching DOIs
+                        cur.execute("SELECT doi FROM articles WHERE feed_id = ? AND COALESCE(doi,'') != ''", (fk,))
+                        rows = cur.fetchall()
+                        deleted = 0
+                        for r in rows:
+                            d = r[0]
+                            if not doi_matches_publication(d, expected_pub):
+                                try:
+                                    cur.execute("DELETE FROM articles WHERE doi = ? AND feed_id = ?", (d, fk))
+                                    n = cur.rowcount if hasattr(cur, 'rowcount') else None
+                                    deleted += n or 0
+                                except Exception:
+                                    logger.exception("Failed to delete article doi=%s feed=%s", d, fk)
+                        if deleted:
+                            conn.commit()
+                        total_deleted += deleted
+                else:
+                    # No publication configured for this feed: delete any article rows
+                    # that have a DOI (they cannot be reliably matched)
+                    if dry_run:
+                        cur.execute("SELECT COUNT(1) FROM articles WHERE feed_id = ? AND COALESCE(doi,'') != ''", (fk,))
+                        row = cur.fetchone()
+                        cnt = row[0] if row and row[0] else 0
+                        logger.info("remove_feed_articles dry-run feed=%s has no publication_id; would delete %d rows", fk, cnt)
+                        total_deleted += cnt
+                    else:
+                        try:
+                            cur.execute("DELETE FROM articles WHERE feed_id = ? AND COALESCE(doi,'') != ''", (fk,))
+                            n = cur.rowcount if hasattr(cur, 'rowcount') else None
+                            if n:
+                                conn.commit()
+                            total_deleted += n or 0
+                        except Exception:
+                            logger.exception("Failed to delete articles for feed with no publication_id: %s", fk)
+            except Exception:
+                logger.exception("Failed to process feed %s in remove_feed_articles", fk)
+                continue
+
+        return total_deleted
+    except Exception:
+        logger.exception("remove_feed_articles failed for feed_keys=%s publication_id=%s", feed_keys, publication_id)
+        return 0

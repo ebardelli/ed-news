@@ -61,8 +61,8 @@ FEED_TITLE_HEADLINES = "Latest Education Headlines"
 TITLE_FILTERS = [
 	"editorial board",
 	"editorial announcement",
-    "reviewer acknowledgements",
-    "reviewer acknowledgments",
-	"acknowledgment"
-    "correction",
+	"reviewer acknowledgements",
+	"reviewer acknowledgments",
+	"acknowledgment",
+	"correction",
 ]

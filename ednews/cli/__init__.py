@@ -24,6 +24,7 @@ from .manage_db import (
     cmd_manage_db_rematch,
     cmd_manage_db_sync_publications,
     cmd_manage_db_run_all,
+    cmd_manage_db_remove_feed_articles,
 )
 from .serve import cmd_serve
 from .postprocess import cmd_postprocess
@@ -139,6 +140,12 @@ def run() -> None:
     p_rematch.add_argument("--remove-orphan-articles", action="store_true", help="Remove articles for the publication that are no longer referenced by any items")
     p_rematch.add_argument("--only-wrong", action="store_true", help="Only operate on items whose DOI is missing or whose DOI does not match the configured publication_id")
     p_rematch.set_defaults(func=lambda args: cmd_manage_db_rematch(args))
+
+    p_remove = manage_sub.add_parser("remove-feed-articles", help="Remove articles associated with specific feeds or a publication")
+    p_remove.add_argument("--publication-id", help="Publication ID to target (will match articles.publication_id)")
+    p_remove.add_argument("--feed", action="append", help="Feed key to target (repeatable). Matches articles.feed_id")
+    p_remove.add_argument("--dry-run", action="store_true", help="Do not delete; only report how many rows would be deleted")
+    p_remove.set_defaults(func=lambda args: cmd_manage_db_remove_feed_articles(args))
 
     p_runall = manage_sub.add_parser("run-all", help="Run migrations, sync publications, cleanup, and vacuum in sequence")
     p_runall.add_argument("--older-than-days", type=int, default=None, help="Pass-through to cleanup step")

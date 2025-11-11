@@ -43,7 +43,7 @@ def get_connection(path: str | None = None):
 # module in sys.modules so older `import ednews.db.manage_db` code continues to work.
 try:
     from .schema import init_db as _init_db, create_combined_view as _create_combined_view
-    from .maintenance import sync_publications_from_feeds as _sync_publications_from_feeds, fetch_latest_journal_works as _fetch_latest_journal_works, vacuum_db as _vacuum_db, log_maintenance_run as _log_maintenance_run, cleanup_empty_articles as _cleanup_empty_articles, cleanup_filtered_titles as _cleanup_filtered_titles, rematch_publication_dois as _rematch_publication_dois
+    from .maintenance import sync_publications_from_feeds as _sync_publications_from_feeds, fetch_latest_journal_works as _fetch_latest_journal_works, vacuum_db as _vacuum_db, log_maintenance_run as _log_maintenance_run, cleanup_empty_articles as _cleanup_empty_articles, cleanup_filtered_titles as _cleanup_filtered_titles, rematch_publication_dois as _rematch_publication_dois, remove_feed_articles as _remove_feed_articles
     from .migrations import migrate_db as _migrate_db, migrate_add_items_url_hash as _migrate_add_items_url_hash
 
     def init_db(conn: sqlite3.Connection):
@@ -90,6 +90,9 @@ try:
             manage_mod.cleanup_empty_articles = _cleanup_empty_articles
             manage_mod.cleanup_filtered_titles = _cleanup_filtered_titles
             manage_mod.rematch_publication_dois = _rematch_publication_dois
+            manage_mod.remove_feed_articles = _remove_feed_articles
+            # also expose at package level
+            remove_feed_articles = _remove_feed_articles
             sys.modules[mod_name] = manage_mod
     except Exception:
         logger.exception("Failed to synthesize ednews.db.manage_db module for backwards compatibility")
@@ -111,6 +114,18 @@ def upsert_article(conn, doi: str, title: str | None, authors: str | None, abstr
     """
     if not doi:
         return False
+    # Prevent inserting articles whose titles are blacklisted via config
+    try:
+        from .. import config as _config
+        if title and isinstance(title, str):
+            tnorm = title.strip().lower()
+            filters = getattr(_config, 'TITLE_FILTERS', []) or []
+            if any(tnorm == f.strip().lower() for f in filters):
+                logger.info("Skipping upsert for filtered title=%s doi=%s", title, doi)
+                return False
+    except Exception:
+        # If config can't be read, continue normally
+        pass
     logger.debug("Upserting article doi=%s feed_id=%s publication_id=%s", doi, feed_id, publication_id)
     cur = conn.cursor()
     now = datetime.now(timezone.utc).isoformat()
@@ -223,6 +238,17 @@ def ensure_article_row(conn, doi: str, title: str | None = None, authors: str | 
     if not doi:
         logger.debug("ensure_article_row called without doi; skipping")
         return None
+    # Prevent inserting articles with blacklisted titles
+    try:
+        from .. import config as _config
+        if title and isinstance(title, str):
+            tnorm = title.strip().lower()
+            filters = getattr(_config, 'TITLE_FILTERS', []) or []
+            if any(tnorm == f.strip().lower() for f in filters):
+                logger.info("Skipping ensure_article_row for filtered title=%s doi=%s", title, doi)
+                return None
+    except Exception:
+        pass
     try:
         cur.execute(
             "INSERT OR IGNORE INTO articles (doi, title, authors, abstract, feed_id, publication_id, issn, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",

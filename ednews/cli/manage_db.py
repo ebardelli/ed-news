@@ -159,6 +159,70 @@ def cmd_manage_db_rematch(args):
         conn.close()
 
 
+def cmd_manage_db_remove_feed_articles(args):
+    from ..db import manage_db
+    feed_keys = list(args.feed) if getattr(args, 'feed', None) else None
+    publication_id = getattr(args, 'publication_id', None)
+
+    conn = get_conn()
+    started, run_id = start_maintenance_run(conn, "remove-feed-articles", {"args": vars(args)})
+    status = "failed"
+    details = {}
+    try:
+        # If no feed_keys and no publication_id provided, attempt discovery:
+        # - feeds present in research.json with no publication_id
+        # - feeds whose DOIs do not match the configured publication_id
+        if not feed_keys and not publication_id:
+            try:
+                from ednews import feeds as feeds_mod
+            except Exception:
+                feeds_mod = None
+
+            discovered = []
+            if feeds_mod:
+                feeds_list = feeds_mod.load_feeds() or []
+                for item in feeds_list:
+                    try:
+                        fk = item[0]
+                        pub = item[3] if len(item) > 3 else None
+                        if pub is None:
+                            # configured but unmapped -> needs cleanup
+                            discovered.append(fk)
+                            continue
+                        # Otherwise, ask the DB (via manage_db) in dry-run mode
+                        c = manage_db.remove_feed_articles(conn, feed_keys=[fk], publication_id=None, dry_run=True)
+                        if c and c > 0:
+                            discovered.append(fk)
+                    except Exception:
+                        continue
+
+            if not discovered:
+                print("No feeds detected that need cleanup")
+                status = "ok"
+                details = {"discovered": []}
+            else:
+                print(f"Discovered {len(discovered)} feeds to clean: {', '.join(discovered)}")
+                feed_keys = discovered
+
+        if getattr(args, 'dry_run', False):
+            count = manage_db.remove_feed_articles(conn, feed_keys=feed_keys, publication_id=publication_id, dry_run=True)
+            print(f"dry-run: would delete {count} article rows")
+            status = "dry-run"
+            details = {"would_delete": count, "feeds": feed_keys}
+        else:
+            deleted = manage_db.remove_feed_articles(conn, feed_keys=feed_keys, publication_id=publication_id, dry_run=False)
+            print(f"deleted {deleted} article rows")
+            status = "ok"
+            details = {"deleted": deleted, "feeds": feed_keys}
+    except Exception as e:
+        status = "failed"
+        details = {"error": str(e)}
+        raise
+    finally:
+        finalize_maintenance_run(conn, "remove-feed-articles", run_id, started, status, details)
+        conn.close()
+
+
 def cmd_manage_db_sync_publications(args):
     from ..db import manage_db
     from ednews import feeds

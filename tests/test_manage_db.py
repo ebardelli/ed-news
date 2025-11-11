@@ -165,3 +165,100 @@ def test_cleanup_filtered_titles_dry_run_counts_only():
     rows = {r[0] for r in cur.fetchall()}
     assert '10.0/delete' in rows
     conn.close()
+
+
+def test_remove_feed_articles_by_feed_and_publication(tmp_path):
+    conn = sqlite3.connect(":memory:")
+    manage_db.init_db(conn)
+    cur = conn.cursor()
+    now = datetime.now(timezone.utc).isoformat()
+
+    # Articles for two feeds and two publications
+    cur.execute('INSERT INTO articles (doi, title, abstract, feed_id, publication_id, fetched_at) VALUES (?, ?, ?, ?, ?, ?)', ('10.0/a', 'A', None, 'feed1', 'pub1', now))
+    cur.execute('INSERT INTO articles (doi, title, abstract, feed_id, publication_id, fetched_at) VALUES (?, ?, ?, ?, ?, ?)', ('10.0/b', 'B', None, 'feed2', 'pub1', now))
+    cur.execute('INSERT INTO articles (doi, title, abstract, feed_id, publication_id, fetched_at) VALUES (?, ?, ?, ?, ?, ?)', ('10.0/c', 'C', None, 'feed2', 'pub2', now))
+    conn.commit()
+
+    # Dry-run by feed
+    would_delete = manage_db.remove_feed_articles(conn, feed_keys=['feed2'], publication_id=None, dry_run=True)
+    assert would_delete == 2
+
+    # Actually delete by feed
+    deleted = manage_db.remove_feed_articles(conn, feed_keys=['feed2'], publication_id=None, dry_run=False)
+    assert deleted == 2
+    cur.execute('SELECT doi FROM articles')
+    remain = {r[0] for r in cur.fetchall()}
+    assert '10.0/a' in remain and '10.0/b' not in remain and '10.0/c' not in remain
+
+    # Now test DOI-stub matching: insert an article for feed 'edfp' where
+    # publication stub is '10.1162/edfp' but DOI does not start with that stub
+    cur.execute('INSERT INTO articles (doi, title, abstract, feed_id, publication_id, fetched_at) VALUES (?, ?, ?, ?, ?, ?)', ('10.9999/other', 'X', None, 'edfp', '10.1162/edfp', now))
+    conn.commit()
+    # Dry-run should count 1 to delete (mismatched DOI)
+    would = manage_db.remove_feed_articles(conn, feed_keys=['edfp'], publication_id=None, dry_run=True)
+    assert would >= 1
+    # Actual delete should remove it
+    delcount = manage_db.remove_feed_articles(conn, feed_keys=['edfp'], publication_id=None, dry_run=False)
+    assert delcount >= 1
+
+    # Finally: feed with no publication mapping should have DOIs removed
+    cur.execute('INSERT INTO articles (doi, title, abstract, feed_id, publication_id, fetched_at) VALUES (?, ?, ?, ?, ?, ?)', ('10.0/keepme', 'Keep', None, 'feed_nopub', None, now))
+    conn.commit()
+    # Dry-run should report 1 would be deleted
+    would2 = manage_db.remove_feed_articles(conn, feed_keys=['feed_nopub'], publication_id=None, dry_run=True)
+    assert would2 == 1
+    # Actual delete removes it
+    del2 = manage_db.remove_feed_articles(conn, feed_keys=['feed_nopub'], publication_id=None, dry_run=False)
+    assert del2 == 1
+
+    # Add back an article and delete by publication_id
+    cur.execute('INSERT INTO articles (doi, title, abstract, feed_id, publication_id, fetched_at) VALUES (?, ?, ?, ?, ?, ?)', ('10.0/d', 'D', None, 'feedX', 'pub1', now))
+    conn.commit()
+    deleted_pub = manage_db.remove_feed_articles(conn, feed_keys=None, publication_id='pub1', dry_run=False)
+    # Should delete remaining article(s) with publication_id pub1 (10.0/a and 10.0/d)
+    assert deleted_pub >= 1
+    cur.execute('SELECT publication_id, doi FROM articles')
+    rows = cur.fetchall()
+    for pub, doi in rows:
+        assert pub != 'pub1'
+
+    conn.close()
+
+
+def test_remove_articles_for_configured_unmapped_feed(monkeypatch):
+    """If a feed is present in the configured feeds list but has no
+    publication_id, ensure `remove_feed_articles` treats it as intentionally
+    unmapped and deletes articles with DOIs for that feed.
+    """
+    conn = sqlite3.connect(":memory:")
+    manage_db.init_db(conn)
+    cur = conn.cursor()
+    now = datetime.now(timezone.utc).isoformat()
+
+    # Insert a publications row for 'mt' to ensure DB fallback exists
+    cur.execute("INSERT INTO publications (feed_id, publication_id, feed_title, issn) VALUES (?, ?, ?, ?)", ('mt', '10.9999', 'Mock Title', ''))
+
+    # Insert articles for feed 'mt' that have DOIs (they should be removed)
+    cur.execute('INSERT INTO articles (doi, title, feed_id, publication_id, fetched_at) VALUES (?, ?, ?, ?, ?)', ('10.1007/abc', 'X', 'mt', None, now))
+    cur.execute('INSERT INTO articles (doi, title, feed_id, publication_id, fetched_at) VALUES (?, ?, ?, ?, ?)', ('10.2000/def', 'Y', 'mt', None, now))
+    conn.commit()
+
+    # Monkeypatch feeds.load_feeds to return an explicit mapping for 'mt'
+    def fake_load_feeds():
+        return [('mt', 'Mathematics Teacher', 'http://example', None, None, None)]
+
+    import ednews.feeds as feeds_mod
+    monkeypatch.setattr(feeds_mod, 'load_feeds', fake_load_feeds)
+
+    # Dry-run should report 2 deletions
+    would = manage_db.remove_feed_articles(conn, feed_keys=['mt'], publication_id=None, dry_run=True)
+    assert would == 2
+
+    # Actual delete removes them
+    deleted = manage_db.remove_feed_articles(conn, feed_keys=['mt'], publication_id=None, dry_run=False)
+    assert deleted == 2
+
+    cur.execute('SELECT doi FROM articles WHERE feed_id = ?', ('mt',))
+    rows = cur.fetchall()
+    assert not rows
+    conn.close()
