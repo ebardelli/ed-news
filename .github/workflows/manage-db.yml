@@ -61,31 +61,6 @@ jobs:
           AWS_ENDPOINT: ${{ secrets.GARAGE_ENDPOINT }}
           AWS_DEFAULT_REGION: ${{ secrets.GARAGE_DEFAULT_REGION }}
 
-      - name: Sync build/ to S3
-        run: s5cmd --endpoint-url $AWS_ENDPOINT sync --delete build/ s3://ed-news/
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.GARAGE_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.GARAGE_SECRET_KEY }}
-          AWS_ENDPOINT: ${{ secrets.GARAGE_ENDPOINT }}
-          AWS_DEFAULT_REGION: ${{ secrets.GARAGE_DEFAULT_REGION }}
-
-      - name: Purge Cloudflare cache
-        uses: jakejarvis/cloudflare-purge-action@v0.3.0
-        env:
-          CLOUDFLARE_ZONE: ${{ secrets.CLOUDFLARE_ZONE_IDENTIFIER }}
-          CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
-
-      # Deploy build to GitHub Pages
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: 'build/'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
       - name: Minimize uv cache
         run: uv cache prune --ci
       
