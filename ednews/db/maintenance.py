@@ -28,7 +28,8 @@ def log_maintenance_run(
             (command, status, started, finished, duration, details_json),
         )
         conn.commit()
-        return cur.lastrowid if hasattr(cur, "lastrowid") else 0
+        lr = getattr(cur, "lastrowid", None)
+        return int(lr) if isinstance(lr, int) and lr is not None else 0
     except Exception:
         logger.exception("Failed to log maintenance run for command=%s", command)
         return 0
@@ -1387,6 +1388,8 @@ def remove_feed_articles(
             try:
                 # Determine expected publication id for this feed (prefer explicit arg)
                 expected_pub = publication_id
+                # ensure feed_issn is always defined for later branches
+                feed_issn = None
                 if not expected_pub:
                     # If the feed is present in the configured feeds list, use
                     # that mapping (even if it is explicitly None). An explicit
@@ -1394,7 +1397,7 @@ def remove_feed_articles(
                     # intentionally configured without a publication mapping
                     # and we should treat it as having no mapping rather than
                     # falling back to the publications table.
-                    feed_issn = None
+
                     if fk in _feeds_list:
                         expected_pub = _feeds_list[fk][0]
                         feed_issn = _feeds_list[fk][1]

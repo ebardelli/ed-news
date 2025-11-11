@@ -199,6 +199,22 @@ def query_crossref_doi_by_title(*args, **kwargs) -> str | None:
     return _query_crossref_doi_by_title_cached(title, preferred_publication_id, timeout)
 
 
+# Expose cache control functions on the compatibility wrapper so callers/tests
+# can clear or inspect the underlying LRU cache.
+try:
+    from typing import Any, cast
+
+    # cast to Any to allow attaching attributes for runtime test helpers
+    cast(Any, query_crossref_doi_by_title).cache_clear = (
+        _query_crossref_doi_by_title_cached.cache_clear
+    )
+    cast(Any, query_crossref_doi_by_title).cache_info = (
+        _query_crossref_doi_by_title_cached.cache_info
+    )
+except Exception:
+    pass
+
+
 def _fetch_crossref_metadata_impl(
     doi: str,
     timeout: int = 10,

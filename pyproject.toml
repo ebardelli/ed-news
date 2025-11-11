@@ -47,3 +47,10 @@ filterwarnings = [
     "ignore:.*U.*mode is deprecated:DeprecationWarning", # Ignore specific DeprecationWarning
     "error::RuntimeWarning", # Convert RuntimeWarnings into errors
 ]
+
+[tool.pyright]
+include = ["ednews/**"]
+exclude = ["tests/**"]
+executionEnvironments = [ { root = "." } ]
+venvPath = "./.venv"
+reportMissingTypeStubs = false

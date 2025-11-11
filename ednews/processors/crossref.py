@@ -38,8 +38,10 @@ def crossref_enricher_processor(
         try:
             # prefer explicit fields
             if entry.get("doi"):
+                raw_doi = entry.get("doi")
                 doi = feeds_mod.normalize_doi(
-                    entry.get("doi"), preferred_publication_id=publication_id
+                    str(raw_doi) if raw_doi is not None else None,
+                    preferred_publication_id=publication_id,
                 )
             else:
                 src = entry.get("_entry") or entry
@@ -121,8 +123,10 @@ def crossref_postprocessor_db(
             doi = None
             try:
                 if e.get("doi"):
+                    raw_doi = e.get("doi")
                     doi = feeds_mod.normalize_doi(
-                        e.get("doi"), preferred_publication_id=publication_id
+                        str(raw_doi) if raw_doi is not None else None,
+                        preferred_publication_id=publication_id,
                     )
                 else:
                     src = e.get("_entry") or e

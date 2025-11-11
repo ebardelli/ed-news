@@ -298,6 +298,12 @@ def build(out_dir: Path = BUILD_DIR):
             ctx = read_planet(PLANET_FILE)
     else:
         ctx = {"title": "Latest Research Articles in Education", "feeds": []}
+    # initialize connection variables so static analysis knows they exist
+    conn = None
+    conn_tmp = None
+    conn_sim = None
+    conn_stat = None
+
     try:
         try:
             from zoneinfo import ZoneInfo
@@ -359,7 +365,8 @@ def build(out_dir: Path = BUILD_DIR):
                             art["similar_articles"] = []
                 finally:
                     try:
-                        conn.close()
+                        if conn is not None and isinstance(conn, sqlite3.Connection):
+                            conn.close()
                     except Exception:
                         pass
         except Exception as e:
@@ -387,7 +394,8 @@ def build(out_dir: Path = BUILD_DIR):
             _emb.create_headlines_vec(conn_tmp)
         finally:
             try:
-                conn_tmp.close()
+                if conn_tmp is not None and isinstance(conn_tmp, sqlite3.Connection):
+                    conn_tmp.close()
             except Exception:
                 pass
 
@@ -411,7 +419,10 @@ def build(out_dir: Path = BUILD_DIR):
                         nh["similar_headlines"] = []
             finally:
                 try:
-                    conn_sim.close()
+                    if conn_sim is not None and isinstance(
+                        conn_sim, sqlite3.Connection
+                    ):
+                        conn_sim.close()
                 except Exception:
                     pass
     except Exception:
@@ -440,7 +451,7 @@ def build(out_dir: Path = BUILD_DIR):
             emb_count = None
         finally:
             try:
-                if conn_stat:
+                if conn_stat is not None and isinstance(conn_stat, sqlite3.Connection):
                     conn_stat.close()
             except Exception:
                 pass
@@ -1192,7 +1203,7 @@ def read_articles(
     return out
 
 
-def read_news_headlines(db_path: Path, limit: int = None):
+def read_news_headlines(db_path: Path, limit: int | None = None):
     """Read the most recent news headlines from the `headlines` table.
 
     Returns a list of dicts with keys: title, link, text, published (short string).
@@ -1288,8 +1299,10 @@ def read_news_headlines(db_path: Path, limit: int = None):
         return []
 
     # Determine the Nth date and include all headlines on or after that date
-    if len(enriched) >= limit:
-        nth_dt = enriched[limit - 1][0]
+    # limit may be None; treat None as 0 so comparisons are valid
+    effective_limit = limit or 0
+    if len(enriched) >= effective_limit and effective_limit > 0:
+        nth_dt = enriched[effective_limit - 1][0]
         try:
             nth_date = nth_dt.date().isoformat()
         except Exception:
@@ -1399,6 +1412,7 @@ def export_db_parquet(out_dir: Path, tables: list | None = None):
 
         for table in tables:
             dest = db_out / f"{table}.parquet"
+            src_table = table  # initialize for exception logging
             try:
                 # Map logical 'headlines' dest to the headlines table in SQLite
                 src_table = "headlines" if table == "headlines" else table

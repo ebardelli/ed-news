@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Any
 
 import feedparser
 import requests
@@ -46,7 +46,7 @@ PROCESSORS = {"fcmat": fcmat_processor}
 FEED_PROCESSORS = {"pd-education": pd_education_feed_processor}
 
 
-def fetch_site(session: requests.Session, site_cfg: Dict) -> List[Dict]:
+def fetch_site(session: Any, site_cfg: Dict) -> List[Dict]:  # session duck-typed
     """Fetch a single site configuration and return normalized headline dicts.
 
     site_cfg is expected to contain keys: title, link, feed, processor.
@@ -68,7 +68,7 @@ def fetch_site(session: requests.Session, site_cfg: Dict) -> List[Dict]:
         proc_name_normalized = processor_name[0] if processor_name else None
     else:
         proc_name_normalized = processor_name
-    link = site_cfg.get("link")
+    link = str(site_cfg.get("link") or "")
 
     if feed_url:
         # If a feed-specific processor exists (e.g. to filter AP items),
@@ -96,7 +96,7 @@ def fetch_site(session: requests.Session, site_cfg: Dict) -> List[Dict]:
         fn = PROCESSORS.get(proc_name_normalized)
         if not fn:
             raise ValueError(f"Unknown processor: {processor_name}")
-        resp = session.get(link, timeout=15)
+        resp = session.get(str(link), timeout=15)
         resp.raise_for_status()
         html = resp.text
         return fn(html, base_url=link)
@@ -105,11 +105,14 @@ def fetch_site(session: requests.Session, site_cfg: Dict) -> List[Dict]:
     return []
 
 
+import sqlite3
+
+
 def fetch_all(
-    session: requests.Session | None = None,
+    session: object | None = None,
     cfg_path: str | Path | None = None,
-    conn: object | None = None,
-) -> Dict[str, List[Dict]]:
+    conn: sqlite3.Connection | None = None,
+) -> Dict[str, List[Dict]]:  # session is duck-typed, conn is optional
     """Load configuration and fetch headlines for all configured sites.
 
     Returns a mapping from site key to list of headline dicts.
@@ -137,7 +140,7 @@ def fetch_all(
         # persist if a DB connection and saver function are available
         if save_fn and conn is not None:
             try:
-                save_fn(conn, key, items)
+                save_fn(conn, key, items)  # type: ignore[arg-type]
             except Exception:
                 # don't let DB issues stop the run
                 pass

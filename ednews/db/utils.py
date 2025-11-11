@@ -9,7 +9,7 @@ import logging
 logger = logging.getLogger("ednews.db.utils")
 
 
-def compute_url_hash(link: str) -> str | None:
+def compute_url_hash(link: str | None) -> str | None:
     """Compute a deterministic hex SHA-256 hash for a URL string.
 
     Returns None for falsy links.
@@ -50,7 +50,8 @@ def backfill_missing_url_hash(conn) -> tuple[int, list[str]]:
                 logger.debug(
                     "backfill: could not set url_hash for id=%s link=%s", rid, link
                 )
-                collisions.append(h)
+                if h is not None:
+                    collisions.append(h)
         except Exception:
             logger.exception(
                 "backfill_missing_url_hash failed for id=%s link=%s", rid, link
@@ -60,7 +61,7 @@ def backfill_missing_url_hash(conn) -> tuple[int, list[str]]:
 
 
 def resolve_url_hash_collisions(
-    conn, url_hashes: list[str] | None = None
+    conn, url_hashes: list[str | None] | None = None
 ) -> tuple[int, list[str]]:
     """Resolve duplicate rows that share the same url_hash.
 
@@ -123,6 +124,7 @@ def resolve_url_hash_collisions(
             conn.commit()
         except Exception:
             logger.exception("Failed to process duplicates for url_hash=%s", h)
-            unresolved.append(h)
+            if h is not None:
+                unresolved.append(h)
 
     return resolved, unresolved

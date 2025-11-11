@@ -158,6 +158,8 @@ def get_json(
         requests_module=requests_module,
     )
     try:
+        if resp is None:
+            return None
         if hasattr(resp, "json"):
             return resp.json()
         # Fallback: if resp has _content or content, try to parse it
@@ -198,16 +200,22 @@ def get_text(
         requests_module=requests_module,
     )
     try:
+        if resp is None:
+            return ""
         if hasattr(resp, "text"):
             return resp.text
         if hasattr(resp, "_content"):
             b = resp._content
+            if b is None:
+                return ""
             try:
                 return b.decode("utf-8", errors="replace")
             except Exception:
                 return str(b)
         if hasattr(resp, "content"):
             b = resp.content
+            if b is None:
+                return ""
             try:
                 return b.decode("utf-8", errors="replace")
             except Exception:

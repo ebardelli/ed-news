@@ -222,7 +222,17 @@ def sciencedirect_feed_processor(
                 "sciencedirect.com" in (link or "")
                 or "sciencedirect.com" in (e.get("link") or "")
             ):
-                if title and len(title) > 10:
+                # Ensure title is a plain string for DB lookup / Crossref
+                t_title = (
+                    title
+                    if isinstance(title, str)
+                    else (
+                        " ".join([str(x) for x in title])
+                        if isinstance(title, list)
+                        else str(title)
+                    )
+                )
+                if t_title and len(t_title) > 10:
                     # Try to find a DOI for this title in the local DB first to avoid
                     # performing a Crossref title lookup when the article is already known.
                     try:
@@ -233,7 +243,7 @@ def sciencedirect_feed_processor(
                         try:
                             conn = sqlite3.connect(str(_cfg.DB_PATH))
                             try:
-                                art = get_article_by_title(conn, title)
+                                art = get_article_by_title(conn, t_title)
                                 if art and art.get("doi"):
                                     entry["doi"] = art.get("doi")
                                     logger.info(

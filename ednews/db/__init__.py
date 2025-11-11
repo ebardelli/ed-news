@@ -31,7 +31,8 @@ def get_connection(path: str | None = None):
             logger.debug("Opening SQLite connection to path: %s", path)
             return sqlite3.connect(path)
         logger.debug("Opening in-memory SQLite connection")
-        return sqlite3.connect()
+        # Explicit ':memory:' path to satisfy type checker (no arg form not typed)
+        return sqlite3.connect(":memory:")
     except Exception:
         logger.exception("Failed to open SQLite connection (path=%s)", path)
         raise
@@ -98,22 +99,26 @@ try:
     try:
         import sys
         import types
+        from typing import Any
 
         mod_name = __name__ + ".manage_db"
         if mod_name not in sys.modules:
             manage_mod = types.ModuleType(mod_name)
-            manage_mod.init_db = _init_db
-            manage_mod.create_combined_view = _create_combined_view
-            manage_mod.sync_publications_from_feeds = _sync_publications_from_feeds
-            manage_mod.fetch_latest_journal_works = _fetch_latest_journal_works
-            manage_mod.migrate_db = _migrate_db
-            manage_mod.migrate_add_items_url_hash = _migrate_add_items_url_hash
-            manage_mod.vacuum_db = _vacuum_db
-            manage_mod.log_maintenance_run = _log_maintenance_run
-            manage_mod.cleanup_empty_articles = _cleanup_empty_articles
-            manage_mod.cleanup_filtered_titles = _cleanup_filtered_titles
-            manage_mod.rematch_publication_dois = _rematch_publication_dois
-            manage_mod.remove_feed_articles = _remove_feed_articles
+            # Cast to Any so we can assign dynamic attributes without Pyright
+            # complaining about unknown ModuleType attributes.
+            manage_mod_any: Any = manage_mod  # type: ignore[assignment]
+            manage_mod_any.init_db = _init_db
+            manage_mod_any.create_combined_view = _create_combined_view
+            manage_mod_any.sync_publications_from_feeds = _sync_publications_from_feeds
+            manage_mod_any.fetch_latest_journal_works = _fetch_latest_journal_works
+            manage_mod_any.migrate_db = _migrate_db
+            manage_mod_any.migrate_add_items_url_hash = _migrate_add_items_url_hash
+            manage_mod_any.vacuum_db = _vacuum_db
+            manage_mod_any.log_maintenance_run = _log_maintenance_run
+            manage_mod_any.cleanup_empty_articles = _cleanup_empty_articles
+            manage_mod_any.cleanup_filtered_titles = _cleanup_filtered_titles
+            manage_mod_any.rematch_publication_dois = _rematch_publication_dois
+            manage_mod_any.remove_feed_articles = _remove_feed_articles
             # also expose at package level
             remove_feed_articles = _remove_feed_articles
             sys.modules[mod_name] = manage_mod
@@ -134,7 +139,7 @@ except Exception:
 
 def upsert_article(
     conn,
-    doi: str,
+    doi: str | None,
     title: str | None,
     authors: str | None,
     abstract: str | None,
@@ -734,7 +739,7 @@ def upsert_news_item(
             (link, title),
         )
         row = cur.fetchone()
-        return row[0] if row and row[0] else None
+        return int(row[0]) if row and isinstance(row[0], int) else False
     except Exception:
         logger.exception(
             "Failed to upsert news_item source=%s title=%s link=%s", source, title, link
@@ -784,6 +789,7 @@ def fetch_latest_journal_works(
     cur = conn.cursor()
     session = requests.Session()
     # allow callers to pass a timeout; otherwise use config defaults (connect, read)
+    config = None  # initialize to avoid possibly-unbound warning
     try:
         from ednews import config
 

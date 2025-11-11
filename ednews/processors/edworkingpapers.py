@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Any, cast
 from bs4 import BeautifulSoup
 from ednews import feeds as feeds_mod
 
@@ -26,7 +26,7 @@ def edworkingpapers_processor(
         if not a:
             continue
         title = a.get_text(strip=True)
-        link = a.get("href") or ""
+        link = str(a.get("href") or "")
         if base_url and link.startswith("/"):
             link = base_url.rstrip("/") + link
 
@@ -42,7 +42,7 @@ def edworkingpapers_processor(
         if author_block:
             # Prefer the datetime attribute if present
             dt = author_block.get("datetime") or author_block.get_text(strip=True)
-            published = dt
+            published = str(dt) if dt is not None else ""
 
         # Do not attempt to extract or fabricate DOIs from the listing page.
         # DOI discovery is performed by the DB postprocessor which fetches
@@ -230,9 +230,11 @@ def edworkingpapers_postprocessor_db(
             try:
                 if soup:
                     # common meta names: citation_doi, dc.identifier, or links
-                    m = soup.find("meta", attrs={"name": "citation_doi"})
-                    if m and m.get("content"):
-                        doi = feeds_mod.normalize_doi(m.get("content"))
+                    m = soup.find("meta", attrs=cast(Any, {"name": "citation_doi"}))
+                    if m:
+                        content = m.get("content")
+                        if content:
+                            doi = feeds_mod.normalize_doi(str(content))
                     if not doi:
                         # sometimes DOI is in a <span> or in text; search for doi.org or 10.26300
                         txt = soup.get_text(" ", strip=True)
@@ -262,7 +264,7 @@ def edworkingpapers_postprocessor_db(
                     for ma in soup.select('meta[name="citation_author"]'):
                         v = ma.get("content")
                         if v:
-                            authors_list.append(v.strip())
+                            authors_list.append(str(v).strip())
                     if not authors_list:
                         # fallback: look for element with class containing 'author'
                         for el in soup.select("[class*=author]"):
@@ -285,28 +287,30 @@ def edworkingpapers_postprocessor_db(
             try:
                 if soup:
                     # 4a) Meta abstract
-                    m_abs = soup.find("meta", attrs={"name": "abstract"})
-                    if m_abs and m_abs.get("content"):
-                        seed = m_abs.get("content").strip()
-                        # Try to find a body div that contains the seed. Prefer the
-                        # body div when it contains the seed and its text is longer
-                        # than the meta seed (this captures cases where the meta is
-                        # an abbreviated summary but the full paragraph is in the body).
-                        body_candidates = soup.select("div.field--name-body")
-                        chosen_body = None
-                        for bc in body_candidates:
-                            bc_txt = bc.get_text(" ", strip=True)
-                            if seed in bc_txt:
-                                chosen_body = bc
-                                break
-                        if chosen_body:
-                            # prefer the body div content if it provides more text
-                            bc_txt = chosen_body.get_text(" ", strip=True)
-                            if len(bc_txt) >= len(seed):
-                                abstract = bc_txt
-                            else:
-                                # fallback to seed
-                                abstract = seed
+                    m_abs = soup.find("meta", attrs=cast(Any, {"name": "abstract"}))
+                    if m_abs:
+                        seed_val = m_abs.get("content")
+                        seed = str(seed_val).strip() if seed_val is not None else ""
+                        if seed:
+                            # Try to find a body div that contains the seed. Prefer the
+                            # body div when it contains the seed and its text is longer
+                            # than the meta seed (this captures cases where the meta is
+                            # an abbreviated summary but the full paragraph is in the body).
+                            body_candidates = soup.select("div.field--name-body")
+                            chosen_body = None
+                            for bc in body_candidates:
+                                bc_txt = bc.get_text(" ", strip=True)
+                                if seed in bc_txt:
+                                    chosen_body = bc
+                                    break
+                            if chosen_body:
+                                # prefer the body div content if it provides more text
+                                bc_txt = chosen_body.get_text(" ", strip=True)
+                                if len(bc_txt) >= len(seed):
+                                    abstract = bc_txt
+                                else:
+                                    # fallback to seed
+                                    abstract = seed
                         else:
                             # If no body div matched, look for any p/div containing the seed
                             found_seed = soup.find(
@@ -361,10 +365,14 @@ def edworkingpapers_postprocessor_db(
                             # 4d) other meta fallbacks
                             if not abstract:
                                 for name in ("description", "twitter:description"):
-                                    m = soup.find("meta", attrs={"name": name})
+                                    m = soup.find(
+                                        "meta", attrs=cast(Any, {"name": name})
+                                    )
                                     if m and m.get("content"):
-                                        abstract = m.get("content").strip()
-                                        break
+                                        content_val = m.get("content")
+                                        if isinstance(content_val, str):
+                                            abstract = content_val.strip()
+                                            break
                             # 4e) document search fallback
                             if not abstract:
                                 found = soup.find(
@@ -381,13 +389,15 @@ def edworkingpapers_postprocessor_db(
                 if soup:
                     t = soup.find("time")
                     if t and t.get("datetime"):
-                        published = t.get("datetime")
+                        published = str(t.get("datetime"))
                     else:
                         m2 = soup.find(
-                            "meta", attrs={"name": "citation_publication_date"}
+                            "meta",
+                            attrs=cast(Any, {"name": "citation_publication_date"}),
                         )
-                        if m2 and m2.get("content"):
-                            published = m2.get("content")
+                        if m2:
+                            pval = m2.get("content")
+                            published = str(pval) if pval is not None else published
             except Exception:
                 pass
 

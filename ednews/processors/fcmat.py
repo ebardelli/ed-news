@@ -22,13 +22,13 @@ def fcmat_processor(html: str, base_url: str | None = None) -> List[Dict]:
         if not a:
             continue
         title = a.get_text(strip=True)
-        link = a.get("href") or ""
+        link = str(a.get("href") or "")
         # Normalize relative links if base_url provided
         if base_url and link and link.startswith("/"):
             link = base_url.rstrip("/") + link
 
         date_p = b.select_one("p.date-published")
-        published = date_p.get_text(separator=" ", strip=True) if date_p else ""
+        published = str(date_p.get_text(separator=" ", strip=True)) if date_p else ""
 
         # The summary is usually the first <p> after the date paragraph
         summary = ""

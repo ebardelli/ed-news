@@ -57,8 +57,15 @@ def _generate_embeddings(
 
 
 def _serialize(vec: List[float]):
-    arr = np.array(vec, dtype=np.float32)
-    return sqlite_vec.serialize_float32(arr)
+    # sqlite_vec.serialize_float32 expects a sequence of floats (List[float]).
+    # Ensure we pass a plain Python list of float (not a numpy ndarray) so Pyright
+    # and downstream callers are satisfied about the type.
+    if isinstance(vec, np.ndarray):
+        lst = vec.astype(np.float32).tolist()
+    else:
+        # coerce items to float to be safe when input contains other numeric types
+        lst = [float(x) for x in vec]
+    return sqlite_vec.serialize_float32(lst)
 
 
 def upsert_embeddings(
