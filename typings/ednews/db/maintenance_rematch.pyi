@@ -6,7 +6,7 @@ import sqlite3
 
 """DOI rematch helper extracted from maintenance.py."""
 logger = ...
-def rematch_publication_dois(conn: sqlite3.Connection, publication_id: str | None = ..., feed_keys: list | None = ..., dry_run: bool = ..., remove_orphan_articles: bool = ..., only_wrong: bool = ..., retry_limit: int | None = ...) -> dict:
+def rematch_publication_dois(conn: sqlite3.Connection, publication_id: str | None = ..., feed_keys: list | None = ..., dry_run: bool = ..., remove_orphan_articles: bool = ..., only_wrong: bool = ..., only_missing: bool = ..., only_articles: bool = ..., retry_limit: int | None = ...) -> dict:
     ...
 
 __all__ = ["rematch_publication_dois"]

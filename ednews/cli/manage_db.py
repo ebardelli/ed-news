@@ -183,6 +183,8 @@ def cmd_manage_db_rematch(args):
             dry_run=getattr(args, "dry_run", False),
             remove_orphan_articles=getattr(args, "remove_orphan_articles", False),
             only_wrong=getattr(args, "only_wrong", False),
+            only_missing=getattr(args, "only_missing", False),
+            only_articles=getattr(args, "only_articles", False),
         )
 
         if getattr(args, "dry_run", False):

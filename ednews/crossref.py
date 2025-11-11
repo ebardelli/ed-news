@@ -304,7 +304,15 @@ def _fetch_crossref_metadata_impl(
     raw_xml = None
     root = None
     json_message = None
-    logger.info("CrossRef JSON lookup for DOI %s -> %s", doi, json_url)
+    # By default we avoid noisy logging for every CrossRef JSON URL; enable
+    # detailed JSON lookup logging by setting VERBOSE_CROSSREF_JSON_LOOKUPS = True
+    # in the ednews config for debugging purposes.
+    try:
+        if getattr(_config, "VERBOSE_CROSSREF_JSON_LOOKUPS", False):
+            logger.debug("CrossRef JSON lookup for DOI %s -> %s", doi, json_url)
+    except Exception:
+        # If config isn't available for any reason, silently skip the log
+        pass
     # Use centralized HTTP helper with configured timeouts/retries
     try:
         connect_to = getattr(_config, "CROSSREF_CONNECT_TIMEOUT", 5)

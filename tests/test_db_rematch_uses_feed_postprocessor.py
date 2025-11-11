@@ -22,36 +22,23 @@ def test_rematch_uses_edworkingpapers_postprocessor(monkeypatch):
 
     called = {}
 
-    # Fake load_feeds to return a feed configured with edworkingpapers postprocessor
+    # Fake load_feeds to return a feed configured for this publication
     def fake_load_feeds():
-        # returns list of tuples: (key, title, url, publication_id, issn, processor)
-        return [("f1", "EdWorkingPapers", "https://edworkingpapers.com/feed", "10.26300", None, {"pre": "edworkingpapers", "post": "edworkingpapers"})]
+        return [("f1", "EdWorkingPapers", "https://edworkingpapers.com/feed", "10.26300", None, None)]
 
     import ednews.feeds as feeds_mod
     monkeypatch.setattr(feeds_mod, "load_feeds", fake_load_feeds)
 
-    # Monkeypatch processors module to provide edworkingpapers_postprocessor_db
-    def fake_edwp_postprocessor_db(conn_arg, feed_key, entries, session=None, publication_id=None, issn=None, force=False):
+    # Monkeypatch crossref lookup to simulate finding a DOI by title
+    def fake_query(title, preferred_publication_id=None):
         called['invoked'] = True
-        # Simulate attaching a DOI to the item
-        cur = conn_arg.cursor()
-        cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND guid = ?", ("10.26300/ai25-1322", feed_key, "ai25-1322"))
-        # Upsert an article row
-        cur.execute("INSERT INTO articles (doi, title, authors, abstract, crossref_xml, feed_id, publication_id, issn, published, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", ("10.26300/ai25-1322", "Title", "A", "abs", None, feed_key, publication_id, issn, "2025-11-01", "2025-11-01T00:00:00Z"))
-        conn_arg.commit()
-        return 1
+        return '10.26300/ai25-1322'
 
-    try:
-        import ednews.processors as proc_mod
-        monkeypatch.setattr(proc_mod, "edworkingpapers_postprocessor_db", fake_edwp_postprocessor_db, raising=False)
-    except Exception:
-        # inject minimal module
-        mod = types.ModuleType('ednews.processors')
-        mod.edworkingpapers_postprocessor_db = fake_edwp_postprocessor_db
-        sys.modules['ednews.processors'] = mod
+    import ednews.crossref as cr_mod
+    monkeypatch.setattr(cr_mod, 'query_crossref_doi_by_title', fake_query, raising=False)
 
-    # Run rematch in only_wrong mode (should process the missing-doi item)
-    res = rematch_publication_dois(conn, publication_id='10.26300', feed_keys=None, dry_run=False, remove_orphan_articles=False, only_wrong=True)
+    # Run rematch in only_missing mode (should process the missing-doi item)
+    res = rematch_publication_dois(conn, publication_id='10.26300', feed_keys=None, dry_run=False, remove_orphan_articles=False, only_missing=True)
 
     assert called.get('invoked', False) is True
 

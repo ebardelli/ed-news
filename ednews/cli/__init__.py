@@ -251,6 +251,16 @@ def run() -> None:
         action="store_true",
         help="Only operate on items whose DOI is missing or whose DOI does not match the configured publication_id",
     )
+    p_rematch.add_argument(
+        "--only-missing",
+        action="store_true",
+        help="Only look up items with NULL/missing DOIs (do not clear existing DOIs)",
+    )
+    p_rematch.add_argument(
+        "--only-articles",
+        action="store_true",
+        help="Only operate on rows from the articles table that are not present in items (useful for articles-only records)",
+    )
     p_rematch.set_defaults(func=lambda args: cmd_manage_db_rematch(args))
 
     p_remove = manage_sub.add_parser(

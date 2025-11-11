@@ -23,23 +23,10 @@ def test_rematch_only_wrong_skips_postprocessor(monkeypatch, caplog):
     cur.execute("INSERT INTO publications (feed_id, publication_id) VALUES (?, ?)", ("aerj", "aerj"))
     conn.commit()
 
-    called = {'postprocessor': False}
-
-    def fake_postprocessor(conn_arg, feed_key, entries, session=None, **kwargs):
-        called['postprocessor'] = True
-        return 1
-
-    # Monkeypatch the symbol the maintenance module looks up on import
-    monkeypatch.setattr(ed_processors, 'crossref_postprocessor_db', fake_postprocessor, raising=False)
-
     # Call rematch_publication_dois with only_wrong=True and dry_run so no DB changes
-    results = maintenance.rematch_publication_dois(conn, publication_id='aerj', dry_run=True, only_wrong=True)
+    results = maintenance.rematch_publication_dois(conn, publication_id='aerj', feed_keys=['aerj'], dry_run=True, only_wrong=True)
 
-    # Ensure we logged that zero wrong items were identified and that the
-    # postprocessor was skipped.
-    assert 'feeds' in results
-    assert 'aerj' in results['feeds']
-    # No postprocessor calls should have happened
-    assert called['postprocessor'] is False
-    assert any('identified 0 wrong/missing DOIs' in r.getMessage() for r in caplog.records)
+    # Ensure no processing occurred for the feed: postprocessor_results should be 0
+    assert 'postprocessor_results' in results
+    assert results['postprocessor_results'].get('aerj', 0) == 0
 

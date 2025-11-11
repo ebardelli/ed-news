@@ -23,39 +23,25 @@ def test_rematch_passes_entries_with_none_doi_and_updates(monkeypatch):
     conn = sqlite3.connect(":memory:")
     setup_db_for_rematch(conn)
 
-    # Capture entries passed to postprocessor and ensure their doi is None
-    captured = {'entries': None, 'called': False}
+    # We'll wrap the crossref.lookup to capture which titles the rematch attempts
+    captured = {'titles': [], 'called': False}
 
-    def fake_postprocessor(conn_arg, feed_key, entries, session=None, publication_id=None, issn=None, force=False, **kwargs):
+    def fake_query(title, preferred_publication_id=None):
         captured['called'] = True
-        captured['entries'] = entries
-        # Simulate resolving DOI for guid g1 and updating DB
-        cur = conn_arg.cursor()
-        for e in entries:
-            if e.get('guid') == 'g1' or e.get('link') == 'http://example/1':
-                cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND guid = ?", ('10.1162/edfp.00001', feed_key, 'g1'))
-                cur.execute("DELETE FROM articles WHERE doi = ?", ('10.3386/w28669',))
-                cur.execute("INSERT INTO articles (doi, title, authors, abstract, crossref_xml, feed_id, publication_id, issn, published, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", ('10.1162/edfp.00001', 'The Insurance Value of Financial Aid', 'X', 'abs', None, feed_key, 'edfp', None, datetime.now(timezone.utc).isoformat(), datetime.now(timezone.utc).isoformat()))
-        conn_arg.commit()
-        return 1
+        captured['titles'].append((title, preferred_publication_id))
+        # simulate resolving DOI
+        return '10.1162/edfp.00001'
 
-    import ednews.processors as proc_mod
-    monkeypatch.setattr(proc_mod, 'crossref_postprocessor_db', fake_postprocessor, raising=False)
+    import ednews.crossref as cr_mod
+    monkeypatch.setattr(cr_mod, 'query_crossref_doi_by_title', fake_query, raising=False)
 
     res = rematch_publication_dois(conn, publication_id='edfp', dry_run=False, only_wrong=True)
 
-    # Ensure postprocessor was called
+    # Ensure crossref lookup was invoked and the title passed was the item's title
     assert captured['called'] is True
-    # Ensure entries were passed and that for our target guid the doi is None
-    assert isinstance(captured['entries'], list)
-    found = False
-    for e in captured['entries']:
-        if e.get('guid') == 'g1':
-            found = True
-            assert e.get('doi') is None
-    assert found
+    assert any('The Insurance Value of Financial Aid' in t[0] for t in captured['titles'])
 
-    # Confirm DB was updated by the fake postprocessor
+    # Confirm DB was updated by rematch logic using crossref result
     cur = conn.cursor()
     cur.execute("SELECT doi FROM items WHERE guid = ?", ('g1',))
     row = cur.fetchone()

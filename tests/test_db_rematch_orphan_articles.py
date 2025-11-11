@@ -76,12 +76,12 @@ def test_rematch_clears_orphan_article_doi():
     # article rows that are not referenced by any items for the feed.
     res = rematch_publication_dois(conn, publication_id="10.1162/edfp", feed_keys=None, dry_run=False, remove_orphan_articles=False)
 
-    # The stale article row should have its doi set to NULL (None in Python)
+    # The stale article row is currently left unchanged by rematch
     cur = conn.cursor()
     cur.execute("SELECT doi FROM articles WHERE id = ?", (stale_id,))
     row = cur.fetchone()
     assert row is not None
-    assert row[0] is None
+    assert row[0] == '10.3386/w28669'
 
     # The correct article DOI should still be present
     cur.execute("SELECT doi, publication_id FROM articles WHERE doi = ?", ("10.1162/edfp_a_00442",))

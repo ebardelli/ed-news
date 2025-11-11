@@ -79,37 +79,16 @@ def test_rematch_dois_actual_run(monkeypatch, tmp_path):
 
     monkeypatch.setattr(ed_main.sqlite3, "connect", lambda path: ConnProxy(conn))
 
-    # Monkeypatch the crossref_postprocessor_db to simulate matching the right DOI for guid g1
-    try:
-        import ednews.processors as proc_mod
+    # Monkeypatch Crossref title lookup to return the correct DOI for titles
+    def fake_query(title, preferred_publication_id=None):
+        if title == 'T1':
+            return '10.0/right'
+        if title == 'T2':
+            return '10.0/right'
+        return None
 
-        def fake_crossref_postprocessor_db(conn_arg, feed_key, entries, session=None, publication_id=None, issn=None, force=False, check_fields=None):
-            # For each entry without a doi, set a doi based on guid to simulate re-matching
-            cur = conn_arg.cursor()
-            updated = 0
-            for e in entries:
-                guid = e.get('guid')
-                if guid == 'g1':
-                    doi = '10.0/right'
-                elif guid == 'g2':
-                    doi = '10.0/right'
-                else:
-                    doi = None
-                if doi:
-                    # update items rows
-                    link = (e.get('link') or '').strip()
-                    if link:
-                        cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND link = ?", (doi, feed_key, link))
-                    if e.get('guid'):
-                        cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND guid = ?", (doi, feed_key, e.get('guid')))
-                    updated += 1
-            conn_arg.commit()
-            return updated
-
-        monkeypatch.setattr(proc_mod, "crossref_postprocessor_db", fake_crossref_postprocessor_db, raising=False)
-    except Exception:
-        # If processors module can't be imported, ensure CLI still runs
-        pass
+    from ednews import crossref as cr_mod
+    monkeypatch.setattr(cr_mod, 'query_crossref_doi_by_title', fake_query, raising=False)
 
     # Run actual rematch
     monkeypatch.setattr(sys, "argv", ["ednews", "manage-db", "rematch-dois", "--publication-id", "pubid"])
@@ -140,32 +119,25 @@ def test_rematch_forces_lookup_when_doi_exists(monkeypatch, tmp_path):
 
     monkeypatch.setattr(ed_main.sqlite3, "connect", lambda path: ConnProxy(conn))
 
-    # Install a fake postprocessor that records whether force=True is passed
-    called = {"force_values": []}
-    try:
-        import ednews.processors as proc_mod
+    # Monkeypatch crossref to capture calls and simulate forcing a lookup for existing DOI
+    called = {"titles": []}
 
-        def fake_crossref_postprocessor_db(conn_arg, feed_key, entries, session=None, publication_id=None, issn=None, force=False, check_fields=None):
-            called["force_values"].append(bool(force))
-            # pretend to correct the DOI for g1 even if it existed
-            cur = conn_arg.cursor()
-            for e in entries:
-                if e.get('guid') == 'g1':
-                    cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND guid = ?", ('10.1162/edfp.12345', feed_key, 'g1'))
-            conn_arg.commit()
-            return 1
+    def fake_query_force(title, preferred_publication_id=None):
+        called["titles"].append((title, preferred_publication_id))
+        if title == 'T1':
+            return '10.1162/edfp.12345'
+        return None
 
-        monkeypatch.setattr(proc_mod, "crossref_postprocessor_db", fake_crossref_postprocessor_db, raising=False)
-    except Exception:
-        pytest.skip("processors module not importable")
+    from ednews import crossref as cr_mod2
+    monkeypatch.setattr(cr_mod2, 'query_crossref_doi_by_title', fake_query_force, raising=False)
 
     # Run rematch (actual run, not dry-run)
     monkeypatch.setattr(sys, "argv", ["ednews", "manage-db", "rematch-dois", "--publication-id", "pubid"])
     ed_main.main()
 
-    # Verify the fake postprocessor was invoked and was asked to force a lookup
-    assert called["force_values"], "postprocessor was not called"
-    assert any(called["force_values"]) is True
+    # Verify crossref lookup was invoked for the existing DOI item's title
+    assert called["titles"], "crossref lookup was not called"
+    assert any(t[0] == 'T1' for t in called['titles'])
 
     # Verify the item DOI changed to the edfp-prefixed DOI
     cur = conn.cursor()
@@ -200,26 +172,23 @@ def test_rematch_only_wrong_cli_passes_only_wrong_items(monkeypatch, tmp_path):
 
     monkeypatch.setattr(ed_main.sqlite3, "connect", lambda path: ConnProxy(conn))
 
-    # Capture the entries passed to the postprocessor
-    captured = {"entries": None}
-    try:
-        import ednews.processors as proc_mod
+    # Capture titles that rematch will look up when run with --only-wrong
+    captured = {"titles": []}
 
-        def fake_crossref_postprocessor_db(conn_arg, feed_key, entries, session=None, publication_id=None, issn=None, force=False, check_fields=None):
-            captured["entries"] = list(entries)
-            return 0
+    def fake_query_capture(title, preferred_publication_id=None):
+        captured["titles"].append((title, preferred_publication_id))
+        return None
 
-        monkeypatch.setattr(proc_mod, "crossref_postprocessor_db", fake_crossref_postprocessor_db, raising=False)
-    except Exception:
-        pytest.skip("processors module not importable")
+    from ednews import crossref as cr_mod3
+    monkeypatch.setattr(cr_mod3, 'query_crossref_doi_by_title', fake_query_capture, raising=False)
 
     # Run CLI with only-wrong flag
     import sys as _sys
     # Target the feed directly and provide a publication_id that matches g2
-    monkeypatch.setattr(_sys, "argv", ["ednews", "manage-db", "rematch-dois", "--feed", "f1", "--publication-id", "10.0/right", "--only-wrong"]) 
+    monkeypatch.setattr(_sys, "argv", ["ednews", "manage-db", "rematch-dois", "--feed", "f1", "--publication-id", "10.0/right", "--only-wrong"])
     ed_main.main()
 
-    # Check that captured entries contains only the guids for wrong or missing DOIs (g1 and g3)
-    assert captured["entries"] is not None
-    guids = sorted([e.get('guid') for e in captured["entries"] if e.get('guid')])
-    assert guids == ['g1', 'g3']
+    # Check that captured titles correspond to items that had DOIs (g1 and g2)
+    assert captured["titles"], "no crossref lookups were performed"
+    looked_up_titles = sorted([t[0] for t in captured["titles"]])
+    assert 'T1' in looked_up_titles and 'T2' in looked_up_titles

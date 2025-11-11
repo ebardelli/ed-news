@@ -23,32 +23,12 @@ def test_rematch_publication_updates_wrong_publication(monkeypatch):
     conn = sqlite3.connect(":memory:")
     setup_db(conn)
 
-    # Monkeypatch crossref postprocessor to simulate resolving to the edfp DOI
-    # We'll monkeypatch ednews.processors.crossref_postprocessor_db indirectly by
-    # invoking rematch_publication_dois which will call it if available. To avoid
-    # importing the full processors module, register a simple function on sys.modules
-    import types, sys
+    # Monkeypatch crossref lookup to return the matching DOI for the item/title
+    def fake_query(title, preferred_publication_id=None):
+        return '10.1162/edfp.00001'
 
-    def fake_postprocessor_db(conn_arg, feed_key, entries, session=None, publication_id=None, issn=None, force=False, check_fields=None):
-        # Update the article DOI to the correct edfp DOI
-        cur = conn_arg.cursor()
-        for e in entries:
-            if e.get('guid') == 'g1' or e.get('link') == 'http://example/1':
-                cur.execute("UPDATE items SET doi = ? WHERE feed_id = ? AND guid = ?", ('10.1162/edfp.00001', feed_key, 'g1'))
-                cur.execute("DELETE FROM articles WHERE doi = ?", ('10.3386/w28669',))
-                cur.execute("INSERT INTO articles (doi, title, authors, abstract, crossref_xml, feed_id, publication_id, issn, published, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", ('10.1162/edfp.00001', 'The Insurance Value of Financial Aid', 'X', 'abs', None, feed_key, 'edfp', None, datetime.now(timezone.utc).isoformat(), datetime.now(timezone.utc).isoformat()))
-        conn_arg.commit()
-        return 1
-
-    # Ensure ednews.processors exists and has crossref_postprocessor_db
-    try:
-        import ednews.processors as proc_mod
-        setattr(proc_mod, 'crossref_postprocessor_db', fake_postprocessor_db)
-    except Exception:
-        # Fallback: inject a minimal module
-        mod = types.ModuleType('ednews.processors')
-        mod.crossref_postprocessor_db = fake_postprocessor_db
-        sys.modules['ednews.processors'] = mod
+    import ednews.crossref as cr_mod
+    monkeypatch.setattr(cr_mod, 'query_crossref_doi_by_title', fake_query, raising=False)
 
     # Run rematch
     res = rematch_publication_dois(conn, publication_id='edfp', feed_keys=None, dry_run=False, remove_orphan_articles=False)

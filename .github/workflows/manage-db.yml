@@ -51,6 +51,7 @@ jobs:
       - name: Fetch and build website
         run: |
           uv run ednews manage-db rematch-dois --only-wrong
+          uv run ednews manage-db rematch-dois --only-missing
           uv run ednews manage-db remove-feed-articles
           uv run python main.py manage-db run-all --older-than-days 7
 
