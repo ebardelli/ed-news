@@ -77,15 +77,15 @@
       "title": "Learning and Instruction",
       "link": "https://www.sciencedirect.com/journal/learning-and-instruction",
       "feed": "https://rss.sciencedirect.com/publication/science/09594752",
-      "processor": {"pre": ["sciencedirect"], "post": ["crossref"]},
       "publication_id": "10.1016/j.learninstruc",
-      "issn": "0959-4752"
+      "issn": "0959-4752",
+      "processor": {"pre": ["sciencedirect"], "post": ["crossref"]}
     },
     "ed": {
       "title": "Education",
       "link": "https://www.ingentaconnect.com/content/prin/ed",
       "feed": "https://api.ingentaconnect.com/content/prin/ed/latest?format=rss",
-      "processor": {"pre": "rss", "post": "crossref"}
+      "processor": {"pre": "rss"}
     },
     "cree": {
       "title": "Race Ethnicity and Education",
@@ -188,7 +188,7 @@
       "link": "https://www.cimt.org.uk/ijmtl/index.php/IJMTL",
       "feed": "https://cimt.org.uk/ijmtl/index.php/IJMTL/gateway/plugin/WebFeedGatewayPlugin/atom",
       "issn": "1473-0111",
-      "processor": {"pre": "rss", "post": "crossref"}
+      "processor": {"pre": "rss"}
     },
     "ijrume": {
       "title": "International Journal of Research in Undergraduate Mathematics Education",
@@ -218,9 +218,9 @@
       "title": "Teaching and Teacher Education",
       "link": "https://www.journals.elsevier.com/teaching-and-teacher-education",
       "feed": "https://rss.sciencedirect.com/publication/science/0742051X",
-      "processor": {"pre": ["sciencedirect"], "post": ["crossref"]},
       "publication_id": "10.1016/j.tate",
-      "issn": "0742-051X"
+      "issn": "0742-051X",
+      "processor": {"pre": ["sciencedirect"], "post": ["crossref"]}
     },
     "jte": {
       "title": "Journal of Teacher Education",
@@ -250,7 +250,7 @@
       "title": "Mathematics Teacher Education",
       "link": "https://pubs.nctm.org/view/journals/mte/mte-overview.xml",
       "feed": "https://pubs.nctm.org/journalissuetocrss/journals/mte/mte-overview.xml",
-      "processor": {"pre": "rss", "post": "crossref"}
+      "processor": {"pre": "rss"}
     },
     "ejte": {
       "title": "European Journal of Teacher Education",
@@ -272,7 +272,7 @@
       "title": "Mathematics Teacher",
       "link": "https://www.nctm.org/publications/mathematics-teacher/",
       "feed": "https://pubs.nctm.org/journalissuetocrss/journals/mtlt/mtlt-overview.xml",
-      "processor": {"pre": "rss", "post": "crossref"}
+      "processor": {"pre": "rss"}
     },
     "ear": {
       "title": "Educational Action Research",
