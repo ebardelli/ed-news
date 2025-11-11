@@ -1,6 +1,9 @@
 """Publication helpers split from ednews.db.__init__."""
+
 import logging, sqlite3
+
 logger = logging.getLogger("ednews.db.publications")
+
 
 def upsert_publication(
     conn,
@@ -10,7 +13,9 @@ def upsert_publication(
     issn: str | None,
 ):
     if not publication_id and not feed_id:
-        logger.debug("upsert_publication called without publication_id or feed_id; skipping")
+        logger.debug(
+            "upsert_publication called without publication_id or feed_id; skipping"
+        )
         return False
     try:
         cur = conn.cursor()
@@ -47,12 +52,16 @@ def upsert_publication(
         )
         return False
 
+
 def sync_publications_from_feeds(conn, feeds_list) -> int:
     try:
         from .maintenance_sync import sync_publications_from_feeds as _sync
+
         return _sync(conn, feeds_list)
     except Exception:
-        logger.exception("Falling back to local sync_publications_from_feeds due to import error")
+        logger.exception(
+            "Falling back to local sync_publications_from_feeds due to import error"
+        )
         if not feeds_list:
             return 0
         count = 0
@@ -70,5 +79,6 @@ def sync_publications_from_feeds(conn, feeds_list) -> int:
                 continue
         logger.info("Synchronized %d publications from feeds", count)
         return count
+
 
 __all__ = ["upsert_publication", "sync_publications_from_feeds"]

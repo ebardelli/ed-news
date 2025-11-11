@@ -1,9 +1,11 @@
 """Article-related DB helpers split from ednews.db.__init__."""
+
 import logging, sqlite3
 from datetime import datetime, timezone
 from .. import config
 
 logger = logging.getLogger("ednews.db.articles")
+
 
 def upsert_article(
     conn,
@@ -21,6 +23,7 @@ def upsert_article(
         return False
     try:
         from .. import config as _config
+
         if title and isinstance(title, str):
             tnorm = title.strip().lower()
             filters = getattr(_config, "TITLE_FILTERS", []) or []
@@ -39,6 +42,7 @@ def upsert_article(
     now = datetime.now(timezone.utc).isoformat()
     used_fetched_at = fetched_at or now
     used_published = published
+
     def _sanitize(val):
         if val is None:
             return None
@@ -58,9 +62,16 @@ def upsert_article(
             except Exception:
                 return None
         return val
-    doi = _sanitize(doi); title = _sanitize(title); authors = _sanitize(authors); abstract = _sanitize(abstract)
-    feed_id = _sanitize(feed_id); publication_id = _sanitize(publication_id); issn = _sanitize(issn)
-    used_fetched_at = _sanitize(used_fetched_at); used_published = _sanitize(used_published)
+
+    doi = _sanitize(doi)
+    title = _sanitize(title)
+    authors = _sanitize(authors)
+    abstract = _sanitize(abstract)
+    feed_id = _sanitize(feed_id)
+    publication_id = _sanitize(publication_id)
+    issn = _sanitize(issn)
+    used_fetched_at = _sanitize(used_fetched_at)
+    used_published = _sanitize(used_published)
     try:
         cur.execute(
             """
@@ -76,14 +87,26 @@ def upsert_article(
                 fetched_at=excluded.fetched_at,
                 published=COALESCE(excluded.published, articles.published)
             """,
-            (doi, title, authors, abstract, feed_id, publication_id, issn, used_fetched_at, used_published),
+            (
+                doi,
+                title,
+                authors,
+                abstract,
+                feed_id,
+                publication_id,
+                issn,
+                used_fetched_at,
+                used_published,
+            ),
         )
         conn.commit()
         cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
         row = cur.fetchone()
         return row[0] if row and row[0] else False
     except Exception:
-        logger.exception("Upsert failed, attempting fallback INSERT OR REPLACE for doi=%s", doi)
+        logger.exception(
+            "Upsert failed, attempting fallback INSERT OR REPLACE for doi=%s", doi
+        )
         try:
             cur.execute(
                 """
@@ -92,7 +115,24 @@ def upsert_article(
                     (SELECT id FROM articles WHERE doi = ?), ?, ?, ?, ?, COALESCE(?, (SELECT crossref_xml FROM articles WHERE doi = ?)), COALESCE(?, (SELECT feed_id FROM articles WHERE doi = ?)), COALESCE((SELECT publication_id FROM articles WHERE doi = ?), ?), COALESCE((SELECT issn FROM articles WHERE doi = ?), ?), ?, COALESCE(?, (SELECT published FROM articles WHERE doi = ?))
                 )
                 """,
-                (doi, doi, title, authors, abstract, None, doi, feed_id, doi, doi, publication_id, doi, issn, used_fetched_at, used_published, doi),
+                (
+                    doi,
+                    doi,
+                    title,
+                    authors,
+                    abstract,
+                    None,
+                    doi,
+                    feed_id,
+                    doi,
+                    doi,
+                    publication_id,
+                    doi,
+                    issn,
+                    used_fetched_at,
+                    used_published,
+                    doi,
+                ),
             )
             conn.commit()
             cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
@@ -101,6 +141,7 @@ def upsert_article(
         except Exception:
             logger.exception("Fallback upsert failed for doi=%s", doi)
             return False
+
 
 def ensure_article_row(
     conn,
@@ -118,18 +159,32 @@ def ensure_article_row(
         return None
     try:
         from .. import config as _config
+
         if title and isinstance(title, str):
             tnorm = title.strip().lower()
             filters = getattr(_config, "TITLE_FILTERS", []) or []
             if any(tnorm == f.strip().lower() for f in filters):
-                logger.info("Skipping ensure_article_row for filtered title=%s doi=%s", title, doi)
+                logger.info(
+                    "Skipping ensure_article_row for filtered title=%s doi=%s",
+                    title,
+                    doi,
+                )
                 return None
     except Exception:
         pass
     try:
         cur.execute(
             "INSERT OR IGNORE INTO articles (doi, title, authors, abstract, feed_id, publication_id, issn, fetched_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            (doi, title, authors, abstract, feed_id, publication_id, issn, datetime.now(timezone.utc).isoformat()),
+            (
+                doi,
+                title,
+                authors,
+                abstract,
+                feed_id,
+                publication_id,
+                issn,
+                datetime.now(timezone.utc).isoformat(),
+            ),
         )
         conn.commit()
         cur.execute("SELECT id FROM articles WHERE doi = ? LIMIT 1", (doi,))
@@ -138,6 +193,7 @@ def ensure_article_row(
     except Exception:
         logger.exception("ensure_article_row failed for doi=%s", doi)
         return None
+
 
 def article_exists(conn: sqlite3.Connection, doi: str) -> bool:
     if not doi:
@@ -149,6 +205,7 @@ def article_exists(conn: sqlite3.Connection, doi: str) -> bool:
     except Exception:
         logger.exception("Failed to check existence for doi=%s", doi)
         return False
+
 
 def get_article_metadata(conn: sqlite3.Connection, doi: str) -> dict | None:
     if not doi:
@@ -176,6 +233,7 @@ def get_article_metadata(conn: sqlite3.Connection, doi: str) -> dict | None:
     except Exception:
         logger.exception("Failed to fetch article metadata for doi=%s", doi)
         return None
+
 
 def get_article_by_title(conn: sqlite3.Connection, title: str) -> dict | None:
     if not title:
@@ -208,6 +266,7 @@ def get_article_by_title(conn: sqlite3.Connection, title: str) -> dict | None:
         logger.exception("Failed to fetch article by title=%s", title)
         return None
 
+
 def enrich_articles_from_crossref(
     conn, fetcher, batch_size: int = 20, delay: float = 0.1, return_ids: bool = False
 ):
@@ -230,7 +289,9 @@ def enrich_articles_from_crossref(
             if not cr:
                 logger.debug("No crossref data for doi=%s", doi)
                 continue
-            authors = cr.get("authors"); abstract = cr.get("abstract"); raw = cr.get("raw")
+            authors = cr.get("authors")
+            abstract = cr.get("abstract")
+            raw = cr.get("raw")
             cur.execute(
                 "UPDATE articles SET authors = COALESCE(?, authors), abstract = COALESCE(?, abstract), crossref_xml = ? WHERE doi = ?",
                 (authors, abstract, raw, doi),
@@ -251,6 +312,7 @@ def enrich_articles_from_crossref(
         return updated_ids
     return updated
 
+
 def get_missing_crossref_dois(
     conn: sqlite3.Connection, limit: int = 100, offset: int = 0
 ) -> list:
@@ -261,8 +323,14 @@ def get_missing_crossref_dois(
     )
     rows = cur.fetchall()
     dois = [r[0] for r in rows if r and r[0]]
-    logger.debug("get_missing_crossref_dois found %d DOIs (limit=%s offset=%s)", len(dois), limit, offset)
+    logger.debug(
+        "get_missing_crossref_dois found %d DOIs (limit=%s offset=%s)",
+        len(dois),
+        limit,
+        offset,
+    )
     return dois
+
 
 def update_article_crossref(
     conn: sqlite3.Connection,
@@ -295,6 +363,7 @@ def update_article_crossref(
     except Exception:
         logger.exception("Failed to update article crossref data for doi=%s", doi)
         return False
+
 
 __all__ = [
     "upsert_article",

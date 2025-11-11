@@ -154,7 +154,7 @@ wheels = [
 
 [[package]]
 name = "ed-news"
-version = "2025.11.1"
+version = "2025.11.11"
 source = { editable = "." }
 dependencies = [
     { name = "beautifulsoup4" },

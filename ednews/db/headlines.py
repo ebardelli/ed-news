@@ -1,10 +1,12 @@
 """Headlines/news helpers split from ednews.db.__init__."""
+
 import logging, sqlite3
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 from .. import config
 
 logger = logging.getLogger("ednews.db.headlines")
+
 
 def upsert_news_item(
     conn: sqlite3.Connection,
@@ -89,24 +91,30 @@ def upsert_news_item(
         )
         return False
 
+
 def save_headlines(conn: sqlite3.Connection, source: str, items: list[dict]) -> int:
     if not items:
         return 0
     count = 0
     for it in items:
         try:
-            title = it.get("title"); link = it.get("link")
+            title = it.get("title")
+            link = it.get("link")
             text = it.get("summary") or it.get("text") or None
             published = it.get("published")
             res = upsert_news_item(conn, source, title, text, link, published=published)
             if res:
                 count += 1
         except Exception:
-            logger.exception("Failed to save headline for source=%s item=%s", source, it)
+            logger.exception(
+                "Failed to save headline for source=%s item=%s", source, it
+            )
     logger.info("Saved %d/%d headlines for source=%s", count, len(items), source)
     return count
 
+
 def save_news_items(conn: sqlite3.Connection, source: str, items: list[dict]) -> int:
     return save_headlines(conn, source, items)
+
 
 __all__ = ["upsert_news_item", "save_headlines", "save_news_items"]

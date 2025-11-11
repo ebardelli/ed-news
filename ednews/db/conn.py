@@ -1,6 +1,9 @@
 """Connection helpers for ednews.db"""
+
 import logging, sqlite3
+
 logger = logging.getLogger("ednews.db.conn")
+
 
 def get_connection(path: str | None = None):
     """Return a SQLite connection.
@@ -17,5 +20,6 @@ def get_connection(path: str | None = None):
     except Exception:
         logger.exception("Failed to open SQLite connection (path=%s)", path)
         raise
+
 
 __all__ = ["get_connection"]
