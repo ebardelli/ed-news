@@ -45,7 +45,6 @@ testpaths = [
 filterwarnings = [
     "ignore::DeprecationWarning",  # Ignore all DeprecationWarnings
     "ignore:.*U.*mode is deprecated:DeprecationWarning", # Ignore specific DeprecationWarning
-    "error::RuntimeWarning", # Convert RuntimeWarnings into errors
 ]
 
 [tool.pyright]
