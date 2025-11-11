@@ -63,6 +63,8 @@ TITLE_FILTERS = [
     "editorial announcement",
     "reviewer acknowledgements",
     "reviewer acknowledgments",
+    "acknowledgement",
     "acknowledgment",
     "correction",
+    "announcements",
 ]
