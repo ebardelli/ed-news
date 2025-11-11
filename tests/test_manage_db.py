@@ -262,3 +262,80 @@ def test_remove_articles_for_configured_unmapped_feed(monkeypatch):
     rows = cur.fetchall()
     assert not rows
     conn.close()
+
+
+def test_remove_empty_doi_rows_when_publication_stub_present():
+    """When a feed is mapped to a publication DOI-stub, remove_feed_articles
+    should also delete article rows that have no DOI but are tagged with the
+    same publication_id to avoid duplicates (one row with NULL DOI and one with
+    the correct DOI).
+    """
+    conn = sqlite3.connect(":memory:")
+    manage_db.init_db(conn)
+    cur = conn.cursor()
+    now = datetime.now(timezone.utc).isoformat()
+
+    # Simulate feed mapped to publication stub '10.1162/edfp'
+    # Ensure publications table has a mapping so remove_feed_articles resolves expected_pub
+    cur.execute("INSERT INTO publications (feed_id, publication_id, feed_title, issn) VALUES (?, ?, ?, ?)", ('edfp', '10.1162/edfp', 'EDFP', ''))
+    # Insert a placeholder article with no DOI but publication_id set
+    cur.execute('INSERT INTO articles (doi, title, feed_id, publication_id, fetched_at) VALUES (?, ?, ?, ?, ?)', (None, 'Placeholder', 'edfp', '10.1162/edfp', now))
+    # Insert the real article with DOI
+    cur.execute('INSERT INTO articles (doi, title, feed_id, publication_id, fetched_at) VALUES (?, ?, ?, ?, ?)', ('10.1162/edfp.0001', 'Real', 'edfp', '10.1162/edfp', now))
+    conn.commit()
+
+    # Dry-run should report 1 deletion for the empty-doi row
+    would = manage_db.remove_feed_articles(conn, feed_keys=['edfp'], publication_id=None, dry_run=True)
+    assert would >= 1
+
+    # Actual deletion should remove the empty-doi row but keep the real DOI row
+    deleted = manage_db.remove_feed_articles(conn, feed_keys=['edfp'], publication_id=None, dry_run=False)
+    assert deleted >= 1
+
+    cur.execute('SELECT doi FROM articles WHERE feed_id = ?', ('edfp',))
+    rows = [r[0] for r in cur.fetchall()]
+    assert '10.1162/edfp.0001' in rows
+    # None/NULL should not be present among DOIs
+    assert None not in rows and '' not in rows
+    conn.close()
+
+
+def test_remove_placeholder_rows_with_issn_in_publication_id():
+    """If a legacy placeholder row stored the ISSN in publication_id, ensure
+    remove_feed_articles for the configured feed removes it.
+    """
+    conn = sqlite3.connect(":memory:")
+    manage_db.init_db(conn)
+    cur = conn.cursor()
+    now = datetime.now(timezone.utc).isoformat()
+
+    # Insert a publications-like row that incorrectly stores ISSN in publication_id
+    # Simulate legacy data where publication_id contains the ISSN
+    cur.execute('INSERT INTO articles (doi, title, feed_id, publication_id, fetched_at) VALUES (?, ?, ?, ?, ?)', (None, 'Placeholder ISSN', 'lni', '0959-4752', now))
+    # Also insert a real DOI row for the same feed/publication
+    cur.execute('INSERT INTO articles (doi, title, feed_id, publication_id, fetched_at) VALUES (?, ?, ?, ?, ?)', ('10.1016/j.learninstruc.0001', 'Real', 'lni', '10.1016/j.learninstruc', now))
+    conn.commit()
+
+    # Monkeypatch feeds.load_feeds to ensure the feed mapping exists for 'lni'
+    import ednews.feeds as feeds_mod
+
+    def fake_load_feeds():
+        return [('lni', 'Learning and Instruction', 'http://example', '10.1016/j.learninstruc', '0959-4752', None)]
+
+    from types import SimpleNamespace
+    # Apply monkeypatch by replacing the function in module
+    feeds_mod.load_feeds = fake_load_feeds
+
+    # Dry-run should report deletion of the placeholder
+    would = manage_db.remove_feed_articles(conn, feed_keys=['lni'], publication_id=None, dry_run=True)
+    assert would >= 1
+
+    # Actual deletion should remove the placeholder but keep the real DOI
+    deleted = manage_db.remove_feed_articles(conn, feed_keys=['lni'], publication_id=None, dry_run=False)
+    assert deleted >= 1
+
+    cur.execute('SELECT doi FROM articles WHERE feed_id = ?', ('lni',))
+    rows = [r[0] for r in cur.fetchall()]
+    assert '10.1016/j.learninstruc.0001' in rows
+    assert None not in rows and '' not in rows
+    conn.close()

@@ -912,7 +912,8 @@ def remove_feed_articles(conn: sqlite3.Connection, feed_keys: list | None = None
         # Load configured feeds so we can consult publication_id from config
         try:
             from ednews import feeds as feeds_mod
-            _feeds_list = {f[0]: (f[3] if len(f) > 3 else None) for f in feeds_mod.load_feeds()}
+            # store tuple (publication_id, issn) per feed key
+            _feeds_list = {f[0]: ((f[3] if len(f) > 3 else None), (f[4] if len(f) > 4 else None)) for f in feeds_mod.load_feeds()}
         except Exception:
             _feeds_list = {}
 
@@ -1014,58 +1015,107 @@ def remove_feed_articles(conn: sqlite3.Connection, feed_keys: list | None = None
                     # intentionally configured without a publication mapping
                     # and we should treat it as having no mapping rather than
                     # falling back to the publications table.
+                    feed_issn = None
                     if fk in _feeds_list:
-                        expected_pub = _feeds_list[fk]
+                        expected_pub = _feeds_list[fk][0]
+                        feed_issn = _feeds_list[fk][1]
                         config_present = True
                     else:
                         expected_pub = None
                         config_present = False
 
-                    if not config_present:
-                        try:
-                            cur.execute("SELECT publication_id FROM publications WHERE feed_id = ?", (fk,))
-                            prow = cur.fetchone()
-                            expected_pub = prow[0] if prow and prow[0] else None
-                        except Exception:
-                            expected_pub = None
-
                 # If we have an expected publication id, delete articles for this feed
-                # where doi is present but does NOT match the expected publication stub
+                # where doi is present but does NOT match the expected publication stub.
+                # Use SQL LIKE for efficient matching (case-insensitive via lower()).
                 if expected_pub:
-                    if dry_run:
-                        cur.execute(
-                            "SELECT COUNT(1) FROM articles WHERE feed_id = ? AND COALESCE(doi,'') != ''",
-                            (fk,),
-                        )
-                        rows = cur.fetchall()
-                        total_with_doi = rows[0][0] if rows and rows[0] else 0
-                        # Count how many match and subtract
-                        cur.execute("SELECT doi FROM articles WHERE feed_id = ? AND COALESCE(doi,'') != ''", (fk,))
-                        rows = cur.fetchall()
-                        to_delete = 0
-                        for r in rows:
-                            d = r[0]
-                            if not doi_matches_publication(d, expected_pub):
-                                to_delete += 1
-                        logger.info("remove_feed_articles dry-run feed=%s would delete %d/%d rows (expected_pub=%s)", fk, to_delete, total_with_doi, expected_pub)
-                        total_deleted += to_delete
-                    else:
-                        # perform delete for non-matching DOIs
-                        cur.execute("SELECT doi FROM articles WHERE feed_id = ? AND COALESCE(doi,'') != ''", (fk,))
-                        rows = cur.fetchall()
-                        deleted = 0
-                        for r in rows:
-                            d = r[0]
-                            if not doi_matches_publication(d, expected_pub):
-                                try:
-                                    cur.execute("DELETE FROM articles WHERE doi = ? AND feed_id = ?", (d, fk))
-                                    n = cur.rowcount if hasattr(cur, 'rowcount') else None
-                                    deleted += n or 0
-                                except Exception:
-                                    logger.exception("Failed to delete article doi=%s feed=%s", d, fk)
-                        if deleted:
-                            conn.commit()
-                        total_deleted += deleted
+                    pub_param = expected_pub or ''
+                    try:
+                        if dry_run:
+                            # total with DOI for feed
+                            cur.execute(
+                                "SELECT COUNT(1) FROM articles WHERE feed_id = ? AND COALESCE(doi,'') != ''",
+                                (fk,),
+                            )
+                            row = cur.fetchone()
+                            total_with_doi = row[0] if row and row[0] else 0
+                            # count DOIs NOT matching either prefix or '/pub' suffix
+                            cur.execute(
+                                "SELECT COUNT(1) FROM articles WHERE feed_id = ? AND COALESCE(doi,'') != '' AND NOT (lower(doi) LIKE lower(?) || '%' OR lower(doi) LIKE '%/' || lower(?) || '%')",
+                                (fk, pub_param, pub_param),
+                            )
+                            row = cur.fetchone()
+                            to_delete = row[0] if row and row[0] else 0
+                            logger.info("remove_feed_articles dry-run feed=%s would delete %d/%d rows (expected_pub=%s)", fk, to_delete, total_with_doi, expected_pub)
+                            total_deleted += to_delete
+                        else:
+                            cur.execute(
+                                "DELETE FROM articles WHERE feed_id = ? AND COALESCE(doi,'') != '' AND NOT (lower(doi) LIKE lower(?) || '%' OR lower(doi) LIKE '%/' || lower(?) || '%')",
+                                (fk, pub_param, pub_param),
+                            )
+                            n = cur.rowcount if hasattr(cur, 'rowcount') else None
+                            if n:
+                                conn.commit()
+                            total_deleted += n or 0
+                    except Exception:
+                        logger.exception("Failed to delete non-matching DOIs for feed=%s publication=%s", fk, expected_pub)
+                    # Additionally, remove article rows for this feed that have
+                    # no DOI (NULL or empty) but are already tagged with the
+                    # publication stub. These rows are often placeholders left
+                    # behind when a proper DOI-based article row was created
+                    # and should be removed to avoid duplicate content.
+                    empty_deleted = 0
+                    try:
+                        # Count/delete placeholder rows where DOI is empty and the
+                        # publication_id matches the expected stub. Note: we do
+                        # not require feed_id to match here because some
+                        # placeholder rows may have been inserted without the
+                        # feed association. This wider delete helps remove
+                        # duplicates tied to the publication stub.
+                        # Also consider placeholder rows that mistakenly store
+                        # the feed ISSN in publication_id (legacy behavior).
+                        # Delete rows where publication_id equals expected_pub
+                        # OR equals the feed ISSN.
+                        try:
+                            if dry_run:
+                                if feed_issn:
+                                    cur.execute(
+                                        "SELECT COUNT(1) FROM articles WHERE COALESCE(doi, '') = '' AND (publication_id = ? OR publication_id = ?)",
+                                        (expected_pub, feed_issn),
+                                    )
+                                else:
+                                    cur.execute(
+                                        "SELECT COUNT(1) FROM articles WHERE COALESCE(doi, '') = '' AND publication_id = ?",
+                                        (expected_pub,),
+                                    )
+                                row = cur.fetchone()
+                                empty_deleted = row[0] if row and row[0] else 0
+                                logger.info(
+                                    "remove_feed_articles dry-run would also delete %d rows with empty DOI and publication_id in (%s, %s)",
+                                    empty_deleted,
+                                    expected_pub,
+                                    feed_issn,
+                                )
+                                total_deleted += empty_deleted
+                            else:
+                                if feed_issn:
+                                    cur.execute(
+                                        "DELETE FROM articles WHERE COALESCE(doi, '') = '' AND (publication_id = ? OR publication_id = ?)",
+                                        (expected_pub, feed_issn),
+                                    )
+                                else:
+                                    cur.execute(
+                                        "DELETE FROM articles WHERE COALESCE(doi, '') = '' AND publication_id = ?",
+                                        (expected_pub,),
+                                    )
+                                n = cur.rowcount if hasattr(cur, 'rowcount') else None
+                                empty_deleted = n or 0
+                                if empty_deleted:
+                                    conn.commit()
+                                total_deleted += empty_deleted
+                        except Exception:
+                            logger.exception("Failed to handle empty-doi articles for publication=%s (feed=%s)", expected_pub, fk)
+                    except Exception:
+                        logger.exception("Failed to handle empty-doi articles for publication=%s (feed=%s)", expected_pub, fk)
                 else:
                     # No publication configured for this feed: delete any article rows
                     # that have a DOI (they cannot be reliably matched)
