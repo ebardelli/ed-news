@@ -168,7 +168,19 @@ def fetch_latest_journal_works(
                     try:
                         from ednews.crossref import fetch_crossref_metadata
 
-                        cr = fetch_crossref_metadata(norm, conn=conn)
+                        # Some fetchers accept a conn kwarg; try with conn first, fall back to no-conn
+                        try:
+                            cr = fetch_crossref_metadata(norm, conn=conn)
+                        except TypeError:
+                            try:
+                                cr = fetch_crossref_metadata(norm)
+                            except Exception:
+                                cr = None
+                        except Exception:
+                            cr = None
+                        # Ensure we have a dict or None
+                        if cr is None or not isinstance(cr, dict):
+                            cr = None
                     except Exception:
                         cr = None
                     authors_val = (

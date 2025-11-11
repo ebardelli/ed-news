@@ -53,27 +53,11 @@ from .maintenance_remove import remove_feed_articles
 # Migrations
 from .migrations import migrate_db, migrate_add_items_url_hash
 
-# Synthesize ednews.db.manage_db module for backward compatibility
-try:
-    mod_name = __name__ + ".manage_db"
-    if mod_name not in sys.modules:
-        manage_mod = types.ModuleType(mod_name)
-        manage_mod.init_db = init_db
-        manage_mod.create_combined_view = create_combined_view
-        manage_mod.sync_publications_from_feeds = sync_publications_from_feeds
-        manage_mod.sync_articles_from_items = sync_articles_from_items
-        manage_mod.fetch_latest_journal_works = fetch_latest_journal_works
-        manage_mod.migrate_db = migrate_db
-        manage_mod.migrate_add_items_url_hash = migrate_add_items_url_hash
-        manage_mod.vacuum_db = vacuum_db
-        manage_mod.log_maintenance_run = log_maintenance_run
-        manage_mod.cleanup_empty_articles = cleanup_empty_articles
-        manage_mod.cleanup_filtered_titles = cleanup_filtered_titles
-        manage_mod.rematch_publication_dois = rematch_publication_dois
-        manage_mod.remove_feed_articles = remove_feed_articles
-        sys.modules[mod_name] = manage_mod
-except Exception:
-    logger.exception("Failed to synthesize ednews.db.manage_db module")
+# Provide an explicit manage_db module for backward compatibility. Importing
+# the module here keeps the public API surface stable and is friendlier to
+# static type checkers (Pyright prefers real module attributes over
+# dynamically created ModuleType assignments).
+from . import manage_db  # type: ignore
 
 __all__ = [
     # schema/conn

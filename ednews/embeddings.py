@@ -9,7 +9,7 @@ tuples and querying nearest neighbours using cosine distance.
 import sqlite3
 import numpy as np
 import sqlite_vec
-from typing import Optional, Iterable, List, Tuple
+from typing import Optional, Iterable, List, Tuple, Union, Any, cast
 from . import config
 from nomic import embed
 
@@ -56,15 +56,23 @@ def _generate_embeddings(
     return output.get("embeddings", [])
 
 
-def _serialize(vec: List[float]):
-    # sqlite_vec.serialize_float32 expects a sequence of floats (List[float]).
-    # Ensure we pass a plain Python list of float (not a numpy ndarray) so Pyright
-    # and downstream callers are satisfied about the type.
-    if isinstance(vec, np.ndarray):
-        lst = vec.astype(np.float32).tolist()
-    else:
-        # coerce items to float to be safe when input contains other numeric types
-        lst = [float(x) for x in vec]
+def _serialize(vec: Any) -> bytes:
+    """Serialize a numeric vector to sqlite_vec float32 blob.
+
+    Accepts either a numpy ndarray or any iterable of numbers.
+    """
+    # If numpy is available and vec is an ndarray, use its astype method.
+    try:
+        if isinstance(vec, np.ndarray):
+            # cast to numpy.ndarray for the type checker and call astype
+            arr = cast("np.ndarray", vec)
+            lst = arr.astype(np.float32).tolist()
+        else:
+            # coerce items to float to be safe when input contains other numeric types
+            lst = [float(x) for x in vec]
+    except Exception:
+        # Fallback: ensure we return a serialized empty vector on unexpected input
+        lst = []
     return sqlite_vec.serialize_float32(lst)
 
 

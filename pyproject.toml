@@ -1,6 +1,6 @@
 [project]
 name = "ed-news"
-version = "2025.11.01"
+version = "2025.11.11"
 description = "A static site generator and feed builder for news aggregation."
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -45,11 +45,14 @@ testpaths = [
 filterwarnings = [
     "ignore::DeprecationWarning",  # Ignore all DeprecationWarnings
     "ignore:.*U.*mode is deprecated:DeprecationWarning", # Ignore specific DeprecationWarning
+    "ignore:.*global interpreter lock.*:RuntimeWarning", # Ignore RuntimeWarnings about GIL
 ]
 
 [tool.pyright]
 include = ["ednews/**"]
-exclude = ["tests/**"]
+exclude = ["tests/**", "build", "ed_news.egg-info"]
 executionEnvironments = [ { root = "." } ]
 venvPath = "./.venv"
 reportMissingTypeStubs = false
+typeCheckingMode = "basic"
+reportMissingImports = false

@@ -142,6 +142,11 @@ def rematch_publication_dois(
             results["feeds"][fk] = {"would_clear": len(wrong_items)}
             if only_wrong and not wrong_items:
                 results["postprocessor_results"][fk] = 0
+                # Informational log for callers/tests that no wrong/missing DOIs were found
+                logger.info(
+                    "identified 0 wrong/missing DOIs for feed=%s; skipping postprocessor",
+                    fk,
+                )
                 if dry_run:
                     continue
                 else:
