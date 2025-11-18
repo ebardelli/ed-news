@@ -319,13 +319,10 @@ def build(out_dir: Path = BUILD_DIR):
 
     if DB_FILE.exists():
         try:
-            # Load the most recent articles according to the configured default.
-            # If more than `ARTICLES_DEFAULT_LIMIT` articles share the same
-            # published DATE as the Nth article, `read_articles` will include them
-            # as well so the site doesn't arbitrarily truncate a day's publications.
-            ctx["articles"] = read_articles(
-                DB_FILE, limit=config.ARTICLES_DEFAULT_LIMIT
-            )
+            # Load articles for the HTML index using the legacy limit-based
+            # selection so the rendered `index.html` shows at most the
+            # configured `ARTICLES_DEFAULT_LIMIT` (with same-date expansion).
+            ctx["articles"] = read_articles(DB_FILE, limit=config.ARTICLES_DEFAULT_LIMIT)
             logger.info("loaded %d articles from %s", len(ctx["articles"]), DB_FILE)
             if get_similar_articles_by_doi and ctx.get("articles"):
                 try:
@@ -554,10 +551,20 @@ def build(out_dir: Path = BUILD_DIR):
 
         # Articles-only feed
         articles_limit = getattr(config, "ARTICLES_DEFAULT_LIMIT", 20)
+        # Build a separate article set for RSS. When configured, prefer a
+        # days-based selection so RSS feeds include all articles published in
+        # the last N days (e.g. last month). Fall back to the HTML article
+        # list when the config option is not set.
+        days = getattr(config, "ARTICLES_INCLUDE_LAST_DAYS", None)
+        if days is not None:
+            rss_articles = read_articles(DB_FILE, days=days)
+        else:
+            rss_articles = ctx.get("articles") or []
+
         # Filter out entirely empty/meaningless items before rendering
         # Ensure article items include optional `source` and `similar_headlines` keys
         articles_items = []
-        for a in ctx.get("articles") or []:
+        for a in rss_articles or []:
             if not item_has_content(a):
                 continue
             it = dict(a)
@@ -665,8 +672,10 @@ def build(out_dir: Path = BUILD_DIR):
         )
         logger.info("wrote %s", out_dir / "headlines.rss")
 
-        # Combined feed: merge articles and headlines, parse/normalize published
-        # datetimes for stable ordering and take up to combined_limit items.
+        # Combined feed: merge RSS article set and headlines, parse/normalize
+        # published datetimes for stable ordering and take up to combined_limit
+        # items. Use the RSS article set rather than the HTML index selection so
+        # the combined RSS reflects the days-based window when configured.
         combined_limit = 40
         merged = []
 
@@ -800,7 +809,7 @@ def build(out_dir: Path = BUILD_DIR):
             item["rss_description"] = make_rss_description(item)
             return item
 
-        for a in ctx.get("articles") or []:
+        for a in (rss_articles or []):
             na = norm_article(a)
             if item_has_content(na):
                 merged.append(na)
@@ -1176,8 +1185,7 @@ def read_articles(
                         )
                 except Exception:
                     rows = []
-            elif days is not None:
-                continue
+            
             if dk not in distinct_dates:
                 distinct_dates.append(dk)
             if len(distinct_dates) >= days:

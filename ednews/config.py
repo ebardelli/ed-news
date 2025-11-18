@@ -34,6 +34,12 @@ CROSSREF_STATUS_FORCELIST = [429, 500, 502, 503, 504]
 # articles for that date are included.
 ARTICLES_DEFAULT_LIMIT = 20
 
+# Include all articles published within the last N days in the build output.
+# When set, the build will request recent articles using a days-based
+# selection rather than the fallback limit-based mode. Set to None to keep
+# legacy limit-based behavior.
+ARTICLES_INCLUDE_LAST_DAYS = 30
+
 # Default number of headlienes to include on the site build. When more than this
 # number of headlines share the same DATE(published) as the Nth headline, all
 # headlines for that date are included.

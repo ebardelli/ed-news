@@ -79,7 +79,7 @@
       "feed": "https://rss.sciencedirect.com/publication/science/09594752",
       "publication_id": "10.1016/j.learninstruc",
       "issn": "0959-4752",
-      "processor": {"pre": ["sciencedirect"], "post": ["crossref"]}
+      "processor": {"pre": "sciencedirect", "post": "crossref"}
     },
     "ed": {
       "title": "Education",
@@ -131,7 +131,7 @@
       "title": "The Journal of Mathematical Behavior",
       "link": "https://www.journals.elsevier.com/the-journal-of-mathematical-behavior",
       "feed": "https://rss.sciencedirect.com/publication/science/07323123",
-      "processor": {"pre": ["sciencedirect"], "post": ["crossref"]},
+      "processor": {"pre": "sciencedirect", "post": "crossref"},
       "publication_id": "10.1016/j.jmathb",
       "issn": "0732-3123"
     },
@@ -220,7 +220,7 @@
       "feed": "https://rss.sciencedirect.com/publication/science/0742051X",
       "publication_id": "10.1016/j.tate",
       "issn": "0742-051X",
-      "processor": {"pre": ["sciencedirect"], "post": ["crossref"]}
+      "processor": {"pre": "sciencedirect", "post": "crossref"}
     },
     "jte": {
       "title": "Journal of Teacher Education",
