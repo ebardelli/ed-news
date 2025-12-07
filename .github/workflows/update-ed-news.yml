@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Set-up s5cmd
         uses: peak/action-setup-s5cmd@main
@@ -32,10 +32,10 @@ jobs:
           version: v2.3.0
 
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@ed21f2f24f8dd64503750218de024bcf64c7250a # v7.1.5
 
       - name: Restore uv cache
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: /tmp/.uv-cache
           key: uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
@@ -81,21 +81,21 @@ jobs:
           AWS_DEFAULT_REGION: ${{ secrets.GARAGE_DEFAULT_REGION }}
 
       - name: Purge Cloudflare cache
-        uses: jakejarvis/cloudflare-purge-action@v0.3.0
+        uses: jakejarvis/cloudflare-purge-action@eee6dba0236093358f25bb1581bd615dc8b3d8e3 # v0.3.0
         env:
           CLOUDFLARE_ZONE: ${{ secrets.CLOUDFLARE_ZONE_IDENTIFIER }}
           CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
 
       # Deploy build to GitHub Pages
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
           path: 'build/'
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
 
       - name: Minimize uv cache
         run: uv cache prune --ci
