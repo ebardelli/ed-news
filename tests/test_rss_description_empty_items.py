@@ -54,7 +54,7 @@ def test_rss_description_empty_items(monkeypatch, tmp_path):
     build_mod.build(out_dir)
 
     idx = out_dir / "index.rss"
-    arts = out_dir / "articles.rss"
+    arts = out_dir / "research.rss"
     heads = out_dir / "headlines.rss"
 
     import xml.etree.ElementTree as ET

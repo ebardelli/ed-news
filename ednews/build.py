@@ -372,6 +372,16 @@ def build(out_dir: Path = BUILD_DIR):
     else:
         ctx["articles"] = []
 
+    # Provide compatibility for templates renamed from `articles` -> `research`.
+    # Ensure each article has `similar_research` and expose `research` in ctx
+    try:
+        for art in ctx.get("articles") or []:
+            if "similar_research" not in art:
+                art["similar_research"] = art.get("similar_articles") or []
+    except Exception:
+        pass
+    ctx["research"] = ctx.get("articles") or []
+
     # Load recent news headlines from the headlines table if present
     try:
         # Use the configured headlines default limit; fall back to 20 when not set.
@@ -484,9 +494,9 @@ def build(out_dir: Path = BUILD_DIR):
                 "title": getattr(config, "FEED_TITLE_HEADLINES", "Ed Headlines"),
                 "href": "headlines.rss",
             },
-            "articles": {
-                "title": getattr(config, "FEED_TITLE_ARTICLES", "Ed Articles"),
-                "href": "articles.rss",
+            "research": {
+                "title": getattr(config, "FEED_TITLE_RESEARCH", "Ed Research"),
+                "href": "research.rss",
             },
         }
     except Exception:
@@ -503,7 +513,7 @@ def build(out_dir: Path = BUILD_DIR):
         env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)))
         # Prefer dedicated templates for articles/headlines when available
         try:
-            tpl_articles = env.get_template("articles.rss.jinja2")
+            tpl_articles = env.get_template("research.rss.jinja2")
         except Exception:
             tpl_articles = env.get_template("index.rss.jinja2")
         try:
@@ -619,11 +629,11 @@ def build(out_dir: Path = BUILD_DIR):
             if not a.get("guid"):
                 a["guid"] = make_guid_for_article(a)
 
-        articles_ctx = {**feed_meta_articles, "articles": articles_items}
-        (out_dir / "articles.rss").write_text(
-            tpl_articles.render(articles_ctx), encoding="utf-8"
+        research_ctx = {**feed_meta_articles, "research": articles_items}
+        (out_dir / "research.rss").write_text(
+            tpl_articles.render(research_ctx), encoding="utf-8"
         )
-        logger.info("wrote %s", out_dir / "articles.rss")
+        logger.info("wrote %s", out_dir / "research.rss")
 
         # Headlines-only feed: map headlines into article-shaped dicts
         headlines_limit = getattr(config, "HEADLINES_DEFAULT_LIMIT", 20)
@@ -678,6 +688,12 @@ def build(out_dir: Path = BUILD_DIR):
         # the combined RSS reflects the days-based window when configured.
         combined_limit = 40
         merged = []
+
+        # Debug: log counts of RSS article/headline items before merging
+        try:
+            logger.info("articles_items_count=%d headlines_items_count=%d", len(articles_items), len(headlines_items))
+        except Exception:
+            logger.info("articles/headlines counts unavailable")
 
         import re
 
@@ -841,7 +857,14 @@ def build(out_dir: Path = BUILD_DIR):
                 )
                 it["guid"] = hashlib.sha1(str(key).encode("utf-8")).hexdigest()
 
-        combined_ctx = {**feed_meta_combined, "articles": combined_items}
+        logger.info("combined_items_count=%d", len(combined_items))
+        # Debug print for test environment
+        try:
+            print(f"DEBUG: combined_items_count={len(combined_items)}")
+        except Exception:
+            pass
+        # Provide both `articles` and `research` keys for compatibility with templates
+        combined_ctx = {**feed_meta_combined, "articles": combined_items, "research": combined_items}
         (out_dir / "index.rss").write_text(
             tpl_index.render(combined_ctx), encoding="utf-8"
         )

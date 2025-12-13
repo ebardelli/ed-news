@@ -6,7 +6,7 @@
     <lastBuildDate>{{ last_build_date or "" }}</lastBuildDate>
     <pubDate>{{ pub_date or "" }}</pubDate>
     <ttl>1800</ttl>
-    {% for item in articles %}
+    {% for item in research %}
     <item>
       <title>{{ item.title or 'Untitled' }}</title>
       <link>{{ item.link or '' }}</link>

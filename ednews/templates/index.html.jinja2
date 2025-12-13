@@ -14,7 +14,7 @@
     <title>{{ title }}</title>
 </head>
 <body>
-    {# No redirect: support ?view=headlines or ?view=articles (default=headlines) #}
+    {# No redirect: support ?view=headlines or ?view=research (default=headlines) #}
     <header>
         <h1>{{ title }}</h1>
     </header>
@@ -22,7 +22,7 @@
         <hr class="menu-line">
         <div class="menu-center">
             <a href="?view=headlines" class="menu-item" id="menu-headlines">Latest Headlines</a>
-            <a href="?view=articles" class="menu-item" id="menu-articles">Research Articles</a>
+            <a href="?view=research" class="menu-item" id="menu-research">Latest Research</a>
         </div>
         <hr class="menu-line">
     </nav>
@@ -43,7 +43,7 @@
                             <p class="excerpt">{{ h.text or '' }}</p>
                             {# Related headlines (populated by build.py) #}
                             {% if h.similar_headlines %}
-                                <div class="similar-articles">
+                                <div class="similar-research">
                                     <h4>Related headlines</h4>
                                     <ul>
                                         {% for s in h.similar_headlines %}
@@ -64,10 +64,10 @@
                     <p>No headlines found.</p>
                 {% endif %}
             </div>
-            {# Latest Articles (flat list) - shown when view=articles #}
-            <div id="view-articles" class="view-section" style="display:none;">
-                {% if articles %}
-                    {% for a in articles[:20] %}
+            {# Latest research (flat list) - shown when view=research #}
+            <div id="view-research" class="view-section" style="display:none;">
+                {% if research %}
+                    {% for a in research[:20] %}
                         <div class="item">
                             <h3>{% if a.link %}<a href="{{ a.link }}">{{ a.title or 'Untitled' }}</a>{% else %}{{ a.title or 'Untitled' }}{% endif %}</h3>
                             <p class="meta">
@@ -100,11 +100,11 @@
                                 {% endif %}
                             </p>
 
-                            {% if a.similar_articles %}
-                                <div class="similar-articles">
-                                    <h4>Related articles</h4>
+                            {% if a.similar_research %}
+                                <div class="similar-research">
+                                    <h4>Related research</h4>
                                     <ul>
-                                        {% for s in a.similar_articles %}
+                                        {% for s in a.similar_research %}
                                             <li>
                                                 {% if s.doi %}
                                                     <a href="https://doi.org/{{ s.doi }}">{{ s.title or s.doi }}</a>
@@ -120,11 +120,11 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    <p>No articles found.</p>
+                    <p>No research found.</p>
                 {% endif %}
             </div>
 
-            {# Previously there was a grouped TOC view here. TOC view removed - only articles view remains. #}
+            {# Previously there was a grouped TOC view here. TOC view removed - only research view remains. #}
             </div>
         </section>
 
@@ -161,14 +161,14 @@
             document.querySelectorAll('.view-section').forEach(function(el){ el.style.display = 'none'; });
             const el = document.getElementById('view-' + view);
             if (el) el.style.display = '';
-            document.getElementById('menu-articles').classList.toggle('active', view === 'articles');
+            document.getElementById('menu-research').classList.toggle('active', view === 'research');
             const mh = document.getElementById('menu-headlines');
             if (mh) mh.classList.toggle('active', view === 'headlines');
         }
         (function(){
             const view = getQueryParam('view') || 'headlines';
             showView(view);
-            document.getElementById('menu-articles').addEventListener('click', function(e){ e.preventDefault(); showView('articles'); history.replaceState({},'', '?view=articles'); });
+            document.getElementById('menu-research').addEventListener('click', function(e){ e.preventDefault(); showView('research'); history.replaceState({},'', '?view=research'); });
             const mh = document.getElementById('menu-headlines');
             if (mh) mh.addEventListener('click', function(e){ e.preventDefault(); showView('headlines'); history.replaceState({},'', '?view=headlines'); });
         })();

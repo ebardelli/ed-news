@@ -8,7 +8,7 @@ def test_build_filters_empty_items(tmp_path, monkeypatch):
     templates_dir = tmp_path / "templates"
     templates_dir.mkdir()
     (templates_dir / "index.rss.jinja2").write_text("{% for a in articles %}ITEM: {{ a.title }}\n{% endfor %}", encoding="utf-8")
-    (templates_dir / "articles.rss.jinja2").write_text("{% for a in articles %}A: {{ a.title }}\n{% endfor %}", encoding="utf-8")
+    (templates_dir / "research.rss.jinja2").write_text("{% for a in research %}A: {{ a.title }}\n{% endfor %}", encoding="utf-8")
     (templates_dir / "headlines.rss.jinja2").write_text("{% for a in articles %}H: {{ a.title }}\n{% endfor %}", encoding="utf-8")
 
     monkeypatch.setattr(build, "TEMPLATES_DIR", templates_dir)
@@ -51,8 +51,8 @@ def test_build_filters_empty_items(tmp_path, monkeypatch):
     articles_items = [a for a in (ctx.get("articles") or []) if build.item_has_content(a)][:articles_limit]
 
     env = __import__('jinja2').Environment(loader=__import__('jinja2').FileSystemLoader(str(templates_dir)))
-    tpl_articles = env.get_template('articles.rss.jinja2')
-    rendered = tpl_articles.render({'articles': articles_items})
+    tpl_articles = env.get_template('research.rss.jinja2')
+    rendered = tpl_articles.render({'research': articles_items})
     assert 'Real Article' in rendered
 
     # Render headlines similarly

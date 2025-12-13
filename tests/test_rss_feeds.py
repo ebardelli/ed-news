@@ -48,7 +48,7 @@ def test_rss_feeds_generate_and_counts(monkeypatch, tmp_path):
 
     # Check files exist
     idx = out_dir / "index.rss"
-    arts = out_dir / "articles.rss"
+    arts = out_dir / "research.rss"
     heads = out_dir / "headlines.rss"
     assert idx.exists()
     assert arts.exists()
