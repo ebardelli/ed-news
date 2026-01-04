@@ -918,6 +918,45 @@ def read_articles(
 
     rows = []
 
+    def _compute_date_key(pub_raw):
+        if pub_raw is None:
+            return None
+        try:
+            if isinstance(pub_raw, datetime):
+                return pub_raw.date().isoformat()
+            s = str(pub_raw)
+            try:
+                dt = parsedate_to_datetime(s)
+                return dt.date().isoformat()
+            except Exception:
+                try:
+                    dt = datetime.fromisoformat(s)
+                    return dt.date().isoformat()
+                except Exception:
+                    for fmt in (
+                        "%Y-%m-%dT%H:%M:%S.%f",
+                        "%Y-%m-%dT%H:%M:%S",
+                        "%Y-%m-%d %H:%M:%S",
+                        "%Y-%m-%d",
+                    ):
+                        try:
+                            dt = datetime.strptime(s, fmt)
+                            return dt.date().isoformat()
+                        except Exception:
+                            continue
+                    import re
+
+                    m = re.search(r"(\d{4}-\d{2}-\d{2})", s)
+                    if m:
+                        try:
+                            dt = datetime.strptime(m.group(1), "%Y-%m-%d")
+                            return dt.date().isoformat()
+                        except Exception:
+                            return None
+        except Exception:
+            return None
+        return None
+
     # publications takes precedence over days when provided. If publications is set,
     # return all articles from each of the latest `publications` feeds where the
     # article's date equals that feed's most recent date.
@@ -965,54 +1004,59 @@ def read_articles(
     elif days is not None:
         try:
             cur.execute(
-                """
-                SELECT doi, title, link, feed_title, content, published, authors
-                FROM combined_articles
-                WHERE DATE(published) IN (
-                    SELECT DISTINCT DATE(published) AS d
-                    FROM combined_articles
-                    WHERE published IS NOT NULL
-                    ORDER BY d DESC
-                    LIMIT ?
-                )
-                ORDER BY published DESC
-                LIMIT 50
-                """,
-                (days,),
+                "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE published IS NOT NULL"
             )
-            rows = [dict(r) for r in cur.fetchall()]
+            all_rows = [dict(r) for r in cur.fetchall()]
+
+            parsed = []
+            for r in all_rows:
+                dk = _compute_date_key(r.get("published")) or "2020-01-01"
+                parsed.append((dk, r))
+
+            # distinct dates in descending order
+            distinct_dates = []
+            for dk, _ in sorted(parsed, key=lambda x: x[0], reverse=True):
+                if dk not in distinct_dates:
+                    distinct_dates.append(dk)
+                if len(distinct_dates) >= days:
+                    break
+            allowed = set(distinct_dates)
+
+            # select rows whose date_key is in allowed, preserve ordering by date desc
+            rows = [r for dk, r in sorted(parsed, key=lambda x: x[0], reverse=True) if dk in allowed]
         except Exception:
             rows = []
 
     # Fallback: select most recent `limit` articles
     if not rows:
         try:
-            # To avoid arbitrarily truncating a day's publications, compute
-            # the DATE(published) of the Nth most recent article and include
-            # all articles whose DATE(published) is on or after that date.
-            # If this fails for any reason, fall back to a simple LIMIT query.
             cur.execute(
-                "SELECT DATE(published) as d FROM combined_articles WHERE published IS NOT NULL ORDER BY published DESC LIMIT 1 OFFSET ?",
-                (max(0, limit - 1),),
+                "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE published IS NOT NULL"
             )
-            row = cur.fetchone()
-            if row and row[0]:
-                nth_date = row[0]
-                # First fetch the top-N articles ordered by published DESC
-                cur.execute(
-                    "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE published IS NOT NULL ORDER BY published DESC LIMIT ?",
-                    (limit,),
-                )
-                top_rows = [dict(r) for r in cur.fetchall()]
+            all_rows = [dict(r) for r in cur.fetchall()]
 
-                # Then fetch all articles that share the same DATE(published) as the Nth article
-                cur.execute(
-                    "SELECT doi, title, link, feed_title, content, published, authors FROM combined_articles WHERE DATE(published) = ? ORDER BY published DESC",
-                    (nth_date,),
-                )
-                same_date_rows = [dict(r) for r in cur.fetchall()]
+            parsed = []
+            for r in all_rows:
+                dk = _compute_date_key(r.get("published")) or "2020-01-01"
+                parsed.append((dk, r))
 
-                # Merge top_rows and same_date_rows while preserving order and avoiding duplicates
+            # Sort by date_key desc, then keep order to compute Nth date
+            parsed_sorted = sorted(parsed, key=lambda x: x[0], reverse=True)
+
+            if parsed_sorted:
+                # nth date (YYYY-MM-DD)
+                idx = max(0, limit - 1)
+                if idx < len(parsed_sorted):
+                    nth_date = parsed_sorted[idx][0]
+                else:
+                    nth_date = parsed_sorted[-1][0]
+
+                # top_rows: first `limit` entries
+                top_rows = [r for _, r in parsed_sorted[:limit]]
+
+                # same_date_rows: all rows with the same date as nth_date
+                same_date_rows = [r for dk, r in parsed_sorted if dk == nth_date]
+
                 seen = set()
                 merged = []
                 for r in top_rows:
@@ -1026,12 +1070,7 @@ def read_articles(
                         seen.add(key)
                         merged.append(r)
 
-                # Enforce a hard cap to avoid pathological expansions when many
-                # articles share the same DATE(published). The configured cap is
-                # limit + config.ARTICLES_MAX_SAME_DATE_EXTRA.
-                max_allowed = limit + getattr(
-                    config, "ARTICLES_MAX_SAME_DATE_EXTRA", 200
-                )
+                max_allowed = limit + getattr(config, "ARTICLES_MAX_SAME_DATE_EXTRA", 200)
                 if len(merged) > max_allowed:
                     logger.warning(
                         "merged articles (%d) exceed max_allowed (%d); truncating to max_allowed",
