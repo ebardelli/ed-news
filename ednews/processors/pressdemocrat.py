@@ -13,26 +13,36 @@ def _entry_has_local_news_category(entry: dict) -> bool:
     """
     keywords = ["local news", "news in education"]
 
+    # Collect normalized category/tag terms from the entry
+    terms: List[str] = []
+
     tags = entry.get("tags") or []
     if isinstance(tags, list):
         for t in tags:
             if not isinstance(t, dict):
                 continue
             term = (t.get("term") or "").strip().lower()
-            if not term:
-                continue
-            for kw in keywords:
-                if term == kw or term == f"[{kw}]" or kw in term:
-                    return True
+            if term:
+                terms.append(term)
 
     cat = entry.get("category") or ""
-    if isinstance(cat, str):
-        lower = cat.lower()
-        for kw in keywords:
-            if kw in lower:
-                return True
+    if isinstance(cat, str) and cat.strip():
+        terms.append(cat.strip().lower())
 
-    return False
+    if not terms:
+        return False
+
+    # Require that every keyword is present in at least one term
+    for kw in keywords:
+        found = False
+        for term in terms:
+            if term == kw or term == f"[{kw}]" or kw in term:
+                found = True
+                break
+        if not found:
+            return False
+
+    return True
 
 
 def pd_education_feed_processor(session: requests.Session, feed_url: str) -> List[Dict]:

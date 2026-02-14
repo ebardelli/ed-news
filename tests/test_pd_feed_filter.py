@@ -46,6 +46,13 @@ def test_pd_feed_keeps_only_local_news():
         assert "published" in it
 
     # The processor should filter out items that are not Local News.
-    # To give a concrete assertion, ensure at least one item is present in the fixture
-    # that is categorized as Local News and therefore returned.
-    assert len(items) >= 1
+    # The fixture contains two items that match both 'Local News' and
+    # 'News in Education' and therefore should be returned.
+    assert len(items) == 2
+
+    titles = {it.get('title') for it in items}
+    expected = {
+        "Santa Rosa City Schools turns to pay cuts for top officials as more teacher layoffs loom",
+        "Rincon Valley seeks to cut $8 million as latest Sonoma County school district weighed down by deficit",
+    }
+    assert expected.issubset(titles)
