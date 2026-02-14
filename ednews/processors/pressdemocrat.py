@@ -4,12 +4,15 @@ import requests
 
 
 def _entry_has_local_news_category(entry: dict) -> bool:
-    """Return True if the feed entry contains a Local News category.
+    """Return True if the feed entry contains a relevant Press Democrat category.
 
     Feedparser normally exposes categories in the `tags` attribute as a
     list of dicts with a 'term' key. We accept either 'Local News' or
-    bracketed '[Local News]' for compatibility with the fixture.
+    'News in Education' (and their bracketed forms) for compatibility with
+    fixtures and the live feed.
     """
+    keywords = ["local news", "news in education"]
+
     tags = entry.get("tags") or []
     if isinstance(tags, list):
         for t in tags:
@@ -18,18 +21,25 @@ def _entry_has_local_news_category(entry: dict) -> bool:
             term = (t.get("term") or "").strip().lower()
             if not term:
                 continue
-            if term == "local news" or term == "[local news]" or "local news" in term:
-                return True
+            for kw in keywords:
+                if term == kw or term == f"[{kw}]" or kw in term:
+                    return True
 
     cat = entry.get("category") or ""
-    if isinstance(cat, str) and "local news" in cat.lower():
-        return True
+    if isinstance(cat, str):
+        lower = cat.lower()
+        for kw in keywords:
+            if kw in lower:
+                return True
 
     return False
 
 
 def pd_education_feed_processor(session: requests.Session, feed_url: str) -> List[Dict]:
-    """Fetch the Press Democrat feed and keep only Local News items.
+    """Fetch the Press Democrat feed and keep only relevant Press Democrat items.
+
+    This currently filters items categorized as 'Local News' or
+    'News in Education'.
 
     Args:
         session: requests.Session to use for fetching.
@@ -37,7 +47,7 @@ def pd_education_feed_processor(session: requests.Session, feed_url: str) -> Lis
 
     Returns:
         List of normalized headline dicts (title, link, summary, published)
-        containing only items categorized as Local News.
+        containing only items matching the configured categories.
     """
     resp = session.get(feed_url, timeout=15)
     resp.raise_for_status()

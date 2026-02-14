@@ -40,3 +40,18 @@ def test_non_dict_tag_entries_are_handled():
 def test_malformed_tag_dicts_are_ignored():
     entry = {"tags": [{}, {"notterm": "Local News"}, {"term": "local news"}]}
     assert pressdemocrat._entry_has_local_news_category(entry)
+
+
+def test_news_in_education_tag_exact_term():
+    entry = {"tags": [{"term": "News in Education"}]}
+    assert pressdemocrat._entry_has_local_news_category(entry)
+
+
+def test_news_in_education_tag_bracketed():
+    entry = {"tags": [{"term": "[News in Education]"}]}
+    assert pressdemocrat._entry_has_local_news_category(entry)
+
+
+def test_news_in_education_tag_case_insensitive():
+    entry = {"tags": [{"term": "news IN education"}]}
+    assert pressdemocrat._entry_has_local_news_category(entry)

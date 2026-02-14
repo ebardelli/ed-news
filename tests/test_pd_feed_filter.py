@@ -29,7 +29,7 @@ def test_pd_feed_keeps_only_local_news():
 
     cfg = {
         "title": "Press Democrat Education News",
-        "feed": "https://www.pressdemocrat.com/news/education/feed/",
+        "feed": "https://www.pressdemocrat.com/local-news/feed/",
         "processor": "pd-education",
     }
 
