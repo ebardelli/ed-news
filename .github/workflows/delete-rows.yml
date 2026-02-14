@@ -1,0 +1,51 @@
+name: delete-rows
+
+on:
+  workflow_dispatch:
+    inputs:
+      table:
+        description: 'Table name to delete from'
+        required: true
+      ids:
+        description: 'Comma- or space-separated list of ids to delete'
+        required: true
+      id_column:
+        description: 'ID column name (default: id)'
+        required: false
+        default: id
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set-up s5cmd
+        uses: peak/action-setup-s5cmd@main
+        with:
+          version: v2.3.0
+
+      - name: Restore ednews.db from S3
+        run: s5cmd --endpoint-url $AWS_ENDPOINT cp s3://ed-news-cache/ednews.db ednews.db
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.GARAGE_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.GARAGE_SECRET_KEY }}
+          AWS_ENDPOINT: ${{ secrets.GARAGE_ENDPOINT }}
+          AWS_DEFAULT_REGION: ${{ secrets.GARAGE_DEFAULT_REGION }}
+
+      - name: Run deletion script
+        run: |
+          python3 scripts/delete_rows.py --db ednews.db --table "${{ inputs.table }}" --ids "${{ inputs.ids }}" --id-column "${{ inputs.id_column }}"
+
+      - name: Upload ednews.db back to S3
+        run: s5cmd --endpoint-url $AWS_ENDPOINT cp ednews.db s3://ed-news-cache/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.GARAGE_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.GARAGE_SECRET_KEY }}
+          AWS_ENDPOINT: ${{ secrets.GARAGE_ENDPOINT }}
+          AWS_DEFAULT_REGION: ${{ secrets.GARAGE_DEFAULT_REGION }}
