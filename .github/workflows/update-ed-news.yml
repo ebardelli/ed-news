@@ -26,11 +26,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Set-up s5cmd
-        uses: peak/action-setup-s5cmd@main
-        with:
-          version: v2.3.0
-
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b # v7.3.0
 
@@ -42,6 +37,110 @@ jobs:
           restore-keys: |
             uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
             uv-${{ runner.os }}
+
+      - name: Find release asset
+        id: find_release_asset
+        shell: bash
+        run: |
+          set -e
+
+          echo "::Group::Inputs"
+          echo "${{ toJSON(inputs) }}"
+          echo "::endgroup::"
+
+          echo "::group::Runner Context"
+          echo "${{ toJSON(runner) }}"
+          echo "::endgroup::"
+
+          tag="2.3.0"
+          version="${tag#v}"
+          os="${{ runner.os }}"
+          arch="${{ runner.arch || 'X64' }}"
+          extension=".tar.gz"
+
+          case "${os}" in
+          Linux)
+              os="Linux"
+              ;;
+          macOS)
+              os="macOS"
+              ;;
+          *)
+              echo "Unknown OS: ${os}"
+              exit 1
+              ;;
+          esac
+
+          case "${arch}" in
+          X32)
+              arch="32bit"
+              ;;
+          X64)
+              arch="64bit"
+              ;;
+          ARM)
+              arch="armv6"
+              ;;
+          ARM64)
+              arch="arm64"
+              ;;
+          *)
+              echo "Unknown architecture: ${arch}"
+              exit 1
+              ;;
+          esac
+
+          asset_name="s5cmd_${version}_${os}-${arch}${extension}"
+          asset_url="http://trunk.s3-website.ebardelli.com/${asset_name}"
+
+          echo "::group::Asset URL"
+          echo "${asset_url}"
+          echo "::endgroup::"
+
+          if [ -z "$asset_url" ]; then
+            echo "Unable to find asset ${asset_name} for version ${tag}"
+            exit 1
+          fi
+
+          echo "url=${asset_url}" >> "$GITHUB_OUTPUT"
+
+      - name: Download release asset
+        id: download_release
+        if: steps.find_release_asset.outputs.url != ''
+        shell: bash
+        run: |
+          set -e
+
+          asset_url="${{ steps.find_release_asset.outputs.url }}"
+          tmp_dir="${{ runner.temp }}"
+
+          download_dir="$tmp_dir/s5cmd-asset"
+          binary_dir="$tmp_dir/s5cmd-bin"
+
+          mkdir -p "$download_dir"
+          mkdir -p "$binary_dir"
+
+          archive_path="${download_dir}/s5cmd.tar.gz"
+
+          curl -sL -o "${archive_path}" "${asset_url}"
+
+          echo "::group::Download archive"
+          ls -l "${archive_path}"
+          echo "::endgroup::"
+
+          tar -xf "${archive_path}" -C "${binary_dir}" s5cmd
+
+          echo "::group::Binary path"
+          ls -l "${binary_dir}"
+          echo "::endgroup::"
+
+          echo "binary_dir=${binary_dir}" >> "$GITHUB_OUTPUT"
+
+      - name: Add s5cmd to path
+        shell: bash
+        run: |
+          s5cmd_binary_dir="${{ steps.download_release.outputs.binary_dir  }}"
+          echo "${s5cmd_binary_dir}" >> $GITHUB_PATH
 
       - name: Restore S3 cache
         run: s5cmd --endpoint-url $AWS_ENDPOINT cp s3://ed-news-cache/ednews.db ednews.db
