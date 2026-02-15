@@ -38,7 +38,7 @@ jobs:
             uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
             uv-${{ runner.os }}
 
-      - name: Find release asset
+      - name: Setup s5cmd release asset
         id: find_release_asset
         shell: bash
         run: |
@@ -104,7 +104,7 @@ jobs:
 
           echo "url=${asset_url}" >> "$GITHUB_OUTPUT"
 
-      - name: Download release asset
+      - name: Download s5cmd release asset
         id: download_release
         if: steps.find_release_asset.outputs.url != ''
         shell: bash
