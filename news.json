@@ -9,7 +9,7 @@
     },
     "pd-education" : {
         "title": "Press Democrat Education News",
-        "feed": "https://www.pressdemocrat.com/local-news/feed/",
+        "feed": "https://www.pressdemocrat.com/local-news/feed/atom/",
         "processor": {"pre": "pd-education"}
     },
     "calmatters-education" : {
