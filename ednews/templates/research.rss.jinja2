@@ -1,16 +1,16 @@
 <rss version="2.0">
   <channel>
-    <title>{{ title }}</title>
+    <title>{{ title | e }}</title>
     <link>{{ (link or "") | e }}</link>
-    <description>{{ description or title }}</description>
+    <description>{{ (description or title) | e }}</description>
     <lastBuildDate>{{ last_build_date or "" }}</lastBuildDate>
     <pubDate>{{ pub_date or "" }}</pubDate>
     <ttl>1800</ttl>
     {% for item in research %}
     <item>
-      <title>{{ item.title or 'Untitled' }}</title>
+      <title>{{ (item.title or 'Untitled') | e }}</title>
       <link>{{ (item.link or '') | e }}</link>
-  <guid isPermaLink="false">{{ item.guid }}</guid>
+  <guid isPermaLink="false">{{ item.guid | e }}</guid>
   <description><![CDATA[{{ item.rss_description | default('') }}]]></description>
       <pubDate>{{ item.published or '' }}</pubDate>
     </item>
