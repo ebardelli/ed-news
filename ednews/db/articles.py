@@ -7,6 +7,29 @@ from .. import config
 logger = logging.getLogger("ednews.db.articles")
 
 
+def _recover_mojibake(text: str) -> str:
+    """Attempt to recover from UTF-8 bytes that were decoded as Latin-1 (mojibake).
+    
+    Example: "â€™" (3 chars: E2 80 99 in Latin-1) should be "'" (U+2019 in UTF-8).
+    
+    Returns the recovered string if successful, otherwise returns the original.
+    """
+    if not isinstance(text, str) or not text:
+        return text
+    
+    try:
+        # Try to detect if this looks like UTF-8 bytes misinterpreted as Latin-1
+        # by encoding to Latin-1 and decoding as UTF-8
+        recovered = text.encode("latin-1").decode("utf-8")
+        # Only return the recovered version if it looks reasonable (no replacement chars)
+        if "\ufffd" not in recovered:
+            return recovered
+    except (UnicodeDecodeError, UnicodeEncodeError):
+        pass
+    
+    return text
+
+
 def upsert_article(
     conn,
     doi: str | None,
@@ -65,6 +88,9 @@ def upsert_article(
 
     doi = _sanitize(doi)
     title = _sanitize(title)
+    # Recover mojibake (UTF-8 bytes misinterpreted as Latin-1)
+    if title:
+        title = _recover_mojibake(title)
     authors = _sanitize(authors)
     abstract = _sanitize(abstract)
     feed_id = _sanitize(feed_id)
