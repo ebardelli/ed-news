@@ -7,6 +7,7 @@ configuration used to assemble the site.
 
 import os
 import shutil
+import html
 from pathlib import Path
 from configparser import ConfigParser
 from jinja2 import Environment, FileSystemLoader
@@ -37,6 +38,13 @@ PLANET_FILE = config.RESEARCH_JSON
 DB_FILE = config.DB_PATH
 
 logger = logging.getLogger("ednews.build")
+
+
+def _decode_html_entities(text: str | None) -> str:
+    """Decode HTML entities from text so downstream XML escaping happens once."""
+    if text is None:
+        return ""
+    return html.unescape(str(text))
 
 
 def item_has_content(item: dict) -> bool:
@@ -578,6 +586,7 @@ def build(out_dir: Path = BUILD_DIR):
             if not item_has_content(a):
                 continue
             it = dict(a)
+            it["title"] = _decode_html_entities(it.get("title"))
             # Prefer an explicit source field if present, else use feed title
             src = (
                 it.get("source")
@@ -642,7 +651,7 @@ def build(out_dir: Path = BUILD_DIR):
         # Convert headline rows to the expected keys used by the RSS template
         def headline_to_item(h):
             item = {
-                "title": h.get("title") or "Untitled",
+                "title": _decode_html_entities(h.get("title") or "Untitled"),
                 "link": h.get("link") or "",
                 "content": h.get("text") or "",
                 "abstract": None,
@@ -788,7 +797,7 @@ def build(out_dir: Path = BUILD_DIR):
             pd = parse_datetime_value(raw_published)
             # Build a normalized item shape including source and similar_headlines
             item = {
-                "title": a.get("title"),
+                "title": _decode_html_entities(a.get("title")),
                 "link": a.get("link"),
                 "content": a.get("content") or a.get("abstract") or "",
                 "abstract": a.get("abstract"),
@@ -813,7 +822,7 @@ def build(out_dir: Path = BUILD_DIR):
             )
             pd = parse_datetime_value(raw_published)
             item = {
-                "title": h.get("title"),
+                "title": _decode_html_entities(h.get("title")),
                 "link": h.get("link"),
                 "content": h.get("text") or "",
                 "abstract": None,

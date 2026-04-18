@@ -122,3 +122,61 @@ def test_read_articles_empty_view(tmp_path):
 
     res = build.read_articles(db)
     assert isinstance(res, list)
+
+
+def test_build_rss_title_not_double_encoded(tmp_path, monkeypatch):
+    templates_dir = tmp_path / "templates"
+    templates_dir.mkdir()
+    (templates_dir / "index.html.jinja2").write_text("ok", encoding="utf-8")
+    rss_template = (
+        "<rss><channel>{% for item in research %}"
+        "<item><title>{{ (item.title or 'Untitled') | e }}</title></item>"
+        "{% endfor %}</channel></rss>"
+    )
+    (templates_dir / "index.rss.jinja2").write_text(rss_template, encoding="utf-8")
+    (templates_dir / "research.rss.jinja2").write_text(
+        rss_template, encoding="utf-8"
+    )
+    (templates_dir / "headlines.rss.jinja2").write_text(
+        "<rss><channel>{% for item in articles %}<item><title>{{ (item.title or 'Untitled') | e }}</title></item>{% endfor %}</channel></rss>",
+        encoding="utf-8",
+    )
+
+    static_dir = tmp_path / "static"
+    static_dir.mkdir()
+
+    planet = tmp_path / "research.json"
+    planet.write_text('{"title": "X", "feeds": {}}', encoding="utf-8")
+
+    db_path = tmp_path / "site.db"
+    db_path.touch()
+
+    encoded_title = "Tom &amp; Jerry&#39;s &lt;Plan&gt;"
+
+    monkeypatch.setattr(build, "TEMPLATES_DIR", templates_dir)
+    monkeypatch.setattr(build, "STATIC_DIR", static_dir)
+    monkeypatch.setattr(build, "PLANET_FILE", planet)
+    monkeypatch.setattr(build, "DB_FILE", db_path)
+    monkeypatch.setattr(
+        build,
+        "read_articles",
+        lambda *args, **kwargs: [
+            {
+                "title": encoded_title,
+                "link": "https://example.com/1",
+                "content": "",
+                "abstract": "",
+                "published": "2026-04-17T00:00:00Z",
+                "feed_title": "Example Feed",
+            }
+        ],
+    )
+    monkeypatch.setattr(build, "read_news_headlines", lambda *args, **kwargs: [])
+
+    out = tmp_path / "site"
+    build.build(out_dir=out)
+
+    rss = (out / "research.rss").read_text(encoding="utf-8")
+    assert "Tom &amp; Jerry&#39;s &lt;Plan&gt;" in rss
+    assert "&amp;amp;" not in rss
+    assert "&amp;#39;" not in rss
