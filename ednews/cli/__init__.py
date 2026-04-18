@@ -19,6 +19,7 @@ from .headlines import cmd_headlines
 from .manage_db import (
     cmd_manage_db_cleanup,
     cmd_manage_db_cleanup_filtered_title,
+    cmd_manage_db_fix_encoding,
     cmd_manage_db_vacuum,
     cmd_manage_db_migrate,
     cmd_manage_db_rematch,
@@ -209,6 +210,17 @@ def run() -> None:
     p_cleanup_ft.set_defaults(
         func=lambda args: cmd_manage_db_cleanup_filtered_title(args)
     )
+
+    p_fix_encoding = manage_sub.add_parser(
+        "fix-encoding",
+        help="Repair mojibake-corrupted text stored in database tables",
+    )
+    p_fix_encoding.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Do not update rows; only report how many fields would change",
+    )
+    p_fix_encoding.set_defaults(func=lambda args: cmd_manage_db_fix_encoding(args))
 
     p_vacuum = manage_sub.add_parser("vacuum", help="Run VACUUM on the configured DB")
     p_vacuum.set_defaults(func=lambda args: cmd_manage_db_vacuum(args))

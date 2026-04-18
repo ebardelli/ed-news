@@ -10,6 +10,7 @@ from .migrations import migrate_db, migrate_add_items_url_hash
 from .maintenance_vacuum import vacuum_db
 from .maintenance_log import log_maintenance_run
 from .maintenance_cleanup import cleanup_empty_articles, cleanup_filtered_titles
+from .maintenance_encoding import repair_text_encoding
 from .maintenance_sync import sync_articles_from_items
 from .maintenance_journal import fetch_latest_journal_works
 from .maintenance_rematch import rematch_publication_dois
@@ -25,6 +26,7 @@ __all__ = [
     "log_maintenance_run",
     "cleanup_empty_articles",
     "cleanup_filtered_titles",
+    "repair_text_encoding",
     "sync_articles_from_items",
     "fetch_latest_journal_works",
     "rematch_publication_dois",

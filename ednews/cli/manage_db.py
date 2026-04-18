@@ -122,6 +122,44 @@ def cmd_manage_db_cleanup_filtered_title(args):
         conn.close()
 
 
+def cmd_manage_db_fix_encoding(args):
+    from ..db import manage_db
+
+    conn = get_conn()
+    started, run_id = start_maintenance_run(
+        conn, "fix-encoding", {"args": vars(args)}
+    )
+    status = "failed"
+    details = {}
+    try:
+        result = manage_db.repair_text_encoding(
+            conn, dry_run=getattr(args, "dry_run", False)
+        )
+        by_column = result.get("by_column", {}) or {}
+        touched = ", ".join(
+            f"{key}={count}" for key, count in by_column.items() if count
+        )
+        touched = touched or "no changes"
+        if getattr(args, "dry_run", False):
+            print(
+                f"dry-run: would update {result.get('total_updates', 0)} fields ({touched})"
+            )
+            status = "dry-run"
+        else:
+            print(
+                f"updated {result.get('total_updates', 0)} fields ({touched})"
+            )
+            status = "ok"
+        details = result
+    except Exception as e:
+        status = "failed"
+        details = {"error": str(e)}
+        raise
+    finally:
+        finalize_maintenance_run(conn, "fix-encoding", run_id, started, status, details)
+        conn.close()
+
+
 def cmd_manage_db_vacuum(args):
     from ..db import manage_db
 

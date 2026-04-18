@@ -53,6 +53,7 @@ jobs:
           uv run ednews manage-db rematch-dois --only-missing
           uv run ednews manage-db remove-feed-articles
           uv run python main.py manage-db run-all --older-than-days 7
+          uv run python main.py manage-db fix-encoding
 
       - name: Upload ednews.db to S3 cache
         run: s5cmd --endpoint-url $AWS_ENDPOINT cp ednews.db s3://ed-news-cache/

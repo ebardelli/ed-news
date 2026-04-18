@@ -100,6 +100,95 @@ def test_create_combined_view_exists_and_selectable():
     conn.close()
 
 
+def test_repair_text_encoding_updates_stored_fields():
+    conn = make_conn()
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO articles (doi, title, authors, abstract, fetched_at) VALUES (?, ?, ?, ?, ?)",
+        (
+            "10.1234/mojibake",
+            "Clean Title",
+            "Jos\u00c3\u00a9 Silva",
+            "Some abstract with na\u00c3\u00afve text",
+            datetime.now(timezone.utc).isoformat(),
+        ),
+    )
+    cur.execute(
+        "INSERT INTO headlines (source, title, text, link, first_seen, published) VALUES (?, ?, ?, ?, ?, ?)",
+        (
+            "Press Dem\u00c3\u00b3crat",
+            "Budget \u00e2\u20ac\u2122concerns\u00e2\u20ac\u2122",
+            "Quoted \u00e2\u20ac\u0153text\u00e2\u20ac\u009d",
+            "https://example.com/h1",
+            datetime.now(timezone.utc).isoformat(),
+            datetime.now(timezone.utc).isoformat(),
+        ),
+    )
+    cur.execute(
+        "INSERT INTO items (guid, title, link, summary, fetched_at) VALUES (?, ?, ?, ?, ?)",
+        (
+            "g1",
+            "El Ni\u00c3\u00b1o update",
+            "https://example.com/i1",
+            "Summary with \u00e2\u20ac\u00a6",
+            datetime.now(timezone.utc).isoformat(),
+        ),
+    )
+    cur.execute(
+        "INSERT INTO publications (feed_id, publication_id, feed_title, issn) VALUES (?, ?, ?, ?)",
+        ("feed1", "pub1", "Revista de Educa\u00c3\u00a7\u00c3\u00a3o", "1234-5678"),
+    )
+    conn.commit()
+
+    result = db.repair_text_encoding(conn, dry_run=False)
+
+    assert result["total_updates"] >= 5
+    cur.execute("SELECT authors, abstract FROM articles WHERE doi = ?", ("10.1234/mojibake",))
+    authors, abstract = cur.fetchone()
+    assert authors == "José Silva"
+    assert abstract == "Some abstract with naïve text"
+
+    cur.execute("SELECT source, title, text FROM headlines WHERE link = ?", ("https://example.com/h1",))
+    source, title, text = cur.fetchone()
+    assert source == "Press Demócrat"
+    assert title == "Budget ’concerns’"
+    assert text == 'Quoted “text”'
+
+    cur.execute("SELECT title, summary FROM items WHERE guid = ?", ("g1",))
+    item_title, item_summary = cur.fetchone()
+    assert item_title == "El Niño update"
+    assert item_summary == "Summary with …"
+
+    cur.execute(
+        "SELECT feed_title FROM publications WHERE publication_id = ? AND issn = ?",
+        ("pub1", "1234-5678"),
+    )
+    assert cur.fetchone()[0] == "Revista de Educação"
+    conn.close()
+
+
+def test_repair_text_encoding_dry_run_does_not_modify_rows():
+    conn = make_conn()
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO items (guid, title, link, fetched_at) VALUES (?, ?, ?, ?)",
+        (
+            "g2",
+            "El Ni\u00c3\u00b1o update",
+            "https://example.com/i2",
+            datetime.now(timezone.utc).isoformat(),
+        ),
+    )
+    conn.commit()
+
+    result = db.repair_text_encoding(conn, dry_run=True)
+
+    assert result["total_updates"] == 1
+    cur.execute("SELECT title FROM items WHERE guid = ?", ("g2",))
+    assert cur.fetchone()[0] == "El Ni\u00c3\u00b1o update"
+    conn.close()
+
+
 def test_upsert_publication_inserts_and_updates():
     conn = make_conn()
     cur = conn.cursor()

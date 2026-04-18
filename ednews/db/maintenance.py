@@ -19,6 +19,7 @@ from .maintenance_cleanup import (
     cleanup_empty_articles,
     cleanup_filtered_titles,
 )
+from .maintenance_encoding import repair_text_encoding
 from .maintenance_journal import fetch_latest_journal_works
 from .maintenance_vacuum import vacuum_db
 from .maintenance_rematch import rematch_publication_dois
@@ -30,6 +31,7 @@ __all__ = [
     "sync_articles_from_items",
     "cleanup_empty_articles",
     "cleanup_filtered_titles",
+    "repair_text_encoding",
     "fetch_latest_journal_works",
     "vacuum_db",
     "rematch_publication_dois",

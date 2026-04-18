@@ -48,6 +48,7 @@ from .maintenance_journal import fetch_latest_journal_works
 from .maintenance_vacuum import vacuum_db
 from .maintenance_log import log_maintenance_run
 from .maintenance_cleanup import cleanup_empty_articles, cleanup_filtered_titles
+from .maintenance_encoding import repair_text_encoding
 from .maintenance_rematch import rematch_publication_dois
 from .maintenance_remove import remove_feed_articles
 
@@ -76,6 +77,7 @@ __all__ = [
     "log_maintenance_run",
     "cleanup_empty_articles",
     "cleanup_filtered_titles",
+    "repair_text_encoding",
     "rematch_publication_dois",
     "remove_feed_articles",
     # articles

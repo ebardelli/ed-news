@@ -18,31 +18,9 @@ from datetime import datetime, timezone
 from . import crossref
 from . import db as eddb
 import hashlib
+from .text import recover_mojibake
 
 logger = logging.getLogger("ednews.feeds")
-
-
-def _recover_mojibake(text: str) -> str:
-    """Attempt to recover from UTF-8 bytes that were decoded as Latin-1 (mojibake).
-    
-    Example: "â€™" (3 chars: E2 80 99 in Latin-1) should be "'" (U+2019 in UTF-8).
-    
-    Returns the recovered string if successful, otherwise returns the original.
-    """
-    if not isinstance(text, str) or not text:
-        return text
-    
-    try:
-        # Try to detect if this looks like UTF-8 bytes misinterpreted as Latin-1
-        # by encoding to Latin-1 and decoding as UTF-8
-        recovered = text.encode("latin-1").decode("utf-8")
-        # Only return the recovered version if it looks reasonable (no replacement chars)
-        if "\ufffd" not in recovered:
-            return recovered
-    except (UnicodeDecodeError, UnicodeEncodeError):
-        pass
-    
-    return text
 
 
 def entry_has_content(entry: dict) -> bool:
@@ -131,12 +109,12 @@ def fetch_feed(
         guid = e.get("id") or e.get("guid") or e.get("link") or e.get("title")
         title = e.get("title", "")
         # Recover mojibake (UTF-8 bytes misinterpreted as Latin-1)
-        title = _recover_mojibake(title)
+        title = recover_mojibake(title)
         link = e.get("link", "")
         published = e.get("published") or e.get("updated") or ""
         summary = e.get("summary", "")
         # Recover mojibake from summary as well
-        summary = _recover_mojibake(summary)
+        summary = recover_mojibake(summary)
         entries.append(
             {
                 "guid": guid,

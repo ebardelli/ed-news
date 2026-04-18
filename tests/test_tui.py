@@ -80,3 +80,17 @@ def test_manage_db_subcommand_invokes_cleanup_filtered_title_filters_flag(monkey
     assert 'cleanup_ft' in called
     # ensure filters string made it through
     assert getattr(called['cleanup_ft'], 'filters', None) == 'Editorial Board,Front matter'
+
+
+def test_manage_db_subcommand_invokes_fix_encoding(monkeypatch):
+    called = {}
+
+    def fake_fix_encoding(args):
+        called['fix_encoding'] = args
+
+    tui = importlib.import_module('ednews.cli')
+    monkeypatch.setattr(tui, 'cmd_manage_db_fix_encoding', fake_fix_encoding)
+
+    run_with_argv(['ednews', 'manage-db', 'fix-encoding', '--dry-run'], monkeypatch, tui_module=tui)
+    assert 'fix_encoding' in called
+    assert getattr(called['fix_encoding'], 'dry_run', False) is True
