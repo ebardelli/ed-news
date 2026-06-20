@@ -26,27 +26,52 @@ The system pulls data from two main types of sources:
 
 ```
 ednews/
-├── cli.py              # CLI implementation and command handlers
-├── feeds.py            # Feed parsing and normalization
-├── news.py             # News headline aggregation
-├── build.py            # Static site generation and rendering
-├── embeddings.py       # Vector embeddings for similarity
-├── crossref.py         # Crossref API integration for metadata
-├── config.py           # Configuration constants and paths
-├── http.py             # HTTP utilities with retry logic
-├── db/                 # Database layer
-│   ├── __init__.py     # DB API and connection management
-│   ├── schema.py       # Schema initialization
-│   ├── maintenance.py  # DB maintenance operations
-│   ├── migrations.py   # Schema migrations
-│   └── utils.py        # DB utility functions
-└── processors/         # Feed/site-specific processors
-    ├── rss.py          # Canonical RSS preprocessor
-    ├── crossref.py     # Crossref postprocessor
-    ├── sciencedirect.py # ScienceDirect enrichment
-    ├── edworkingpapers.py # EdWorkingPapers processor
-    ├── fcmat.py        # FCMAT site scraper
-    └── pressdemocrat.py # Press Democrat filter
+├── cli/                    # CLI subcommands (one module per command)
+│   ├── __init__.py         # Argument parser wiring and run() entrypoint
+│   ├── fetch.py            # cmd_fetch
+│   ├── build.py            # cmd_build
+│   ├── embed.py            # cmd_embed
+│   ├── db_init.py          # cmd_db_init
+│   ├── issn_lookup.py      # cmd_issn_lookup
+│   ├── headlines.py        # cmd_headlines
+│   ├── manage_db.py        # cmd_manage_db_* handlers
+│   ├── postprocess.py      # cmd_postprocess
+│   ├── serve.py            # cmd_serve
+│   └── common.py           # Shared CLI utilities
+├── feeds.py                # Feed parsing and normalization
+├── news.py                 # News headline aggregation
+├── build.py                # Static site generation and rendering
+├── embeddings.py           # Vector embeddings for similarity
+├── crossref.py             # Crossref API integration for metadata
+├── config.py               # Configuration constants and paths
+├── http.py                 # HTTP utilities with retry logic
+├── text.py                 # Text encoding and repair utilities
+├── db/                     # Database layer
+│   ├── __init__.py         # DB API facade
+│   ├── schema.py           # Schema initialization and views
+│   ├── articles.py         # Article CRUD
+│   ├── headlines.py        # Headline CRUD
+│   ├── publications.py     # Publication metadata
+│   ├── migrations.py       # Schema migrations
+│   ├── conn.py             # Connection management
+│   ├── utils.py            # DB utility functions
+│   ├── maintenance.py      # Maintenance orchestration
+│   ├── manage_db.py        # manage-db command implementations
+│   ├── maintenance_cleanup.py
+│   ├── maintenance_encoding.py
+│   ├── maintenance_journal.py
+│   ├── maintenance_log.py
+│   ├── maintenance_rematch.py
+│   ├── maintenance_remove.py
+│   ├── maintenance_sync.py
+│   └── maintenance_vacuum.py
+└── processors/             # Feed/site-specific processors
+    ├── rss.py              # Canonical RSS preprocessor
+    ├── crossref.py         # Crossref postprocessor
+    ├── sciencedirect.py    # ScienceDirect enrichment
+    ├── edworkingpapers.py  # EdWorkingPapers processor
+    ├── fcmat.py            # FCMAT site scraper
+    └── pressdemocrat.py    # Press Democrat filter
 ```
 
 ### 3. Data Flow
@@ -193,8 +218,8 @@ The build process:
 
 ### Adding a New CLI Command
 
-1. Add a handler function in `ednews/cli.py` (e.g., `cmd_mycommand`)
-2. Register it in the `run()` function's argument parser
+1. Create `ednews/cli/mycommand.py` with a `cmd_mycommand(args)` function
+2. Import and wire it into the `run()` parser in `ednews/cli/__init__.py`
 3. Add tests in `tests/test_cli_*.py`
 
 ## Performance Considerations

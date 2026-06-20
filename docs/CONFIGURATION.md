@@ -180,8 +180,7 @@ Each source in the `feeds` object has the following fields:
 |--------------|-------------|
 | `fcmat` | Scrapes FCMAT news headlines from HTML |
 | `pd-education` | Parses Press Democrat education feed with AP filtering |
-| `calmatters-education` | Parses CalMatters education feed |
-| `rss` | Generic RSS/Atom parser |
+| `rss` | Generic RSS/Atom parser (default for standard feeds) |
 
 ### Complete Example
 
@@ -433,13 +432,13 @@ To validate your configuration:
 
 ```bash
 # Test feed fetching
-uv run python main.py fetch -v
+uv run ednews fetch -v
 
 # Check database
 sqlite3 ednews.db "SELECT COUNT(*) FROM items;"
 
 # Verify build
-uv run python main.py build --out-dir test-build
+uv run ednews build --out-dir test-build
 ```
 
 ## Migration from Old Formats

@@ -44,20 +44,20 @@ pip install -e .
 ### 3. Initialize the Database
 
 ```bash
-uv run python main.py db-init
+uv run ednews db-init
 ```
 
 ### 4. Fetch Sample Data
 
 ```bash
 # Fetch a few feeds to test
-uv run python main.py fetch -v
+uv run ednews fetch -v
 ```
 
 ### 5. Build the Site
 
 ```bash
-uv run python main.py build --out-dir build
+uv run ednews build --out-dir build
 ```
 
 ### 6. Run Tests
@@ -70,24 +70,34 @@ uv run pytest -q
 
 ```
 ed-news/
-├── main.py                 # CLI entrypoint
+├── main.py                 # Thin CLI entrypoint (delegates to ednews.cli:run)
 ├── ednews/                 # Main package
-│   ├── cli.py             # CLI implementation
-│   ├── feeds.py           # Feed fetching
+│   ├── cli/               # CLI subcommands (one module per command)
+│   │   ├── __init__.py    # Argument parser and run() entrypoint
+│   │   ├── fetch.py       # cmd_fetch
+│   │   ├── build.py       # cmd_build
+│   │   ├── embed.py       # cmd_embed
+│   │   ├── manage_db.py   # cmd_manage_db_* handlers
+│   │   └── ...            # Other command modules
+│   ├── feeds.py           # Feed fetching and normalization
 │   ├── news.py            # News aggregation
 │   ├── build.py           # Site generation
 │   ├── embeddings.py      # Vector embeddings
 │   ├── crossref.py        # Crossref integration
 │   ├── config.py          # Configuration
 │   ├── http.py            # HTTP utilities
+│   ├── text.py            # Text encoding utilities
 │   ├── db/                # Database layer
-│   │   ├── __init__.py    # DB API
+│   │   ├── __init__.py    # DB API facade
 │   │   ├── schema.py      # Schema definition
-│   │   ├── maintenance.py # Maintenance operations
+│   │   ├── articles.py    # Article CRUD
+│   │   ├── headlines.py   # Headline CRUD
+│   │   ├── publications.py
 │   │   ├── migrations.py  # Schema migrations
+│   │   ├── maintenance*.py # Split maintenance modules
 │   │   └── utils.py       # DB utilities
 │   ├── processors/        # Feed processors
-│   │   ├── __init__.py    # Exports
+│   │   ├── __init__.py    # Exports and resolve_postprocessor
 │   │   ├── rss.py         # RSS preprocessor
 │   │   ├── crossref.py    # Crossref postprocessor
 │   │   ├── sciencedirect.py
@@ -153,13 +163,13 @@ uv run pytest --cov=ednews
 
 ```bash
 # Test fetch
-uv run python main.py fetch -v
+uv run ednews fetch -v
 
 # Test build
-uv run python main.py build --out-dir test-build
+uv run ednews build --out-dir test-build
 
 # Serve locally
-uv run python main.py serve --directory test-build
+uv run ednews serve --directory test-build
 ```
 
 ### 6. Commit Changes
@@ -320,26 +330,23 @@ def test_my_preprocessor(monkeypatch):
 
 ### Adding a CLI Command
 
-1. Add handler function:
+1. Create a new module with a handler function:
 
 ```python
-# ednews/cli.py
+# ednews/cli/mycommand.py
 def cmd_mycommand(args):
     """Handle my-command CLI invocation."""
-    logger.info("Running my command with args: %s", args)
     # Implementation
 ```
 
-2. Register in argument parser:
+2. Import and register in the argument parser:
 
 ```python
-# ednews/cli.py, in run() function
-subparsers = parser.add_subparsers()
+# ednews/cli/__init__.py
+from .mycommand import cmd_mycommand
 
-my_parser = subparsers.add_parser(
-    "my-command",
-    help="Description of my command"
-)
+# inside run():
+my_parser = sub.add_parser("my-command", help="Description of my command")
 my_parser.add_argument("--option", help="Option description")
 my_parser.set_defaults(func=cmd_mycommand)
 ```
@@ -465,7 +472,7 @@ from ednews import config, db
 ### Enable Debug Logging
 
 ```bash
-uv run python main.py fetch -v  # -v for verbose/debug logs
+uv run ednews fetch -v  # -v for verbose/debug logs
 ```
 
 ### Use Python Debugger

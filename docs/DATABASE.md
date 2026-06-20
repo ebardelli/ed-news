@@ -4,7 +4,7 @@ This document describes the SQLite database schema used by ed-news.
 
 ## Overview
 
-ed-news uses a local SQLite database (`ednews.db`) to store fetched articles, headlines, and metadata. The schema is initialized via `uv run python main.py db-init` and managed through the `ednews.db` module.
+ed-news uses a local SQLite database (`ednews.db`) to store fetched articles, headlines, and metadata. The schema is initialized via `uv run ednews db-init` and managed through the `ednews.db` module.
 
 ## Tables
 
@@ -202,35 +202,56 @@ The `manage-db` CLI command provides several maintenance operations:
 Runs schema migrations (e.g., adding `url_hash` column).
 
 ```bash
-uv run python main.py manage-db migrate
+uv run ednews manage-db migrate
 ```
 
 ### `vacuum`
 Compacts the database and frees unused space.
 
 ```bash
-uv run python main.py manage-db vacuum
+uv run ednews manage-db vacuum
 ```
 
 ### `cleanup-empty-articles`
 Removes articles with no title or abstract older than N days.
 
 ```bash
-uv run python main.py manage-db cleanup-empty-articles --older-than-days 90
+uv run ednews manage-db cleanup-empty-articles --older-than-days 90
 ```
 
 ### `sync-publications`
 Synchronizes the `publications` table with feed configurations.
 
 ```bash
-uv run python main.py manage-db sync-publications
+uv run ednews manage-db sync-publications
+```
+
+### `rematch-dois`
+Re-fetches DOIs from Crossref for articles with wrong or missing DOIs.
+
+```bash
+uv run ednews manage-db rematch-dois --feed feed-key --only-missing
+```
+
+### `fix-encoding`
+Recovers mojibake-corrupted text in articles, headlines, and feeds.
+
+```bash
+uv run ednews manage-db fix-encoding --dry-run
+```
+
+### `remove-feed-articles`
+Removes all articles for a specific feed.
+
+```bash
+uv run ednews manage-db remove-feed-articles --feed feed-key
 ```
 
 ### `run-all`
 Runs all maintenance operations in sequence.
 
 ```bash
-uv run python main.py manage-db run-all
+uv run ednews manage-db run-all --older-than-days 7
 ```
 
 ## Data Lifecycle
@@ -281,9 +302,9 @@ uv run python main.py manage-db run-all
 
 ### Missing embeddings
 - Ensure `sqlite-vec` is installed: `pip install sqlite-vec`
-- Run `uv run python main.py embed` to generate embeddings
+- Run `uv run ednews embed` to generate embeddings
 - Check that `sqlite3` supports loadable extensions
 
 ### Schema out of sync
-- Run `uv run python main.py db-init` to create missing tables
-- Run `uv run python main.py manage-db migrate` for schema updates
+- Run `uv run ednews db-init` to create missing tables
+- Run `uv run ednews manage-db migrate` for schema updates
