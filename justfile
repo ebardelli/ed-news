@@ -1,18 +1,18 @@
 fetch:
     uv run ed-news fetch
     # issn-lookup: --from-date/--until-date accept YYYY, YYYY-MM, YYYY-MM-DD, or datetimes like YYYY-MM-DDTHH:MM (no-tz -> UTC)
-    uv run ed-news issn-lookup
+    uv run ednews issn-lookup
     # Crossref enrichment moved to per-feed postprocessors (see ednews.processors.crossref)
-    uv run ed-news embed
+    uv run ednews embed
 
 build:
-    uv run ed-news build
+    uv run ednews build
 
 serve:
-    uv run ed-news serve
+    uv run ednews serve
 
 db:
-    uv run ed-news manage-db run-all
+    uv run ednews manage-db run-all
 
 get-db:
     s3cmd get --force s3://ed-news-cache/ednews.db .

@@ -24,7 +24,7 @@ def sync_publications_from_feeds(conn, feeds_list) -> int:
                     try:
                         cur.execute(
                             "DELETE FROM publications WHERE feed_id = ? AND (publication_id != ? OR issn != ?)",
-                            (key, pub_id or "", issn or ""),
+                            (key, pub_id or key, issn or ""),
                         )
                         conn.commit()
                     except Exception:
