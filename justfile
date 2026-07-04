@@ -13,3 +13,9 @@ serve:
 
 db:
     uv run ed-news manage-db run-all
+
+get-db:
+    s3cmd get --force s3://ed-news-cache/ednews.db .
+
+put-db:
+    s3cmd put ednews.db s3://ed-news-cache/
