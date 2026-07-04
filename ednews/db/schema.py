@@ -26,6 +26,7 @@ def init_db(conn: sqlite3.Connection):
             url_hash TEXT,
             published TEXT,
             summary TEXT,
+            authors TEXT,
             fetched_at TEXT,
             UNIQUE(url_hash),
             UNIQUE(guid, link, title, published)
@@ -118,7 +119,7 @@ def create_combined_view(conn: sqlite3.Connection):
         SELECT
             articles.doi AS doi,
             COALESCE(articles.title, '') AS title,
-            ('https://doi.org/' || articles.doi) AS link,
+            CASE WHEN articles.doi LIKE 'https://%' THEN articles.doi ELSE ('https://doi.org/' || articles.doi) END AS link,
             COALESCE(publications.feed_title, feeds.feed_title, '') AS feed_title,
             COALESCE(articles.abstract, '') AS content,
             COALESCE(articles.published, articles.fetched_at) AS published,

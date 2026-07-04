@@ -335,6 +335,24 @@
       "feed": "https://edworkingpapers.com/edworkingpapers",
       "publication_id": "10.26300",
       "processor": {"pre": "edworkingpapers", "post": "edworkingpapers"}
+    },
+    "pace_publications": {
+      "title": "PACE - Publications",
+      "link": "https://edpolicyinca.org/publications",
+      "feed": "https://edpolicyinca.org/publications",
+      "processor": {
+        "pre": "edpolicyinca_publications",
+        "post": "edpolicyinca_publications"
+      }
+    },
+    "pace_commentaries": {
+      "title": "PACE - Commentaries",
+      "link": "https://edpolicyinca.org/commentaries",
+      "feed": "https://edpolicyinca.org/commentaries",
+      "processor": {
+        "pre": "edpolicyinca_commentaries",
+        "post": "edpolicyinca_commentaries"
+      }
     }
   }
 }

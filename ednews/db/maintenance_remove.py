@@ -106,8 +106,23 @@ def remove_feed_articles(
                         feed_issn = _feeds_list[fk][1]
                         config_present = True
                     else:
-                        expected_pub = None
-                        config_present = False
+                        # Fall back to publications table for feeds not in the active config
+                        try:
+                            cur.execute(
+                                "SELECT publication_id, issn FROM publications WHERE feed_id = ? LIMIT 1",
+                                (fk,),
+                            )
+                            pub_row = cur.fetchone()
+                            if pub_row and pub_row[0]:
+                                expected_pub = pub_row[0]
+                                feed_issn = pub_row[1] if len(pub_row) > 1 else None
+                                config_present = True
+                            else:
+                                expected_pub = None
+                                config_present = False
+                        except Exception:
+                            expected_pub = None
+                            config_present = False
                 if expected_pub:
                     pub_param = expected_pub or ""
                     try:

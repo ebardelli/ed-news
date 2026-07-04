@@ -16,6 +16,10 @@
         "title": "CalMatters Education News",
         "feed": "https://calmatters.org/category/education/feed/",
         "processor": {"pre": "calmatters-education"}
+    },
+    "The 74 Million": {
+        "title": "The 74 Million",
+        "feed": "https://www.the74million.org/feed/"
     }
   }
 }

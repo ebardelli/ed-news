@@ -5,17 +5,12 @@ import logging
 logger = logging.getLogger("ednews.manage_db.migrations")
 
 
-def create_combined_view(conn):
-    # For compatibility, provide the view creation function here
-    logger.info("Creating combined_articles view (migrations)")
-    cur = conn.cursor()
-    cur.execute(
-        """
+_COMBINED_VIEW_SQL = """
         CREATE VIEW IF NOT EXISTS combined_articles AS
         SELECT
             articles.doi AS doi,
             COALESCE(articles.title, '') AS title,
-            ('https://doi.org/' || articles.doi) AS link,
+            CASE WHEN articles.doi LIKE 'https://%' THEN articles.doi ELSE ('https://doi.org/' || articles.doi) END AS link,
             COALESCE(publications.feed_title, feeds.feed_title, '') AS feed_title,
             COALESCE(articles.abstract, '') AS content,
             COALESCE(articles.published, articles.fetched_at) AS published,
@@ -24,10 +19,65 @@ def create_combined_view(conn):
             LEFT JOIN publications on publications.feed_id = articles.feed_id
             LEFT JOIN publications as feeds on feeds.feed_id = articles.feed_id
         WHERE articles.doi IS NOT NULL
-        """,
-    )
+"""
+
+
+def create_combined_view(conn):
+    # For compatibility, provide the view creation function here
+    logger.info("Creating combined_articles view (migrations)")
+    cur = conn.cursor()
+    cur.execute(_COMBINED_VIEW_SQL)
     conn.commit()
     logger.debug("combined_articles view created")
+
+
+def migrate_update_combined_view(conn):
+    """Drop and recreate combined_articles to pick up the URL-DOI link fix.
+
+    Also patches any existing edpolicyinca/* synthetic DOI records to use
+    the full article URL so their links resolve correctly.
+    """
+    cur = conn.cursor()
+    try:
+        cur.execute("DROP VIEW IF EXISTS combined_articles")
+        cur.execute(_COMBINED_VIEW_SQL.replace("IF NOT EXISTS ", ""))
+        conn.commit()
+        logger.info("Recreated combined_articles view with URL-DOI link fix")
+    except Exception:
+        logger.exception("Failed to recreate combined_articles view")
+
+    # Patch existing edpolicyinca/* synthetic DOI records.
+    # The new format stores the full URL as DOI, so find the matching items
+    # row to get the real link and update both tables.
+    try:
+        cur.execute(
+            """
+            UPDATE articles
+            SET doi = (
+                SELECT items.link FROM items
+                WHERE items.doi = articles.doi
+                LIMIT 1
+            )
+            WHERE articles.doi LIKE 'edpolicyinca/%'
+              AND EXISTS (
+                SELECT 1 FROM items WHERE items.doi = articles.doi
+              )
+            """
+        )
+        patched_articles = cur.rowcount or 0
+        cur.execute(
+            "UPDATE items SET doi = link WHERE doi LIKE 'edpolicyinca/%'"
+        )
+        patched_items = cur.rowcount or 0
+        conn.commit()
+        if patched_articles or patched_items:
+            logger.info(
+                "Patched %d article rows and %d item rows from edpolicyinca/ to full-URL DOIs",
+                patched_articles,
+                patched_items,
+            )
+    except Exception:
+        logger.exception("Failed to patch edpolicyinca synthetic DOI records")
 
 
 def migrate_add_items_url_hash(conn):
@@ -99,6 +149,20 @@ def migrate_add_items_url_hash(conn):
     return result
 
 
+def migrate_add_items_authors(conn):
+    """Add authors column to items table if not present."""
+    cur = conn.cursor()
+    try:
+        cur.execute("PRAGMA table_info(items)")
+        cols = [c[1] for c in cur.fetchall()]
+        if "authors" not in cols:
+            cur.execute("ALTER TABLE items ADD COLUMN authors TEXT")
+            conn.commit()
+            logger.info("Added authors column to items table")
+    except Exception:
+        logger.exception("migrate_add_items_authors failed")
+
+
 def migrate_db(conn):
     # Run all migrations. Keep behavior as previous migrate_db wrapper.
     logger.info("migrate_db: running migrations (migrations module)")
@@ -107,6 +171,8 @@ def migrate_db(conn):
         logger.info("migrate_add_items_url_hash: %s", res)
         if res and isinstance(res, dict) and res.get("collisions"):
             return False
+        migrate_update_combined_view(conn)
+        migrate_add_items_authors(conn)
         return True
     except Exception:
         logger.exception("migrate_db failed")

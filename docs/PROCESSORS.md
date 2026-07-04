@@ -77,6 +77,7 @@ def name_postprocessor(entries: list[dict],
 | `sciencedirect` | `ednews.processors.sciencedirect` | ScienceDirect feed parser |
 | `fcmat` | `ednews.processors.fcmat` | FCMAT news headline scraper |
 | `pd-education` | `ednews.processors.pressdemocrat` | Press Democrat education feed (with AP filtering) |
+| `edpolicyinca` | `ednews.processors.edpolicyinca` | PACE publications scraper (Cloudflare-protected; requires `cloudscraper`) |
 
 ### Postprocessors
 
@@ -85,6 +86,7 @@ def name_postprocessor(entries: list[dict],
 | `crossref` | `ednews.processors.crossref` | DB-level | Enrich articles with Crossref metadata |
 | `sciencedirect` | `ednews.processors.sciencedirect` | DB-level | Enrich ScienceDirect articles |
 | `edworkingpapers` | `ednews.processors.edworkingpapers` | DB-level | Enrich EdWorkingPapers with metadata |
+| `edpolicyinca` | `ednews.processors.edpolicyinca` | DB-level | Enrich PACE articles with authors and abstract; uses URL slug as synthetic DOI |
 
 ## Compatibility
 

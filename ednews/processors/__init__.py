@@ -21,6 +21,18 @@ from .edworkingpapers import (
     edworkingpapers_postprocessor_db,
 )
 from .rss import rss_preprocessor
+from .edpolicyinca import (
+    edpolicyinca_publications_processor,
+    edpolicyinca_publications_preprocessor,
+    edpolicyinca_publications_postprocessor_db,
+    edpolicyinca_commentaries_processor,
+    edpolicyinca_commentaries_preprocessor,
+    edpolicyinca_commentaries_postprocessor_db,
+    # legacy aliases
+    edpolicyinca_processor,
+    edpolicyinca_preprocessor,
+    edpolicyinca_postprocessor_db,
+)
 from typing import Any, Callable
 
 
@@ -125,6 +137,15 @@ __all__ = [
     "sciencedirect_postprocessor_db",
     "crossref_postprocessor_db",
     "rss_preprocessor",
+    "edpolicyinca_publications_processor",
+    "edpolicyinca_publications_preprocessor",
+    "edpolicyinca_publications_postprocessor_db",
+    "edpolicyinca_commentaries_processor",
+    "edpolicyinca_commentaries_preprocessor",
+    "edpolicyinca_commentaries_postprocessor_db",
+    "edpolicyinca_processor",
+    "edpolicyinca_preprocessor",
+    "edpolicyinca_postprocessor_db",
     # migration aliases
     "sciencedirect_preprocessor",
     "edworkingpapers_preprocessor",

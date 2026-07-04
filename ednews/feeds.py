@@ -536,6 +536,23 @@ def save_entries(conn, feed_id, feed_title, entries):
                                     "failed to extract/attach DOI for existing item link=%s",
                                     link_val,
                                 )
+                        # Refresh summary/authors for existing rows so preprocessors
+                        # that extract these fields (e.g. PACE) don't leave stale nulls.
+                        new_summary = e.get("summary") or None
+                        new_authors = e.get("authors") or None
+                        if new_summary is not None or new_authors is not None:
+                            try:
+                                cur.execute(
+                                    """
+                                    UPDATE items
+                                    SET summary = COALESCE(?, summary),
+                                        authors = COALESCE(?, authors)
+                                    WHERE id = ?
+                                    """,
+                                    (new_summary, new_authors, existing_id),
+                                )
+                            except Exception:
+                                pass
                         continue
                 except Exception:
                     logger.debug(
@@ -546,8 +563,8 @@ def save_entries(conn, feed_id, feed_title, entries):
             cur.execute(
                 """
                 INSERT OR IGNORE INTO items
-                (feed_id, doi, guid, title, link, url_hash, published, summary, fetched_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (feed_id, doi, guid, title, link, url_hash, published, summary, authors, fetched_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     feed_id,
@@ -558,6 +575,7 @@ def save_entries(conn, feed_id, feed_title, entries):
                     url_hash,
                     e.get("published") or datetime.now(timezone.utc).isoformat(),
                     e.get("summary"),
+                    e.get("authors"),
                     datetime.now(timezone.utc).isoformat(),
                 ),
             )
@@ -570,6 +588,20 @@ def save_entries(conn, feed_id, feed_title, entries):
                     "item already exists (skipping enrichment) for link: %s",
                     existing_link,
                 )
+                # Refresh summary/authors on existing rows so preprocessors that
+                # extract these fields (e.g. PACE) don't leave stale nulls behind.
+                new_summary = e.get("summary") or None
+                new_authors = e.get("authors") or None
+                if new_summary is not None or new_authors is not None:
+                    cur.execute(
+                        """
+                        UPDATE items
+                        SET summary = COALESCE(?, summary),
+                            authors = COALESCE(?, authors)
+                        WHERE feed_id = ? AND link = ?
+                        """,
+                        (new_summary, new_authors, feed_id, existing_link),
+                    )
                 continue
             entry_obj = e.get("_entry") or {}
             doi = extract_doi_from_entry(entry_obj) or extract_doi_from_entry(e)
