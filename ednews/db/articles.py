@@ -1,6 +1,7 @@
 """Article-related DB helpers split from ednews.db.__init__."""
 
-import logging, sqlite3
+import logging
+import sqlite3
 from datetime import datetime, timezone
 from .. import config
 from ..text import recover_mojibake

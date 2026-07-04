@@ -5,19 +5,22 @@ and provides helpers to extract DOIs, authors, and abstracts from feed
 entries. It also contains logic to persist entries into the project's DB.
 """
 
+import hashlib
+import html
 import json
 import logging
+import re
+from datetime import datetime, timezone
+from functools import lru_cache
 from pathlib import Path
 from typing import List
+
 import feedparser
 import requests
+
 from . import config
-import re
-import html
-from datetime import datetime, timezone
 from . import crossref
 from . import db as eddb
-import hashlib
 from .text import recover_mojibake
 
 logger = logging.getLogger("ednews.feeds")
@@ -84,8 +87,9 @@ def fetch_feed(
     """Fetch and parse a single feed URL.
 
     Returns a dict containing feed metadata and a list of parsed entries. The
-    function attempts to filter entries to those from the feed's most recent
-    publication date when possible.
+    function filters entries to those from the feed's most recent publication
+    date when parseable dates are present — entries from earlier dates are
+    dropped. If no dates are parseable, all entries are returned.
     """
     logger.info("fetching feed %s (%s)", key, url)
     try:
@@ -206,9 +210,6 @@ def title_suitable_for_crossref_lookup(title: str) -> bool:
     return True
 
 
-from functools import lru_cache
-
-
 @lru_cache(maxsize=1024)
 def normalize_doi(
     doi: str | None, preferred_publication_id: str | None = None
@@ -258,9 +259,6 @@ def normalize_doi(
         return None
 
 
-# (extract_doi_from_entry is defined below; see helper `extract_and_normalize_doi` after it)
-
-
 def extract_doi_from_entry(entry) -> str | None:
     """Try to extract a DOI from a feed entry.
 
@@ -268,7 +266,7 @@ def extract_doi_from_entry(entry) -> str | None:
     contents of 'summary' and 'content' looking for DOI patterns or DOI URLs.
     Returns a normalized DOI or None.
     """
-    for key in ("doi", "dc:identifier", "doi"):
+    for key in ("doi", "dc:identifier"):
         v = entry.get(key)
         if v:
             d = normalize_doi(str(v))
@@ -396,6 +394,184 @@ def extract_abstract_from_entry(entry) -> str | None:
     return None
 
 
+def _refresh_existing_item_fields(cur, item_id: int, entry: dict) -> None:
+    """Update summary/authors on an existing items row from a fresher feed entry."""
+    new_summary = entry.get("summary") or None
+    new_authors = entry.get("authors") or None
+    if new_summary is not None or new_authors is not None:
+        try:
+            cur.execute(
+                """
+                UPDATE items
+                SET summary = COALESCE(?, summary),
+                    authors = COALESCE(?, authors)
+                WHERE id = ?
+                """,
+                (new_summary, new_authors, item_id),
+            )
+        except Exception:
+            pass
+
+
+def _try_attach_doi_to_existing(
+    conn, cur, existing_id: int, existing_doi: str | None, link_val: str, entry: dict, feed_id: str
+) -> None:
+    """When a url_hash-duplicate item has no DOI yet, try to extract and attach one."""
+    if existing_doi:
+        return
+    try:
+        entry_obj = entry.get("_entry") or {}
+        maybe_doi = extract_doi_from_entry(entry_obj) or extract_doi_from_entry(entry)
+        if not maybe_doi:
+            return
+        maybe_doi = normalize_doi(maybe_doi)
+        if not maybe_doi:
+            return
+        feed_issn = entry.get("_feed_issn") if isinstance(entry, dict) else None
+        feed_pub_id = entry.get("_feed_publication_id") if isinstance(entry, dict) else None
+        try:
+            eddb.ensure_article_row(
+                conn, maybe_doi,
+                title=entry.get("title"), authors=None, abstract=None,
+                feed_id=feed_id, publication_id=feed_pub_id, issn=feed_issn,
+            )
+        except Exception:
+            pass
+        try:
+            cur.execute("UPDATE items SET doi = ? WHERE id = ?", (maybe_doi, existing_id))
+            conn.commit()
+            logger.info("attached DOI %s to existing item id=%s", maybe_doi, existing_id)
+        except Exception:
+            logger.debug("failed to attach doi %s to existing item id=%s", maybe_doi, existing_id)
+        try:
+            cur.execute(
+                "SELECT published FROM articles WHERE doi = ? LIMIT 1", (maybe_doi,)
+            )
+            rowp = cur.fetchone()
+            if rowp and rowp[0]:
+                cur.execute(
+                    "UPDATE items SET published = ? WHERE id = ?", (rowp[0], existing_id)
+                )
+                conn.commit()
+                logger.info(
+                    "updated item id=%s published date from article DOI %s",
+                    existing_id, maybe_doi,
+                )
+        except Exception:
+            logger.debug("failed to update item.published for id=%s", existing_id)
+    except Exception:
+        logger.debug("failed to extract/attach DOI for existing item link=%s", link_val)
+
+
+def _enrich_new_item(conn, cur, item_rowid: int, entry: dict, feed_id: str) -> None:
+    """After inserting a new item, extract its DOI and upsert article metadata."""
+    entry_obj = entry.get("_entry") or {}
+    doi = extract_doi_from_entry(entry_obj) or extract_doi_from_entry(entry)
+    pub_pid = entry.get("_feed_publication_id") if isinstance(entry, dict) else None
+
+    if not doi:
+        link_val = entry.get("link") or ""
+        if "sciencedirect.com" in link_val:
+            lookup_title = entry.get("title") or (
+                entry_obj.get("title") if isinstance(entry_obj, dict) else None
+            )
+            if lookup_title and title_suitable_for_crossref_lookup(lookup_title):
+                try:
+                    found = crossref.query_crossref_doi_by_title(lookup_title, pub_pid)
+                    if found:
+                        logger.info(
+                            "ScienceDirect title lookup found DOI %s for title: %s",
+                            found, lookup_title,
+                        )
+                        doi = found
+                except Exception:
+                    logger.debug(
+                        "CrossRef title lookup failed for ScienceDirect title: %s",
+                        lookup_title,
+                    )
+
+    if not doi:
+        return
+
+    doi = normalize_doi(doi)
+    if not doi:
+        return
+
+    title_feed = entry.get("title") or (
+        entry_obj.get("title") if isinstance(entry_obj, dict) else None
+    )
+    authors_feed = extract_authors_from_entry(entry_obj) or extract_authors_from_entry(entry)
+    abstract_feed = extract_abstract_from_entry(entry_obj) or extract_abstract_from_entry(entry)
+    feed_issn = entry.get("_feed_issn") if isinstance(entry, dict) else None
+
+    cr = None
+    try:
+        if eddb.article_exists(conn, doi):
+            logger.info(
+                "Skipping CrossRef lookup for DOI %s because it already exists in DB;"
+                " loading stored metadata",
+                doi,
+            )
+            cr = eddb.get_article_metadata(conn, doi) or None
+        else:
+            cr = crossref.fetch_crossref_metadata(doi, conn=conn)
+    except Exception:
+        logger.debug("Crossref lookup or existence check failed for DOI=%s", doi)
+
+    authors_final = None
+    abstract_final = None
+    published_final = None
+    raw_crossref = None
+
+    if isinstance(cr, dict):
+        authors_final = cr.get("authors") or None
+        abstract_final = cr.get("abstract") or None
+        published_final = cr.get("published") or None
+        raw_crossref = cr.get("raw")
+
+    authors_final = authors_final or authors_feed
+    abstract_final = abstract_final or abstract_feed
+    published_final = published_final or (entry.get("published") or None)
+
+    try:
+        aid = eddb.upsert_article(
+            conn, doi,
+            title=title_feed,
+            authors=authors_final,
+            abstract=abstract_final,
+            feed_id=feed_id,
+            publication_id=pub_pid,
+            issn=feed_issn,
+            published=published_final,
+        )
+        if raw_crossref:
+            try:
+                cur.execute(
+                    "UPDATE articles SET crossref_xml = ? WHERE doi = ?",
+                    (raw_crossref, doi),
+                )
+                conn.commit()
+            except Exception:
+                logger.debug("failed to store crossref_xml for doi=%s", doi)
+        if aid and item_rowid:
+            try:
+                cur.execute("UPDATE items SET doi = ? WHERE id = ?", (doi, item_rowid))
+                cur.execute(
+                    "SELECT published FROM articles WHERE doi = ? LIMIT 1", (doi,)
+                )
+                rowp = cur.fetchone()
+                if rowp and rowp[0]:
+                    cur.execute(
+                        "UPDATE items SET published = ? WHERE id = ?",
+                        (rowp[0], item_rowid),
+                    )
+                conn.commit()
+            except Exception:
+                logger.debug("failed to attach doi %s to item %s", doi, item_rowid)
+    except Exception:
+        logger.exception("failed to upsert article for doi=%s", doi)
+
+
 def save_entries(conn, feed_id, feed_title, entries):
     """Persist feed entries into the database `items` table.
 
@@ -404,42 +580,28 @@ def save_entries(conn, feed_id, feed_title, entries):
     """
     cur = conn.cursor()
     inserted = 0
-    logger.debug(
-        "saving %d entries for feed %s (%s)", len(entries), feed_id, feed_title
-    )
+    logger.debug("saving %d entries for feed %s (%s)", len(entries), feed_id, feed_title)
     for e in entries:
-        # Skip entirely empty entries (no title, link, or content)
         try:
             if not entry_has_content(e):
                 logger.debug("skipping empty entry for feed %s: %r", feed_id, e)
                 continue
         except Exception:
-            # On unexpected shapes, be conservative and attempt to process
             pass
-        # Filter: exclude entries with titles that are editorial board notes
         try:
             title_val = e.get("title") or ""
             if isinstance(title_val, str):
                 tnorm = title_val.strip().lower()
-                # consult configured title filters (if present)
-                try:
-                    filters = config.TITLE_FILTERS
-                except Exception:
-                    filters = []
-                if any(tnorm == f.strip().lower() for f in (filters or [])):
+                filters = getattr(config, "TITLE_FILTERS", []) or []
+                if any(tnorm == f.strip().lower() for f in filters):
                     logger.info(
-                        "skipping filtered title '%s' for feed %s: %r",
-                        title_val,
-                        feed_id,
-                        e,
+                        "skipping filtered title '%s' for feed %s", title_val, feed_id
                     )
                     continue
         except Exception:
             pass
         try:
-            doi = None
             link_val = (e.get("link") or "").strip()
-            # Compute URL hash for dedup across feeds
             url_hash = None
             if link_val:
                 try:
@@ -453,106 +615,12 @@ def save_entries(conn, feed_id, feed_title, entries):
                         existing_id, existing_doi = existing[0], existing[1]
                         logger.debug(
                             "item with same url_hash already exists (id=%s, link=%s, doi=%s)",
-                            existing_id,
-                            link_val,
-                            existing_doi,
+                            existing_id, link_val, existing_doi,
                         )
-                        if not existing_doi:
-                            try:
-                                entry_obj = e.get("_entry") or {}
-                                maybe_doi = extract_doi_from_entry(
-                                    entry_obj
-                                ) or extract_doi_from_entry(e)
-                                if maybe_doi:
-                                    maybe_doi = normalize_doi(maybe_doi)
-                                    if maybe_doi:
-                                        try:
-                                            feed_issn = (
-                                                e.get("_feed_issn")
-                                                if isinstance(e, dict)
-                                                else None
-                                            )
-                                            feed_pub_id = (
-                                                e.get("_feed_publication_id")
-                                                if isinstance(e, dict)
-                                                else None
-                                            )
-                                            ensured = eddb.ensure_article_row(
-                                                conn,
-                                                maybe_doi,
-                                                title=e.get("title"),
-                                                authors=None,
-                                                abstract=None,
-                                                feed_id=feed_id,
-                                                publication_id=feed_pub_id,
-                                                issn=feed_issn,
-                                            )
-                                        except Exception:
-                                            ensured = None
-                                        try:
-                                            cur.execute(
-                                                "UPDATE items SET doi = ? WHERE id = ?",
-                                                (maybe_doi, existing_id),
-                                            )
-                                            conn.commit()
-                                            logger.info(
-                                                "attached DOI %s to existing item id=%s",
-                                                maybe_doi,
-                                                existing_id,
-                                            )
-                                        except Exception:
-                                            logger.debug(
-                                                "failed to attach doi %s to existing item id=%s",
-                                                maybe_doi,
-                                                existing_id,
-                                            )
-                                        try:
-                                            cur.execute(
-                                                "SELECT published FROM articles WHERE doi = ? LIMIT 1",
-                                                (maybe_doi,),
-                                            )
-                                            rowp = cur.fetchone()
-                                            if rowp and rowp[0]:
-                                                try:
-                                                    cur.execute(
-                                                        "UPDATE items SET published = ? WHERE id = ?",
-                                                        (rowp[0], existing_id),
-                                                    )
-                                                    conn.commit()
-                                                    logger.info(
-                                                        "updated item id=%s published date from article DOI %s",
-                                                        existing_id,
-                                                        maybe_doi,
-                                                    )
-                                                except Exception:
-                                                    logger.debug(
-                                                        "failed to update item.published for id=%s",
-                                                        existing_id,
-                                                    )
-                                        except Exception:
-                                            pass
-                            except Exception:
-                                logger.debug(
-                                    "failed to extract/attach DOI for existing item link=%s",
-                                    link_val,
-                                )
-                        # Refresh summary/authors for existing rows so preprocessors
-                        # that extract these fields (e.g. PACE) don't leave stale nulls.
-                        new_summary = e.get("summary") or None
-                        new_authors = e.get("authors") or None
-                        if new_summary is not None or new_authors is not None:
-                            try:
-                                cur.execute(
-                                    """
-                                    UPDATE items
-                                    SET summary = COALESCE(?, summary),
-                                        authors = COALESCE(?, authors)
-                                    WHERE id = ?
-                                    """,
-                                    (new_summary, new_authors, existing_id),
-                                )
-                            except Exception:
-                                pass
+                        _try_attach_doi_to_existing(
+                            conn, cur, existing_id, existing_doi, link_val, e, feed_id
+                        )
+                        _refresh_existing_item_fields(cur, existing_id, e)
                         continue
                 except Exception:
                     logger.debug(
@@ -567,29 +635,23 @@ def save_entries(conn, feed_id, feed_title, entries):
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
-                    feed_id,
-                    doi,
-                    e.get("guid"),
-                    e.get("title"),
-                    e.get("link"),
-                    url_hash,
+                    feed_id, None,
+                    e.get("guid"), e.get("title"), e.get("link"), url_hash,
                     e.get("published") or datetime.now(timezone.utc).isoformat(),
-                    e.get("summary"),
-                    e.get("authors"),
+                    e.get("summary"), e.get("authors"),
                     datetime.now(timezone.utc).isoformat(),
                 ),
             )
             if cur.rowcount:
                 inserted += 1
                 item_rowid = cur.lastrowid
+                _enrich_new_item(conn, cur, item_rowid, e, feed_id)
             else:
                 existing_link = e.get("link") or ""
                 logger.debug(
                     "item already exists (skipping enrichment) for link: %s",
                     existing_link,
                 )
-                # Refresh summary/authors on existing rows so preprocessors that
-                # extract these fields (e.g. PACE) don't leave stale nulls behind.
                 new_summary = e.get("summary") or None
                 new_authors = e.get("authors") or None
                 if new_summary is not None or new_authors is not None:
@@ -602,150 +664,10 @@ def save_entries(conn, feed_id, feed_title, entries):
                         """,
                         (new_summary, new_authors, feed_id, existing_link),
                     )
-                continue
-            entry_obj = e.get("_entry") or {}
-            doi = extract_doi_from_entry(entry_obj) or extract_doi_from_entry(e)
-            pub_pid = None
-            try:
-                pub_pid = e.get("_feed_publication_id")
-            except Exception:
-                pub_pid = None
-            if not doi:
-                link_val = e.get("link") or ""
-                if (
-                    "www.sciencedirect.com" in link_val
-                    or "sciencedirect.com" in link_val
-                ):
-                    lookup_title = e.get("title") or (
-                        entry_obj.get("title") if isinstance(entry_obj, dict) else None
-                    )
-                    if lookup_title and title_suitable_for_crossref_lookup(
-                        lookup_title
-                    ):
-                        try:
-                            found = crossref.query_crossref_doi_by_title(
-                                lookup_title, preferred_publication_id=pub_pid
-                            )
-                            if found:
-                                logger.info(
-                                    "ScienceDirect title lookup found DOI %s for title: %s",
-                                    found,
-                                    lookup_title,
-                                )
-                                doi = found
-                        except Exception:
-                            logger.debug(
-                                "CrossRef title lookup failed for ScienceDirect title: %s",
-                                lookup_title,
-                            )
-
-            if doi:
-                doi_norm = normalize_doi(doi)
-                if not doi_norm:
-                    doi = None
-                else:
-                    doi = doi_norm
-                title_feed = e.get("title") or (
-                    entry_obj.get("title") if isinstance(entry_obj, dict) else None
-                )
-                authors_feed = extract_authors_from_entry(
-                    entry_obj
-                ) or extract_authors_from_entry(e)
-                abstract_feed = extract_abstract_from_entry(
-                    entry_obj
-                ) or extract_abstract_from_entry(e)
-                feed_issn = None
-                try:
-                    feed_issn = e.get("_feed_issn")
-                except Exception:
-                    feed_issn = None
-
-                # Try to fetch Crossref metadata for this DOI and prefer its fields.
-                # If the DOI already exists in the articles table, skip the network
-                # request to Crossref to avoid unnecessary lookups.
-                cr = None
-                try:
-                    if doi and eddb.article_exists(conn, doi):
-                        logger.info(
-                            "Skipping CrossRef lookup for DOI %s because it already exists in DB; loading stored metadata",
-                            doi,
-                        )
-                        cr = eddb.get_article_metadata(conn, doi) or None
-                    else:
-                        cr = crossref.fetch_crossref_metadata(doi, conn=conn)
-                except Exception:
-                    logger.debug(
-                        "Crossref lookup or existence check failed for DOI=%s", doi
-                    )
-
-                authors_final = None
-                abstract_final = None
-                published_final = None
-                raw_crossref = None
-                aid = None
-
-                if isinstance(cr, dict):
-                    authors_final = cr.get("authors") or None
-                    abstract_final = cr.get("abstract") or None
-                    published_final = cr.get("published") or None
-                    raw_crossref = cr.get("raw")
-
-                # Prefer Crossref values when available, fall back to feed values
-                title_final = title_feed
-                authors_final = authors_final or authors_feed
-                abstract_final = abstract_final or abstract_feed
-                published_final = published_final or (e.get("published") or None)
-
-                try:
-                    if doi:
-                        aid = eddb.upsert_article(
-                            conn,
-                            doi,
-                            title=title_final,
-                            authors=authors_final,
-                            abstract=abstract_final,
-                            feed_id=feed_id,
-                            publication_id=pub_pid,
-                            issn=feed_issn,
-                            published=published_final,
-                        )
-                    # If we have raw Crossref XML, store it in the articles.crossref_xml column
-                    if raw_crossref:
-                        try:
-                            cur.execute(
-                                "UPDATE articles SET crossref_xml = ? WHERE doi = ?",
-                                (raw_crossref, doi),
-                            )
-                            conn.commit()
-                        except Exception:
-                            logger.debug("failed to store crossref_xml for doi=%s", doi)
-
-                    # Attach DOI to item and update item.published from article if available
-                    if aid and item_rowid:
-                        try:
-                            cur.execute(
-                                "UPDATE items SET doi = ? WHERE id = ?",
-                                (doi, item_rowid),
-                            )
-                            cur.execute(
-                                "SELECT published FROM articles WHERE doi = ? LIMIT 1",
-                                (doi,),
-                            )
-                            rowp = cur.fetchone()
-                            if rowp and rowp[0]:
-                                cur.execute(
-                                    "UPDATE items SET published = ? WHERE id = ?",
-                                    (rowp[0], item_rowid),
-                                )
-                            conn.commit()
-                        except Exception:
-                            logger.debug(
-                                "failed to attach doi %s to item %s", doi, item_rowid
-                            )
-                except Exception:
-                    logger.exception("failed to upsert article for doi=%s", doi)
         except Exception:
-            continue
+            logger.exception(
+                "unexpected error processing entry for feed %s: %r", feed_id, e
+            )
     conn.commit()
     logger.info("saved %d new items for feed %s", inserted, feed_id)
     return inserted

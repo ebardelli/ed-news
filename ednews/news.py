@@ -12,6 +12,7 @@ summary, and published (string when available).
 from __future__ import annotations
 
 import json
+import sqlite3
 from pathlib import Path
 from typing import Dict, List, Any
 
@@ -103,9 +104,6 @@ def fetch_site(session: Any, site_cfg: Dict) -> List[Dict]:  # session duck-type
 
     # Nothing configured
     return []
-
-
-import sqlite3
 
 
 def fetch_all(

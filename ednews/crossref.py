@@ -9,10 +9,12 @@ are used by feed processing and ScienceDirect enrichment helpers.
 import logging
 import json
 import re
+import sqlite3
+from urllib.parse import quote
+
 import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
-import sqlite3
 
 logger = logging.getLogger("ednews.crossref")
 
@@ -157,62 +159,35 @@ def _query_crossref_doi_by_title_uncached(
     return None
 
 
-# Create a cached version of the uncached implementation and expose a
-# compatibility wrapper that accepts either positional or keyword args.
-def _query_crossref_doi_by_title_cached_fn(
-    title: str, preferred_publication_id: str | None = None, timeout: int = 8
+def _query_crossref_doi_by_title_cached(
+    title: str | None,
+    preferred_publication_id: str | None = None,
+    timeout: int = 8,
 ) -> str | None:
-    # Call the (possibly monkeypatched) uncached implementation at runtime.
-    return _query_crossref_doi_by_title_uncached(
-        title, preferred_publication_id, timeout
-    )
+    return _query_crossref_doi_by_title_uncached(title, preferred_publication_id, timeout)
 
 
 _query_crossref_doi_by_title_cached = lru_cache(maxsize=256)(
-    _query_crossref_doi_by_title_cached_fn
+    _query_crossref_doi_by_title_cached
 )
 
 
-def query_crossref_doi_by_title(*args, **kwargs) -> str | None:
-    """Compatibility wrapper for Crossref title lookup.
+def query_crossref_doi_by_title(
+    title: str | None = None,
+    preferred_publication_id: str | None = None,
+    timeout: int = 8,
+) -> str | None:
+    """Cached Crossref title lookup by article title.
 
-    Accepts the legacy signature either as positional arguments
-        (title, preferred_publication_id=None, timeout=8)
-    or as keywords. Normalizes inputs and calls the cached implementation.
+    Accepts positional or keyword arguments. Uses an LRU cache keyed on all
+    three parameters; call ``query_crossref_doi_by_title.cache_clear()`` in
+    tests to reset the cache between cases.
     """
-    # Map positional args to parameters
-    title = (
-        kwargs.get("title")
-        if "title" in kwargs
-        else (args[0] if len(args) > 0 else None)
-    )
-    preferred_publication_id = (
-        kwargs.get("preferred_publication_id")
-        if "preferred_publication_id" in kwargs
-        else (args[1] if len(args) > 1 else None)
-    )
-    timeout = (
-        kwargs.get("timeout")
-        if "timeout" in kwargs
-        else (args[2] if len(args) > 2 else 8)
-    )
     return _query_crossref_doi_by_title_cached(title, preferred_publication_id, timeout)
 
 
-# Expose cache control functions on the compatibility wrapper so callers/tests
-# can clear or inspect the underlying LRU cache.
-try:
-    from typing import Any, cast
-
-    # cast to Any to allow attaching attributes for runtime test helpers
-    cast(Any, query_crossref_doi_by_title).cache_clear = (
-        _query_crossref_doi_by_title_cached.cache_clear
-    )
-    cast(Any, query_crossref_doi_by_title).cache_info = (
-        _query_crossref_doi_by_title_cached.cache_info
-    )
-except Exception:
-    pass
+query_crossref_doi_by_title.cache_clear = _query_crossref_doi_by_title_cached.cache_clear
+query_crossref_doi_by_title.cache_info = _query_crossref_doi_by_title_cached.cache_info
 
 
 def _fetch_crossref_metadata_impl(
@@ -248,36 +223,9 @@ def _fetch_crossref_metadata_impl(
     # `force` flag can be used to bypass this short-circuit when callers
     # explicitly want to re-fetch metadata (e.g. during rematching).
     try:
-        # If a conn is provided, use it; otherwise try to open the configured DB
-        # path lazily. Use ednews.db helpers when available.
         from ednews.db import article_exists
 
-        if conn is None:
-            try:
-                from ednews import config as _cfg
-                import sqlite3
-
-                conn_local = sqlite3.connect(str(_cfg.DB_PATH))
-                try:
-                    if (not force) and article_exists(conn_local, doi):
-                        logger.info(
-                            "Skipping CrossRef lookup for DOI %s because it already exists in DB",
-                            doi,
-                        )
-                        try:
-                            conn_local.close()
-                        except Exception:
-                            pass
-                        return None
-                finally:
-                    try:
-                        conn_local.close()
-                    except Exception:
-                        pass
-            except Exception:
-                # Fall back to network lookup if DB access is not possible
-                pass
-        else:
+        if conn is not None:
             try:
                 if (not force) and article_exists(conn, doi):
                     logger.info(
@@ -286,18 +234,27 @@ def _fetch_crossref_metadata_impl(
                     )
                     return None
             except Exception:
-                # If the provided conn can't be used for existence check, fall through
+                pass
+        else:
+            try:
+                from ednews import config as _cfg
+
+                with sqlite3.connect(str(_cfg.DB_PATH)) as _conn:
+                    if (not force) and article_exists(_conn, doi):
+                        logger.info(
+                            "Skipping CrossRef lookup for DOI %s because it already exists in DB",
+                            doi,
+                        )
+                        return None
+            except Exception:
                 pass
     except Exception:
-        # If ednews.db isn't importable, proceed with the network lookup
         pass
     # Try to fetch JSON from the Crossref REST API first and prefer the
     # message.created -> date-parts field for determining a publication date.
     # If JSON isn't available or parsing fails, fall back to the unixref XML
     # endpoint (dx.crossref.org) as before.
     # quote DOI path component safely (don't quote slashes inside DOI suffix)
-    from urllib.parse import quote
-
     quoted = quote(doi, safe="/:")
     json_url = f"https://api.crossref.org/works/{quoted}"
     json_headers = {"Accept": "application/json", "User-Agent": "ed-news-fetcher/1.0"}
