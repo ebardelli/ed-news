@@ -122,6 +122,9 @@ def cmd_fetch(args: Any) -> None:
             print(f"SAVE ERROR: {e}")
         return
     if want_articles:
+        total_feeds = 0
+        total_fetched = 0
+        total_inserted = 0
         with ThreadPoolExecutor(max_workers=8) as ex:
             futures = {}
             for item in feeds_list:
@@ -326,6 +329,9 @@ def cmd_fetch(args: Any) -> None:
                     from ..feeds import save_entries
 
                     cnt = save_entries(conn, res["key"], res["title"], res["entries"])
+                    total_feeds += 1
+                    total_fetched += len(res["entries"])
+                    total_inserted += cnt
                     logger.info(
                         "%s: fetched %d entries, inserted %d",
                         res["key"],
@@ -427,6 +433,12 @@ def cmd_fetch(args: Any) -> None:
                     logger.exception(
                         "Failed to save entries for %s: %s", res.get("key"), e
                     )
+        logger.info(
+            "Fetch complete: %d feeds, %d entries fetched, %d inserted",
+            total_feeds,
+            total_fetched,
+            total_inserted,
+        )
     else:
         pass
 

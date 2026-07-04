@@ -105,7 +105,7 @@ def enrich_sciencedirect(
         cr = None
         try:
             if eddb.article_exists(conn, norm):
-                logger.info(
+                logger.debug(
                     "Skipping CrossRef lookup for DOI %s because it already exists in DB; loading stored metadata",
                     norm,
                 )
@@ -246,7 +246,7 @@ def sciencedirect_feed_processor(
                                 art = get_article_by_title(conn, t_title)
                                 if art and art.get("doi"):
                                     entry["doi"] = art.get("doi")
-                                    logger.info(
+                                    logger.debug(
                                         "sciencedirect_processor: found DOI %s for title %s from local DB",
                                         art.get("doi"),
                                         title,

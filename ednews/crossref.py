@@ -228,7 +228,7 @@ def _fetch_crossref_metadata_impl(
         if conn is not None:
             try:
                 if (not force) and article_exists(conn, doi):
-                    logger.info(
+                    logger.debug(
                         "Skipping CrossRef lookup for DOI %s because it already exists in DB",
                         doi,
                     )
@@ -241,7 +241,7 @@ def _fetch_crossref_metadata_impl(
 
                 with sqlite3.connect(str(_cfg.DB_PATH)) as _conn:
                     if (not force) and article_exists(_conn, doi):
-                        logger.info(
+                        logger.debug(
                             "Skipping CrossRef lookup for DOI %s because it already exists in DB",
                             doi,
                         )

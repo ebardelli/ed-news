@@ -507,7 +507,7 @@ def _enrich_new_item(conn, cur, item_rowid: int, entry: dict, feed_id: str) -> N
     cr = None
     try:
         if eddb.article_exists(conn, doi):
-            logger.info(
+            logger.debug(
                 "Skipping CrossRef lookup for DOI %s because it already exists in DB;"
                 " loading stored metadata",
                 doi,
