@@ -146,9 +146,9 @@ def test_rematch_forces_lookup_when_doi_exists(monkeypatch, tmp_path):
     assert row and row[0].startswith('10.1162/edfp')
 
 
-def test_rematch_only_wrong_cli_passes_only_wrong_items(monkeypatch, tmp_path):
-    """Ensure that running the CLI with --only-wrong passes only the wrong/missing DOI items
-    to the postprocessor (so title lookups will be attempted for them).
+def test_rematch_reverify_dois_cli_passes_existing_doi_items(monkeypatch, tmp_path):
+    """Ensure that running the CLI with --reverify-dois passes only items that already have
+    a DOI to the postprocessor (so Crossref lookups are attempted to re-verify them).
     """
     conn = sqlite3.connect(":memory:")
     setup_db(conn)
@@ -172,7 +172,7 @@ def test_rematch_only_wrong_cli_passes_only_wrong_items(monkeypatch, tmp_path):
 
     monkeypatch.setattr(ed_main.sqlite3, "connect", lambda path: ConnProxy(conn))
 
-    # Capture titles that rematch will look up when run with --only-wrong
+    # Capture titles that rematch will look up when run with --reverify-dois
     captured = {"titles": []}
 
     def fake_query_capture(title, preferred_publication_id=None):
@@ -182,10 +182,10 @@ def test_rematch_only_wrong_cli_passes_only_wrong_items(monkeypatch, tmp_path):
     from ednews import crossref as cr_mod3
     monkeypatch.setattr(cr_mod3, 'query_crossref_doi_by_title', fake_query_capture, raising=False)
 
-    # Run CLI with only-wrong flag
+    # Run CLI with --reverify-dois flag
     import sys as _sys
     # Target the feed directly and provide a publication_id that matches g2
-    monkeypatch.setattr(_sys, "argv", ["ednews", "manage-db", "rematch-dois", "--feed", "f1", "--publication-id", "10.0/right", "--only-wrong"])
+    monkeypatch.setattr(_sys, "argv", ["ednews", "manage-db", "rematch-dois", "--feed", "f1", "--publication-id", "10.0/right", "--reverify-dois"])
     ed_main.main()
 
     # Check that captured titles correspond to items that had DOIs (g1 and g2)

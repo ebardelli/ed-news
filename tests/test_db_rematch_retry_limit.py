@@ -30,11 +30,11 @@ def test_rematch_skips_after_retry_limit(monkeypatch):
     monkeypatch.setattr(cr_mod, 'query_crossref_doi_by_title', fake_query, raising=False)
 
     # First run with retry_limit=1 should attempt and increment attempts
-    res1 = rematch_publication_dois(conn, publication_id='edfp', dry_run=False, only_wrong=True, retry_limit=1)
+    res1 = rematch_publication_dois(conn, publication_id='edfp', dry_run=False, reverify_dois=True, retry_limit=1)
     assert call_count['calls'] >= 1
 
     # Second run should skip the guid because attempts >= retry_limit
-    res2 = rematch_publication_dois(conn, publication_id='edfp', dry_run=False, only_wrong=True, retry_limit=1)
+    res2 = rematch_publication_dois(conn, publication_id='edfp', dry_run=False, reverify_dois=True, retry_limit=1)
     # Ensure we recorded skipped_due_to_retry_limit for the feed (if implemented)
     # At minimum, the function should not repeatedly call external lookup for the same guid
     assert call_count['calls'] >= 1

@@ -1,7 +1,12 @@
 name: manage-db
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      rematch_wrong:
+        description: 'Re-verify existing DOIs (slow, hits Crossref for every matched item)'
+        type: boolean
+        default: false
   schedule:
   - cron: '0 0 1 * *'
     timezone: "America/Los_Angeles"
@@ -53,7 +58,9 @@ jobs:
       - name: Run DB maintenance
         run: |
           uv run python main.py manage-db run-all --older-than-days 7
-          uv run ednews manage-db rematch-dois --only-wrong
+          if [ "${{ inputs.rematch_wrong }}" = "true" ]; then
+            uv run ednews manage-db rematch-dois --reverify-dois
+          fi
           uv run ednews manage-db rematch-dois --only-missing
           uv run ednews manage-db remove-feed-articles
           uv run python main.py manage-db fix-encoding

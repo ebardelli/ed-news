@@ -259,9 +259,9 @@ def run() -> None:
         help="Remove articles for the publication that are no longer referenced by any items",
     )
     p_rematch.add_argument(
-        "--only-wrong",
+        "--reverify-dois",
         action="store_true",
-        help="Only operate on items whose DOI is missing or whose DOI does not match the configured publication_id",
+        help="Re-verify existing DOI assignments against Crossref (slow: queries Crossref for every already-matched item)",
     )
     p_rematch.add_argument(
         "--only-missing",

@@ -7,8 +7,8 @@ from ednews.db import maintenance
 import ednews.processors as ed_processors
 
 
-def test_rematch_only_wrong_skips_postprocessor(monkeypatch, caplog):
-    """When --only-wrong is used and no wrong/missing DOIs are found for a feed,
+def test_rematch_reverify_dois_skips_postprocessor(monkeypatch, caplog):
+    """When --reverify-dois is used and no items with DOIs are found for a feed,
     the postprocessor should not be invoked and the function should return quickly.
     """
     caplog.set_level(logging.INFO)
@@ -23,8 +23,8 @@ def test_rematch_only_wrong_skips_postprocessor(monkeypatch, caplog):
     cur.execute("INSERT INTO publications (feed_id, publication_id) VALUES (?, ?)", ("aerj", "aerj"))
     conn.commit()
 
-    # Call rematch_publication_dois with only_wrong=True and dry_run so no DB changes
-    results = maintenance.rematch_publication_dois(conn, publication_id='aerj', feed_keys=['aerj'], dry_run=True, only_wrong=True)
+    # Call rematch_publication_dois with reverify_dois=True and dry_run so no DB changes
+    results = maintenance.rematch_publication_dois(conn, publication_id='aerj', feed_keys=['aerj'], dry_run=True, reverify_dois=True)
 
     # Ensure no processing occurred for the feed: postprocessor_results should be 0
     assert 'postprocessor_results' in results

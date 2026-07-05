@@ -50,7 +50,7 @@ def test_rematch_only_missing_updates_article_doi(monkeypatch):
     monkeypatch.setattr(cr_mod, 'query_crossref_doi_by_title', fake_query, raising=False)
 
     # Run rematch with only_missing
-    res = rematch_publication_dois(conn, publication_id=None, feed_keys=['aerj'], dry_run=False, remove_orphan_articles=False, only_wrong=False, only_missing=True)
+    res = rematch_publication_dois(conn, publication_id=None, feed_keys=['aerj'], dry_run=False, remove_orphan_articles=False, reverify_dois=False, only_missing=True)
 
     assert called.get('invoked', False) is True
 

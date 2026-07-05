@@ -35,7 +35,7 @@ def test_rematch_passes_entries_with_none_doi_and_updates(monkeypatch):
     import ednews.crossref as cr_mod
     monkeypatch.setattr(cr_mod, 'query_crossref_doi_by_title', fake_query, raising=False)
 
-    res = rematch_publication_dois(conn, publication_id='edfp', dry_run=False, only_wrong=True)
+    res = rematch_publication_dois(conn, publication_id='edfp', dry_run=False, reverify_dois=True)
 
     # Ensure crossref lookup was invoked and the title passed was the item's title
     assert captured['called'] is True

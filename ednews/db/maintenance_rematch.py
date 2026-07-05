@@ -21,7 +21,7 @@ def rematch_publication_dois(
     feed_keys: Optional[list] = None,
     dry_run: bool = False,
     remove_orphan_articles: bool = False,
-    only_wrong: bool = False,
+    reverify_dois: bool = False,
     only_missing: bool = False,
     only_articles: bool = False,
     retry_limit: Optional[int] = 3,
@@ -86,7 +86,7 @@ def rematch_publication_dois(
 
     for fk in keys:
         try:
-            if only_articles and (not only_missing) and (not only_wrong):
+            if only_articles and (not only_missing) and (not reverify_dois):
                 only_missing = True
 
             # Determine expected publication id for this feed
@@ -150,7 +150,7 @@ def rematch_publication_dois(
                         "SELECT guid, link, title, published, fetched_at FROM items WHERE feed_id = ? AND COALESCE(doi, '') = '' ORDER BY COALESCE(published, fetched_at) DESC LIMIT 2000",
                         (fk,),
                     )
-                elif only_wrong:
+                elif reverify_dois:
                     cur.execute(
                         "SELECT guid, link, title, published, fetched_at FROM items WHERE feed_id = ? AND COALESCE(doi, '') != '' ORDER BY COALESCE(published, fetched_at) DESC LIMIT 2000",
                         (fk,),
