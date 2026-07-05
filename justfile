@@ -11,6 +11,9 @@ build:
 serve:
     uv run ednews serve
 
+test target="":
+    {{ if target == "crossref" { "RUN_CROSSREF_INTEGRATION=1" } else { "" } }} uv run pytest -q
+
 db:
     uv run ednews manage-db run-all
 

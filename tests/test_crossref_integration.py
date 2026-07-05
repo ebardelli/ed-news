@@ -34,7 +34,7 @@ DOIS_TO_TEST = list(EXPECTED.keys()) if EXPECTED else DOIS
 def test_hardcoded_dois_fetch_and_parse():
     for doi in DOIS_TO_TEST:
         try:
-            data = crossref.fetch_crossref_metadata(doi)
+            data = crossref.fetch_crossref_metadata(doi, force=True)
         except Exception as e:
             pytest.skip(f"Network or parsing error when fetching DOI {doi}: {e}")
         if data is None:
