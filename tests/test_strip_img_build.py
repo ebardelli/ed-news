@@ -35,6 +35,7 @@ def test_strip_img_from_articles_and_headlines(tmp_path: Path):
         """
         CREATE TABLE headlines (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            source TEXT,
             title TEXT,
             link TEXT,
             text TEXT,
@@ -46,8 +47,8 @@ def test_strip_img_from_articles_and_headlines(tmp_path: Path):
 
     img_text = 'Headline with <img src="https://example.com/h.jpg"> embedded'
     cur.execute(
-        "INSERT INTO headlines (title, link, text, published, first_seen) VALUES (?,?,?,?,?)",
-        ("H", "http://h", img_text, "2025-11-01T13:00:00Z", None),
+        "INSERT INTO headlines (source, title, link, text, published, first_seen) VALUES (?,?,?,?,?,?)",
+        ("test-src", "H", "http://h", img_text, "2025-11-01T13:00:00Z", None),
     )
 
     conn.commit()

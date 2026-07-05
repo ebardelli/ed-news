@@ -37,6 +37,12 @@
                         <div class="item">
                             <h3>{% if h.link %}<a href="{{ h.link }}">{{ h.title or 'Untitled' }}</a>{% else %}{{ h.title or 'Untitled' }}{% endif %}</h3>
                             <p class="meta">
+                                {% if h.feed_title %}
+                                    <span class="pub">{{ h.feed_title }}</span>
+                                {% endif %}
+                                {% if h.feed_title and h.published %}
+                                    <span class="sep"> | </span>
+                                {% endif %}
                                 {% if h.published %}
                                     <span class="date">{{ h.published }}</span>
                                 {% endif %}

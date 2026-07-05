@@ -1302,6 +1302,18 @@ def read_news_headlines(db_path: Path, limit: int | None = None):
             limit = getattr(_cfg, "HEADLINES_DEFAULT_LIMIT", 8)
         except Exception:
             limit = 8
+    # Build source key → display title map from news.json
+    source_title_map: dict[str, str] = {}
+    try:
+        news_json = config.RESEARCH_JSON.parent / "news.json"
+        if news_json.exists():
+            data = json.loads(news_json.read_text(encoding="utf-8"))
+            for key, info in (data.get("feeds", {}) or {}).items():
+                if isinstance(info, dict) and info.get("title"):
+                    source_title_map[key] = info["title"]
+    except Exception:
+        pass
+
     conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
@@ -1309,7 +1321,7 @@ def read_news_headlines(db_path: Path, limit: int | None = None):
         # fetch a reasonable number of recent rows; include `id` so callers can
         # reference the headlines rowid when looking up headline embeddings.
         cur.execute(
-            "SELECT id, title, link, text, published, first_seen FROM headlines"
+            "SELECT id, source, title, link, text, published, first_seen FROM headlines"
         )
         rows = [dict(r) for r in cur.fetchall()]
     except Exception:
@@ -1447,6 +1459,8 @@ def read_news_headlines(db_path: Path, limit: int | None = None):
 
     out = []
     for r in selected:
+        raw_source = r.get("source") or ""
+        feed_title = source_title_map.get(raw_source, raw_source) if raw_source else None
         out.append(
             {
                 "id": r.get("id"),
@@ -1456,6 +1470,7 @@ def read_news_headlines(db_path: Path, limit: int | None = None):
                 "published": format_short_date(
                     r.get("published") or r.get("first_seen")
                 ),
+                "feed_title": feed_title,
             }
         )
     return out
