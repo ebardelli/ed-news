@@ -19,7 +19,7 @@
     },
     "aera_open": {
       "title": "AERA Open",
-      "link": "aera open",
+      "link": "https://journals.sagepub.com/home/ero",
       "feed": "https://journals.sagepub.com/action/showFeed?ui=0&mi=ehikzz&ai=2b4&jc=eroa&type=etoc&feed=rss",
       "publication_id": "10.1177",
       "issn": "2332-8584",

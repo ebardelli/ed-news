@@ -23,6 +23,7 @@
         <div class="menu-center">
             <a href="?view=headlines" class="menu-item" id="menu-headlines">Latest Headlines</a>
             <a href="?view=research" class="menu-item" id="menu-research">Latest Research</a>
+            <a href="?view=firehose" class="menu-item" id="menu-firehose">Firehose</a>
         </div>
         <hr class="menu-line">
     </nav>
@@ -64,6 +65,33 @@
                     <p>No headlines found.</p>
                 {% endif %}
             </div>
+            {# Firehose: one card per source, up to 10 articles each #}
+            <div id="view-firehose" class="view-section" style="display:none;">
+                {% if firehose %}
+                    <div class="firehose-grid">
+                    {% for card in firehose %}
+                        <div class="firehose-card">
+                            <h4 class="firehose-source">{% if card.source_link %}<a href="{{ card.source_link }}">{{ card.source }}</a>{% else %}{{ card.source }}{% endif %}</h4>
+                            <ul class="firehose-list">
+                                {% for a in card.articles %}
+                                    <li>
+                                        {% if a.link %}
+                                            <a href="{{ a.link }}">{{ a.title or 'Untitled' }}</a>
+                                        {% else %}
+                                            {{ a.title or 'Untitled' }}
+                                        {% endif %}
+                                        {% if a.age %}<span class="firehose-age">[{{ a.age }}]</span>{% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No headlines found.</p>
+                {% endif %}
+            </div>
+
             {# Latest research (flat list) - shown when view=research #}
             <div id="view-research" class="view-section" style="display:none;">
                 {% if research %}
@@ -157,20 +185,24 @@
             const params = new URLSearchParams(window.location.search);
             return params.get(name);
         }
+        const VIEWS = ['headlines', 'firehose', 'research'];
         function showView(view) {
             document.querySelectorAll('.view-section').forEach(function(el){ el.style.display = 'none'; });
             const el = document.getElementById('view-' + view);
             if (el) el.style.display = '';
-            document.getElementById('menu-research').classList.toggle('active', view === 'research');
-            const mh = document.getElementById('menu-headlines');
-            if (mh) mh.classList.toggle('active', view === 'headlines');
+            document.body.classList.toggle('firehose-active', view === 'firehose');
+            VIEWS.forEach(function(v){
+                const m = document.getElementById('menu-' + v);
+                if (m) m.classList.toggle('active', v === view);
+            });
         }
         (function(){
             const view = getQueryParam('view') || 'headlines';
             showView(view);
-            document.getElementById('menu-research').addEventListener('click', function(e){ e.preventDefault(); showView('research'); history.replaceState({},'', '?view=research'); });
-            const mh = document.getElementById('menu-headlines');
-            if (mh) mh.addEventListener('click', function(e){ e.preventDefault(); showView('headlines'); history.replaceState({},'', '?view=headlines'); });
+            VIEWS.forEach(function(v){
+                const m = document.getElementById('menu-' + v);
+                if (m) m.addEventListener('click', function(e){ e.preventDefault(); showView(v); history.replaceState({},'', '?view=' + v); });
+            });
         })();
     </script>
 </body>

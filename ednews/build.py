@@ -399,6 +399,12 @@ def build(out_dir: Path = BUILD_DIR):
     except Exception:
         ctx["news_headlines"] = []
 
+    # Load firehose: headlines grouped by source, up to 10 per source
+    try:
+        ctx["firehose"] = read_firehose_by_source(DB_FILE)
+    except Exception:
+        ctx["firehose"] = []
+
     # Compute related headlines using stored embeddings (headlines_vec).
     try:
         from . import embeddings as _emb
@@ -1453,6 +1459,128 @@ def read_news_headlines(db_path: Path, limit: int | None = None):
             }
         )
     return out
+
+
+def read_firehose_by_source(db_path: Path, per_source_limit: int = 5):
+    """Return all content (headlines + research articles) grouped by source.
+
+    Sources are ordered by their most recent article (descending). Within each
+    source the articles are also ordered newest-first, capped at per_source_limit.
+
+    Returns:
+        list[dict]: Each dict has keys ``source`` (str) and ``articles``
+            (list of dicts with ``title``, ``link``, ``published``).
+    """
+    if not db_path.exists():
+        return []
+
+    def _parse_dt(val):
+        if not val:
+            return datetime(1970, 1, 1, tzinfo=timezone.utc)
+        s = str(val).strip()
+        for parser in (
+            lambda v: parsedate_to_datetime(v),
+            lambda v: datetime.fromisoformat(v.replace("Z", "+00:00")),
+        ):
+            try:
+                dt = parser(s)
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                return dt
+            except Exception:
+                pass
+        for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+            try:
+                return datetime.strptime(s, fmt).replace(tzinfo=timezone.utc)
+            except Exception:
+                pass
+        return datetime(1970, 1, 1, tzinfo=timezone.utc)
+
+    # Build feed-key → display title and title → link maps from config files
+    source_title_map: dict[str, str] = {}
+    source_link_map: dict[str, str] = {}
+
+    def _load_feed_config(path: Path):
+        if not path.exists():
+            return
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            for key, info in (data.get("feeds", {}) or {}).items():
+                if not isinstance(info, dict):
+                    continue
+                title = info.get("title")
+                link = info.get("link") or ""
+                if title:
+                    source_title_map[key] = title
+                    if link:
+                        source_link_map[title] = link
+        except Exception:
+            pass
+
+    _load_feed_config(config.RESEARCH_JSON.parent / "news.json")
+    _load_feed_config(config.RESEARCH_JSON)
+
+    conn = sqlite3.connect(str(db_path))
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    rows = []
+    cur.execute(
+        "SELECT source, title, link, COALESCE(published, first_seen) AS pub "
+        "FROM headlines WHERE source IS NOT NULL AND title IS NOT NULL"
+    )
+    for r in cur.fetchall():
+        src = source_title_map.get(r["source"], r["source"])
+        rows.append({"source": src, "title": r["title"], "link": r["link"], "pub": r["pub"]})
+    cur.execute(
+        "SELECT feed_title AS source, title, link, published AS pub "
+        "FROM combined_articles WHERE feed_title IS NOT NULL AND title IS NOT NULL"
+    )
+    for r in cur.fetchall():
+        rows.append({"source": r["source"], "title": r["title"], "link": r["link"], "pub": r["pub"]})
+    conn.close()
+
+    def _format_age(dt, now):
+        seconds = max(0, (now - dt).total_seconds())
+        hours = int(seconds / 3600)
+        days = int(seconds / 86400)
+        weeks = int(days / 7)
+        if hours < 1:
+            return f"{int(seconds / 60)}m"
+        elif hours < 24:
+            return f"{hours}h"
+        elif days < 7:
+            return f"{days}d"
+        elif weeks < 52:
+            return f"{weeks}w"
+        else:
+            return f"{int(weeks / 52)}y"
+
+    now = datetime.now(timezone.utc)
+
+    # Sort all rows newest-first so we naturally keep the most recent per source
+    rows.sort(key=lambda r: _parse_dt(r["pub"]), reverse=True)
+
+    grouped: dict[str, list] = {}
+    source_latest: dict[str, datetime] = {}
+    for r in rows:
+        src = r["source"]
+        dt = _parse_dt(r["pub"])
+        if src not in grouped:
+            grouped[src] = []
+            source_latest[src] = dt
+        if len(grouped[src]) < per_source_limit:
+            grouped[src].append({
+                "title": r["title"],
+                "link": r["link"],
+                "published": r["pub"],
+                "age": _format_age(dt, now),
+            })
+
+    sources = sorted(grouped.keys(), key=lambda s: source_latest[s], reverse=True)
+    return [
+        {"source": s, "source_link": source_link_map.get(s) or "", "articles": grouped[s]}
+        for s in sources
+    ]
 
 
 def export_db_parquet(out_dir: Path, tables: list | None = None):

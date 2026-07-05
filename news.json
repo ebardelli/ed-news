@@ -9,16 +9,19 @@
     },
     "pd-education" : {
         "title": "Press Democrat Education News",
+        "link": "https://www.pressdemocrat.com/local-news/",
         "feed": "https://www.pressdemocrat.com/local-news/feed/atom/",
         "processor": {"pre": "pd-education"}
     },
     "calmatters-education" : {
         "title": "CalMatters Education News",
+        "link": "https://calmatters.org/category/education/",
         "feed": "https://calmatters.org/category/education/feed/",
         "processor": {"pre": "calmatters-education"}
     },
     "The 74 Million": {
         "title": "The 74 Million",
+        "link": "https://www.the74million.org/",
         "feed": "https://www.the74million.org/feed/"
     }
   }
