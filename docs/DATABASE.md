@@ -288,7 +288,7 @@ uv run ednews manage-db run-all --older-than-days 7
 - **Deduplication**: The schema enforces uniqueness constraints; handle conflicts gracefully
 - **Indexing**: Indexes exist on commonly-queried columns; add more if needed
 - **NULL handling**: Use `COALESCE` in queries to handle NULL values
-- **Date formats**: Store dates in ISO 8601 format for consistency
+- **Date formats**: Store `published` as `YYYY-MM-DD` (date only, no time component). All insertion paths normalize through `normalize_date_ymd()` in `ednews/db/utils.py`. Run `uv run ednews manage-db migrate` to backfill any legacy datetime values.
 
 ## Troubleshooting
 

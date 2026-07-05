@@ -151,10 +151,6 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Run DB migration
-        run: |
-          uv run ednews manage-db migrate
-
       - name: Fetch and build website
         run: |
           uv run python main.py fetch

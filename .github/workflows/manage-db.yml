@@ -2,6 +2,9 @@ name: manage-db
 
 on:
   workflow_dispatch: {}
+  schedule:
+  - cron: '0 0 1 * *'
+    timezone: "America/Los_Angeles"
 
 permissions:
   contents: read
@@ -47,12 +50,12 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Fetch and build website
+      - name: Run DB maintenance
         run: |
+          uv run python main.py manage-db run-all --older-than-days 7
           uv run ednews manage-db rematch-dois --only-wrong
           uv run ednews manage-db rematch-dois --only-missing
           uv run ednews manage-db remove-feed-articles
-          uv run python main.py manage-db run-all --older-than-days 7
           uv run python main.py manage-db fix-encoding
 
       - name: Upload ednews.db to S3 cache
