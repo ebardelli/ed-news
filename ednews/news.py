@@ -73,10 +73,17 @@ def fetch_site(session: Any, site_cfg: Dict) -> List[Dict]:  # session duck-type
 
     if feed_url:
         # If a feed-specific processor exists (e.g. to filter AP items),
-        # prefer it. Otherwise fall back to the simple feedparser path.
+        # prefer it. Then try ednews.processors dynamic lookup. Otherwise
+        # fall back to the simple feedparser path.
         proc = (
             FEED_PROCESSORS.get(proc_name_normalized) if proc_name_normalized else None
         )
+        if not proc and proc_name_normalized:
+            try:
+                import ednews.processors as proc_mod
+                proc = getattr(proc_mod, f"{proc_name_normalized}_preprocessor", None)
+            except Exception:
+                proc = None
         if proc:
             return proc(session, feed_url)
 

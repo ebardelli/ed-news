@@ -145,31 +145,43 @@ def _make_scraper(session):
 
 
 def _fetch_paginated(scraper, url: str, parser) -> List[Dict]:
+    from .pagination import open_db_conn, has_new_entries
+
+    conn = open_db_conn()
     entries: List[Dict] = []
     next_url: str | None = url
 
-    while next_url:
-        try:
-            resp = scraper.get(next_url, timeout=30)
-            resp.raise_for_status()
-        except Exception as exc:
-            logger.error("Failed to fetch %s: %s", next_url, exc)
-            break
+    try:
+        while next_url:
+            try:
+                resp = scraper.get(next_url, timeout=30)
+                resp.raise_for_status()
+            except Exception as exc:
+                logger.error("Failed to fetch %s: %s", next_url, exc)
+                break
 
-        entries.extend(parser(resp.text, base_url=BASE_URL))
+            page_entries = parser(resp.text, base_url=BASE_URL)
+            entries.extend(page_entries)
 
-        soup = BeautifulSoup(resp.text, "html.parser")
-        next_link = (
-            soup.select_one("a[rel='next']")
-            or soup.select_one("li.pager__item--next a")
-            or soup.select_one("li.next a")
-            or soup.select_one(".pager-next a")
-        )
-        if next_link:
-            href = str(next_link.get("href") or "")
-            next_url = urljoin(BASE_URL, href) if href and not href.startswith("http") else (href or None)
-        else:
-            next_url = None
+            if conn and not has_new_entries(page_entries, conn):
+                logger.debug("edpolicyinca: page fully known to DB, stopping at %s", next_url)
+                break
+
+            soup = BeautifulSoup(resp.text, "html.parser")
+            next_link = (
+                soup.select_one("a[rel='next']")
+                or soup.select_one("li.pager__item--next a")
+                or soup.select_one("li.next a")
+                or soup.select_one(".pager-next a")
+            )
+            if next_link:
+                href = str(next_link.get("href") or "")
+                next_url = urljoin(BASE_URL, href) if href and not href.startswith("http") else (href or None)
+            else:
+                next_url = None
+    finally:
+        if conn:
+            conn.close()
 
     return entries
 

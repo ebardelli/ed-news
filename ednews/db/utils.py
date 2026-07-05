@@ -5,8 +5,42 @@ These functions are small, pure where possible, and easy to unit-test.
 
 import hashlib
 import logging
+import re
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 
 logger = logging.getLogger("ednews.db.utils")
+
+
+def normalize_date_ymd(s) -> str | None:
+    """Parse any date/datetime string and return YYYY-MM-DD, or None if unparseable."""
+    if not s:
+        return None
+    s = str(s).strip()
+    if not s:
+        return None
+    try:
+        return datetime.fromisoformat(s.replace("Z", "+00:00")).date().isoformat()
+    except Exception:
+        pass
+    try:
+        return parsedate_to_datetime(s).date().isoformat()
+    except Exception:
+        pass
+    for fmt in (
+        "%Y-%m-%dT%H:%M:%S.%f",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%d",
+        "%b %d, %Y",
+        "%B %d, %Y",
+        "%d %b %Y",
+    ):
+        try:
+            return datetime.strptime(s, fmt).date().isoformat()
+        except Exception:
+            continue
+    return None
 
 
 def compute_url_hash(link: str | None) -> str | None:

@@ -21,6 +21,7 @@ from .edworkingpapers import (
     edworkingpapers_postprocessor_db,
 )
 from .rss import rss_preprocessor
+from .calmatters import calmatters_preprocessor
 from .edpolicyinca import (
     edpolicyinca_publications_processor,
     edpolicyinca_publications_preprocessor,
@@ -137,6 +138,7 @@ __all__ = [
     "sciencedirect_postprocessor_db",
     "crossref_postprocessor_db",
     "rss_preprocessor",
+    "calmatters_preprocessor",
     "edpolicyinca_publications_processor",
     "edpolicyinca_publications_preprocessor",
     "edpolicyinca_publications_postprocessor_db",

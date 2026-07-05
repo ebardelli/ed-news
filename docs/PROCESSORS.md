@@ -78,6 +78,7 @@ def name_postprocessor(entries: list[dict],
 | `fcmat` | `ednews.processors.fcmat` | FCMAT news headline scraper |
 | `pd-education` | `ednews.processors.pressdemocrat` | Press Democrat education feed (with AP filtering) |
 | `edpolicyinca` | `ednews.processors.edpolicyinca` | PACE publications scraper (Cloudflare-protected; requires `cloudscraper`) |
+| `calmatters` | `ednews.processors.calmatters` | CalMatters education section HTML scraper |
 
 ### Postprocessors
 

@@ -163,6 +163,39 @@ def migrate_add_items_authors(conn):
         logger.exception("migrate_add_items_authors failed")
 
 
+def migrate_normalize_published_dates(conn):
+    """Normalize all published values to YYYY-MM-DD across items, articles, headlines."""
+    from .utils import normalize_date_ymd
+    import re
+    _ymd = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+    cur = conn.cursor()
+    totals = {}
+    for table in ("items", "articles", "headlines"):
+        try:
+            cur.execute(
+                f"SELECT id, published FROM {table}"
+                f" WHERE published IS NOT NULL AND published != ''"
+                f" AND published NOT GLOB '????-??-??'"
+            )
+            rows = cur.fetchall()
+            count = 0
+            for row_id, raw in rows:
+                normalized = normalize_date_ymd(raw)
+                if normalized and normalized != raw:
+                    cur.execute(
+                        f"UPDATE {table} SET published = ? WHERE id = ?",
+                        (normalized, row_id),
+                    )
+                    count += 1
+            conn.commit()
+            totals[table] = count
+            if count:
+                logger.info("normalize_published_dates: fixed %d rows in %s", count, table)
+        except Exception:
+            logger.exception("normalize_published_dates failed for table %s", table)
+    return totals
+
+
 def migrate_db(conn):
     # Run all migrations. Keep behavior as previous migrate_db wrapper.
     logger.info("migrate_db: running migrations (migrations module)")
@@ -173,6 +206,8 @@ def migrate_db(conn):
             return False
         migrate_update_combined_view(conn)
         migrate_add_items_authors(conn)
+        totals = migrate_normalize_published_dates(conn)
+        logger.info("migrate_normalize_published_dates: %s", totals)
         return True
     except Exception:
         logger.exception("migrate_db failed")

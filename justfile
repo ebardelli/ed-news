@@ -1,5 +1,5 @@
 fetch:
-    uv run ed-news fetch
+    uv run ednews fetch
     # issn-lookup: --from-date/--until-date accept YYYY, YYYY-MM, YYYY-MM-DD, or datetimes like YYYY-MM-DDTHH:MM (no-tz -> UTC)
     uv run ednews issn-lookup
     # Crossref enrichment moved to per-feed postprocessors (see ednews.processors.crossref)

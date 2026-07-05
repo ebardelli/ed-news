@@ -70,7 +70,7 @@ def upsert_news_item(
                     except Exception:
                         continue
             if pub_dt is not None:
-                published = pub_dt.isoformat()
+                published = pub_dt.date().isoformat()
         except Exception:
             published = published
     else:

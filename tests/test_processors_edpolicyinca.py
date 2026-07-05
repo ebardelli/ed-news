@@ -129,6 +129,7 @@ def test_publications_preprocessor_pagination(monkeypatch):
             return MockResponse(page1 if call_count["n"] == 1 else page2)
 
     monkeypatch.setattr("ednews.processors.edpolicyinca._make_scraper", lambda s: FakeScraper())
+    monkeypatch.setattr("ednews.processors.pagination.open_db_conn", lambda: None)
 
     entries = edpolicyinca_publications_preprocessor(None, "https://edpolicyinca.org/publications")
     assert len(entries) == page1_count + 1
@@ -156,6 +157,7 @@ def test_commentaries_preprocessor_pagination(monkeypatch):
             return MockResponse(page1 if call_count["n"] == 1 else page2)
 
     monkeypatch.setattr("ednews.processors.edpolicyinca._make_scraper", lambda s: FakeScraper())
+    monkeypatch.setattr("ednews.processors.pagination.open_db_conn", lambda: None)
 
     entries = edpolicyinca_commentaries_preprocessor(None, "https://edpolicyinca.org/commentaries")
     assert len(entries) == page1_count + 1

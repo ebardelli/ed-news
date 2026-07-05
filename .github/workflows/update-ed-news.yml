@@ -151,7 +151,7 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Run migrations
+      - name: Run DB migration
         run: |
           uv run ednews manage-db migrate
 

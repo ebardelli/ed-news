@@ -21,6 +21,7 @@ import requests
 from . import config
 from . import crossref
 from . import db as eddb
+from .db.utils import normalize_date_ymd
 from .text import recover_mojibake
 
 logger = logging.getLogger("ednews.feeds")
@@ -637,7 +638,7 @@ def save_entries(conn, feed_id, feed_title, entries):
                 (
                     feed_id, None,
                     e.get("guid"), e.get("title"), e.get("link"), url_hash,
-                    e.get("published") or datetime.now(timezone.utc).isoformat(),
+                    normalize_date_ymd(e.get("published")) or datetime.now(timezone.utc).date().isoformat(),
                     e.get("summary"), e.get("authors"),
                     datetime.now(timezone.utc).isoformat(),
                 ),

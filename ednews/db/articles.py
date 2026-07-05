@@ -5,6 +5,7 @@ import sqlite3
 from datetime import datetime, timezone
 from .. import config
 from ..text import recover_mojibake
+from .utils import normalize_date_ymd
 
 logger = logging.getLogger("ednews.db.articles")
 
@@ -43,7 +44,7 @@ def upsert_article(
     cur = conn.cursor()
     now = datetime.now(timezone.utc).isoformat()
     used_fetched_at = fetched_at or now
-    used_published = published
+    used_published = normalize_date_ymd(published)
 
     def _sanitize(val):
         if val is None:
