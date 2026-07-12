@@ -662,7 +662,7 @@ def build(out_dir: Path = BUILD_DIR):
                 "content": h.get("text") or "",
                 "abstract": None,
                 "published": h.get("published") or None,
-                "source": h.get("source") or None,
+                "source": h.get("feed_title") or h.get("source") or None,
                 "similar_headlines": h.get("similar_headlines") or [],
             }
             try:
@@ -834,7 +834,7 @@ def build(out_dir: Path = BUILD_DIR):
                 "abstract": None,
                 "published": h.get("published"),
                 "published_dt": pd,
-                "source": h.get("source") or None,
+                "source": h.get("feed_title") or h.get("source") or None,
                 "similar_headlines": h.get("similar_headlines") or [],
             }
             item["rss_description"] = make_rss_description(item)

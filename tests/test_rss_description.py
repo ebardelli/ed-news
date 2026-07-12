@@ -17,14 +17,17 @@ def make_article(i, published):
     }
 
 
-def make_headline(i, published):
-    return {
+def make_headline(i, published, feed_title=None):
+    headline = {
         "id": i,
         "title": f"Headline {i}",
         "link": f"https://example.org/headline/{i}",
         "text": f"Text {i}",
         "published": published,
     }
+    if feed_title is not None:
+        headline["feed_title"] = feed_title
+    return headline
 
 
 @pytest.mark.usefixtures("tmp_path")
@@ -83,3 +86,33 @@ def test_rss_description_present_and_formatted(monkeypatch, tmp_path):
             # Ensure description is non-empty after trimming
             assert d is not None and d.strip() != "", f"Empty description in {file}"
             # Basic structure check removed — non-empty description is sufficient
+
+
+@pytest.mark.usefixtures("tmp_path")
+def test_rss_headline_description_includes_source(monkeypatch, tmp_path):
+    # Headlines from read_news_headlines carry the display name under
+    # `feed_title` (not `source`); the RSS description builder must fall
+    # back to that field so the source line isn't silently dropped.
+    articles = [make_article(i, f"2025-10-{30-i:02d}T12:00:00Z") for i in range(3)]
+    headlines = [
+        make_headline(i, f"2025-10-{30-i:02d}", feed_title="Example Feed")
+        for i in range(3)
+    ]
+
+    monkeypatch.setattr(build_mod, "read_articles", lambda db_path, limit=None, days=None, publications=None: articles)
+    monkeypatch.setattr(build_mod, "read_news_headlines", lambda db_path, limit=None: headlines)
+
+    out_dir = tmp_path / "build"
+    if out_dir.exists():
+        shutil.rmtree(out_dir)
+
+    build_mod.build(out_dir)
+
+    idx = out_dir / "index.rss"
+    heads = out_dir / "headlines.rss"
+
+    for file_path in (heads, idx):
+        txt = file_path.read_text(encoding="utf-8")
+        assert "<strong>Source:</strong> Example Feed" in txt, (
+            f"Missing source line in {file_path}"
+        )
